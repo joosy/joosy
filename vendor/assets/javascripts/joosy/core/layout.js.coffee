@@ -1,4 +1,5 @@
 #= require joosy/core/joosy
+#= require joosy/core/modules/module
 #= require joosy/core/modules/log
 #= require joosy/core/modules/events
 #= require joosy/core/modules/container

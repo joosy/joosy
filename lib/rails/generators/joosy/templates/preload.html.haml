@@ -1,0 +1,21 @@
+!!! 5
+%html
+  %head
+    %title> Loading...
+
+    javascript:
+      window.preload = {
+        libraries:   #{extract_sources_and_sizes_from_include_tag('<%= file_path %>')},
+        development: #{Rails.env.development?}
+      };
+
+    = stylesheet_link_tag 'application'
+    = javascript_include_tag 'application'
+    = javascript_include_tag '<%= file_path %>_preloader'
+    = csrf_meta_tags
+
+  %body
+    #application
+      #preloader
+        Loading application...
+        %span#percents 0%

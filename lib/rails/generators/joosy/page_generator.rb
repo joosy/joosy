@@ -9,7 +9,7 @@ module Joosy
         super
 
         empty_directory "#{app_path}/pages"
-        template "pages/template.js.coffee", "#{app_path}/pages/#{layout_name}/#{file_name}.js.coffee"
+        template "app/pages/template.js.coffee", "#{app_path}/pages/#{layout_name}/#{file_name}.js.coffee"
 
         empty_directory "#{app_path}/templates/pages/#{layout_name}"
         create_file "#{app_path}/templates/pages/#{layout_name}/#{file_name}.jst.#{options[:template_kind]}"

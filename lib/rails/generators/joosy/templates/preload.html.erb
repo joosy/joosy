@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Loading...</title>
+
+    <script type="text/javascript">
+      window.preload = {
+        libraries:   <%= "<%= extract_sources_and_sizes_from_include_tag('#{file_path}') %"+">" %>,
+        development: <%= "<%= Rails.env.development? %"+">" %>
+      };
+    </script>
+
+    <%= "<%= stylesheet_link_tag 'application' %"+">" %>
+    <%= "<%= javascript_include_tag 'application' %"+">" %>
+    <%= "<%= javascript_include_tag '#{file_path}_preloader' %"+">" %>
+    <%= "<%= csrf_meta_tags %"+">" %>
+  </head>
+
+  <body>
+    <div id="application">
+      <div id="preloader">
+        Loading application...
+        <span id="percents">0%</span>
+      </div>
+    </div>
+  </body>
+</html>

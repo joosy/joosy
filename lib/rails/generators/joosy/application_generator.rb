@@ -8,17 +8,17 @@ module Joosy
       def create_files
         self.destination_root = "app/assets/javascripts"
 
-        template "root.js.coffee", "#{file_path}.js.coffee"
+        template "app.js.coffee", "#{file_path}.js.coffee"
 
         empty_directory file_path
 
-        template "routes.js.coffee", "#{file_path}/routes.js.coffee"
+        template "app/routes.js.coffee", "#{file_path}/routes.js.coffee"
 
         empty_directory "#{file_path}/layouts"
-        template "layouts/application.js.coffee", "#{file_path}/layouts/application.js.coffee"
+        template "app/layouts/application.js.coffee", "#{file_path}/layouts/application.js.coffee"
 
         empty_directory "#{file_path}/pages"
-        template "pages/application.js.coffee", "#{file_path}/pages/application.js.coffee"
+        template "app/pages/application.js.coffee", "#{file_path}/pages/application.js.coffee"
 
         empty_directory_with_gitkeep "#{file_path}/widgets"
 

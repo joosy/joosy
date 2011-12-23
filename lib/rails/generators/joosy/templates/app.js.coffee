@@ -3,7 +3,7 @@
 #= require jquery.hashchange
 #= require underscore
 #
-#= require joosy
+#= require joosy/core
 #
 #= require_tree ./<%= file_name %>/templates
 #= require_tree ./<%= file_name %>/widgets

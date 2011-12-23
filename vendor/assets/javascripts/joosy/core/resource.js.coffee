@@ -1,3 +1,7 @@
+#= require joosy/core/joosy
+#= require joosy/core/modules/log
+#= require joosy/core/modules/events
+
 class Joosy.Resource extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events

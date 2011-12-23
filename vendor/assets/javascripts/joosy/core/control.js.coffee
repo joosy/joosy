@@ -1,3 +1,9 @@
+#= require joosy/core/joosy
+#= require joosy/core/modules/log
+#= require joosy/core/modules/events
+#= require joosy/core/modules/container
+#= require joosy/core/modules/filters
+
 class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events

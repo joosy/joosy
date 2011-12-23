@@ -1,3 +1,5 @@
+#= require joosy/core/joosy
+
 Joosy.Router =
   raw_routes: {}
   routes: {}

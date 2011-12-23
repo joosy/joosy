@@ -1,4 +1,4 @@
-@Joosy = {}
+@Joosy ?= {}
 @Joosy.Modules = {}
 
 Joosy.Beautifier =

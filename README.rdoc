@@ -1,0 +1,3 @@
+= Joosy on Rails
+
+    $ rails generate joosy_boilerplate yourapp

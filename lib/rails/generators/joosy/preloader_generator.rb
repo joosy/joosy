@@ -9,7 +9,7 @@ module Joosy
       source_root File.join(File.dirname(__FILE__), 'templates')
 
       def create_preloader_files
-        template "app_preloader.js.coffee", "app/assets/javascripts/#{file_path}_preloader.js.coffee"
+        template "app_preloader.js.coffee.erb", "app/assets/javascripts/#{file_path}_preloader.js.coffee.erb"
 
         empty_directory "app/controllers/#{File.join class_path}"
         template "app_controller.rb", "app/controllers/#{file_path}_controller.rb"

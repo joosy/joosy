@@ -1,13 +1,13 @@
 module Joosy
   module SprocketsHelper
-    def extract_sources_and_sizes_from_include_tag(resource)
-      resource = javascript_include_tag resource
-      resource = resource.scan(/(href|src)=['"]([^'"]+)['"]/).map { |x| x[1].gsub('.hamljs', '') }
+    def extract_sources_and_sizes_from_include_tag(name)
+      code = javascript_include_tag name
+      resources = code.scan(/(?:href|src)=['"]([^'"]+)['"]/).flatten
 
-      resource.map do |x|
-        size = File.size(Rails.root.to_s + "/public" + x) rescue false
-        [x, size]
-      end
+      resources.map do |resource|
+        size = File.size(Rails.root.join("public", resource)) rescue false
+        [resource, size]
+      end.to_json.html_safe
     end
   end
 end

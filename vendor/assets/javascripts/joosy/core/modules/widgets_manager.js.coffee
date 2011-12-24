@@ -10,17 +10,17 @@ Joosy.Modules.WidgetsManager =
 
   unregisterWidget: (widget) ->
     widget.__unload()
-    delete @__activeWidgets[_(@__activeWidgets).indexOf(widget)]
+    delete @__activeWidgets[@__activeWidgets.indexOf(widget)]
 
   __setupWidgets: ->
-    widgets = @widgets || {}
+    widgets = Object.extended(@widgets || {})
 
     x = @__proto__
-    _(widgets).defaults(x.widgets) while x = x.__proto__
+    widgets.merge(x.widgets, false) while x = x.__proto__
 
     return unless widgets
 
-    _(widgets).each (widget, selector) =>
+    widgets.each (selector, widget) =>
       parent = @
 
       if selector == '$container'

@@ -10,7 +10,7 @@ class Joosy.Module
 
   @include: (obj) ->
     throw('include(obj) requires obj') unless obj
-    _(obj).each (value, key) =>
+    Object.extended(obj).each (key, value) =>
       if key not in moduleKeywords
         @::[key] = value
     obj.included?.apply(@)
@@ -18,7 +18,7 @@ class Joosy.Module
 
   @extend: (obj) ->
     throw('extend(obj) requires obj') unless obj
-    _(obj).each (value, key) =>
+    Object.extended(obj).each (key, value) =>
       if key not in moduleKeywords
         @[key] = value
     obj.extended?.apply(@)

@@ -1,12 +1,11 @@
 #= require joosy/core/joosy
 
 Joosy.Router =
-  raw_routes: {}
-  routes: {}
+  raw_routes: Object.extended()
+  routes: Object.extended()
 
   map: (routes) ->
-    $.extend @raw_routes, routes
-  # -------
+    @raw_routes.merge routes
 
   setupRoutes: ->
     @prepareRoutes @raw_routes
@@ -18,12 +17,12 @@ Joosy.Router =
     if !namespace && routes[404]
       @wildcardAction = routes[404]
       delete routes[404]
-    _(routes).each (response, path) =>
+    routes.each (path, response) =>
       path = (namespace+path).replace(/\/{2,}/, '/')
       if typeof(response) == 'function' || response.prototype?
-        @prepareRoute(path, response)
+        @prepareRoute path, response
       else
-        @prepareRoutes(response, path)
+        @prepareRoutes Object.extended(response), path
 
   prepareRoute: (path, response) ->
     matchPath = path.replace(/\/:([^\/]+)/g, '/([^/]+)').replace(/^\/?/, '^/?').replace(/\/?$/, '/?$')

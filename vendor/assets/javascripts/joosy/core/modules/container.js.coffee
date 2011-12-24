@@ -7,14 +7,14 @@ Joosy.Modules.Container =
   $: (selector) -> $(selector, @container)
 
   refreshElements: ->
-    elements = @elements || {}
+    elements = Object.extended(@elements || {})
 
     x = @__proto__
-    _(elements).defaults(x.elements) while x = x.__proto__
+    elements.merge(x.elements, false) while x = x.__proto__
 
     return unless elements
 
-    _(@elements).each (value, key) => @[key] = @$(value)
+    elements.each (key, value) => @[key] = @$(value)
 
   swapContainer: (container, data) ->
     realContainer = container.clone().html(data)
@@ -22,14 +22,14 @@ Joosy.Modules.Container =
     return realContainer
 
   __delegateEvents: ->
-    events = @events || {}
+    events = Object.extended(@events || {})
 
     x = @__proto__
-    _(events).defaults(x.events) while x = x.__proto__
+    events.merge(x.events, false) while x = x.__proto__
 
-    return unless @events
+    return unless events
 
-    _(@events).each (method, key) =>
+    events.each (key, method) =>
       unless typeof(method) is 'function'
         method = @proxy(@[method])
       else

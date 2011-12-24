@@ -14,8 +14,7 @@ Joosy.Modules.Container =
 
     return unless elements
 
-    for key, value of @elements
-      @[key] = @$(value)
+    _(@elements).each (value, key) => @[key] = @$(value)
 
   swapContainer: (container, data) ->
     realContainer = container.clone().html(data)
@@ -30,7 +29,7 @@ Joosy.Modules.Container =
 
     return unless @events
 
-    for key, method of @events
+    _(@events).each (method, key) =>
       unless typeof(method) is 'function'
         method = @proxy(@[method])
       else

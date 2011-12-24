@@ -24,7 +24,7 @@ Joosy.Modules.Filters =
 
     flag = true
 
-    for i,filter of @__before_loads
+    _(@__before_loads).each (filter, i) =>
       flag = flag && filter.apply(@, opts)
 
     return flag

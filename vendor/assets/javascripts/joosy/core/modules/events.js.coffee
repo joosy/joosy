@@ -8,7 +8,7 @@ Joosy.Modules.Events =
   trigger: (event) ->
     return unless @__eventWaiters
 
-    for i, entry of @__eventWaiters
+    _(@__eventWaiters).each (entry, i) =>
       index = entry[0].indexOf(event)
       delete entry[0][index] if index >= 0
 

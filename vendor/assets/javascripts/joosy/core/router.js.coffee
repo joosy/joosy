@@ -18,7 +18,7 @@ Joosy.Router =
     if !namespace && routes[404]
       @wildcardAction = routes[404]
       delete routes[404]
-    for path, response of routes
+    _(routes).each (response, path) =>
       path = (namespace+path).replace(/\/{2,}/, '/')
       if typeof(response) == 'function' || response.prototype?
         @prepareRoute(path, response)
@@ -42,7 +42,7 @@ Joosy.Router =
       path = param_str.shift()
       url_params = @getUrlParams(param_str)
 
-      for regex, route of @routes
+      for regex, route of @routes when @routes.hasOwnProperty(regex)
         if vals = path.match(new RegExp(regex))
           params = $.extend @getRouteParams(vals, route), url_params
 

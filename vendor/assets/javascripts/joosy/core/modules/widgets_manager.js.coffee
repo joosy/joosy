@@ -20,7 +20,7 @@ Joosy.Modules.WidgetsManager =
 
     return unless widgets
 
-    for selector, widget of widgets
+    _(widgets).each (widget, selector) =>
       parent = @
 
       if selector == '$container'

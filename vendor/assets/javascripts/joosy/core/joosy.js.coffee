@@ -43,7 +43,7 @@ Joosy.preloadImages = (images, callback) ->
 
 Joosy.buildUrl = (url, params) ->
   params_string = []
-  params_string.push("#{key}=#{value}") for key, value of params
+  _(params).each (value, key) -> params_string.push("#{key}=#{value}")
   params_string = params_string.join('&')
 
   hash = url.match(/\#.*$/)

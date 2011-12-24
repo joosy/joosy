@@ -22,6 +22,7 @@ class Joosy.Resource extends Joosy.Module
 
   load: (callback, append=false) ->
     @fetch (data) =>
+      data = @getIndex(data) if @getIndex
       @data = {} unless append
       @appendData(data)
       callback.call @, data

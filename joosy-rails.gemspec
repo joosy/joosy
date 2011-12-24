@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.email       = "boris@roundlake.ru"
   s.homepage    = "http://github.com/roundlake/joosy-rails"
   s.description = "A gem wrapper to include Joosy via the asset pipeline."
-  s.authors     = ['Boris Staal', 'Peter Zotov']
+  s.authors     = ['Boris Staal', 'Andrew Shaydurov', 'Peter Zotov']
 
   s.files         = `git ls-files`.split("\n")
   s.require_paths = ["lib"]

@@ -43,9 +43,8 @@ Joosy.Router =
 
       for regex, route of @routes when @routes.hasOwnProperty(regex)
         if vals = path.match(new RegExp(regex))
-          params = $.extend @getRouteParams(vals, route), url_params
+          params = @getRouteParams(vals, route).merge url_params
 
-          $.extend params,
           if !Joosy.Module.has_ancestor(route.action, Joosy.Page)
             route.action.call(this, params)
           else
@@ -57,7 +56,7 @@ Joosy.Router =
         @wildcardAction(path, url_params)
 
   getRouteParams: (vals, route) ->
-    params = {}
+    params = Object.extended()
     vals.shift()
     for param in route.capture
       params[param] = vals.shift()

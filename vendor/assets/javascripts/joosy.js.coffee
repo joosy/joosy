@@ -1,4 +1,5 @@
 #= require jquery
+#= require jquery_ujs
 #= require jquery.hashchange
 #= require sugar
 #= require inflection

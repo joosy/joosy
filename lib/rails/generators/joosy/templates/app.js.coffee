@@ -1,5 +1,4 @@
 #= require joosy
-#= require jquery_ujs
 #
 #= require_tree ./<%= file_name %>/templates
 #= require_tree ./<%= file_name %>/widgets

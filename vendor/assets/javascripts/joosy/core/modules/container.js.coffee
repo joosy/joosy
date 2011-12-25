@@ -22,6 +22,7 @@ Joosy.Modules.Container =
     return realContainer
 
   __delegateEvents: ->
+    module = @
     events = Object.extended(@events || {})
 
     x = @__proto__
@@ -30,19 +31,17 @@ Joosy.Modules.Container =
     return unless events
 
     events.each (key, method) =>
-      unless typeof(method) is 'function'
-        method = @proxy(@[method])
-      else
-        method = @proxy(method)
+      method   = @[method] unless typeof(method) is 'function'
+      callback = (event) -> method.call(module, @, event)
 
       match      = key.match(@eventSplitter)
       eventName  = match[1]
       selector   = match[2]
 
       if selector is ''
-        @container.bind(eventName, method)
+        @container.bind(eventName, callback)
       else
         if r = selector.match(/\$([A-z]+)/)
           selector = @elements[r[1]]
 
-        @container.on(eventName, selector, method)
+        @container.on(eventName, selector, callback)

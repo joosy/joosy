@@ -46,14 +46,18 @@ class Joosy.Form extends Joosy.Module
       
   __error: (data) ->
     errors = if data.responseText
-      Object.extended(jQuery.parseJSON(xhr.responseText))
+      try
+        Object.extended(jQuery.parseJSON(data.responseText))
+      catch error
+        Object.extended()
     else
       Object.extended(data)
 
-    errors.each (field, notifications) =>
-      field = @substitutions[field] if @substitutions[field]?
-      input = @fields.filter("[name='#{field}']").addClass(@invalidationClass)
-      @notification?(input, notifications)
+    if !@error? || @error(errors)
+      errors.each (field, notifications) =>
+        field = @substitutions[field] if @substitutions[field]?
+        input = @fields.filter("[name='#{field}']").addClass(@invalidationClass)
+        @notification?(input, notifications)
   
   __markIframe: () ->
     mark = $ '<input />', 

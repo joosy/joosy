@@ -14,21 +14,13 @@ class Joosy.Form extends Joosy.Module
   
   elements:
     'fields': 'input,select,textarea'
-  
-  events:
-    'submit': -> @__send(); return false
     
-  constructor: (form) ->
+  constructor: (form, @success) ->
     @container = $(form)
     @refreshElements()
     @__delegateEvents()
-  
-  __send: ->
-    $.ajax
-      url: @container.attr('action')
-      type: @container.attr('method') || 'GET'
-      data: @container.serializeArray()
-      dataType: 'json'
+
+    @container.ajaxForm
       success: => @success?(arguments...)
       complete: => @complete?(arguments...)
       
@@ -37,7 +29,7 @@ class Joosy.Form extends Joosy.Module
           @fields.removeClass(@invalidationClass)
           
       error: (evt, xhr, status, error) => 
-        if !@error? || @error?(arguments...)
+        if !@error? || @error(arguments...)
           errors = Object.extended(jQuery.parseJSON(xhr.responseText))
           
           errors.each (field, notifications) ->

@@ -1,40 +1,3 @@
-# class Joosy.Resource2 extends Joosy.Module
-#   @include Joosy.Modules.Log
-#   @include Joosy.Modules.Events
-#   
-#   @source: (url) -> @::__source = url
-#   @name: (name) -> @::__name = name
-#   @saved: (callback) -> @::__saved = callback
-#   
-#   __getName: -> @__name ?= @constructor.name.underscore()
-#   
-#   @build: (name, options) ->
-#     resource = new @
-#     Object.extended(options).each (key, value) -> 
-#       resource["__#{key}"] = value
-#     resource.__name = name.underscore()
-#     return resource
-# 
-#   attach: (form) ->
-#     form   = $(form)
-#     submit = form.find('input:submit')
-#     
-#     form.submit =>
-#       success = => @__saved?()
-#       data    = @toHash(form)
-#       
-#       
-#       
-#       return false
-#     
-#     #@sendItem data, success, finish
-# 
-#   toHash: (form, entity) ->
-#     data = Object.extended()
-#     @eachSuccessfullElement form, (input) =>
-#       data[input.attr('name')] = input.val()
-#     return data
-
 class Joosy.Resource extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
@@ -177,9 +140,10 @@ class Joosy.Resource extends Joosy.Module
             alert('Forbidden')
             onError.call(this) if onError
 
-  fillForm: (form, data) ->
+  fillForm: (form, data, entity=false) ->
     $.each data, (key, val) ->
-      input = $("[name=#{key}]", form)
+      rkey = if entity then "#{entity}[#{key}]" else key
+      input = $("[name='#{rkey}']", form)
       if input.attr('type') == 'file'
         input.data 'url', val
       else

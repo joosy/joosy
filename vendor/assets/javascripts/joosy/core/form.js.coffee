@@ -41,7 +41,7 @@ class Joosy.Form extends Joosy.Module
       @__error(response.json)
 
   __before: ->
-    if !@before? || @before(arguments...)
+    if !@before? || @before(arguments...) is true
       @fields.removeClass(@invalidationClass)
       
   __error: (data) ->
@@ -53,7 +53,7 @@ class Joosy.Form extends Joosy.Module
     else
       Object.extended(data)
 
-    if !@error? || @error(errors)
+    if !@error? || @error(errors) is true
       errors.each (field, notifications) =>
         field = @substitutions[field] if @substitutions[field]?
         input = @fields.filter("[name='#{field}']").addClass(@invalidationClass)

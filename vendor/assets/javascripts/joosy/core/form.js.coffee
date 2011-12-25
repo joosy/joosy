@@ -14,25 +14,57 @@ class Joosy.Form extends Joosy.Module
   
   elements:
     'fields': 'input,select,textarea'
-    
+
   constructor: (form, @success) ->
     @container = $(form)
     @refreshElements()
     @__delegateEvents()
 
+    @hasFiles = @fields.filter('input:file:enabled[value]').length > 0
+
+    @__markIframe() if @hasFiles
+    @__markMethod() if ['put', 'delete'].has @container.attr('method').toLowerCase()
+
     @container.ajaxForm
-      success: => @success?(arguments...)
-      complete: => @complete?(arguments...)
+      iframe: @hasFiles
+      dataType: 'json'
+      beforeSend: => @__before(arguments...) 
+      success: => @__success(arguments...)
+      error: => @__error(arguments...)
+
+  __success: (response) ->
+    if !@hasFiles
+      @success(response)
+    else if response.status == 200
+      @success(response.json)
+    else
+      @__error(response.json)
+
+  __before: ->
+    if !@before? || @before(arguments...)
+      @fields.removeClass(@invalidationClass)
       
-      beforeSend: => 
-        if !@before? || @before(arguments...)
-          @fields.removeClass(@invalidationClass)
-          
-      error: (evt, xhr, status, error) => 
-        if !@error? || @error(arguments...)
-          errors = Object.extended(jQuery.parseJSON(xhr.responseText))
-          
-          errors.each (field, notifications) ->
-            field = @substitutions[field] if substitutions[field]?
-            input = @fields.filter("[name=#{field}]").addClass(@invalidationClass)
-            @notification?(input, notifications)
+  __error: (data) ->
+    errors = if data.responseText
+      Object.extended(jQuery.parseJSON(xhr.responseText))
+    else
+      Object.extended(data)
+
+    errors.each (field, notifications) =>
+      field = @substitutions[field] if @substitutions[field]?
+      input = @fields.filter("[name='#{field}']").addClass(@invalidationClass)
+      @notification?(input, notifications)
+  
+  __markIframe: () ->
+    mark = $ '<input />', 
+      type: 'hidden'
+      name: 'joosy-iframe'
+      value: true
+    @container.append mark
+    
+  __markMethod: () ->
+    method = $ '<input/>',
+      type: 'hidden'
+      name: '_method'
+      value: @container.attr('method')
+    @container.append(method).attr('method', 'post')

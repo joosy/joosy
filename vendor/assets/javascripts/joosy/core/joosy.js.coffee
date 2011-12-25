@@ -1,5 +1,7 @@
-@Joosy ?= {}
-@Joosy.Modules = {}
+@Joosy = Object.extended(if @Joosy? then @Joosy else {})
+
+@Joosy.merge
+  Modules: {}
 
 Joosy.Beautifier =
   beautifiers: []

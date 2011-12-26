@@ -48,15 +48,15 @@ class Joosy.Resource.REST extends Joosy.Module
       success: callback
 
   @__buildSource: (options) ->
-    @__source ?= "/"+@__getEntityName().pluralize()
+    @__source ?= "/"+@entityName().pluralize()
     source     = Joosy.buildUrl("#{@__source}/#{options.extension || ''}", options.params)
 
   __fillData: (data) -> 
     data = Object.extended(data)
     data = @__before_load(data) if @__before_load?
     
-    @e = if Object.isObject(data) && data[@constructor.name.underscore()] && data.keys().length == 1
-      data[@constructor.name.underscore()]
+    @e = if Object.isObject(data) && data[@constructor.entityName()] && data.keys().length == 1
+      data[@constructor.entityName()]
     else
       data
 

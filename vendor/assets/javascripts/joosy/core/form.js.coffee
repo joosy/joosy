@@ -37,6 +37,9 @@ class Joosy.Form extends Joosy.Module
     e.each (key, val) ->
       key = resource.constructor.entityName()+"[#{key}]"
       @fields.filter("[name='#{key}']").val(val)
+      
+    @container.attr 'action', resource.constructor.__buildSource(extension: resource.id)
+    @container.attr 'method', if resource.id? then 'PUT' else 'POST'
 
   __success: (response) ->
     if !@hasFiles

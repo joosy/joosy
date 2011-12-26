@@ -32,8 +32,9 @@ class Joosy.Form extends Joosy.Module
       success: => @__success(arguments...)
       error: => @__error(arguments...)
 
-  fill: (resource) ->
-    resource.e.each (key, val) ->
+  fill: (resource, decorator) ->
+    e = if decorator? then decorator(resource.e) else resource.e
+    e.each (key, val) ->
       key = resource.constructor.entityName()+"[#{key}]"
       @fields.filter("[name='#{key}']").val(val)
 

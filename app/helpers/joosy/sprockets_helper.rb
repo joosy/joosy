@@ -5,7 +5,8 @@ module Joosy
       resources = code.scan(/(?:href|src)=['"]([^'"]+)['"]/).flatten
 
       resources.map do |resource|
-        size = File.size(Rails.root.join("public", resource)) rescue false
+        path = ::Rails.root.join("public", resource.split('?')[0])
+        size = File.size(path) rescue false
         [resource, size]
       end.to_json.html_safe
     end

@@ -2,6 +2,7 @@
 
 @Joosy.merge
   Modules: {}
+  Resource: {}
 
 Joosy.Beautifier =
   beautifiers: []

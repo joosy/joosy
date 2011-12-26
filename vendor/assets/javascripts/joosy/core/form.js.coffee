@@ -32,6 +32,11 @@ class Joosy.Form extends Joosy.Module
       success: => @__success(arguments...)
       error: => @__error(arguments...)
 
+  fill: (resource) ->
+    resource.e.each (key, val) ->
+      key = resource.constructor.entityName()+"[#{key}]"
+      @fields.filter("[name='#{key}']").val(val)
+
   __success: (response) ->
     if !@hasFiles
       @success(response)

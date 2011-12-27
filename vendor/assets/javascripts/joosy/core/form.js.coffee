@@ -20,7 +20,7 @@ class Joosy.Form extends Joosy.Module
     @refreshElements()
     @__delegateEvents()
 
-    if method = @container.attr('method').toLowerCase() && !['get', 'post'].has(method)
+    if (method = @container.attr('method')?.toLowerCase()) && !['get', 'post'].has(method)
       @__markMethod method
       @container.attr 'method', 'POST'
 

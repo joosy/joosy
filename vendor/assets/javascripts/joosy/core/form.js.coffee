@@ -20,9 +20,12 @@ class Joosy.Form extends Joosy.Module
     @refreshElements()
     @__delegateEvents()
 
+    if @container.attr('method') && !['get', 'post'].has(@container.attr 'method')
+      @__markMethod()
+      @container.attr 'method', 'POST'
+
     @container.ajaxForm
       dataType: 'json'
-      iframe: true
       beforeSend: => @__before(arguments...) 
       success: => @__success(arguments...)
       error: => @__error(arguments...)
@@ -32,17 +35,19 @@ class Joosy.Form extends Joosy.Module
     Object.each e, (key, val) =>
       key = resource.constructor.entityName()+"[#{key}]"
       @fields.filter("[name='#{key}']:not(:file)").val(val)
-      
+
     @container.attr 'action', resource.constructor.__buildSource(extension: resource.id)
-    @__markMethod() if resource.id?
+    @__markMethod() if resource.id
     @container.attr 'method', 'POST'
 
   __success: (response, status, xhr) ->
     if xhr
       @success(response)
     else if response.status == 200
+      console.log response
       @success(response.json)
     else
+      console.log response
       @__error(response.json)
 
   __before: ->
@@ -64,9 +69,9 @@ class Joosy.Form extends Joosy.Module
         input = @fields.filter("[name='#{field}']").addClass(@invalidationClass)
         @notification?(input, notifications)
     
-  __markMethod: () ->
+  __markMethod: (method='PUT') ->
     method = $ '<input/>',
       type: 'hidden'
       name: '_method'
-      value: 'PUT'
+      value: method
     @container.append(method)

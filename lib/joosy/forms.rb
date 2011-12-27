@@ -35,11 +35,11 @@ module Joosy
 
       def joosy_respond(data, status=200)
         unless request.xhr?
-          result = { status: status, json: data }
+          @data = { status: status, json: data }
           self.class.layout 'json_wrapper'
-          render :text => result.to_json
+          render :text => result.to_json, status: status
         else
-          render json: data
+          render json: data, status: status
         end
       end
     end

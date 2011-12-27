@@ -32,5 +32,5 @@ class Joosy.Resource.RESTCollection extends Joosy.Module
       @data = []
       @pages.keys().sort().each (x) => @data.add @pages[x]
       
-      callback?(data)
+      callback?(@pages[number])
     @

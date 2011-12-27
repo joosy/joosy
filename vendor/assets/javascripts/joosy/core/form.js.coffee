@@ -34,7 +34,7 @@ class Joosy.Form extends Joosy.Module
 
   fill: (resource, decorator) ->
     e = if decorator? then decorator(resource.e) else resource.e
-    e.each (key, val) ->
+    Object.each e, (key, val) =>
       key = resource.constructor.entityName()+"[#{key}]"
       @fields.filter("[name='#{key}']").val(val)
       

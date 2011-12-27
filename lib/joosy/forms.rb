@@ -30,18 +30,16 @@ module Joosy
 
       def joosy_succeed(data, entity=nil, &block)
         block.call(entity) if block_given?
-        joosy_respond (data.is_a?(Proc) ? data.call(entity) : data)
+        joosy_respond (data.is_a?(Proc) ? data.call(entity) : (data || entity))
       end
 
-      def joosy_respond(json, status=200)
-        result = {}
-        result[:json]   = json
-        result[:status] = status if status
-
-        if params['joosy-iframe']
-          render :text => "<textarea>#{result.to_json}</textarea>"
+      def joosy_respond(data, status=200)
+        unless request.xhr?
+          result = { status: status, json: data }
+          self.class.layout 'json_wrapper'
+          render :text => result.to_json
         else
-          render result
+          render json: data
         end
       end
     end

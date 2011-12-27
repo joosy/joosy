@@ -20,14 +20,9 @@ class Joosy.Form extends Joosy.Module
     @refreshElements()
     @__delegateEvents()
 
-    @hasFiles = @fields.filter('input:file:enabled[value]').length > 0
-
-    @__markIframe() if @hasFiles
-    @__markMethod() if ['put', 'delete'].has @container.attr('method').toLowerCase()
-
     @container.ajaxForm
-      iframe: @hasFiles
       dataType: 'json'
+      iframe: true
       beforeSend: => @__before(arguments...) 
       success: => @__success(arguments...)
       error: => @__error(arguments...)
@@ -39,10 +34,11 @@ class Joosy.Form extends Joosy.Module
       @fields.filter("[name='#{key}']:not(:file)").val(val)
       
     @container.attr 'action', resource.constructor.__buildSource(extension: resource.id)
-    @container.attr 'method', if resource.id? then 'PUT' else 'POST'
+    @__markMethod() if resource.id?
+    @container.attr 'method', 'POST'
 
-  __success: (response) ->
-    if !@hasFiles
+  __success: (response, status, xhr) ->
+    if xhr
       @success(response)
     else if response.status == 200
       @success(response.json)
@@ -67,17 +63,10 @@ class Joosy.Form extends Joosy.Module
         field = @substitutions[field] if @substitutions[field]?
         input = @fields.filter("[name='#{field}']").addClass(@invalidationClass)
         @notification?(input, notifications)
-  
-  __markIframe: () ->
-    mark = $ '<input />', 
-      type: 'hidden'
-      name: 'joosy-iframe'
-      value: true
-    @container.append mark
     
   __markMethod: () ->
     method = $ '<input/>',
       type: 'hidden'
       name: '_method'
-      value: @container.attr('method')
-    @container.append(method).attr('method', 'post')
+      value: 'PUT'
+    @container.append(method)

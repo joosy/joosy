@@ -15,8 +15,8 @@ Joosy.Modules.WidgetsManager =
   __setupWidgets: ->
     widgets = Object.extended(@widgets || {})
 
-    x = @__proto__
-    widgets.merge(x.widgets, false) while x = x.__proto__
+    x = @constructor
+    widgets.merge(x.widgets, false) while x = x.__super__
 
     return unless widgets
 

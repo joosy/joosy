@@ -20,6 +20,11 @@ Joosy.Modules.Container =
     realContainer = container.clone().html(data)
     container.replaceWith realContainer
     return realContainer
+    
+  __extractSelector: (selector) ->
+    if r = selector.match(/\$([A-z]+)/)
+      selector = @elements[r[1]]
+    selector
 
   __delegateEvents: ->
     module = @
@@ -36,12 +41,9 @@ Joosy.Modules.Container =
 
       match      = key.match(@eventSplitter)
       eventName  = match[1]
-      selector   = match[2]
+      selector   = @__extractSelector(match[2])
 
       if selector is ''
         @container.bind(eventName, callback)
       else
-        if r = selector.match(/\$([A-z]+)/)
-          selector = @elements[r[1]]
-
         @container.on(eventName, selector, callback)

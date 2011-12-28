@@ -22,9 +22,10 @@ class Joosy.Page extends Joosy.Module
   data: false
 
   @fetch: (callback) -> @::__fetch = callback
-  @scroll: (element, speed=500) -> 
+  @scroll: (element, options={}) -> 
     @::__scrollElement = element
-    @::__scrollSpeed = speed
+    @::__scrollSpeed = options.speed || 500
+    @::__scrollMargin = options.margin || 0
 
   @before_page_render: (callback) -> @::__before_page_render = callback
   @after_page_render:  (callback) -> @::__after_page_render = callback
@@ -33,10 +34,6 @@ class Joosy.Page extends Joosy.Module
   @before_layout_render: (callback) -> @::__before_page_render = callback
   @after_layout_render: (callback) -> @::__after_layout_render = callback
   @on_layout_render: (callback) -> @::__on_layout_render = callback
-  
-  @after_load ->
-    if @__scrollElement
-      $('html, body').animate({scrollTop: $(@__extractSelector(@__scrollElement)).offset().top}, @__scrollSpeed)
 
   constructor: (@params, @previous) ->
     @layout ||= ApplicationLayout
@@ -54,6 +51,9 @@ class Joosy.Page extends Joosy.Module
     @__delegateEvents()
     @__setupWidgets()
     @__runAfterLoads(@params, @previous)
+    if @__scrollElement
+      scroll = $(@__extractSelector(@__scrollElement)).offset()?.top + @__scrollMargin
+      $('html, body').animate({scrollTop: scroll}, @__scrollSpeed)
 
   __unload: ->
     @clearTime()

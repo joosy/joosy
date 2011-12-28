@@ -9,8 +9,8 @@ Joosy.Modules.Container =
   refreshElements: ->
     elements = Object.extended(@elements || {})
 
-    x = @__proto__
-    elements.merge(x.elements, false) while x = x.__proto__
+    x = @constructor
+    elements.merge(x.elements, false) while x = x.__super__
 
     return unless elements
 
@@ -25,8 +25,8 @@ Joosy.Modules.Container =
     module = @
     events = Object.extended(@events || {})
 
-    x = @__proto__
-    events.merge(x.events, false) while x = x.__proto__
+    x = @constructor
+    events.merge(x.events, false) while x = x.__super__
 
     return unless events
 

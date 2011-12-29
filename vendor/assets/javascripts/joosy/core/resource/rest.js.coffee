@@ -22,18 +22,18 @@ class Joosy.Resource.REST extends Joosy.Module
 
   # Returns single entity if int/string given
   # Returns collection if no value or Object (with parameters) given
-  @find: (description, callback) ->
+  @find: (description, callback, options) ->
     if @__isId(description)
       resource = new @(description)
-      resource.fetch callback
+      resource.fetch callback, options
       resource
     else
       resources = new Joosy.Resource.RESTCollection(@, description)
-      resources.fetch callback
+      resources.fetch callback, options
       resources
     
-  fetch: (callback) ->
-    @constructor.__ajax 'get', @constructor.__buildSource(extension: @id), (e) => 
+  fetch: (callback, options) ->
+    @constructor.__ajax 'get', @constructor.__buildSource(extension: @id), options, (e) => 
       @__fillData(e)
       callback?(@)
     @
@@ -47,12 +47,13 @@ class Joosy.Resource.REST extends Joosy.Module
 
   @__isId: (something) -> Object.isNumber(something) || Object.isString(something)
 
-  @__ajax: (method, url, callback) ->
-    $.ajax
+  @__ajax: (method, url, options={}, callback) ->
+    $.ajax url, Object.extended(
       type: method
-      url: url
       success: callback
       cache: false
+      dataType: 'json'
+    ).merge options
 
   @__buildSource: (options) ->
     @__source ?= "/"+@entityName().pluralize()

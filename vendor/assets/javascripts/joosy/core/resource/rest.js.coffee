@@ -52,6 +52,7 @@ class Joosy.Resource.REST extends Joosy.Module
       type: method
       url: url
       success: callback
+      cache: false
 
   @__buildSource: (options) ->
     @__source ?= "/"+@entityName().pluralize()

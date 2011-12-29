@@ -14,10 +14,11 @@ class Joosy.Resource.RESTCollection extends Joosy.Module
     @
 
   # Clears the storage and gets new data from server
-  fetch: (callback=false) ->
+  fetch: (callback, opts) ->
     @model.__ajax 'get', @model.__buildSource(params: @params), (data) =>
       @reset(data)
       callback?(@)
+    , opts
     @
 
   # Returns the subset for requested page. Requests with &page=x if not found localy.

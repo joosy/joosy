@@ -7,23 +7,22 @@ Joosy.Modules.Container =
   $: (selector) -> $(selector, @container)
 
   refreshElements: ->
-    elements = Object.extended(@elements || {})
-
-    x = @constructor
-    elements.merge(x.elements, false) while x = x.__super__
-
-    return unless elements
-
-    elements.each (key, value) => @[key] = @$(value)
+    @__collectElements().each (key, value) => @[key] = @$(value)
 
   swapContainer: (container, data) ->
     realContainer = container.clone().html(data)
     container.replaceWith realContainer
     return realContainer
     
+  __collectElements: ->
+    elements = Object.extended(@elements || {})
+    x = @constructor
+    elements.merge(x.elements, false) while x = x.__super__
+    elements
+    
   __extractSelector: (selector) ->
     if r = selector.match(/\$([A-z]+)/)
-      selector = @elements[r[1]]
+      selector = @__collectElements()[r[1]]
     selector
 
   __delegateEvents: ->

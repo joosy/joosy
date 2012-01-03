@@ -1,14 +1,14 @@
 #= require joosy/core/joosy
 
 Joosy.Router =
-  raw_routes: Object.extended()
+  rawRoutes: Object.extended()
   routes: Object.extended()
 
   map: (routes) ->
-    @raw_routes.merge routes
+    @rawRoutes.merge routes
 
   setupRoutes: ->
-    @prepareRoutes @raw_routes
+    @prepareRoutes @rawRoutes
 
     @respondRoute(location.hash)
     $(window).hashchange => @respondRoute(location.hash)
@@ -31,19 +31,19 @@ Joosy.Router =
       action  : response
 
   respondRoute: (hash) ->
-    full_path = hash.replace(/^#!?/, '')
+    fullPath = hash.replace(/^#!?/, '')
 
-    if @currentPath != full_path
-      @currentPath = full_path
+    if @currentPath != fullPath
+      @currentPath = fullPath
       found = false
 
-      param_str = full_path.split('&')
-      path = param_str.shift()
-      url_params = @getUrlParams(param_str)
+      paramStr = fullPath.split('&')
+      path = paramStr.shift()
+      urlParams = @getUrlParams(paramStr)
 
       for regex, route of @routes when @routes.hasOwnProperty(regex)
         if vals = path.match(new RegExp(regex))
-          params = @getRouteParams(vals, route).merge url_params
+          params = @getRouteParams(vals, route).merge urlParams
 
           if !Joosy.Module.hasAncestor(route.action, Joosy.Page)
             route.action.call(this, params)
@@ -53,7 +53,7 @@ Joosy.Router =
           break
 
       if !found && @wildcardAction
-        @wildcardAction(path, url_params)
+        @wildcardAction(path, urlParams)
 
   getRouteParams: (vals, route) ->
     params = Object.extended()
@@ -62,10 +62,10 @@ Joosy.Router =
       params[param] = vals.shift()
     return params
 
-  getUrlParams: (param_str) ->
+  getUrlParams: (paramStr) ->
     params = {}
-    if param_str
-      $.each param_str, () ->
+    if paramStr
+      $.each paramStr, () ->
         if @ != ''
           pair = @.split '='
           params[pair[0]] = pair[1]

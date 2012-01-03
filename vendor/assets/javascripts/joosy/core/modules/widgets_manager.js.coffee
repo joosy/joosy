@@ -2,7 +2,7 @@ Joosy.Modules.WidgetsManager =
   registerWidget: (container, widget) ->
     @__activeWidgets ||= []
 
-    if Joosy.Module.has_ancestor(widget, Joosy.Widget)
+    if Joosy.Module.hasAncestor(widget, Joosy.Widget)
       widget = new widget()
 
     @__activeWidgets.push widget.__load(@, container)
@@ -33,7 +33,7 @@ Joosy.Modules.WidgetsManager =
       Joosy.Modules.Log.log "Widget registered at '#{selector.selector}'. Elements: #{selector.length}"
 
       selector.each (i) ->
-        if Joosy.Module.has_ancestor(widget, Joosy.Widget)
+        if Joosy.Module.hasAncestor(widget, Joosy.Widget)
           w = new widget(parent)
         else
           w = widget.apply(parent, [i])

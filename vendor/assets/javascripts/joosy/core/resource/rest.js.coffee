@@ -9,7 +9,7 @@ class Joosy.Resource.REST extends Joosy.Module
   @entity: (name) -> @__entityName = name
   @primary: (primary) -> @::__primaryKey = primary
   @source: (source) -> @__source = source
-  @before_load: (action) -> @::__before_load = action
+  @beforeLoad: (action) -> @::__beforeLoad = action
 
   constructor: (description) ->
     if @constructor.__isId(description) 
@@ -61,7 +61,7 @@ class Joosy.Resource.REST extends Joosy.Module
 
   __fillData: (data) -> 
     data = Object.extended(data)
-    data = @__before_load(data) if @__before_load?
+    data = @__beforeLoad(data) if @__beforeLoad?
     
     @e = if Object.isObject(data) && data[@constructor.entityName()] && data.keys().length == 1
       data[@constructor.entityName()]

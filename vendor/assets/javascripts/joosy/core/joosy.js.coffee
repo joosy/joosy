@@ -45,16 +45,16 @@ Joosy.preloadImages = (images, callback) ->
   return result
 
 Joosy.buildUrl = (url, params) ->
-  params_string = []
-  Object.each params, (key, value) -> params_string.push("#{key}=#{value}")
-  params_string = params_string.join('&')
+  paramsString = []
+  Object.each params, (key, value) -> paramsString.push("#{key}=#{value}")
+  paramsString = paramsString.join('&')
 
   hash = url.match(/(\#.*)?$/)[0]
 
   url = url.replace(/\#.*$/, '')
 
-  url = url + "?" if params_string != '' && url.indexOf("?") == -1
+  url = url + "?" if paramsString != '' && url.indexOf("?") == -1
 
-  url = (if params_string == '' || url.last() == '?' then url+params_string else url+'&'+params_string) + hash
+  url = (if paramsString == '' || url.last() == '?' then url+paramsString else url+'&'+paramsString) + hash
 
   return url

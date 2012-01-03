@@ -1,7 +1,7 @@
 moduleKeywords = ['included', 'extended']
 
 class Joosy.Module
-  @has_ancestor = (what, klass) ->
+  @hasAncestor = (what, klass) ->
     [ what, klass ] = [ what.prototype, klass.prototype ]
     while what
       return true if what == klass

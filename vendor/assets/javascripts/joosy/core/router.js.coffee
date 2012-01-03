@@ -45,7 +45,7 @@ Joosy.Router =
         if vals = path.match(new RegExp(regex))
           params = @getRouteParams(vals, route).merge url_params
 
-          if !Joosy.Module.has_ancestor(route.action, Joosy.Page)
+          if !Joosy.Module.hasAncestor(route.action, Joosy.Page)
             route.action.call(this, params)
           else
             Joosy.Application.setCurrentPage(route.action, params)

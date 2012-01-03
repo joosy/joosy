@@ -27,13 +27,13 @@ class Joosy.Page extends Joosy.Module
     @::__scrollSpeed = options.speed || 500
     @::__scrollMargin = options.margin || 0
 
-  @before_page_render: (callback) -> @::__before_page_render = callback
-  @after_page_render:  (callback) -> @::__after_page_render = callback
-  @on_page_render: (callback) -> @::__on_page_render = callback
+  @beforePageRender: (callback) -> @::__beforePageRender = callback
+  @afterPageRender:  (callback) -> @::__afterPageRender = callback
+  @onPageRender: (callback) -> @::__onPageRender = callback
 
-  @before_layout_render: (callback) -> @::__before_page_render = callback
-  @after_layout_render: (callback) -> @::__after_layout_render = callback
-  @on_layout_render: (callback) -> @::__on_layout_render = callback
+  @beforeLayoutRender: (callback) -> @::__beforeLayoutRender = callback
+  @afterLayoutRender: (callback) -> @::__afterLayoutRender = callback
+  @onLayoutRender: (callback) -> @::__onLayoutRender = callback
 
   constructor: (@params, @previous) ->
     @layout ||= ApplicationLayout
@@ -73,18 +73,18 @@ class Joosy.Page extends Joosy.Module
         @__load()
         Joosy.Beautifier.go()
 
-        if @__after_page_render?
-          @__after_page_render @layout.content()
+        if @__afterPageRender?
+          @__afterPageRender @layout.content()
 
         return @layout.content()
 
-      if @__on_page_render?
-        @__on_page_render @layout.content(), render
+      if @__onPageRender?
+        @__onPageRender @layout.content(), render
       else
         render()
 
-    if @__before_page_render?
-      @__before_page_render @layout.content(), =>
+    if @__beforePageRender?
+      @__beforePageRender @layout.content(), =>
         @trigger 'stageClear'
     else
       @trigger 'stageClear'
@@ -112,19 +112,19 @@ class Joosy.Page extends Joosy.Module
         @__load()
         Joosy.Beautifier.go()
 
-        if @__after_layout_render?
-          @__after_layout_render Joosy.Application.content()
+        if @__afterLayoutRender?
+          @__afterLayoutRender Joosy.Application.content()
 
         return Joosy.Application.content()
 
-      if @__on_layout_render?
-        @__on_layout_render Joosy.Application.content(), render
+      if @__onLayoutRender?
+        @__onLayoutRender Joosy.Application.content(), render
       else
         render()
 
 
-    if @__before_layout_render?
-      @__before_layout_render Joosy.Application.content(), =>
+    if @__beforeLayoutRender?
+      @__beforeLayoutRender Joosy.Application.content(), =>
         @trigger 'stageClear'
     else
       @trigger 'stageClear'

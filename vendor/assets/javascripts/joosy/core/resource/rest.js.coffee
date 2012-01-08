@@ -40,8 +40,8 @@ class Joosy.Resource.REST extends Joosy.Module
   
   save: ->
     
-  destroy: (callback) ->
-    @constructor.__ajax 'delete', @constructor.__buildSource(extension: @id), (e) =>
+  destroy: (callback, options) ->
+    @constructor.__ajax 'delete', @constructor.__buildSource(extension: @id), options, (e) =>
       callback?(@)
     @
 

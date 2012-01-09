@@ -39,7 +39,7 @@ class Joosy.Form extends Joosy.Module
         xhr = $.ajaxSettings.xhr()
         if xhr.upload? && @progress
           xhr.upload.onprogress = (event) =>
-            @progress event.position/event.total*100 if event.lengthComputable
+            @progress (event.position/event.total*100).round(2) if event.lengthComputable
         xhr
 
   fill: (resource, decorator) ->

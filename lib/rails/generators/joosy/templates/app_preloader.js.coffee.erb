@@ -3,6 +3,8 @@
 bootstrap = ->
   $('#preloader').slideUp ->
     location.hash = '!/' if !location.hash
+    
+    Joosy.debug = window.preload.development
     Joosy.Application.initialize('#application')
 
 window.onload = ->

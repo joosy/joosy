@@ -7,3 +7,6 @@ Joosy.Modules.Log =
 
     args.unshift "Joosy>"
     console.log(args...)
+  
+  debug: (args...) ->
+    @log(args...) if Joosy.debug

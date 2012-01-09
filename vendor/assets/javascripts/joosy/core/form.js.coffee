@@ -15,7 +15,13 @@ class Joosy.Form extends Joosy.Module
   elements:
     'fields': 'input,select,textarea'
 
-  constructor: (form, @success) ->
+  constructor: (form, opts={}) ->
+    if Object.isFunction opts
+      @success = opts
+    else
+      Object.extended(opts).each (key, value) =>
+        @[key] = value
+    
     @container = $(form)
     @refreshElements()
     @__delegateEvents()
@@ -29,6 +35,12 @@ class Joosy.Form extends Joosy.Module
       beforeSend: => @__before(arguments...) 
       success: => @__success(arguments...)
       error: => @__error(arguments...)
+      xhr: =>
+        xhr = $.ajaxSettings.xhr()
+        if xhr.upload? && @progress
+          xhr.upload.onprogress = (event) =>
+            @progress event.position/event.total*100 if event.lengthComputable
+        xhr
 
   fill: (resource, decorator) ->
     e = if decorator? then decorator(resource.e) else resource.e
@@ -44,13 +56,11 @@ class Joosy.Form extends Joosy.Module
     if xhr
       @success(response)
     else if response.status == 200
-      console.log response
       @success(response.json)
     else
-      console.log response
       @__error(response.json)
 
-  __before: ->
+  __before: (xhr, settings) ->
     if !@before? || @before(arguments...) is true
       @fields.removeClass(@invalidationClass)
       

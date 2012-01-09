@@ -30,7 +30,7 @@ Joosy.Modules.WidgetsManager =
           selector = @elements[r[1]]
         selector = @$(selector)
 
-      Joosy.Modules.Log.log "Widget registered at '#{selector.selector}'. Elements: #{selector.length}"
+      Joosy.Modules.Log.debug "Widget registered at '#{selector.selector}'. Elements: #{selector.length}"
 
       selector.each (i) ->
         if Joosy.Module.hasAncestor(widget, Joosy.Widget)

@@ -1,6 +1,7 @@
 @Joosy = Object.extended(if @Joosy? then @Joosy else {})
 
 @Joosy.merge
+  debug: false
   Modules: {}
   Resource: {}
 

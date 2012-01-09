@@ -9,7 +9,7 @@ class Joosy.Resource.RESTCollection extends Joosy.Module
   
   # Clears the storage and atempts to import given JSON
   reset: (entities) ->
-    @data = data = entities.map (x) => new @model(x)
+    @data = data = @modelize entities
     @pages = Object.extended().merge 1: data
     @
 
@@ -27,10 +27,16 @@ class Joosy.Resource.RESTCollection extends Joosy.Module
       return @ 
     
     @model.__ajax 'get', @model.__buildSource(params: @params.merge(page: number)), (data) =>
-      @pages[number] = data.map (x) => new @model(x)
+      @pages[number] = @modelize data
       
       @data = []
       @pages.keys().sort().each (x) => @data.add @pages[x]
       
       callback?(@pages[number])
     @
+
+  modelize: (collection) ->
+    if collection instanceof Array
+      collection.map (x) => new @model(x)
+    else
+      []

@@ -46,7 +46,7 @@ class Joosy.Form extends Joosy.Module
     e = if decorator? then decorator(resource.e) else resource.e
     Object.each e, (key, val) =>
       key = resource.constructor.entityName()+"[#{key}]"
-      @fields.filter("[name='#{key}']:not(:file)").val(val)
+      @fields.filter("[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)").val(val)
 
     @container.attr 'action', resource.constructor.__buildSource(extension: resource.id)
     @__markMethod() if resource.id

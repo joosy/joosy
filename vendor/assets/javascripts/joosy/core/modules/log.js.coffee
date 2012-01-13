@@ -1,12 +1,16 @@
 Joosy.Modules.Log =
   log: (args...) ->
-    trace = true
-
-    return unless trace
+    #trace = true
+    #return unless trace
+    # - wtf?
+  
     return if typeof console is 'undefined'
 
-    args.unshift "Joosy>"
-    console.log(args...)
+    if console.log.apply?
+      args.unshift "Joosy>"
+      console.log(args...)
+    else
+      console.log(args.first())
   
   debug: (args...) ->
     @log(args...) if Joosy.debug

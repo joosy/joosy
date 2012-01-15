@@ -40,8 +40,9 @@ Joosy.preloadImages = (images, callback) ->
   result = []
 
   for p in images
-    result.push $('<img/>').attr('src', p).load ->
+    result.push $('<img/>').load(->
       callback?() if (ticks -= 1) == 0
+    ).attr('src', p)
 
   return result
 

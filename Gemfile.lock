@@ -60,6 +60,11 @@ GEM
     guard-coffeescript (0.5.4)
       coffee-script (>= 2.2.0)
       guard (>= 0.8.3)
+    guard-shell (0.2.0)
+      guard (>= 0.2.0)
+    guard-sprockets (0.2.0)
+      guard (>= 0.2.2)
+      sprockets (~> 2)
     hike (1.2.1)
     i18n (0.6.0)
     jasmine (1.1.2)
@@ -139,5 +144,7 @@ PLATFORMS
 DEPENDENCIES
   guard
   guard-coffeescript
+  guard-shell
+  guard-sprockets
   jasmine
   joosy-rails!

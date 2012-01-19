@@ -1,11 +1,8 @@
 @Preloader =
-  start: false
-  complete: false
-
   receive: (url, callback) ->
     head   = document.getElementsByTagName("head")[0]
     script = document.createElement("script")
-    script.src = url #+ "&rand=" + Math.random()
+    script.src = url# + (if url.match(/\?/) then '&' else '?') + "rand=" + Math.random()
 
     done = false
 
@@ -21,10 +18,10 @@
     head.appendChild(script)
     return undefined
 
-  load: (libraries) =>
-    Preloader.start() if Preloader.start
+  load: (libraries) ->
+    @start?.call window
 
     if libraries.length > 0
-      Preloader.receive libraries.shift()[0], => Preloader.load(libraries)
+      @receive libraries.shift()[0], => @load(libraries)
     else
-      Preloader.complete() if Preloader.complete
+      @complete?.call window

@@ -1,3 +1,11 @@
+window.globalEval = (src) ->
+  if window.execScript
+    window.execScript src
+  else
+    fn = ->
+      window.eval.call window,src
+    fn()
+
 @Preloader =
   force: false
   prefix: "cache:"
@@ -5,8 +13,6 @@
   libraries: []
   counter: 0
 
-  progress: false
-  start: false
   complete: false
 
   ajax: (url, size, callback) ->
@@ -16,50 +22,50 @@
     x.open('GET', url, 1)
     x.setRequestHeader('Content-type','application/x-www-form-urlencoded')
 
-    if Preloader.progress
-      x.onprogress = (event) ->
+    if @progress
+      x.onprogress = (event) =>
         total = if size then size else event.total
-        Preloader.progress Math.round(event.loaded / total * 100 * Preloader.counter / Preloader.libraries.length)
+        @progress.call window, Math.round(event.loaded / total * 100 * @counter / @libraries.length), event
 
     x.onreadystatechange = () -> callback(x) if callback? && x.readyState > 3
     x.send()
 
   restore: ->
-    for name, i in Preloader.libraries
-      window.eval window.localStorage.getItem(name)
-    Preloader.complete(true) if Preloader.complete
+    for name, i in @libraries
+      window.globalEval window.localStorage.getItem(name)
+    @complete?.call window, (true)
 
   download: (libraries) ->
     if libraries.length > 0
-      Preloader.counter += 1
+      @counter += 1
 
       lib  = libraries.shift()
       url  = lib[0]
       size = lib[1]
 
-      Preloader.ajax url, size, (xhr) ->
-        window.localStorage.setItem(Preloader.prefix+url, xhr.responseText)
-        window.eval(xhr.responseText)
-        Preloader.download(libraries)
+      @ajax url, size, (xhr) =>
+        window.localStorage.setItem(@prefix+url, xhr.responseText)
+        window.globalEval xhr.responseText
+        @download(libraries)
     else
-      Preloader.clean()
-      Preloader.complete(false) if Preloader.complete
+      @clean()
+      @complete?.call window, false
 
   load: (libraries) ->
-    Preloader.libraries = libraries.slice()
+    @libraries = libraries.slice()
 
-    for lib, i in Preloader.libraries
-      Preloader.libraries[i] = Preloader.prefix+lib[0]
+    for lib, i in @libraries
+      @libraries[i] = @prefix+lib[0]
 
-    if !Preloader.force && Preloader.check()
-      Preloader.restore()
+    if !@force && @check()
+      @restore()
     else
-      Preloader.start() if Preloader.start
-      Preloader.download(libraries)
+      @start?.call window
+      @download(libraries)
 
   check: ->
     flag = true
-    for name, i in Preloader.libraries
+    for name, i in @libraries
       flag &&= window.localStorage.getItem(name)?
     flag
 
@@ -69,6 +75,6 @@
     for element, i in window.localStorage
       key = window.localStorage.key(i-removed)
 
-      if key.indexOf(Preloader.prefix) == 0 && Preloader.libraries.indexOf(key) < 0
+      if key.indexOf(@prefix) == 0 && @libraries.indexOf(key) < 0
         window.localStorage.removeItem(key)
         removed += 1

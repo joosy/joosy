@@ -56,21 +56,38 @@ describe "Joosy.Modules.Container", ->
     target = @box.__extractSelector('$footer')
     expect(target).toEqual('.footer')
 
-  it "should delegate event declarations", ->
-    callback = 1.upto(3).map -> sinon.spy()
+  it "should inherit event declarations", ->
     class SubContainerA extends @TestContainer
       events:
-        'test .post': callback[2]
-      onFooterTest: callback[1]
+        'test .post': 'callback2'
+        'custom' : 'method'
     class SubContainerB extends SubContainerA
       events:
         'test $footer': 'onFooterTest'
-      onContainerTest: callback[0]
+        'custom' : 'overrided'
     subBox = new SubContainerB()
-    subBox.__delegateEvents()
-    subBox.container.trigger('test')
-    $('.footer', subBox.container).trigger('test')
-    $('.post', subBox.container).trigger('test')
+    target = subBox.__collectEvents()
+    expect(target).toEqual(
+      'test': 'onContainerTest'
+      'test .post': 'callback2'
+      'test $footer': 'onFooterTest'
+      'custom' : 'overrided'
+    )
+    target = (new @TestContainer()).__collectEvents()
+    expect(target).toEqual('test': 'onContainerTest')
+
+  it "should delegate events", ->
+    callback = 1.upto(3).map -> sinon.spy()
+    @box.events = Object.extended(@box.events).merge(
+      'test .post': callback[2]
+      'test $footer': 'onFooterTest'
+    )
+    @box.onContainerTest = callback[0]
+    @box.onFooterTest = callback[1]
+    @box.__delegateEvents()
+    @box.container.trigger('test')
+    $('.footer', @box.container).trigger('test')
+    $('.post', @box.container).trigger('test')
     expect(callback[0].callCount).toEqual(5)
     expect(callback[1].callCount).toEqual(1)
     expect(callback[2].callCount).toEqual(3)

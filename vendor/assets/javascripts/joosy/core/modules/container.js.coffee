@@ -16,8 +16,9 @@ Joosy.Modules.Container =
     
   __collectElements: ->
     elements = Object.extended(@elements || {})
-    x = @constructor
-    elements.merge(x.elements, false) while x = x.__super__
+    klass = @
+    while klass = klass.constructor.__super__
+      elements.merge(klass.elements, false)
     elements
     
   __extractSelector: (selector) ->
@@ -29,8 +30,9 @@ Joosy.Modules.Container =
     module = @
     events = Object.extended(@events || {})
 
-    x = @constructor
-    events.merge(x.events, false) while x = x.__super__
+    klass = @
+    while klass = klass.constructor.__super__
+      events.merge(klass.events, false)
 
     return unless events
 

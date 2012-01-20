@@ -12,33 +12,33 @@ Joosy.Modules.WidgetsManager =
     widget.__unload()
     delete @__activeWidgets[@__activeWidgets.indexOf(widget)]
 
-  __setupWidgets: ->
+  __collectWidgets: ->
     widgets = Object.extended(@widgets || {})
+    klass = @
+    while klass = klass.constructor.__super__
+      widgets.merge(klass.widgets, false)
+    widgets
 
-    x = @constructor
-    widgets.merge(x.widgets, false) while x = x.__super__
-
-    return unless widgets
+  __setupWidgets: ->
+    widgets = @__collectWidgets()
 
     widgets.each (selector, widget) =>
-      parent = @
-
       if selector == '$container'
         selector = @container
       else
         if r = selector.match(/\$([A-z]+)/)
           selector = @elements[r[1]]
-        selector = @$(selector)
+        selector = $(selector, @container)
 
       Joosy.Modules.Log.debug "Widget registered at '#{selector.selector}'. Elements: #{selector.length}"
 
-      selector.each (i) ->
+      selector.each (elem) =>
         if Joosy.Module.hasAncestor(widget, Joosy.Widget)
-          w = new widget(parent)
+          w = new widget(@)
         else
-          w = widget.apply(parent, [i])
+          w = widget.apply(@, [elem])
 
-        parent.registerWidget $(this), w
+        @registerWidget($(elem), w)
 
   __unloadWidgets: ->
     if @__activeWidgets

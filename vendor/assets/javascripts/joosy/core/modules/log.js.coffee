@@ -1,9 +1,5 @@
 Joosy.Modules.Log =
   log: (args...) ->
-    #trace = true
-    #return unless trace
-    # - wtf?
-  
     return if typeof console is 'undefined'
 
     if console.log.apply?

@@ -16,17 +16,24 @@ Joosy.Modules.Filters =
       @::__afterUnloads.push callback
 
   __runBeforeLoads: (opts...) ->
-    return true if !@__beforeLoads?.length > 0
+    return true unless @__beforeLoads?.length > 0
 
     flag = true
 
-    @__beforeLoads.each (filter, i) =>
+    for filter in @__beforeLoads
+      filter = @[filter] unless typeof(filter) is 'function'
       flag = flag && filter.apply(@, opts)
 
     return flag
 
   __runAfterLoads: (opts...) ->
-    filter.apply(@, opts) for filter in @__afterLoads if @__afterLoads?
+    if @__afterLoads?
+      for filter in @__afterLoads
+        filter = @[filter] unless typeof(filter) is 'function'
+        filter.apply(@, opts)
 
   __runAfterUnloads: (opts...) ->
-    filter.apply(@, opts) for filter in @__afterUnloads if @__afterUnloads?
+    if @__afterUnloads?
+      for filter in @__afterUnloads
+        filter = @[filter] unless typeof(filter) is 'function'
+        filter.apply(@, opts)

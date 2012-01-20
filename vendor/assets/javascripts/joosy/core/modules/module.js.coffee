@@ -24,11 +24,5 @@ class Joosy.Module
     obj.extended?.apply(@)
     @
 
-  @proxy: (func) ->
-    => func.apply(@, arguments)
-
-  proxy: (func) ->
-    => func.apply(@, arguments)
-
   constructor: ->
     @init?(arguments...)

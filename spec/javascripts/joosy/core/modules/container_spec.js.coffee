@@ -11,6 +11,7 @@ describe "Joosy.Modules.Container", ->
       container: $('#application', @ground)
     @box = new @TestContainer()
 
+
   it "should have property named per declared element in container", ->
     @ground.prepend('<div class="footer" />')  # out of container
     @box.refreshElements()

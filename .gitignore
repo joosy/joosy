@@ -2,3 +2,4 @@
 .bundle/
 log/*.log
 pkg/
+tmp/

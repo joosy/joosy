@@ -1,4 +1,5 @@
-#= require ../../base64
+#= require base64
+
 window.globalEval = (src) ->
   if window.execScript
     window.execScript src

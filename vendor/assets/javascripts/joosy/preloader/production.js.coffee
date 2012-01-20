@@ -1,3 +1,4 @@
+#= require ../../base64
 window.globalEval = (src) ->
   if window.execScript
     window.execScript src
@@ -32,7 +33,8 @@ window.globalEval = (src) ->
 
   restore: ->
     for name, i in @libraries
-      window.globalEval window.localStorage.getItem(name)
+      code = window.localStorage.getItem(name)
+      window.globalEval if window.navigator.appName == "Microsoft Internet Explorer" then Base64.decode(code) else code
     @complete?.call window, (true)
 
   download: (libraries) ->
@@ -44,7 +46,8 @@ window.globalEval = (src) ->
       size = lib[1]
 
       @ajax url, size, (xhr) =>
-        window.localStorage.setItem(@prefix+url, xhr.responseText)
+        code = xhr.responseText
+        window.localStorage.setItem @prefix+url, (if window.navigator.appName == "Microsoft Internet Explorer" then Base64.encode(code) else code)
         window.globalEval xhr.responseText
         @download(libraries)
     else

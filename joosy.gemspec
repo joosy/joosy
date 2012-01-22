@@ -1,7 +1,7 @@
 require File.expand_path("../lib/joosy/rails/version", __FILE__)
 
 Gem::Specification.new do |s|
-  s.name        = "joosy-rails"
+  s.name        = "joosy"
   s.version     = Joosy::Rails::VERSION
   s.platform    = Gem::Platform::RUBY
   s.summary     = "Joosy Framework support for Ruby on Rails"

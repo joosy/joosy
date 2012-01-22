@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name        = "joosy-rails"
   s.version     = Joosy::Rails::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.summary     = "Joosy on Rails"
+  s.summary     = "Joosy Framework support for Ruby on Rails"
   s.email       = "boris@roundlake.ru"
   s.homepage    = "http://github.com/roundlake/joosy-rails"
   s.description = "A gem wrapper to include Joosy via the asset pipeline."

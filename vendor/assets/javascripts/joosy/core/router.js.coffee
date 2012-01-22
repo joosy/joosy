@@ -19,7 +19,7 @@ Joosy.Router =
       delete routes[404]
     routes.each (path, response) =>
       path = (namespace+path).replace(/\/{2,}/, '/')
-      if typeof(response) == 'function' || response.prototype?
+      if response && (typeof(response) == 'function' || response.prototype?)
         @prepareRoute path, response
       else
         @prepareRoutes Object.extended(response), path

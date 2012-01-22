@@ -1,3 +1,5 @@
+.idea/
 .bundle/
 log/*.log
 pkg/
+tmp/

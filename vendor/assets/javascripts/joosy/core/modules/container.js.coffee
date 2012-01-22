@@ -16,10 +16,18 @@ Joosy.Modules.Container =
     
   __collectElements: ->
     elements = Object.extended(@elements || {})
-    x = @constructor
-    elements.merge(x.elements, false) while x = x.__super__
+    klass = @
+    while klass = klass.constructor.__super__
+      elements.merge(klass.elements, false)
     elements
-    
+
+  __collectEvents: ->
+    events = Object.extended(@events || {})
+    klass = @
+    while klass = klass.constructor.__super__
+      events.merge(klass.events, false)
+    events
+
   __extractSelector: (selector) ->
     if r = selector.match(/\$([A-z]+)/)
       selector = @__collectElements()[r[1]]
@@ -27,12 +35,7 @@ Joosy.Modules.Container =
 
   __delegateEvents: ->
     module = @
-    events = Object.extended(@events || {})
-
-    x = @constructor
-    events.merge(x.events, false) while x = x.__super__
-
-    return unless events
+    events = @__collectEvents()
 
     events.each (key, method) =>
       method   = @[method] unless typeof(method) is 'function'

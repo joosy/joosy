@@ -58,7 +58,7 @@ class Joosy.Resource.REST extends Joosy.Module
       dataType: 'json'
     ).merge options
 
-  @__buildSource: (options) ->
+  @__buildSource: (options={}) ->
     @__source ?= "/"+@entityName().pluralize()
     source     = Joosy.buildUrl("#{@__source}/#{options.extension || ''}", options.params)
 

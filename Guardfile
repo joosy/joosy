@@ -1,24 +1,24 @@
-guard 'coffeescript',
-  :output => 'tmp/spec/javascripts' do
-    watch(%r{^spec/javascripts/.+[sS]pec\.js\.coffee$})
+guard 'coffeescript', :output => 'tmp/spec/javascripts' do
+  watch(%r{^spec/javascripts/.+[sS]pec\.js\.coffee$})
 end
 
-guard 'coffeescript',
-  :output => 'tmp/spec/javascripts/helpers' do
-    watch(%r{^spec/javascripts/helpers/.+\.js\.coffee$})
+guard 'coffeescript', :output => 'tmp/spec/javascripts/helpers' do
+  watch(%r{^spec/javascripts/helpers/.+\.js\.coffee$})
 end
 
+require 'guard/sprockets'
 jquery_path = File.join(Gem.loaded_specs['jquery-rails'].full_gem_path, 'vendor/assets/javascripts')
-guard 'sprockets',
-  :destination => 'tmp/javascripts',
-  :asset_paths => ['app/assets/javascripts', 'vendor/assets/javascripts', jquery_path] do
-    watch('app/assets/javascripts/joosy.js.coffee')
+sprocket = Sprockets.new([], :destination => 'tmp/javascripts',
+  :asset_paths => ['app/assets/javascripts', 'vendor/assets/javascripts', jquery_path])
+guard 'shell' do
+  watch(%r{^app/assets/javascripts/.+\.js}) do
+    sprocket.run_on_change(['app/assets/javascripts/joosy.js.coffee'])
+  end
 end
 
-scapegoat = ObjectSpace.each_object(Guard).select{|o| o.class == Sprockets }.first
-guard 'shell' do
-  watch(%r{^app/assets/javascripts/(?!joosy\.js).+\.js}) do
-    scapegoat.run_on_change(['app/assets/javascripts/joosy.js.coffee'])
+ObjectSpace.each_object(Guard).select{|o| o.class == Shell }.first.instance_eval do
+  def run_all
+    run_on_change(Watcher.match_files(self, ['app/assets/javascripts/joosy.js.coffee']))
   end
 end
 

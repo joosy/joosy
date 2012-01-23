@@ -26,17 +26,17 @@ Joosy.Modules.WidgetsManager =
       if selector == '$container'
         selector = @container
       else
-        if r = selector.match(/\$([A-z]+)/)
+        if r = selector.match(/\$([A-z_]+)/)
           selector = @elements[r[1]]
         selector = $(selector, @container)
 
       Joosy.Modules.Log.debug "Widget registered at '#{selector.selector}'. Elements: #{selector.length}"
 
-      selector.each (elem) =>
+      selector.each (i, elem) =>
         if Joosy.Module.hasAncestor(widget, Joosy.Widget)
-          w = new widget(@)
+          w = new widget(i)
         else
-          w = widget.apply(@, [elem])
+          w = widget.call @, i
 
         @registerWidget($(elem), w)
 

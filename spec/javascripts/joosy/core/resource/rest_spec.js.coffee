@@ -50,14 +50,15 @@ describe "Joosy.Resource.REST", ->
     @Test.beforeLoad beforeLoadCallback = sinon.spy (data) ->
       expect(data.id).toEqual 1
       expect(data.name).toEqual 'test1'
+      Object.extended(test: data)
     @Test.find 1, callback = sinon.spy (target) ->
       expect(target.id).toEqual 1
-      expect(target.e.name).toEqual 'test1'
+      expect(target.e?.name).toEqual 'test1'
     target = @server.requests[0]
     expect(target.method).toEqual 'GET'
     expect(target.url).toMatch /^\/tests\/1\?_=\d+/
     target.respond 200, 'Content-Type': 'application/json',
-      '{"id": 1, "name": "test1"}'  
+      '{"id": 1, "name": "test1"}'
     expect(callback.callCount).toEqual 1
     expect(beforeLoadCallback.callCount).toEqual 1
 
@@ -66,7 +67,7 @@ describe "Joosy.Resource.REST", ->
       i = 1
       collection.data.each (target) ->
         expect(target.id).toEqual i
-        expect(target.e.name).toEqual 'test' + i
+        expect(target.e?.name).toEqual 'test' + i
         i += 1
     @Test.find null, callback
     target = @server.requests[0]

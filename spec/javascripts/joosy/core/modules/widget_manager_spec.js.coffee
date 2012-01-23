@@ -8,21 +8,20 @@ describe "Joosy.Modules.WidgetsManager", ->
       __load: sinon.stub()
       __unload: sinon.spy()
     )
-    @widgetMock.__load.returns(@widgetMock)
+    @widgetMock.__load.returns @widgetMock
 
 
   it "should register and unregister widget", ->
-    expect(@box.registerWidget(@ground, @widgetMock)).toBe(@widgetMock)
-    expect(@box.__activeWidgets).toEqual([@widgetMock])
-    expect(@widgetMock.__load.callCount).toEqual(1)
+    expect(@box.registerWidget @ground, @widgetMock).toBe @widgetMock
+    expect(@box.__activeWidgets).toEqual [@widgetMock]
+    expect(@widgetMock.__load.callCount).toEqual 1
 
-    expect(@box.unregisterWidget(@widgetMock)).toBeTruthy()
-    expect(@box.__activeWidgets).toEqual([undefined])
-    expect(@widgetMock.__unload.callCount).toEqual(1)
+    expect(@box.unregisterWidget @widgetMock).toBeTruthy()
+    expect(@box.__activeWidgets).toEqual [undefined]
+    expect(@widgetMock.__unload.callCount).toEqual 1
 
   it "should unload all widgets", ->
-    0.upto(2).each =>
-      @box.registerWidget(@ground, @widgetMock)
+    0.upto(2).each => @box.registerWidget(@ground, @widgetMock)
     @box.__unloadWidgets()
     expect(@widgetMock.__unload.callCount).toEqual(3)
 
@@ -53,11 +52,11 @@ describe "Joosy.Modules.WidgetsManager", ->
       '$container': Joosy.Widget
       '$footer': Joosy.Widget
       '.post': sinon.stub()
-    @box.widgets['.post'].returns(@widgetMock)
+    @box.widgets['.post'].returns @widgetMock
     @box.__setupWidgets()
-    expect(@box.__activeWidgets.length).toEqual(5)
-    expect(@box.widgets['.post'].callCount).toEqual(3)
-    expect(@box.widgets['.post'].getCall(0).calledOn(@box))
+    expect(@box.__activeWidgets.length).toEqual 5
+    expect(@box.widgets['.post'].callCount).toEqual 3
+    expect(@box.widgets['.post'].getCall(0).calledOn @box)
 
   it "should bootstrap widget properly", ->
     class TextWidget extends Joosy.Widget
@@ -68,10 +67,10 @@ describe "Joosy.Modules.WidgetsManager", ->
     @box.container = $('#application')
     @box.widgets = 
       '.post:first': TextWidget
-      '.widget:first': (i) -> new TextWidget(i)
+      '.widget:first': (i) -> new TextWidget i
     @box.__setupWidgets()
     
-    expect(@ground.find('.post').html()).toEqual('fluffy')
-    expect(@ground.find('.widget').html()).toEqual('fluffy')
+    expect(@ground.find('.post').html()).toEqual 'fluffy'
+    expect(@ground.find('.widget').html()).toEqual 'fluffy'
     expect(@box.__activeWidgets[0].tester).toBeUndefined()
-    expect(@box.__activeWidgets[1].tester).toEqual(0)
+    expect(@box.__activeWidgets[1].tester).toEqual 0

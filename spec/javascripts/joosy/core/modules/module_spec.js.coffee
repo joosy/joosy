@@ -19,15 +19,15 @@ describe "Joosy.Module", ->
       property: 'value'
     class Klass extends Joosy.Module
       @include TestModule
-    expect(Klass::property).toEqual('value')
-    expect((new Klass()).property).toEqual('value')
+    expect(Klass::property).toEqual 'value'
+    expect((new Klass()).property).toEqual 'value'
 
   it "should extend object", ->
     TestModule =
       property: 'value'
     class Klass extends Joosy.Module
       @extend TestModule
-    expect(Klass.property).toEqual('value')
+    expect(Klass.property).toEqual 'value'
     expect((new Klass()).property).toBeUndefined()
 
   it "should run callbacks on include and extend", ->
@@ -39,18 +39,16 @@ describe "Joosy.Module", ->
       @include TestModule
       @extend TestModule
     for callback in ['included', 'extended']
-      expect(TestModule[callback].callCount).toEqual(1)
+      expect(TestModule[callback].callCount).toEqual 1
       expect(TestModule[callback].getCall(0).calledOn(Klass)).toBeTruthy()
 
   it "should run init hook", ->
     class Klass extends Joosy.Module
       init: sinon.spy()
-    target = (new Klass(1, 2)).init
+    target = (new Klass 1, 2).init
     expect(target.callCount).toEqual(1)
-    expect(target.alwaysCalledWithExactly(1, 2)).toBeTruthy()
+    expect(target.alwaysCalledWithExactly 1, 2).toBeTruthy()
 
   it "should have minimal set of properties", ->
-    expect(Object.extended(Joosy.Module).keys())
-      .toEqual(['hasAncestor', 'include', 'extend'])
-    expect(Object.extended(Joosy.Module.prototype).keys())
-      .toEqual([])
+    expect(Object.extended(Joosy.Module).keys()).toEqual ['hasAncestor', 'include', 'extend']
+    expect(Object.extended(Joosy.Module.prototype).keys()).toEqual []

@@ -34,7 +34,7 @@ Joosy.Modules.WidgetsManager =
 
       selector.each (i, elem) =>
         if Joosy.Module.hasAncestor(widget, Joosy.Widget)
-          w = new widget(i)
+          w = new widget
         else
           w = widget.call @, i
 

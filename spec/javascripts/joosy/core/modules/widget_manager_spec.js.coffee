@@ -62,13 +62,16 @@ describe "Joosy.Modules.WidgetsManager", ->
   it "should bootstrap widget properly", ->
     class TextWidget extends Joosy.Widget
       @render -> @container.html 'fluffy'
+      constructor: (@tester) ->
 
     @seedGround()
     @box.container = $('#application')
     @box.widgets = 
-      '.post': TextWidget
-      '.widget': -> new TextWidget
+      '.post:first': TextWidget
+      '.widget:first': (i) -> new TextWidget(i)
     @box.__setupWidgets()
     
     expect(@ground.find('.post').html()).toEqual('fluffy')
     expect(@ground.find('.widget').html()).toEqual('fluffy')
+    expect(@box.__activeWidgets[0].tester).toBeUndefined()
+    expect(@box.__activeWidgets[1].tester).toEqual(0)

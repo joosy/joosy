@@ -11,13 +11,13 @@ end
 jquery_path = File.join(Gem.loaded_specs['jquery-rails'].full_gem_path, 'vendor/assets/javascripts')
 guard 'sprockets',
   :destination => 'tmp/javascripts',
-  :asset_paths => ['vendor/assets/javascripts', jquery_path] do
-    watch('vendor/assets/javascripts/joosy.js.coffee')
+  :asset_paths => ['app/assets/javascripts', 'vendor/assets/javascripts', jquery_path] do
+    watch('app/assets/javascripts/joosy.js.coffee')
 end
 
 guard 'shell' do
-  watch(%r{^vendor/assets/javascripts/(?!joosy\.js).+\.js}) do
-    `touch vendor/assets/javascripts/joosy.js.coffee`
+  watch(%r{^app/assets/javascripts/(?!joosy\.js).+\.js}) do
+    `touch app/assets/javascripts/joosy.js.coffee`
   end
 end
 

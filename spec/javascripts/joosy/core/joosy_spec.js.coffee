@@ -17,6 +17,7 @@ describe "Joosy", ->
     2.times -> 
       uuids.push Joosy.uuid()
     expect(uuids.unique().length).toEqual(2)
+    expect(uuids[0]).toMatch /[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}/
     
   it "should build proper URLs", ->
     expect(Joosy.buildUrl 'http://www.org').toEqual('http://www.org')

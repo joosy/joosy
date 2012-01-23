@@ -7,16 +7,15 @@ describe "Joosy.Resource.REST", ->
   afterEach ->
     @server.restore()
 
-
-  it "should have default primary key", ->
+  it "should have default primary key", ->    
     expect(@Test::__primaryKey).toEqual 'id'
 
   it "should have appropriate accessors", ->
     @Test.entity 'tada'
-    expect(@Test.__entityName).toEqual 'tada'
+    expect(@Test::__entityName).toEqual 'tada'
     expect(@Test.entityName()).toEqual 'tada'
     @Test.source 'uri'
-    expect(@Test.__source).toEqual 'uri'
+    expect(@Test::__source).toEqual 'uri'
     expect(@Test.__buildSource()).toEqual 'uri/'
     @Test.primary 'uid'
     expect(@Test::__primaryKey).toEqual 'uid'
@@ -48,6 +47,8 @@ describe "Joosy.Resource.REST", ->
     expect(resource.e.field).toEqual 'value'
 
   it 'should find single object', ->
+    console.log @Test.__entityName
+    
     @Test.beforeLoad beforeLoadCallback = sinon.spy (data) ->
       expect(data.id).toEqual 1
       expect(data.name).toEqual 'test1'
@@ -58,7 +59,7 @@ describe "Joosy.Resource.REST", ->
     expect(target.method).toEqual 'GET'
     expect(target.url).toMatch /^\/tests\/1\?_=\d+/
     target.respond 200, 'Content-Type': 'application/json',
-      '{"id": 1, "name": "test1"}'
+      '{"id": 1, "name": "test1"}'  
     expect(callback.callCount).toEqual 1
     expect(beforeLoadCallback.callCount).toEqual 1
 

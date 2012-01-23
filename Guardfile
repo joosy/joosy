@@ -1,9 +1,9 @@
 guard 'coffeescript', :output => 'tmp/spec/javascripts' do
-  watch(%r{^spec/javascripts/.+[sS]pec\.js\.coffee$})
+  watch(%r{^spec/javascripts/(.+)[sS]pec\.js\.coffee$})
 end
 
 guard 'coffeescript', :output => 'tmp/spec/javascripts/helpers' do
-  watch(%r{^spec/javascripts/helpers/.+\.js\.coffee$})
+  watch(%r{^spec/javascripts/helpers/(.+)\.js\.coffee$})
 end
 
 require 'guard/sprockets'

@@ -21,8 +21,8 @@ window.globalEval = (src) ->
     x = this.ActiveXObject
     x = new (if x then x else XMLHttpRequest)('Microsoft.XMLHTTP')
 
-    x.open('GET', url, 1)
-    x.setRequestHeader('Content-type','application/x-www-form-urlencoded')
+    x.open 'GET', url, 1
+    x.setRequestHeader 'Content-type','application/x-www-form-urlencoded'
 
     if @progress
       x.onprogress = (event) =>
@@ -36,7 +36,7 @@ window.globalEval = (src) ->
     for name, i in @libraries
       code = window.localStorage.getItem(name)
       window.globalEval if window.navigator.appName == "Microsoft Internet Explorer" then Base64.decode(code) else code
-    @complete?.call window, (true)
+    @complete?.call window, true
 
   download: (libraries) ->
     if libraries.length > 0
@@ -50,7 +50,7 @@ window.globalEval = (src) ->
         code = xhr.responseText
         window.localStorage.setItem @prefix+url, (if window.navigator.appName == "Microsoft Internet Explorer" then Base64.encode(code) else code)
         window.globalEval xhr.responseText
-        @download(libraries)
+        @download libraries
     else
       @clean()
       @complete?.call window, false
@@ -65,7 +65,7 @@ window.globalEval = (src) ->
       @restore()
     else
       @start?.call window
-      @download(libraries)
+      @download libraries
 
   check: ->
     flag = true
@@ -80,5 +80,5 @@ window.globalEval = (src) ->
       key = window.localStorage.key(i-removed)
 
       if key.indexOf(@prefix) == 0 && @libraries.indexOf(key) < 0
-        window.localStorage.removeItem(key)
+        window.localStorage.removeItem key
         removed += 1

@@ -1,4 +1,4 @@
 source "http://rubygems.org"
 
-# Specify your gem's dependencies in joosy-rails.gemspec
+# Specify your gem's dependencies in joosy.gemspec
 gemspec

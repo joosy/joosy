@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    joosy-rails (0.1.0)
+    joosy (0.1.0.alpha)
       coffee-rails
       jquery-rails
       rails (>= 3.0.0)
@@ -76,8 +76,7 @@ GEM
     jquery-rails (1.0.19)
       railties (~> 3.0)
       thor (~> 0.14)
-    json (1.6.4)
-    json (1.6.4-java)
+    json (1.6.5)
     mail (2.3.0)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -147,4 +146,4 @@ DEPENDENCIES
   guard-shell
   guard-sprockets
   jasmine
-  joosy-rails!
+  joosy!

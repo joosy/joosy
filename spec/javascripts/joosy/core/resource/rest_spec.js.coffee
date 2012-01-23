@@ -22,7 +22,7 @@ describe "Joosy.Resource.REST", ->
     @Test.beforeLoad 'function'
     expect(@Test::__beforeLoad).toEqual 'function'
 
-  it "should extact entity name from class name", ->
+  it "should extract entity name from class name", ->
     class SubTest extends @Test
     expect(@Test.entityName()).toEqual 'test'
     expect(SubTest.entityName()).toEqual 'sub_test'
@@ -47,8 +47,6 @@ describe "Joosy.Resource.REST", ->
     expect(resource.e.field).toEqual 'value'
 
   it 'should find single object', ->
-    console.log @Test.__entityName
-    
     @Test.beforeLoad beforeLoadCallback = sinon.spy (data) ->
       expect(data.id).toEqual 1
       expect(data.name).toEqual 'test1'

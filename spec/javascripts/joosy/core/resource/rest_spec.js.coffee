@@ -38,13 +38,15 @@ describe "Joosy.Resource.REST", ->
     resource = new Joosy.Resource.REST 'someId'
     expect(resource.id).toEqual 'someId'
 
-    resource = new Joosy.Resource.REST
-      rest:  # should match entityName
-        id: 'someId'
-        field: 'value'
-    expect(resource.id).toEqual 'someId'
-    expect(resource.e.id).toEqual 'someId'
-    expect(resource.e.field).toEqual 'value'
+    data = {id: 'someId', field: 'value'}
+
+    rooted   = new Joosy.Resource.REST {rest: data}
+    unrooted = new Joosy.Resource.REST data
+
+    expect(rooted.e).toEqual unrooted.e
+    expect(rooted.id).toEqual 'someId'
+    expect(rooted.e.id).toEqual 'someId'
+    expect(rooted.e.field).toEqual 'value'
 
   it 'should find single object', ->
     @Test.beforeLoad beforeLoadCallback = sinon.spy (data) ->

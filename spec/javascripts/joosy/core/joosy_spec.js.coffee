@@ -26,20 +26,14 @@ describe "Joosy", ->
     
   it "should preload images", ->
     path   = "/spec/javascripts/support/images/"
-    images = [path+"okay.jpg", path+"coolface.jpg"]
+    images = [path+"okay.jpg", path+"okay.jpg"]
     
     callback = sinon.spy()
     
-    runs -> Joosy.preloadImages images[0], callback
-    waits(50)
+    runs -> Joosy.preloadImages path+"coolface.jpg", callback
+    waits(150)
     runs -> expect(callback.callCount).toEqual(1)
     
-    # Callback should happen on cached images too
-    runs -> Joosy.preloadImages images[0], callback
-    waits(50)
-    runs -> expect(callback.callCount).toEqual(2)
-    
-    # One callback per set
     runs -> Joosy.preloadImages images, callback
-    waits(50)
-    runs -> expect(callback.callCount).toEqual(3)
+    waits(150)
+    runs -> expect(callback.callCount).toEqual(2)

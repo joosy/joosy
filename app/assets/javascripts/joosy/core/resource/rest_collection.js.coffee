@@ -5,7 +5,8 @@ class Joosy.Resource.RESTCollection extends Joosy.Module
   data: []
   pages: Object.extended()
   
-  constructor: (@model, params={}) -> @params = Object.extended(params)
+  constructor: (@model, params={}) ->
+    @params = Object.extended(params)
   
   # Clears the storage and attempts to import given JSON
   reset: (entities) ->
@@ -26,7 +27,7 @@ class Joosy.Resource.RESTCollection extends Joosy.Module
       callback?(@pages[number])
       return @ 
     
-    @model.__ajax 'get', @model.__buildSource(params: @params.merge(page: number)), (data) =>
+    @model.__ajax 'get', @model.__buildSource(params: @params.merge(page: number)), {}, (data) =>
       @pages[number] = @modelize data
       
       @data = []

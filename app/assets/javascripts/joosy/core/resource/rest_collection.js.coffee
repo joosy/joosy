@@ -7,7 +7,7 @@ class Joosy.Resource.RESTCollection extends Joosy.Module
   
   constructor: (@model, params={}) -> @params = Object.extended(params)
   
-  # Clears the storage and atempts to import given JSON
+  # Clears the storage and attempts to import given JSON
   reset: (entities) ->
     @data = data = @modelize entities
     @pages = Object.extended().merge 1: data

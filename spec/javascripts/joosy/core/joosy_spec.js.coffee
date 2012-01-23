@@ -31,15 +31,15 @@ describe "Joosy", ->
     callback = sinon.spy()
     
     runs -> Joosy.preloadImages images[0], callback
-    waits(0)
+    waits(50)
     runs -> expect(callback.callCount).toEqual(1)
     
     # Callback should happen on cached images too
     runs -> Joosy.preloadImages images[0], callback
-    waits(0)
+    waits(50)
     runs -> expect(callback.callCount).toEqual(2)
     
     # One callback per set
     runs -> Joosy.preloadImages images, callback
-    waits(0)
+    waits(50)
     runs -> expect(callback.callCount).toEqual(3)

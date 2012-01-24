@@ -10,7 +10,7 @@ describe "Joosy.Layout", ->
     expect(@box.view).toEqual 'test'
 
   it "should use Router", ->
-    target = sinon.spy Joosy.Router, 'navigate'
+    target = sinon.stub Joosy.Router, 'navigate'
     @box.navigate 'there'
     expect(target.callCount).toEqual 1
     expect(target.alwaysCalledWithExactly 'there').toBeTruthy()

@@ -22,7 +22,7 @@ describe "Joosy.Widget", ->
     expect(target.alwaysCalledWithExactly 1, 2, 3).toBeTruthy()
 
   it "should use Router", ->
-    target = sinon.spy Joosy.Router, 'navigate'
+    target = sinon.stub Joosy.Router, 'navigate'
     @box.navigate 'there'
     expect(target.callCount).toEqual 1
     expect(target.alwaysCalledWithExactly 'there').toBeTruthy()

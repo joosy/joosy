@@ -4,6 +4,10 @@ Joosy.Router =
   rawRoutes: Object.extended()
   routes: Object.extended()
 
+  reset: ->
+    @rawRoutes = Object.extended()
+    @routes = Object.extended()
+
   map: (routes) ->
     @rawRoutes.merge routes
 
@@ -21,16 +25,18 @@ Joosy.Router =
     routes.each (path, response) =>
       path = (namespace + path).replace(/\/{2,}/, '/')
       if response && (typeof(response) == 'function' || response.prototype?)
-        @prepareRoute path, response
+        @routes.merge @prepareRoute path,response
       else
         @prepareRoutes Object.extended(response), path
 
   prepareRoute: (path, response) ->
     matchPath = path.replace(/\/:([^\/]+)/g, '/([^/]+)').replace(/^\/?/, '^/?').replace(/\/?$/, '/?$')
+    result    = Object.extended()
 
-    @routes[matchPath] =
-      capture : (path.match(/\/:[^\/]+/g) || []).map((str) -> str.substr(2))
-      action  : response
+    result[matchPath] =
+      capture: (path.match(/\/:[^\/]+/g) || []).map((str) -> str.substr(2))
+      action: response
+    result
 
   respondRoute: (hash) ->
     fullPath = hash.replace(/^#!?/, '')
@@ -38,13 +44,13 @@ Joosy.Router =
     @currentPath = fullPath
     found = false
 
-    paramStr = fullPath.split('&')
-    path = paramStr.shift()
-    urlParams = @getUrlParams(paramStr)
+    queryArray = fullPath.split('&')
+    path       = queryArray.shift()
+    urlParams  = @paramsFromQueryArray(queryArray)
 
     for regex, route of @routes when @routes.hasOwnProperty(regex)
       if vals = path.match(new RegExp(regex))
-        params = @getRouteParams(vals, route).merge urlParams
+        params = @paramsFromRouteMatch(vals, route).merge urlParams
 
         if !Joosy.Module.hasAncestor(route.action, Joosy.Page)
           route.action.call(this, params)
@@ -57,7 +63,7 @@ Joosy.Router =
     if !found && @wildcardAction
       @wildcardAction(path, urlParams)
 
-  getRouteParams: (vals, route) ->
+  paramsFromRouteMatch: (vals, route) ->
     params = Object.extended()
 
     vals.shift()
@@ -66,11 +72,11 @@ Joosy.Router =
 
     params
 
-  getUrlParams: (paramStr) ->
+  paramsFromQueryArray: (queryArray) ->
     params = {}
 
-    if paramStr
-      $.each paramStr, () ->
+    if queryArray
+      $.each queryArray, () ->
         if this != ''
           pair = @split '='
           params[pair[0]] = pair[1]

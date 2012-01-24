@@ -1,7 +1,7 @@
 describe "Joosy.Application", ->
   
   beforeEach ->
-    sinon.spy(Joosy.Router, "setupRoutes")
+    sinon.stub(Joosy.Router, "setupRoutes")
     @seedGround()
     
   afterEach ->

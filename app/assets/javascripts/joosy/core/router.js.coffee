@@ -33,27 +33,26 @@ Joosy.Router =
   respondRoute: (hash) ->
     fullPath = hash.replace(/^#!?/, '')
 
-    if @currentPath != fullPath
-      @currentPath = fullPath
-      found = false
+    @currentPath = fullPath
+    found = false
 
-      paramStr = fullPath.split('&')
-      path = paramStr.shift()
-      urlParams = @getUrlParams(paramStr)
+    paramStr = fullPath.split('&')
+    path = paramStr.shift()
+    urlParams = @getUrlParams(paramStr)
 
-      for regex, route of @routes when @routes.hasOwnProperty(regex)
-        if vals = path.match(new RegExp(regex))
-          params = @getRouteParams(vals, route).merge urlParams
+    for regex, route of @routes when @routes.hasOwnProperty(regex)
+      if vals = path.match(new RegExp(regex))
+        params = @getRouteParams(vals, route).merge urlParams
 
-          if !Joosy.Module.hasAncestor(route.action, Joosy.Page)
-            route.action.call(this, params)
-          else
-            Joosy.Application.setCurrentPage(route.action, params)
-          found = true
-          break
+        if !Joosy.Module.hasAncestor(route.action, Joosy.Page)
+          route.action.call(this, params)
+        else
+          Joosy.Application.setCurrentPage(route.action, params)
+        found = true
+        break
 
-      if !found && @wildcardAction
-        @wildcardAction(path, urlParams)
+    if !found && @wildcardAction
+      @wildcardAction(path, urlParams)
 
   getRouteParams: (vals, route) ->
     params = Object.extended()

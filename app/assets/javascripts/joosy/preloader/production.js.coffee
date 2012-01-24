@@ -18,18 +18,26 @@ window.globalEval = (src) ->
   complete: false
 
   ajax: (url, size, callback) ->
-    x = this.ActiveXObject
-    x = new (if x then x else XMLHttpRequest)('Microsoft.XMLHTTP')
-
+    if window.XMLHttpRequest
+      x = new XMLHttpRequest
+    else
+      x = new ActiveXObject 'Microsoft.XMLHTTP'
+    
     x.open 'GET', url, 1
-    x.setRequestHeader 'Content-type','application/x-www-form-urlencoded'
+
+    x.onreadystatechange = () ->
+      if callback? && x.readyState > 3
+        clearInterval(interval)
+        callback(x)
 
     if @progress
-      x.onprogress = (event) =>
-        total = if size then size else event.total
-        @progress.call window, Math.round(event.loaded / total * 100 * @counter / @libraries.length), event
-
-    x.onreadystatechange = () -> callback(x) if callback? && x.readyState > 3
+      interval = setInterval =>
+        try
+          @progress.call window, Math.round((x.responseText.length / size) * (@counter / @libraries.length) * 100)
+        catch e
+          # ... IE?
+      , 100
+      
     x.send()
 
   restore: ->

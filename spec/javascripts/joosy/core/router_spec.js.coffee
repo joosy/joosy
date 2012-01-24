@@ -7,7 +7,7 @@ describe "Joosy.Router", ->
     section: sinon.spy()
     wildcard: sinon.spy()
   
-  map = 
+  map = Object.extended
     '/': spies.root
     '/page': TestPage
     '/section':
@@ -41,7 +41,7 @@ describe "Joosy.Router", ->
   it "should prepare route", ->
     route = Joosy.Router.prepareRoute "/such/a/long/long/url/:with/:plenty/:of/:params", "123"
     
-    expect(route).toEqual 
+    expect(route).toEqual Object.extended
       '^/?such/a/long/long/url/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$':
         capture: ['with', 'plenty', 'of', 'params']
         action: "123"
@@ -52,7 +52,7 @@ describe "Joosy.Router", ->
     Joosy.Router.map map
     Joosy.Router.setupRoutes()
     
-    expect(Joosy.Router.routes).toEqual
+    expect(Joosy.Router.routes).toEqual Object.extended
       '^/?/?$':
         capture: []
         action: spies.root
@@ -72,7 +72,7 @@ describe "Joosy.Router", ->
     route  = Joosy.Router.prepareRoute "/such/a/long/long/url/:with/:plenty/:of/:params", "123"
     result = Joosy.Router.paramsFromRouteMatch ['full regex match here', 1,2,3,4], route.values().first()
     
-    expect(result).toEqual
+    expect(result).toEqual Object.extended
       with: 1
       plenty: 2
       of: 3
@@ -81,7 +81,7 @@ describe "Joosy.Router", ->
   it "should build query params", ->
     result = Joosy.Router.paramsFromQueryArray ["foo=bar", "bar=baz"]
   
-    expect(result).toEqual
+    expect(result).toEqual Object.extended
       foo: 'bar'
       bar: 'baz'
       
@@ -99,19 +99,19 @@ describe "Joosy.Router", ->
     
     Joosy.Router.respondRoute '/page'
     expect(Joosy.Application.setCurrentPage.callCount).toEqual 1
-    expect(Joosy.Application.setCurrentPage.args.last()).toEqual [TestPage, {}]
+    expect(Joosy.Application.setCurrentPage.args.last()).toEqual [TestPage, Object.extended()]
     
     Joosy.Router.respondRoute '/section/page/1'
     expect(spies.section.callCount).toEqual 1
-    expect(spies.section.args.last()).toEqual [{id: '1'}]
+    expect(spies.section.args.last()).toEqual [Object.extended(id: '1')]
     
     Joosy.Router.respondRoute '/section/page2/1&a=b'
     expect(Joosy.Application.setCurrentPage.callCount).toEqual 2
-    expect(Joosy.Application.setCurrentPage.args.last()).toEqual [TestPage, {more: '1', a: 'b'}]
+    expect(Joosy.Application.setCurrentPage.args.last()).toEqual [TestPage, Object.extended(more: '1', a: 'b')]
     
     Joosy.Router.respondRoute '/thiswillneverbefound&a=b'
     expect(spies.wildcard.callCount).toEqual 1
-    expect(spies.wildcard.args.last()).toEqual ['/thiswillneverbefound', {a: 'b'}]
+    expect(spies.wildcard.args.last()).toEqual ['/thiswillneverbefound', Object.extended(a: 'b')]
     
     Joosy.Application.setCurrentPage.restore()
     

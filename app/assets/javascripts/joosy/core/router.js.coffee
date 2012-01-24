@@ -73,7 +73,7 @@ Joosy.Router =
     params
 
   paramsFromQueryArray: (queryArray) ->
-    params = {}
+    params = Object.extended()
 
     if queryArray
       $.each queryArray, () ->

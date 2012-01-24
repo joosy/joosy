@@ -105,7 +105,8 @@ describe "Joosy.Form", ->
       @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
       expect(@nudeForm.error.callCount).toEqual 1
-      expect(@nudeForm.error.args[0][0]).toEqual {"test[foo]": "error!"}
+      expect(@nudeForm.error.args[0][0]).toEqual Object.extended
+        "test[foo]": "error!"
       
     it "should trigger 'error' and skip default action if it returned false", ->
       @nudeForm.error = sinon.spy ->

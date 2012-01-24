@@ -17,7 +17,7 @@ describe "Joosy.Modules.WidgetsManager", ->
     expect(@widgetMock.__load.callCount).toEqual 1
 
     expect(@box.unregisterWidget @widgetMock).toBeTruthy()
-    expect(@box.__activeWidgets).toEqual [undefined]
+    expect(@box.__activeWidgets).toEqual []
     expect(@widgetMock.__unload.callCount).toEqual 1
 
   it "should unload all widgets", ->

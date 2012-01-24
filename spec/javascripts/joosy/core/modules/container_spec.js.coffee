@@ -44,14 +44,13 @@ describe "Joosy.Modules.Container", ->
         third: 'third'
     subBox = new SubContainerB()
     target = subBox.__collectElements()
-    expect(target).toEqual(
+    expect(target).toEqual Object.extended
       first: 'overrided'
       second: 'second'
       third: 'third'
       footer: '.footer'
-    )
     target = (new @TestContainer()).__collectElements()
-    expect(target).toEqual footer: '.footer'
+    expect(target).toEqual Object.extended(footer: '.footer')
 
   it "should resolve element selector", ->
     target = @box.__extractSelector '$footer'
@@ -68,14 +67,13 @@ describe "Joosy.Modules.Container", ->
         'custom' : 'overrided'
     subBox = new SubContainerB()
     target = subBox.__collectEvents()
-    expect(target).toEqual(
+    expect(target).toEqual Object.extended
       'test': 'onContainerTest'
       'test .post': 'callback2'
       'test $footer': 'onFooterTest'
       'custom' : 'overrided'
-    )
     target = (new @TestContainer()).__collectEvents()
-    expect(target).toEqual 'test': 'onContainerTest'
+    expect(target).toEqual Object.extended('test': 'onContainerTest')
 
   it "should delegate events", ->
     callback = 1.upto(3).map -> sinon.spy()

@@ -25,9 +25,9 @@ describe "Joosy.Resource.RESTCollection", ->
 
   it "should initialize", ->
     expect(@collection.model).toEqual Test
-    expect(@collection.params).toEqual {}
+    expect(@collection.params).toEqual Object.extended()
     expect(@collection.data).toEqual []
-    expect(@collection.pages).toEqual {}
+    expect(@collection.pages).toEqual Object.extended()
     
   it "should modelize", ->
     result = @collection.modelize $.parseJSON(data)

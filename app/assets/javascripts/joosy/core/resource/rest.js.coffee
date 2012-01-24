@@ -68,6 +68,6 @@ class Joosy.Resource.REST extends Joosy.Module
     data = @__beforeLoad(data) if @__beforeLoad?
     
     @e = if Object.isObject(data) && data[@constructor.entityName()] && data.keys().length == 1
-      data[@constructor.entityName()]
+      Object.extended data[@constructor.entityName()]
     else
       data

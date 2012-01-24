@@ -1,4 +1,5 @@
 beforeEach ->
+  window.JST = {}
   $('body').append('<div id="ground">')
   @ground = $('body #ground')
   @seedGround = ->

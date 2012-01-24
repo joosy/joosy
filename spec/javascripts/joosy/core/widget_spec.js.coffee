@@ -29,32 +29,16 @@ describe "Joosy.Widget", ->
     Joosy.Router.navigate.restore()
 
   it "should load itself", ->
-    @TestWidget.render sinon.spy()
+    spies = [sinon.spy()]
+    @TestWidget.render spies[0]
     @parent = new Joosy.Layout()
-    sinon.spy @box, 'refreshElements'
-    sinon.spy @box, '__delegateEvents'
-    sinon.spy @box, '__runAfterLoads'
+    spies.push sinon.spy(@box, 'refreshElements')
+    spies.push sinon.spy(@box, '__delegateEvents')
+    spies.push sinon.spy(@box, '__runAfterLoads')
     target = @box.__load @parent, @ground
     expect(target).toBe @box
-
-    target = @box.__render
-    expect(target.callCount).toEqual 1
-    expect(target.getCall(0).calledOn()).toBeFalsy()
-
-    prev_target = target
-    target = @box.refreshElements
-    expect(target.callCount).toEqual 1
-    expect(target.calledAfter prev_target).toBeTruthy()
-
-    prev_target = target
-    target = @box.__delegateEvents
-    expect(target.callCount).toEqual 1
-    expect(target.calledAfter prev_target).toBeTruthy()
-
-    prev_target = target
-    target = @box.__runAfterLoads
-    expect(target.callCount).toEqual 1
-    expect(target.calledAfter prev_target).toBeTruthy()
+    expect(@box.__render.getCall(0).calledOn()).toBeFalsy()
+    expect(spies).toBeSequenced()
 
   it "should unload itself", ->
     sinon.spy @box, '__runAfterUnloads'

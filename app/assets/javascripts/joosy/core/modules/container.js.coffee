@@ -13,7 +13,7 @@ Joosy.Modules.Container =
   swapContainer: (container, data) ->
     realContainer = container.clone().html(data)
     container.replaceWith realContainer
-    return realContainer
+    realContainer
 
   __collectElements: ->
     elements = Object.extended(@elements || {})
@@ -55,3 +55,40 @@ Joosy.Modules.Container =
         @container.bind(eventName, callback)
       else
         @container.on(eventName, selector, callback)
+
+  @helpers: (helper...) ->
+    # Add a helper to the chain
+
+  __instantiateHelpers: ->
+    unless @__helpersInstance
+      @__helpersInstance = { __proto__: this }
+
+      # Mix in the actual helpers
+
+    @__helpersInstance
+
+  render: (template, locals) ->
+    if object.isString(template)
+      template = JST[template]
+
+    locals = new Object(locals)
+    locals.__proto__ = @__instantiateHelpers()
+
+    morph = Metamorph(template(locals))
+
+    update = =>
+      morph.html(template(locals))
+
+    @__metamorphs ||= []
+
+    for key, object of locals
+      if object.bind?
+        object.bind 'changed', update
+        @__metamorphs.push [object, update]
+
+    morph.outerHTML()
+
+  __removeMetamorphs: ->
+    if @__metamorphs
+      for [object, callback] in @__metamorphs
+        object.unbind callback

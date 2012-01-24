@@ -60,6 +60,7 @@ class Joosy.Page extends Joosy.Module
   __unload: ->
     @clearTime()
     @__unloadWidgets()
+    @__removeMetamorphs()
     @__runAfterUnloads(@params, @previous)
 
   __render: ->

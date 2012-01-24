@@ -34,4 +34,5 @@ class Joosy.Widget extends Joosy.Module
     this
 
   __unload: ->
+    @__removeMetamorphs()
     @__runAfterUnloads()

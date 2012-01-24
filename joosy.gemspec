@@ -18,8 +18,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'jquery-rails'
 
   s.add_development_dependency 'guard'
-  s.add_development_dependency 'guard-shell'
   s.add_development_dependency 'guard-coffeescript'
-  s.add_development_dependency 'guard-sprockets'
+  # s.add_development_dependency 'guard-sprockets'
   s.add_development_dependency 'jasmine'
 end

@@ -77,10 +77,10 @@ describe "Joosy.Modules.Container", ->
 
   it "should delegate events", ->
     callback = 1.upto(3).map -> sinon.spy()
-    @box.events = Object.extended(@box.events).merge(
+    @box.events = Object.extended(@box.events).merge
       'test .post': callback[2]
       'test $footer': 'onFooterTest'
-    )
+
     @box.onContainerTest = callback[0]
     @box.onFooterTest = callback[1]
     @box.__delegateEvents()

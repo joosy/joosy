@@ -23,7 +23,7 @@ describe "Joosy.Modules.WidgetsManager", ->
   it "should unload all widgets", ->
     0.upto(2).each => @box.registerWidget(@ground, @widgetMock)
     @box.__unloadWidgets()
-    expect(@widgetMock.__unload.callCount).toEqual(3)
+    expect(@widgetMock.__unload.callCount).toEqual 3
 
   it "should inherit widget declarations", ->
     @box.container = @ground
@@ -38,11 +38,10 @@ describe "Joosy.Modules.WidgetsManager", ->
         'selector': 'overriden'
     subBox = new SubWidgetManagerB()
     target = subBox.__collectWidgets()
-    expect(target).toEqual(
+    expect(target).toEqual Object.extended
       'test': 'widget'
       'widgets':  'widget'
       'selector': 'overriden'
-    )
 
   it "should register widgets per declaration", ->
     @seedGround()
@@ -56,7 +55,7 @@ describe "Joosy.Modules.WidgetsManager", ->
     @box.__setupWidgets()
     expect(@box.__activeWidgets.length).toEqual 5
     expect(@box.widgets['.post'].callCount).toEqual 3
-    expect(@box.widgets['.post'].getCall(0).calledOn @box)
+    expect(@box.widgets['.post'].getCall(0).calledOn @box).toBeTruthy()
 
   it "should bootstrap widget properly", ->
     class TextWidget extends Joosy.Widget

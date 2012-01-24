@@ -7,8 +7,7 @@ Joosy.Application =
 
   selector: false
 
-  initialize: (selector) ->
-    @selector = selector
+  initialize: (@selector) ->
     Joosy.Router.setupRoutes()
 
     @sandboxSelector = Joosy.uuid()

@@ -6,9 +6,9 @@ class Joosy.Resource.REST extends Joosy.Module
 
   __primaryKey: 'id'
   
-  @entity: (name) -> @__entityName = name
+  @entity: (name) -> @::__entityName = name
+  @source: (source) -> @::__source = source
   @primary: (primary) -> @::__primaryKey = primary
-  @source: (source) -> @__source = source
   @beforeLoad: (action) -> @::__beforeLoad = action
 
   constructor: (description) ->
@@ -18,7 +18,10 @@ class Joosy.Resource.REST extends Joosy.Module
       @__fillData(description)
       @id = @e[@__primaryKey]
 
-  @entityName: -> @__entityName ?= @name.underscore()
+  @entityName: ->
+    unless @::hasOwnProperty '__entityName'
+      @::__entityName = @name.underscore()
+    @::__entityName
 
   # Returns single entity if int/string given
   # Returns collection if no value or Object (with parameters) given
@@ -55,15 +58,16 @@ class Joosy.Resource.REST extends Joosy.Module
       dataType: 'json'
     ).merge options
 
-  @__buildSource: (options) ->
-    @__source ?= "/"+@entityName().pluralize()
-    source     = Joosy.buildUrl("#{@__source}/#{options.extension || ''}", options.params)
+  @__buildSource: (options={}) ->
+    unless @::hasOwnProperty '__source'
+      @::__source = "/" + @entityName().pluralize()
+    source = Joosy.buildUrl("#{@::__source}/#{options.extension || ''}", options.params)
 
   __fillData: (data) -> 
     data = Object.extended(data)
     data = @__beforeLoad(data) if @__beforeLoad?
     
     @e = if Object.isObject(data) && data[@constructor.entityName()] && data.keys().length == 1
-      data[@constructor.entityName()]
+      Object.extended data[@constructor.entityName()]
     else
       data

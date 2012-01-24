@@ -17,8 +17,9 @@ Joosy.Router =
     if !namespace && routes[404]
       @wildcardAction = routes[404]
       delete routes[404]
+
     routes.each (path, response) =>
-      path = (namespace+path).replace(/\/{2,}/, '/')
+      path = (namespace + path).replace(/\/{2,}/, '/')
       if response && (typeof(response) == 'function' || response.prototype?)
         @prepareRoute path, response
       else
@@ -26,6 +27,7 @@ Joosy.Router =
 
   prepareRoute: (path, response) ->
     matchPath = path.replace(/\/:([^\/]+)/g, '/([^/]+)').replace(/^\/?/, '^/?').replace(/\/?$/, '/?$')
+
     @routes[matchPath] =
       capture : (path.match(/\/:[^\/]+/g) || []).map((str) -> str.substr(2))
       action  : response
@@ -48,6 +50,7 @@ Joosy.Router =
           route.action.call(this, params)
         else
           Joosy.Application.setCurrentPage(route.action, params)
+
         found = true
         break
 
@@ -56,19 +59,23 @@ Joosy.Router =
 
   getRouteParams: (vals, route) ->
     params = Object.extended()
+
     vals.shift()
     for param in route.capture
       params[param] = vals.shift()
-    return params
+
+    params
 
   getUrlParams: (paramStr) ->
     params = {}
+
     if paramStr
       $.each paramStr, () ->
-        if @ != ''
-          pair = @.split '='
+        if this != ''
+          pair = @split '='
           params[pair[0]] = pair[1]
-    return params
+
+    params
 
   navigate: (to) ->
-    location.hash = '!'+to
+    location.hash = '!' + to

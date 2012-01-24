@@ -1,22 +1,25 @@
 Joosy.Modules.WidgetsManager =
   registerWidget: (container, widget) ->
-    @__activeWidgets ||= []
-
     if Joosy.Module.hasAncestor(widget, Joosy.Widget)
       widget = new widget()
 
-    @__activeWidgets.push widget.__load(@, container)
+    @__activeWidgets ||= []
+    @__activeWidgets.push widget.__load(this, container)
+
     return widget
 
   unregisterWidget: (widget) ->
     widget.__unload()
-    delete @__activeWidgets[@__activeWidgets.indexOf(widget)]
+
+    @__activeWidgets.splice(@__activeWidgets.indexOf(widget))
 
   __collectWidgets: ->
     widgets = Object.extended(@widgets || {})
-    klass = @
+
+    klass = this
     while klass = klass.constructor.__super__
       widgets.merge(klass.widgets, false)
+
     widgets
 
   __setupWidgets: ->
@@ -36,10 +39,11 @@ Joosy.Modules.WidgetsManager =
         if Joosy.Module.hasAncestor(widget, Joosy.Widget)
           w = new widget
         else
-          w = widget.call @, i
+          w = widget.call this, i
 
         @registerWidget($(elem), w)
 
   __unloadWidgets: ->
     if @__activeWidgets
-      widget?.__unload() for widget in @__activeWidgets
+      for widget in @__activeWidgets
+        widget.__unload()

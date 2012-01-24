@@ -16,9 +16,10 @@ class Joosy.Layout extends Joosy.Module
   @include Joosy.Modules.Filters
 
   constructor: ->
-    @view  ||= JST['app/templates/layouts/default']
+    @view ||= JST['app/templates/layouts/default']
 
-  navigate: (args...) -> Joosy.Router.navigate(args...)
+  navigate: (args...) ->
+    Joosy.Router.navigate(args...)
 
   __load: (@container) ->
     @refreshElements()

@@ -8,11 +8,12 @@
 Joosy.Beautifier =
   beautifiers: []
 
-  add: (callback) -> 
+  add: (callback) ->
     @beautifiers.push callback
 
-  go: -> 
-    b() for b in @beautifiers
+  go: ->
+    for b in @beautifiers
+      b()
 
 Joosy.namespace = (name, generator=false) ->
   name  = name.split('.')
@@ -42,25 +43,25 @@ Joosy.preloadImages = (images, callback) ->
 
   ticks   = images.length
   result  = []
-  checker = -> 
+  checker = ->
     callback?() if (ticks -= 1) == 0
 
   for p in images
     result.push $('<img/>').load(checker).attr('src', p)
 
-  return result
+  result
 
 Joosy.buildUrl = (url, params) ->
   paramsString = []
-  
-  Object.each params, (key, value) -> 
+
+  Object.each params, (key, value) ->
     paramsString.push("#{key}=#{value}")
 
   hash = url.match(/(\#.*)?$/)[0]
   url  = url.replace(/\#.*$/, '')
   url  = url + "?" if !paramsString.isEmpty() && !url.has(/\?/)
-  
-  paramsString = paramsString.join('&')
-  paramsString = '&'+paramsString if paramsString != '' && url.last() != '?'
 
-  return url + paramsString + hash
+  paramsString = paramsString.join('&')
+  paramsString = '&' + paramsString if paramsString != '' && url.last() != '?'
+
+  url + paramsString + hash

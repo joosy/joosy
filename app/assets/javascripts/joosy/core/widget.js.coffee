@@ -22,14 +22,16 @@ class Joosy.Widget extends Joosy.Module
   setTimeout: (args...) ->
     @parent.setTimeout(args...)
 
-  navigate: (args...) -> Joosy.Router.navigate(args...)
+  navigate: (args...) ->
+    Joosy.Router.navigate(args...)
 
   __load: (@parent, @container) ->
     @__render?()
     @refreshElements()
     @__delegateEvents()
     @__runAfterLoads()
-    return @
+
+    this
 
   __unload: ->
     @__runAfterUnloads()

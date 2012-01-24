@@ -4,6 +4,7 @@ Joosy.Modules.TimeManager =
 
     timer = window.setTimeout (=> action()), timeout
     @__timeouts.push timer
+
     timer
 
   setInterval: (delay, action) ->
@@ -11,6 +12,7 @@ Joosy.Modules.TimeManager =
 
     timer = window.setInterval (=> action()), delay
     @__intervals.push timer
+
     timer
 
   clearTime: ->

@@ -8,10 +8,10 @@ class Joosy.Form extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
   @include Joosy.Modules.Container
-  
+
   invalidationClass: 'field_with_errors'
   substitutions: {}
-  
+
   elements:
     'fields': 'input,select,textarea'
 
@@ -21,7 +21,7 @@ class Joosy.Form extends Joosy.Module
     else
       Object.extended(opts).each (key, value) =>
         @[key] = value
-    
+
     @container = $(form)
     @refreshElements()
     @__delegateEvents()
@@ -32,7 +32,7 @@ class Joosy.Form extends Joosy.Module
 
     @container.ajaxForm
       dataType: 'json'
-      beforeSend: => @__before(arguments...) 
+      beforeSend: => @__before(arguments...)
       success: => @__success(arguments...)
       error: => @__error(arguments...)
       xhr: =>
@@ -63,7 +63,7 @@ class Joosy.Form extends Joosy.Module
   __before: (xhr, settings) ->
     if !@before? || @before(arguments...) is true
       @fields.removeClass(@invalidationClass)
-      
+
   __error: (data) ->
     errors = if data.responseText
       try
@@ -78,7 +78,7 @@ class Joosy.Form extends Joosy.Module
         field = @substitutions[field] if @substitutions[field]?
         input = @fields.filter("[name='#{field}']").addClass(@invalidationClass)
         @notification?(input, notifications)
-    
+
   __markMethod: (method='PUT') ->
     method = $ '<input/>',
       type: 'hidden'

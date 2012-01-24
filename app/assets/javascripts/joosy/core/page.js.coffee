@@ -21,8 +21,10 @@ class Joosy.Page extends Joosy.Module
   source: false
   data: false
 
-  @fetch: (callback) -> @::__fetch = callback
-  @scroll: (element, options={}) -> 
+  @fetch: (callback) ->
+    @::__fetch = callback
+
+  @scroll: (element, options={}) ->
     @::__scrollElement = element
     @::__scrollSpeed = options.speed || 500
     @::__scrollMargin = options.margin || 0
@@ -76,7 +78,7 @@ class Joosy.Page extends Joosy.Module
         if @__afterPageRender?
           @__afterPageRender @layout.content()
 
-        return @layout.content()
+        @layout.content()
 
       if @__onPageRender?
         @__onPageRender @layout.content(), render
@@ -99,7 +101,6 @@ class Joosy.Page extends Joosy.Module
     @layout = new @layout
 
     @wait "stageClear dataReceived", =>
-
       @previous?.layout?.__unload?()
       @previous?.__unload()
 
@@ -110,18 +111,18 @@ class Joosy.Page extends Joosy.Module
 
         @layout.__load Joosy.Application.content()
         @__load()
+
         Joosy.Beautifier.go()
 
         if @__afterLayoutRender?
           @__afterLayoutRender Joosy.Application.content()
 
-        return Joosy.Application.content()
+        Joosy.Application.content()
 
       if @__onLayoutRender?
         @__onLayoutRender Joosy.Application.content(), render
       else
         render()
-
 
     if @__beforeLayoutRender?
       @__beforeLayoutRender Joosy.Application.content(), =>

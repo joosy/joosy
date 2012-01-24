@@ -5,14 +5,14 @@ class Joosy.Resource.REST extends Joosy.Module
   @include Joosy.Modules.Events
 
   __primaryKey: 'id'
-  
+
   @entity: (name) -> @::__entityName = name
   @source: (source) -> @::__source = source
   @primary: (primary) -> @::__primaryKey = primary
   @beforeLoad: (action) -> @::__beforeLoad = action
 
   constructor: (description) ->
-    if @constructor.__isId(description) 
+    if @constructor.__isId(description)
       @id = description
     else
       @__fillData(description)
@@ -34,19 +34,21 @@ class Joosy.Resource.REST extends Joosy.Module
       resources = new Joosy.Resource.RESTCollection(@, description)
       resources.fetch callback, options
       resources
-    
+
   fetch: (callback, options) ->
-    @constructor.__ajax 'get', @constructor.__buildSource(extension: @id), options, (e) => 
+    @constructor.__ajax 'get', @constructor.__buildSource(extension: @id), options, (e) =>
       @__fillData(e)
-      callback?(@)
-    @
-  
+      callback?(this)
+
+    this
+
   save: ->
-    
+
   destroy: (callback, options) ->
     @constructor.__ajax 'delete', @constructor.__buildSource(extension: @id), options, (e) =>
-      callback?(@)
-    @
+      callback?(this)
+
+    this
 
   @__isId: (something) -> Object.isNumber(something) || Object.isString(something)
 
@@ -61,13 +63,14 @@ class Joosy.Resource.REST extends Joosy.Module
   @__buildSource: (options={}) ->
     unless @::hasOwnProperty '__source'
       @::__source = "/" + @entityName().pluralize()
+
     source = Joosy.buildUrl("#{@::__source}/#{options.extension || ''}", options.params)
 
-  __fillData: (data) -> 
+  __fillData: (data) ->
     data = Object.extended(data)
     data = @__beforeLoad(data) if @__beforeLoad?
-    
-    @e = if Object.isObject(data) && data[@constructor.entityName()] && data.keys().length == 1
-      Object.extended data[@constructor.entityName()]
+
+    if Object.isObject(data) && data[@constructor.entityName()] && data.keys().length == 1
+      @e = Object.extended data[@constructor.entityName()]
     else
-      data
+      @e = data

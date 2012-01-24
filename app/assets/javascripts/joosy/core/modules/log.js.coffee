@@ -7,6 +7,6 @@ Joosy.Modules.Log =
       console.log(args...)
     else
       console.log(args.first())
-  
+
   debug: (args...) ->
     @log(args...) if Joosy.debug

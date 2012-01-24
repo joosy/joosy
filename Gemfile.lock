@@ -81,6 +81,8 @@ GEM
       thor (~> 0.14)
     json (1.6.5)
     json (1.6.5-java)
+    libnotify (0.7.2)
+      ffi (~> 1.0.0)
     mail (2.3.0)
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
@@ -113,6 +115,8 @@ GEM
       rdoc (~> 3.4)
       thor (~> 0.14.6)
     rake (0.9.2.2)
+    rb-inotify (0.8.8)
+      ffi (>= 0.5.0)
     rdoc (3.12)
       json (~> 1.4)
     rspec (2.8.0)
@@ -150,3 +154,5 @@ DEPENDENCIES
   guard-sprockets!
   jasmine
   joosy!
+  libnotify
+  rb-inotify

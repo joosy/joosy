@@ -1,7 +1,7 @@
 Joosy.Modules.Renderer =
   __instantiateHelpers: ->
     unless @__helpersInstance
-      @__helpersInstance = { __proto__: this }
+      @__helpersInstance = {}
 
       # Mix in the actual helpers
 

@@ -15,8 +15,12 @@ class Joosy.Widget extends Joosy.Module
 
   __render: false
 
-  @render: (callback) ->
-    @::__render = callback
+  @render: (template) ->
+    if Object.isString(template)
+      @::__render = =>
+        @container.html @render(template)
+    else
+      @::__render = template
 
   setInterval: (args...) ->
     @parent.setInterval(args...)

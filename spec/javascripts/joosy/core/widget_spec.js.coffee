@@ -5,8 +5,11 @@ describe "Joosy.Widget", ->
     @box = new @TestWidget()
 
   it "should have appropriate accessors", ->
-    @TestWidget.render 'function'
-    expect(@TestWidget::__render).toEqual 'function'
+    test = ->
+    @TestWidget.render test
+    expect(@TestWidget::__render).toEqual test
+    @TestWidget.render 'test'
+    expect(@TestWidget::__render instanceof Function).toBeTruthy()
 
   it "should use parent's TimeManager", ->
     @box.parent =

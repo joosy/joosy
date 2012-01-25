@@ -12,8 +12,8 @@ describe "Joosy.Page", ->
       sinon.stub @TestPage.prototype, '__bootstrap'
       sinon.stub @TestPage.prototype, '__bootstrapLayout'
       @box = new @TestPage()
-      expect(@TestPage::__render.callCount).toEqual 0
-      expect(@TestPage::__renderLayout.callCount).toEqual 1
+      expect(@TestPage::__bootstrap.callCount).toEqual 0
+      expect(@TestPage::__bootstrapLayout.callCount).toEqual 1
 
 
     it "should have appropriate accessors", ->
@@ -37,22 +37,22 @@ describe "Joosy.Page", ->
     it "should not render layout if it not changes", ->
       @box.layout = new ApplicationLayout()
       new @TestPage {}, @box
-      expect(@TestPage::__render.callCount).toEqual 1
-      expect(@TestPage::__renderLayout.callCount).toEqual 1
+      expect(@TestPage::__bootstrap.callCount).toEqual 1
+      expect(@TestPage::__bootstrapLayout.callCount).toEqual 1
 
     it "should render layout if it changes", ->
       class SubLayout extends Joosy.Layout
       @box.layout = new SubLayout()
       new @TestPage {}, @box
-      expect(@TestPage::__render.callCount).toEqual 0
-      expect(@TestPage::__renderLayout.callCount).toEqual 2
+      expect(@TestPage::__bootstrap.callCount).toEqual 0
+      expect(@TestPage::__bootstrapLayout.callCount).toEqual 2
 
     it "should stop render on beforeFilter result", ->
       sinon.stub @TestPage.prototype, '__runBeforeLoads'
       @TestPage::__runBeforeLoads.returns(false)
       new @TestPage()
-      expect(@TestPage::__render.callCount).toEqual 0
-      expect(@TestPage::__renderLayout.callCount).toEqual 1
+      expect(@TestPage::__bootstrap.callCount).toEqual 0
+      expect(@TestPage::__bootstrapLayout.callCount).toEqual 1
 
     it "should use Router", ->
       target = sinon.stub Joosy.Router, 'navigate'
@@ -86,8 +86,8 @@ describe "Joosy.Page", ->
         @box.previous.layout = new @box.previous.layout()
         @box.view = sinon.spy()
         @box.layout.prototype.view = sinon.spy()
-        @TestPage::__render.restore()
-        @TestPage::__renderLayout.restore()
+        @TestPage::__bootstrap.restore()
+        @TestPage::__bootstrapLayout.restore()
 
 
       it "should wait stageClear and dataReceived event to start render", ->
@@ -111,7 +111,7 @@ describe "Joosy.Page", ->
           expect(typeof callback).toEqual 'function'
           # callback()  - start rendering
 
-        @box.__render()
+        @box.__bootstrap()
 
         expect(spies).toBeSequenced()
 
@@ -126,7 +126,7 @@ describe "Joosy.Page", ->
         spies.push @box.__afterPageRender = sinon.spy (stage) ->
           expect(stage.selector).toEqual @layout.content().selector
 
-        @box.__render()
+        @box.__bootstrap()
         expect(spies).toBeSequenced()
 
         Joosy.Beautifier.go.restore()
@@ -153,7 +153,7 @@ describe "Joosy.Page", ->
           expect(typeof callback).toEqual 'function'
           # callback()  - start rendering
 
-        @box.__renderLayout()
+        @box.__bootstrapLayout()
 
         expect(spies).toBeSequenced()
 
@@ -170,7 +170,7 @@ describe "Joosy.Page", ->
         spies.push @box.__afterLayoutRender = sinon.spy (stage) ->
           expect(stage.selector).toEqual Joosy.Application.content().selector
 
-        @box.__renderLayout()
+        @box.__bootstrapLayout()
         expect(spies).toBeSequenced()
         expect(swapContainer.callCount).toEqual 2
 

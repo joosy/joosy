@@ -56,8 +56,9 @@ Joosy.Modules.Container =
       else
         @container.on(eventName, selector, callback)
 
-  @helpers: (helper...) ->
-    # Add a helper to the chain
+  # @helpers: (helper...) ->           <- This is not a class! Static property can not be included in object
+  #   # Add a helper to the chain
+
 
   __instantiateHelpers: ->
     unless @__helpersInstance

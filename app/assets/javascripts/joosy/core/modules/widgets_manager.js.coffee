@@ -24,24 +24,32 @@ Joosy.Modules.WidgetsManager =
 
   __setupWidgets: ->
     widgets = @__collectWidgets()
+    registereds = Object.extended()
 
-    widgets.each (selector, widget) =>
+    widgets.each (selector, widget) =>  
       if selector == '$container'
-        selector = @container
+        activeSelector = @container
       else
         if r = selector.match(/\$([A-z_]+)/)
           selector = @elements[r[1]]
-        selector = $(selector, @container)
+        activeSelector = $(selector, @container)
 
-      Joosy.Modules.Log.debug "Widget registered at '#{selector.selector}'. Elements: #{selector.length}"
+      registereds[selector] = Object.extended()
 
-      selector.each (i, elem) =>
+      activeSelector.each (i, elem) =>
         if Joosy.Module.hasAncestor(widget, Joosy.Widget)
           w = new widget
         else
           w = widget.call this, i
 
+        registereds[selector][w.constructor.name] ||= 0
+        registereds[selector][w.constructor.name] += 1
+
         @registerWidget($(elem), w)
+
+    registereds.each (selector, value) =>
+      value.each (widget, count) =>
+        Joosy.Modules.Log.debug "Widget #{widget} registered at '#{selector}'. Elements: #{count}"
 
   __unloadWidgets: ->
     if @__activeWidgets

@@ -6,9 +6,9 @@ describe "Joosy.Widget", ->
 
   it "should have appropriate accessors", ->
     test = ->
-    @TestWidget.render test
+    @TestWidget.view test
     expect(@TestWidget::__renderer).toEqual test
-    @TestWidget.render 'test'
+    @TestWidget.view 'test'
     expect(@TestWidget::__renderer instanceof Function).toBeTruthy()
 
   it "should use parent's TimeManager", ->
@@ -33,7 +33,7 @@ describe "Joosy.Widget", ->
 
   it "should load itself", ->
     spies = [sinon.spy()]
-    @TestWidget.render spies[0]
+    @TestWidget.view spies[0]
     @parent = new Joosy.Layout()
     spies.push sinon.spy(@box, 'refreshElements')
     spies.push sinon.spy(@box, '__delegateEvents')

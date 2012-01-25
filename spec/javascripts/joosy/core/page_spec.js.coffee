@@ -42,9 +42,10 @@ describe "Joosy.Page", ->
 
     it "should render layout if it changes", ->
       class SubLayout extends Joosy.Layout
-      @box.layout = new SubLayout()
+      @box.constructor.view SubLayout
+      @box = new @TestPage()
       new @TestPage {}, @box
-      expect(@TestPage::__bootstrap.callCount).toEqual 0
+      expect(@TestPage::__bootstrap.callCount).toEqual 1
       expect(@TestPage::__bootstrapLayout.callCount).toEqual 2
 
     it "should stop render on beforeFilter result", ->
@@ -83,9 +84,9 @@ describe "Joosy.Page", ->
 
       beforeEach ->
         @box.previous = new @TestPage()
-        @box.previous.layout = new @box.previous.layout()
+        @box.previous.layout = new @box.previous.__layoutClass
         @box.__renderer = sinon.spy()
-        @box.layout.prototype.__renderer = sinon.spy()
+        @box.__layoutClass.prototype.__renderer = sinon.spy()
         @TestPage::__bootstrap.restore()
         @TestPage::__bootstrapLayout.restore()
 
@@ -160,10 +161,10 @@ describe "Joosy.Page", ->
       it "should render layout and page", ->
         spies = []
 
-        spies.push @box.layout.prototype.__renderer
+        spies.push @box.__layoutClass.prototype.__renderer
         spies.push @box.__renderer
         swapContainer = sinon.spy(@box, 'swapContainer')
-        spies.push @box.layout.prototype.__load = sinon.spy()
+        spies.push @box.__layoutClass.prototype.__load = sinon.spy()
         spies.push sinon.spy(@box, '__load')
         spies.push sinon.spy(Joosy.Beautifier, 'go')
 

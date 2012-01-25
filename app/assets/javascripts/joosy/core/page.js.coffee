@@ -42,10 +42,10 @@ class Joosy.Page extends Joosy.Module
   @onLayoutRender: (callback) -> @::__onLayoutRender = callback
 
   constructor: (@params, @previous) ->
-    @__layout ||= ApplicationLayout
+    @__layoutClass ||= ApplicationLayout
 
     if @__runBeforeLoads(@params, @previous)
-      if @previous?.__layout != @__layout
+      if @previous?.__layoutClass != @__layoutClass
         @__bootstrapLayout()
       else
         @__bootstrap()
@@ -72,6 +72,7 @@ class Joosy.Page extends Joosy.Module
     delete @previous
 
   __bootstrap: ->
+    Joosy.Modules.Log.debug "#{@constructor.name}> Boostraping page"
     @layout = @previous.layout
 
     @wait "stageClear dataReceived", =>
@@ -107,6 +108,7 @@ class Joosy.Page extends Joosy.Module
       @trigger 'dataReceived'
 
   __bootstrapLayout: ->
+    Joosy.Modules.Log.debug "#{@constructor.name}> Boostraping page with layout"
     @layout = new @__layoutClass
 
     @wait "stageClear dataReceived", =>

@@ -3,6 +3,7 @@
 #= require joosy/core/modules/log
 #= require joosy/core/modules/events
 #= require joosy/core/modules/container
+#= require joosy/core/modules/renderer
 #= require joosy/core/modules/time_manager
 #= require joosy/core/modules/widgets_manager
 #= require joosy/core/modules/filters
@@ -11,6 +12,7 @@ class Joosy.Page extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
   @include Joosy.Modules.Container
+  @include Joosy.Modules.Renderer
   @include Joosy.Modules.TimeManager
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
@@ -42,9 +44,9 @@ class Joosy.Page extends Joosy.Module
 
     if @__runBeforeLoads(@params, @previous)
       if @previous?.layout not instanceof @layout
-        @__renderLayout()
+        @__bootstrapLayout()
       else
-        @__render()
+        @__bootstrap()
 
   navigate: (args...) -> Joosy.Router.navigate(args...)
 
@@ -63,7 +65,7 @@ class Joosy.Page extends Joosy.Module
     @__removeMetamorphs()
     @__runAfterUnloads(@params, @previous)
 
-  __render: ->
+  __bootstrap: ->
     @layout = @previous.layout
 
     @wait "stageClear dataReceived", =>
@@ -98,7 +100,7 @@ class Joosy.Page extends Joosy.Module
     else
       @trigger 'dataReceived'
 
-  __renderLayout: ->
+  __bootstrapLayout: ->
     @layout = new @layout
 
     @wait "stageClear dataReceived", =>

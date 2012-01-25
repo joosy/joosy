@@ -9,8 +9,8 @@ describe "Joosy.Page", ->
   describe "not rendered page", ->
 
     beforeEach ->
-      sinon.stub @TestPage.prototype, '__render'
-      sinon.stub @TestPage.prototype, '__renderLayout'
+      sinon.stub @TestPage.prototype, '__bootstrap'
+      sinon.stub @TestPage.prototype, '__bootstrapLayout'
       @box = new @TestPage()
       expect(@TestPage::__render.callCount).toEqual 0
       expect(@TestPage::__renderLayout.callCount).toEqual 1

@@ -1,4 +1,5 @@
-# require_tree ../renderers
+#= require_tree ../renderers
+#= require metamorph
 
 Joosy.Modules.Renderer =
   

@@ -17,7 +17,7 @@ class Joosy.Layout extends Joosy.Module
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
 
-  @render 'layouts/default'
+  @view 'layouts/default'
 
   navigate: (args...) ->
     Joosy.Router.navigate(args...)

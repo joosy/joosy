@@ -12,6 +12,8 @@ class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Container
   @include Joosy.Modules.Renderer
   @include Joosy.Modules.Filters
+  
+  __renderer: false
 
   setInterval: (args...) ->
     @parent.setInterval(args...)

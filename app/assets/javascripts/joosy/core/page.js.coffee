@@ -29,6 +29,9 @@ class Joosy.Page extends Joosy.Module
     @::__scrollElement = element
     @::__scrollSpeed = options.speed || 500
     @::__scrollMargin = options.margin || 0
+    
+  @layout: (layoutClass) ->
+    @::__layoutClass = layoutClass
 
   @beforePageRender: (callback) -> @::__beforePageRender = callback
   @afterPageRender:  (callback) -> @::__afterPageRender = callback
@@ -39,10 +42,10 @@ class Joosy.Page extends Joosy.Module
   @onLayoutRender: (callback) -> @::__onLayoutRender = callback
 
   constructor: (@params, @previous) ->
-    @layout ||= ApplicationLayout
+    @__layout ||= ApplicationLayout
 
     if @__runBeforeLoads(@params, @previous)
-      if @previous?.layout not instanceof @layout
+      if @previous?.__layout != @__layout
         @__bootstrapLayout()
       else
         @__bootstrap()
@@ -74,7 +77,7 @@ class Joosy.Page extends Joosy.Module
     @wait "stageClear dataReceived", =>
       @previous?.__unload()
 
-      render = =>
+      complete = =>
         @swapContainer @layout.content(), @__renderer(@data)
         @container = @layout.content()
 
@@ -87,9 +90,9 @@ class Joosy.Page extends Joosy.Module
         @layout.content()
 
       if @__onPageRender?
-        @__onPageRender @layout.content(), render
+        @__onPageRender @layout.content(), complete
       else
-        render()
+        complete()
 
     if @__beforePageRender?
       @__beforePageRender @layout.content(), =>
@@ -104,31 +107,33 @@ class Joosy.Page extends Joosy.Module
       @trigger 'dataReceived'
 
   __bootstrapLayout: ->
-    @layout = new @layout
+    @layout = new @__layoutClass
 
     @wait "stageClear dataReceived", =>
       @previous?.layout?.__unload?()
       @previous?.__unload()
 
-      render = =>
-        @swapContainer Joosy.Application.content(), @layout.__renderer(@data)
+      complete = =>
+        @swapContainer Joosy.Application.content(), @layout.__renderer
+          yield: =>
+            @layout.yield()
         @swapContainer @layout.content(), @__renderer(@data)
         @container = @layout.content()
-
+        
         @layout.__load Joosy.Application.content()
         @__load()
-
+        
         Joosy.Beautifier.go()
-
+        
         if @__afterLayoutRender?
           @__afterLayoutRender Joosy.Application.content()
-
+        
         Joosy.Application.content()
 
       if @__onLayoutRender?
-        @__onLayoutRender Joosy.Application.content(), render
+        @__onLayoutRender Joosy.Application.content(), complete
       else
-        render()
+        complete()
 
     if @__beforeLayoutRender?
       @__beforeLayoutRender Joosy.Application.content(), =>

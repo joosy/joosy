@@ -1,17 +1,18 @@
-#= require_tree ../renderers
+#= require_tree ../templaters
 #= require metamorph
 
 Joosy.Modules.Renderer =
   
-  __renderer: false
+  __renderer: ->
+    throw new Error "#{@constructor.name}> Renderer not defined!"
 
   included: ->
-    @render = (template) ->
+    @view = (template) ->
       if Object.isFunction(template)
         @::__renderer = template
       else
-        @::__renderer = =>
-          @render(template)
+        @::__renderer = (locals={}) ->
+          @render(template, locals)
   
   __instantiateHelpers: ->
     unless @__helpersInstance
@@ -25,7 +26,9 @@ Joosy.Modules.Renderer =
     if Object.isString(template)
       template = Joosy.Application.templater.buildView(template)
 
-    locals = new Object(locals)
+    if !Object.isObject(locals)
+      throw new Error "#{@constructor.name}> locals (maybe @data?) can only be dumb hash!"
+
     locals.__proto__ = @__instantiateHelpers()
 
     morph = Metamorph(template(locals))

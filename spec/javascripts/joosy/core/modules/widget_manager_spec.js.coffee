@@ -59,7 +59,7 @@ describe "Joosy.Modules.WidgetsManager", ->
 
   it "should bootstrap widget properly", ->
     class TextWidget extends Joosy.Widget
-      @render -> 'fluffy'
+      @view -> 'fluffy'
       constructor: (@tester) ->
 
     @seedGround()

@@ -7,9 +7,9 @@ describe "Joosy.Widget", ->
   it "should have appropriate accessors", ->
     test = ->
     @TestWidget.render test
-    expect(@TestWidget::__render).toEqual test
+    expect(@TestWidget::__renderer).toEqual test
     @TestWidget.render 'test'
-    expect(@TestWidget::__render instanceof Function).toBeTruthy()
+    expect(@TestWidget::__renderer instanceof Function).toBeTruthy()
 
   it "should use parent's TimeManager", ->
     @box.parent =
@@ -40,7 +40,7 @@ describe "Joosy.Widget", ->
     spies.push sinon.spy(@box, '__runAfterLoads')
     target = @box.__load @parent, @ground
     expect(target).toBe @box
-    expect(@box.__render.getCall(0).calledOn()).toBeFalsy()
+    expect(@box.__renderer.getCall(0).calledOn()).toBeFalsy()
     expect(spies).toBeSequenced()
 
   it "should unload itself", ->

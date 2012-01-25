@@ -13,14 +13,14 @@ class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Renderer
   @include Joosy.Modules.Filters
 
-  __render: false
+  __renderer: false
 
   @render: (template) ->
     if Object.isString(template)
-      @::__render = =>
+      @::__renderer = =>
         @container.html @render(template)
     else
-      @::__render = template
+      @::__renderer = template
 
   setInterval: (args...) ->
     @parent.setInterval(args...)
@@ -32,7 +32,7 @@ class Joosy.Widget extends Joosy.Module
     Joosy.Router.navigate(args...)
 
   __load: (@parent, @container) ->
-    @__render?()
+    @__renderer?()
     @refreshElements()
     @__delegateEvents()
     @__runAfterLoads()

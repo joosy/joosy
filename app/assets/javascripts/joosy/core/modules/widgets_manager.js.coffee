@@ -49,7 +49,7 @@ Joosy.Modules.WidgetsManager =
 
     registereds.each (selector, value) =>
       value.each (widget, count) =>
-        Joosy.Modules.Log.debug "Widget #{widget} registered at '#{selector}'. Elements: #{count}"
+        Joosy.Modules.Log.debug "#{@constructor.name}> Widget #{widget} registered at '#{selector}'. Elements: #{count}"
 
   __unloadWidgets: ->
     if @__activeWidgets

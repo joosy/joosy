@@ -58,6 +58,9 @@ class Joosy.Page extends Joosy.Module
     if @__scrollElement
       scroll = $(@__extractSelector(@__scrollElement)).offset()?.top + @__scrollMargin
       $('html, body').animate({scrollTop: scroll}, @__scrollSpeed)
+      Joosy.Modules.Log.debug "#{@constructor.name}> Scrolling to #{@__extractSelector(@__scrollElement)}"
+      
+    Joosy.Modules.Log.debug "#{@constructor.name}> Page loaded"
 
   __unload: ->
     @clearTime()

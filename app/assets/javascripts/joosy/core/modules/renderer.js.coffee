@@ -1,3 +1,5 @@
+# require_tree ../renderers
+
 Joosy.Modules.Renderer =
   __instantiateHelpers: ->
     unless @__helpersInstance
@@ -8,8 +10,8 @@ Joosy.Modules.Renderer =
     @__helpersInstance
 
   render: (template, locals) ->
-    if object.isString(template)
-      template = JST[template]
+    if Object.isString(template)
+      template = Joosy.Application.templater.buildView(template)
 
     locals = new Object(locals)
     locals.__proto__ = @__instantiateHelpers()

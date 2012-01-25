@@ -7,8 +7,10 @@ Joosy.Application =
 
   selector: false
 
-  initialize: (@selector) ->
+  initialize: (@name, @selector) ->
     Joosy.Router.setupRoutes()
+
+    @templater = new Joosy.Templaters.RailsJST(@name)
 
     @sandboxSelector = Joosy.uuid()
     @content().after("<div id='#{@sandboxSelector}' style='display:none'></div>")

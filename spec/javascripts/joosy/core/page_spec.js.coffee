@@ -84,8 +84,8 @@ describe "Joosy.Page", ->
       beforeEach ->
         @box.previous = new @TestPage()
         @box.previous.layout = new @box.previous.layout()
-        @box.view = sinon.spy()
-        @box.layout.prototype.view = sinon.spy()
+        @box.__renderer = sinon.spy()
+        @box.layout.prototype.__renderer = sinon.spy()
         @TestPage::__bootstrap.restore()
         @TestPage::__bootstrapLayout.restore()
 
@@ -118,7 +118,7 @@ describe "Joosy.Page", ->
       it "should render page", ->
         spies = []
 
-        spies.push @box.view
+        spies.push @box.__renderer
         spies.push sinon.spy(@box, 'swapContainer')
         spies.push sinon.spy(@box, '__load')
         spies.push sinon.spy(Joosy.Beautifier, 'go')
@@ -160,8 +160,8 @@ describe "Joosy.Page", ->
       it "should render layout and page", ->
         spies = []
 
-        spies.push @box.layout.prototype.view
-        spies.push @box.view
+        spies.push @box.layout.prototype.__renderer
+        spies.push @box.__renderer
         swapContainer = sinon.spy(@box, 'swapContainer')
         spies.push @box.layout.prototype.__load = sinon.spy()
         spies.push sinon.spy(@box, '__load')

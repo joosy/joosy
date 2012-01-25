@@ -5,9 +5,8 @@ describe "Joosy.Layout", ->
     @box = new @TestLayout()
 
   it "should have default view", ->
-    JST['app/templates/layouts/default'] = 'test'
     @box = new @TestLayout()
-    expect(@box.view).toEqual 'test'
+    expect(@box.__renderer instanceof Function).toBeTruthy()
 
   it "should use Router", ->
     target = sinon.stub Joosy.Router, 'navigate'

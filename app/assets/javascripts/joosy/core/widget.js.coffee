@@ -16,11 +16,11 @@ class Joosy.Widget extends Joosy.Module
   __renderer: false
 
   @render: (template) ->
-    if Object.isString(template)
-      @::__renderer = =>
-        @container.html @render(template)
-    else
+    if Object.isFunction(template)
       @::__renderer = template
+    else
+      @::__renderer = =>
+        @render(template)
 
   setInterval: (args...) ->
     @parent.setInterval(args...)
@@ -32,7 +32,8 @@ class Joosy.Widget extends Joosy.Module
     Joosy.Router.navigate(args...)
 
   __load: (@parent, @container) ->
-    @__renderer?()
+    if @__renderer
+      @container.html @__renderer()
     @refreshElements()
     @__delegateEvents()
     @__runAfterLoads()

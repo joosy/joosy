@@ -4,6 +4,7 @@
   debug: false
   Modules: {}
   Resource: {}
+  Templaters: {}
 
 Joosy.Beautifier =
   beautifiers: []

@@ -3,6 +3,7 @@
 #= require joosy/core/modules/log
 #= require joosy/core/modules/events
 #= require joosy/core/modules/container
+#= require joosy/core/modules/renderer
 #= require joosy/core/modules/time_manager
 #= require joosy/core/modules/widgets_manager
 #= require joosy/core/modules/filters
@@ -11,12 +12,20 @@ class Joosy.Layout extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
   @include Joosy.Modules.Container
+  @include Joosy.Modules.Renderer
   @include Joosy.Modules.TimeManager
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
 
-  constructor: ->
-    @view ||= JST['app/templates/layouts/default']
+  @render: (template) ->
+    if Object.isFunction(template)
+      @::__renderer = (locals) =>
+        template(locals)
+    else
+      @::__renderer = (locals) =>
+        @render(template, locals)
+
+  @render 'layouts/default'
 
   navigate: (args...) ->
     Joosy.Router.navigate(args...)

@@ -20,11 +20,18 @@ class Joosy.Page extends Joosy.Module
   layout: false
   previous: false
   params: false
-  source: false
   data: false
 
   @fetch: (callback) ->
     @::__fetch = callback
+    
+  @render: (template) ->
+    if Object.isFunction(template)
+      @::__renderer = (locals) =>
+        template(locals)
+    else
+      @::__renderer = (locals) =>
+        @render(template, locals)
 
   @scroll: (element, options={}) ->
     @::__scrollElement = element
@@ -67,6 +74,7 @@ class Joosy.Page extends Joosy.Module
     @__unloadWidgets()
     @__removeMetamorphs()
     @__runAfterUnloads(@params, @previous)
+    delete @previous
 
   __bootstrap: ->
     @layout = @previous.layout
@@ -75,7 +83,7 @@ class Joosy.Page extends Joosy.Module
       @previous?.__unload()
 
       render = =>
-        @swapContainer @layout.content(), @view(@data)
+        @swapContainer @layout.content(), @__renderer(@data)
         @container = @layout.content()
 
         @__load()
@@ -111,8 +119,8 @@ class Joosy.Page extends Joosy.Module
       @previous?.__unload()
 
       render = =>
-        @swapContainer Joosy.Application.content(), @layout.view(@data)
-        @swapContainer @layout.content(), @view(@data)
+        @swapContainer Joosy.Application.content(), @layout.__renderer(@data)
+        @swapContainer @layout.content(), @__renderer(@data)
         @container = @layout.content()
 
         @layout.__load Joosy.Application.content()

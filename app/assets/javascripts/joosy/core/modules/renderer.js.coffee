@@ -1,6 +1,17 @@
 # require_tree ../renderers
 
 Joosy.Modules.Renderer =
+  
+  __renderer: false
+
+  included: ->
+    @render = (template) ->
+      if Object.isFunction(template)
+        @::__renderer = template
+      else
+        @::__renderer = =>
+          @render(template)
+  
   __instantiateHelpers: ->
     unless @__helpersInstance
       @__helpersInstance = {}

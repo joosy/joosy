@@ -24,14 +24,6 @@ class Joosy.Page extends Joosy.Module
 
   @fetch: (callback) ->
     @::__fetch = callback
-    
-  @render: (template) ->
-    if Object.isFunction(template)
-      @::__renderer = (locals) =>
-        template(locals)
-    else
-      @::__renderer = (locals) =>
-        @render(template, locals)
 
   @scroll: (element, options={}) ->
     @::__scrollElement = element

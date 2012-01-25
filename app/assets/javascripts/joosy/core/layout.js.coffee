@@ -17,14 +17,6 @@ class Joosy.Layout extends Joosy.Module
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
 
-  @render: (template) ->
-    if Object.isFunction(template)
-      @::__renderer = (locals) =>
-        template(locals)
-    else
-      @::__renderer = (locals) =>
-        @render(template, locals)
-
   @render 'layouts/default'
 
   navigate: (args...) ->

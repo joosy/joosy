@@ -13,15 +13,6 @@ class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Renderer
   @include Joosy.Modules.Filters
 
-  __renderer: false
-
-  @render: (template) ->
-    if Object.isFunction(template)
-      @::__renderer = template
-    else
-      @::__renderer = =>
-        @render(template)
-
   setInterval: (args...) ->
     @parent.setInterval(args...)
 

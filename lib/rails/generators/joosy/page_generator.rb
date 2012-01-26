@@ -8,21 +8,36 @@ module Joosy
       def create_files
         super
 
-        empty_directory "#{app_path}/pages"
-        template "app/pages/template.js.coffee", "#{app_path}/pages/#{layout_name}/#{file_name}.js.coffee"
+        empty_directory "#{app_path}/pages/#{namespace_path}"
+        template "app/pages/template.js.coffee", "#{app_path}/pages/#{namespace_path}/#{file_name}.js.coffee"
 
-        empty_directory "#{app_path}/templates/pages/#{layout_name}"
-        create_file "#{app_path}/templates/pages/#{layout_name}/#{file_name}.jst.#{options[:template_kind]}"
+        empty_directory "#{app_path}/templates/pages/#{namespace_path}"
+        create_file "#{app_path}/templates/pages/#{namespace_path}/#{file_name}.jst.#{options[:template_kind]}"
       end
 
       protected
 
       def app_path
-        File.join class_path[0..-2]
+        if class_path.size < 2
+          puts <<HELP
+Usage: rails generate joosy:page joosy_app_name/page_namespace/page_name
+Tip: do not add Page suffix to page_name
+HELP
+          exit 1
+        end
+        class_path[0]
+      end
+
+      def namespace_path
+        File.join class_path[1..-1]
+      end
+
+      def namespace_name
+        class_path[1..-1].map(&:camelize).join '.'
       end
 
       def layout_name
-        class_path.last
+        class_path[1]
       end
     end
   end

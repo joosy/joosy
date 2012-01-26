@@ -6,7 +6,7 @@ module Joosy
       source_root File.join(File.dirname(__FILE__), 'templates')
 
       def create_files
-        self.destination_root = "app/assets/javascripts"
+        super
 
         template "app.js.coffee", "#{file_path}.js.coffee"
 

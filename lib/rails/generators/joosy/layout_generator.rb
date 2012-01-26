@@ -18,7 +18,14 @@ module Joosy
       protected
 
       def app_path
-        File.join class_path
+        unless class_path.size == 1
+          puts <<HELP
+Usage: rails generate joosy:layout joosy_app_name/layout_name
+Tip: do not add Layout suffix to layout_name
+HELP
+          exit 1
+        end
+        class_path[0]
       end
     end
   end

@@ -1,2 +1,2 @@
-class @<%= file_name.camelize %>Widget extends Joosy.Layout
-  view: JST['<%= app_path %>/templates/widgets/<%= file_name %>']
+class @<%= file_name.camelize %>Widget extends Joosy.Widget
+  @view JST['widgets/<%= file_name %>']

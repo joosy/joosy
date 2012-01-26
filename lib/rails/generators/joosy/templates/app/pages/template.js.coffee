@@ -1,5 +1,5 @@
-Joosy.namespace '<%= layout_name.camelize %>', ->
+Joosy.namespace '<%= namespace_name %>', ->
 
   class @<%= file_name.camelize %>Page extends ApplicationPage
-    layout: <%= layout_name.camelize %>Layout
-    view: JST['<%= app_path %>/templates/pages/<%= layout_name %>/<%= file_name %>']
+    @layout <%= layout_name.camelize %>Layout
+    @view   JST['pages/<%= namespace_path %>/<%= file_name %>']

@@ -18,7 +18,14 @@ module Joosy
       protected
 
       def app_path
-        File.join class_path
+        unless class_path.size == 1
+          puts <<HELP
+Usage: rails generate joosy:widget joosy_app_name/widget_name
+Tip: do not add Widget suffix to widget_name
+HELP
+          exit 1
+        end
+        class_path[0]
       end
     end
   end

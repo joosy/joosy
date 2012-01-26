@@ -29,7 +29,7 @@ Joosy.Modules.Renderer =
 
   __instantiateHelpers: ->
     unless @__helpersInstance
-      @__helpersInstance = Object.extended()
+      @__helpersInstance = Object.extended(Joosy.Helpers.Global)
 
       if @__helpers
         for helper in @__helpers

@@ -60,3 +60,20 @@ describe "Joosy.Modules.Renderer", ->
     elem.html @dummyContainer.__renderer({ })
 
     expect(elem.text()).toBe "50"
+
+  it "should include global rendering helpers in locals", ->
+    Joosy.Helpers.Global.globalMultiplier = (value) ->
+      value * 6
+
+    @TestContainer.view (locals) ->
+      template = (locals) ->
+        "#{locals.globalMultiplier(10)}"
+
+      @render(template, locals)
+
+    elem = $("<div></div>")
+    @ground.append elem
+
+    elem.html @dummyContainer.__renderer({ })
+
+    expect(elem.text()).toBe "60"

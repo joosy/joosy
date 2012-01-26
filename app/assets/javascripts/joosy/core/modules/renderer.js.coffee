@@ -64,9 +64,10 @@ Joosy.Modules.Renderer =
     @__metamorphs ||= []
 
     for key, object of locals
-      if object.bind?
-        object.bind 'changed', update
-        @__metamorphs.push [object, update]
+      if locals.hasOwnProperty key
+        if object.bind? && object.unbind?
+          object.bind 'changed', update
+          @__metamorphs.push [object, update]
 
     morph.outerHTML()
 

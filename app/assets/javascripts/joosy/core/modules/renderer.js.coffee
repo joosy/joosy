@@ -37,15 +37,22 @@ Joosy.Modules.Renderer =
 
     @__helpersInstance
 
-  render: (template, locals) ->
-  #   locals = locals.merge
-  #     render: (template, locals) =>
-  #       @__implicitlyRenderPartial template, locals
-  # 
-  #   @__implicitlyRenderPage template, locals
-  # 
-  # __explicitlyRender: (template, locals) ->
+    #   locals = locals.merge
+    #     render: (template, locals) =>
+    #       @__implicitlyRenderPartial template, locals
+    # 
+    #   @__implicitlyRenderTemplate template, locals
+    # 
+    # __explicitlyRender: (template, locals) ->
+
+  render: (template, locals, partial=false) ->
     if Object.isString template
+      if @__renderSection?
+        if partial
+          template = Joosy.Application.templater.resolve @__renderSection(), template, this
+        else
+          template = Joosy.Application.templater.resolve @__renderSection(), template
+        
       template = Joosy.Application.templater.buildView template
     else if !Object.isFunction(template)
       throw new Error "#{@constructor.name}> template (maybe @view) does not look like a string or lambda"
@@ -54,6 +61,8 @@ Joosy.Modules.Renderer =
       throw new Error "#{@constructor.name}> locals (maybe @data?) can only be dumb hash"
 
     locals.__proto__ = @__instantiateHelpers()
+    locals.render = (template, locals) =>
+      @render template, locals, true
 
     morph = Metamorph template(locals)
 
@@ -68,39 +77,6 @@ Joosy.Modules.Renderer =
         @__metamorphs.push [object, update]
 
     morph.outerHTML()
-
-  __implicitlyRenderPage: (template, locals) ->
-    @__explicitlyRender @__resolveTemplate(template, false), locals
-
-  __implicitlyRenderPartial: (template, locals) ->
-    @__explicitlyRender @__resolveTemplate(template, true), locals
-
-  __resolveTemplate: (template, isPartial) ->
-    if Object.isFunction template
-      return template
-
-    if template
-      if !Object.isString template
-        throw new Error "template should either be string or function"
-
-      path = template.split "/"
-      file = path.pop()
-    else
-      path = []
-      file = null
-
-    if path.length == 0
-      path = @constructor.__namespace__.map 'underscore'
-
-    path.unshift "pages"
-
-    if file == null
-      file = @constructor.name.underscore()
-
-    if isPartial
-      "#{path.join "/"}/_#{file}"
-    else
-      "#{path.join "/"}/#{file}"
 
   __removeMetamorphs: ->
     if @__metamorphs

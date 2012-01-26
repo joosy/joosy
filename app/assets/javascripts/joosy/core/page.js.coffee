@@ -20,7 +20,7 @@ class Joosy.Page extends Joosy.Module
   layout: false
   previous: false
   params: false
-  data: false
+  data: {}
 
   @fetch: (callback) ->
     @::__fetch = callback

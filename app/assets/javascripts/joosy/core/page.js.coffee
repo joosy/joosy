@@ -52,6 +52,9 @@ class Joosy.Page extends Joosy.Module
 
   navigate: (args...) -> Joosy.Router.navigate(args...)
 
+  __renderSection: ->
+    'pages'
+
   __load: ->
     @refreshElements()
     @__delegateEvents()

@@ -24,6 +24,9 @@ class Joosy.Widget extends Joosy.Module
   navigate: (args...) ->
     Joosy.Router.navigate(args...)
 
+  __renderSection: ->
+    'widgets'
+
   __load: (@parent, @container) ->
     if @__renderer
       @container.html @__renderer()

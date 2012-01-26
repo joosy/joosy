@@ -22,6 +22,9 @@ class Joosy.Layout extends Joosy.Module
   navigate: (args...) ->
     Joosy.Router.navigate(args...)
 
+  __renderSection: ->
+    'layouts'
+
   __load: (@container) ->
     @refreshElements()
     @__delegateEvents()

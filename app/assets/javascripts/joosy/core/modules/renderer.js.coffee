@@ -31,19 +31,18 @@ Joosy.Modules.Renderer =
     unless @__helpersInstance
       @__helpersInstance = Object.extended Joosy.Helpers.Global
 
+      @__helpersInstance.render = @render
+
       if @__helpers
         for helper in @__helpers
           @__helpersInstance.merge helper
 
     @__helpersInstance
 
-  render: (template, locals={}, partial=false) ->
+  render: (template, locals={}) ->
     if Object.isString template
       if @__renderSection?
-        if partial
-          template = Joosy.Application.templater.resolvePageTemplate @__renderSection(), template, this
-        else
-          template = Joosy.Application.templater.resolveTemplate @__renderSection(), template
+        template = Joosy.Application.templater.resolveTemplate @__renderSection(), template, this
 
       template = Joosy.Application.templater.buildView template
     else if !Object.isFunction(template)
@@ -53,8 +52,6 @@ Joosy.Modules.Renderer =
       throw new Error "#{@constructor.name}> locals (maybe @data?) can only be dumb hash"
 
     locals.__proto__ = @__instantiateHelpers()
-    locals.render = (template, locals) =>
-      @render template, locals, true
 
     morph = Metamorph template(locals)
 

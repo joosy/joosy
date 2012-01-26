@@ -11,18 +11,10 @@ class Joosy.Templaters.RailsJST
 
     template
 
-  resolveTemplate: (section, template) ->
+  resolveTemplate: (section, template, entity) ->
     return template.substr 1 if template.startsWith '/'
 
-    "#{section}/#{template}"
+    path = entity.constructor?.__namespace__?.map('underscore') || []
+    path.unshift(section)
 
-  resolvePageTemplate: (section, template, entity) ->
-    return template.substr 1 if template.startsWith '/'
-
-    if template.indexOf("/") == -1
-      path = entity.constructor.__namespace__.map 'underscore'
-      path.unshift(section)
-
-      "#{path.join('/')}/#{template}"
-    else
-      "#{section}/#{template}"
+    "#{path.join('/')}/#{template}"

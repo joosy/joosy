@@ -10,17 +10,15 @@ class Joosy.Templaters.RailsJST
       throw new Error "Template '#{name}' not found. Checked at: #{location}"
 
     template
-    
-  resolve: (section, template, entity=false) ->
-    if entity
-      resolvePartial section, template, entity
-    else
-      resolveTemplate section, template
         
   resolveTemplate: (section, template) ->
+    return template.substr 1 if template.startsWith '/'
+
     "#{section}/#{template}"
     
   resolvePartial: (section, template, entity) ->
+    return template.substr 1 if template.startsWith '/'
+    
     entity   = entity.constructor.__namespace__.map 'underscore'
     template = template.split "/"
     file     = path.pop()

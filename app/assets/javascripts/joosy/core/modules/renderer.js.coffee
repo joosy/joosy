@@ -37,22 +37,14 @@ Joosy.Modules.Renderer =
 
     @__helpersInstance
 
-    #   locals = locals.merge
-    #     render: (template, locals) =>
-    #       @__implicitlyRenderPartial template, locals
-    # 
-    #   @__implicitlyRenderTemplate template, locals
-    # 
-    # __explicitlyRender: (template, locals) ->
-
   render: (template, locals, partial=false) ->
     if Object.isString template
       if @__renderSection?
         if partial
-          template = Joosy.Application.templater.resolve @__renderSection(), template, this
+          template = Joosy.Application.templater.resolvePartial @__renderSection(), template, this
         else
-          template = Joosy.Application.templater.resolve @__renderSection(), template
-        
+          template = Joosy.Application.templater.resolveTemplate @__renderSection(), template
+
       template = Joosy.Application.templater.buildView template
     else if !Object.isFunction(template)
       throw new Error "#{@constructor.name}> template (maybe @view) does not look like a string or lambda"

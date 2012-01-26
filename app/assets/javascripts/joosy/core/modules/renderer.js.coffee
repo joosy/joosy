@@ -3,8 +3,8 @@
 
 Joosy.Modules.Renderer =
 
-  __renderer: ->
-    throw new Error "#{@constructor.name}> Renderer not defined"
+  __renderer: (locals={}) ->
+    @render(null, locals)
 
   __helpers: null
 

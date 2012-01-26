@@ -38,13 +38,13 @@ Joosy.Modules.Renderer =
     @__helpersInstance
 
   render: (template, locals) ->
-    locals = locals.merge
-      render: (template, locals) =>
-        @__implicitlyRenderPartial template, locals
-
-    @__implicitlyRenderPage template, locals
-
-  __explicitlyRender: (template, locals) ->
+  #   locals = locals.merge
+  #     render: (template, locals) =>
+  #       @__implicitlyRenderPartial template, locals
+  # 
+  #   @__implicitlyRenderPage template, locals
+  # 
+  # __explicitlyRender: (template, locals) ->
     if Object.isString template
       template = Joosy.Application.templater.buildView template
     else if !Object.isFunction(template)

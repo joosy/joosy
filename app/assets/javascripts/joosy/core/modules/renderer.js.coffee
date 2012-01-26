@@ -29,29 +29,36 @@ Joosy.Modules.Renderer =
 
   __instantiateHelpers: ->
     unless @__helpersInstance
-      @__helpersInstance = Object.extended(Joosy.Helpers.Global)
+      @__helpersInstance = Object.extended Joosy.Helpers.Global
 
       if @__helpers
         for helper in @__helpers
-          @__helpersInstance.merge(helper)
+          @__helpersInstance.merge helper
 
     @__helpersInstance
 
   render: (template, locals) ->
-    if Object.isString(template)
-      template = Joosy.Application.templater.buildView(template)
+    locals = locals.merge
+      render: (template, locals) =>
+        @__implicitlyRenderPartial template, locals
+
+    @__implicitlyRenderPage template, locals
+
+  __explicitlyRender: (template, locals) ->
+    if Object.isString template
+      template = Joosy.Application.templater.buildView template
     else if !Object.isFunction(template)
       throw new Error "#{@constructor.name}> template (maybe @view) does not look like a string or lambda"
 
-    if !Object.isObject(locals)
-      throw new Error "#{@constructor.name}> locals (maybe @data) can only be dumb hash"
+    if !Object.isObject locals
+      throw new Error "#{@constructor.name}> locals (maybe @data?) can only be dumb hash"
 
     locals.__proto__ = @__instantiateHelpers()
 
-    morph = Metamorph(template(locals))
+    morph = Metamorph template(locals)
 
     update = =>
-      morph.html(template(locals))
+      morph.html template(locals)
 
     @__metamorphs ||= []
 
@@ -63,20 +70,20 @@ Joosy.Modules.Renderer =
     morph.outerHTML()
 
   __implicitlyRenderPage: (template, locals) ->
-    @render(@__resolveTemplate(template, false), locals)
+    @__explicitlyRender @__resolveTemplate(template, false), locals
 
   __implicitlyRenderPartial: (template, locals) ->
-    @render(@__resolveTemplate(template, true), locals)
+    @__explicitlyRender @__resolveTemplate(template, true), locals
 
   __resolveTemplate: (template, isPartial) ->
-    if Object.isFunction(template)
+    if Object.isFunction template
       return template
 
     if template
-      if !Object.isString(template)
+      if !Object.isString template
         throw new Error "template should either be string or function"
 
-      path = template.split("/")
+      path = template.split "/"
       file = path.pop()
     else
       path = []

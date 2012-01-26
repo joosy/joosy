@@ -37,7 +37,7 @@ Joosy.Modules.Renderer =
 
     @__helpersInstance
 
-  render: (template, locals, partial=false) ->
+  render: (template, locals={}, partial=false) ->
     if Object.isString template
       if @__renderSection?
         if partial

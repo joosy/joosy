@@ -2,7 +2,7 @@
 #= require metamorph
 
 Joosy.Modules.Renderer =
-  
+
   __renderer: ->
     throw new Error "#{@constructor.name}> Renderer not defined!"
 
@@ -13,7 +13,7 @@ Joosy.Modules.Renderer =
       else
         @::__renderer = (locals={}) ->
           @render(template, locals)
-  
+
   __instantiateHelpers: ->
     unless @__helpersInstance
       @__helpersInstance = {}

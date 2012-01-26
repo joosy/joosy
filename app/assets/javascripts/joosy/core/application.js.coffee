@@ -9,7 +9,7 @@ Joosy.Application =
 
   initialize: (@name, @selector) ->
     @templater = new Joosy.Templaters.RailsJST(@name)
-    
+
     Joosy.Router.setupRoutes()
 
     @sandboxSelector = Joosy.uuid()

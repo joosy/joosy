@@ -24,7 +24,7 @@ Joosy.namespace = (name, generator=false) ->
   # A strange hack to add namespaces to Joosy.Module descendants
   Joosy.Module.__namespace__ = name
   generator = generator.apply(space) if generator
-  delete Joosy.Module.__namespace__
+  Joosy.Module.__namespace__ = []
 
 Joosy.helpers = (name, generator) ->
   Joosy.namespace("Joosy.Helpers.#{name}", generator)

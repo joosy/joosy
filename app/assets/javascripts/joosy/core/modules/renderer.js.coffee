@@ -67,7 +67,33 @@ Joosy.Modules.Renderer =
     @render(@__resolveTemplate(template, true), locals)
 
   __resolveTemplate: (template, isPartial) ->
-    layoutPath = ""
+    if Object.isFunction(template)
+      return template
+
+    console.log(template)
+
+    if template
+      if !Object.isString(template)
+        throw new Error "template should either be string or function"
+
+      path = template.split("/")
+      file = path.pop()
+    else
+      path = []
+      file = null
+
+    if path.length == 0
+      path = @constructor.__namespace__.map 'underscore'
+
+    path.unshift "pages"
+
+    if file == null
+      file = @constructor.name.underscore()
+
+    if isPartial
+      "#{path.join "/"}/_#{file}"
+    else
+      "#{path.join "/"}/#{file}"
 
   __removeMetamorphs: ->
     if @__metamorphs

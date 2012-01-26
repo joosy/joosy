@@ -77,3 +77,27 @@ describe "Joosy.Modules.Renderer", ->
     elem.html @dummyContainer.__renderer({ })
 
     expect(elem.text()).toBe "60"
+
+  it "correctly derives paths for templates from namespaces", ->
+    Joosy.namespace 'HogeNS.Fuga', ->
+      class @British extends Joosy.Module
+        @include Joosy.Modules.Renderer
+
+    class @Irish extends Joosy.Module
+      @include Joosy.Modules.Renderer
+
+    British = new HogeNS.Fuga.British
+    Irish   = new @Irish
+
+    func = ->
+    expect(British.__resolveTemplate(func)).toBe func
+
+    expect(British.__resolveTemplate()).toEqual "pages/hoge_ns/fuga/british"
+    expect(British.__resolveTemplate("other")).toEqual "pages/hoge_ns/fuga/other"
+    expect(British.__resolveTemplate("some/thing")).toEqual "pages/some/thing"
+
+    expect(British.__resolveTemplate("other", true)).toEqual "pages/hoge_ns/fuga/_other"
+    expect(British.__resolveTemplate("some/thing", true)).toEqual "pages/some/_thing"
+
+    expect(Irish.__resolveTemplate("con", true)).toEqual "pages/_con"
+    expect(Irish.__resolveTemplate("con/artist", true)).toEqual "pages/con/_artist"

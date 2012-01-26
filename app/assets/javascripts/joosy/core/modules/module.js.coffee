@@ -10,6 +10,8 @@ class Joosy.Module
 
     false
 
+  @__namespace__: []
+
   @include: (obj) ->
     throw 'include(obj) requires obj' unless obj
 

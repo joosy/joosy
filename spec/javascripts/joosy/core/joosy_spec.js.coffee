@@ -27,6 +27,10 @@ describe "Joosy", ->
 
     expect(Deeply.Nested.Klass.__namespace__).toEqual ["Deeply", "Nested"]
 
+    class @Flat extends Joosy.Module
+
+    expect(@Flat.__namespace__).toEqual []
+
   it "should set up helpers", ->
     Joosy.helpers 'Hoge', ->
       @fuga = ->

@@ -31,7 +31,8 @@ Joosy.Modules.Renderer =
     unless @__helpersInstance
       @__helpersInstance = Object.extended Joosy.Helpers.Global
 
-      @__helpersInstance.render = @render
+      @__helpersInstance.render = =>
+        @render
 
       if @__helpers
         for helper in @__helpers

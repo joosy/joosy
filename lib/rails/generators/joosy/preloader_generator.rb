@@ -4,21 +4,28 @@ module Joosy
   module Generators
     class PreloaderGenerator < ::Rails::Generators::NamedBase
       class_option :template_engine, :type => :string,
-                                     :desc => "Generate templates for specified engine."
+        :desc => "Generate templates for specified engine."
 
       source_root File.join(File.dirname(__FILE__), 'templates')
 
       def create_preloader_files
-        template "app_preloader.js.coffee.erb", "app/assets/javascripts/#{file_path}_preloader.js.coffee.erb"
+        unless class_path.empty?
+          puts <<HELP
+Usage: rails generate joosy:preloader joosy_app_name
+HELP
+          exit 1
+        end
 
-        empty_directory "app/controllers/#{File.join class_path}"
-        template "app_controller.rb", "app/controllers/#{file_path}_controller.rb"
+        template "app_preloader.js.coffee.erb", "app/assets/javascripts/#{file_name}_preloader.js.coffee.erb"
 
-        empty_directory "app/views/layouts/#{File.join class_path}"
+        empty_directory "app/controllers"
+        template "app_controller.rb", "app/controllers/#{file_name}_controller.rb"
+
+        empty_directory "app/views/layouts"
         template "preload.html.#{options[:template_engine]}",
-                 "app/views/layouts/#{file_path}.html.#{options[:template_engine]}"
+                 "app/views/layouts/#{file_name}.html.#{options[:template_engine]}"
 
-        route "match '#{file_path}' => '#{file_path}#index'"
+        route "match '#{file_name}' => '#{file_name}#index'"
       end
     end
   end

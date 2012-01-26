@@ -5,7 +5,7 @@ bootstrap = ->
     location.hash = '!/' if !location.hash
     
     Joosy.debug = window.preload.development
-    Joosy.Application.initialize('#application')
+    Joosy.Application.initialize('<%= file_name %>','#application')
 
 window.onload = ->
   Preloader.force    = false

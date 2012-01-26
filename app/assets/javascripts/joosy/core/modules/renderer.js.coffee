@@ -65,7 +65,7 @@ Joosy.Modules.Renderer =
 
     for key, object of locals
       if locals.hasOwnProperty key
-        if object.bind? && object.unbind?
+        if object?.bind? && object?.unbind?
           object.bind 'changed', update
           @__metamorphs.push [object, update]
 

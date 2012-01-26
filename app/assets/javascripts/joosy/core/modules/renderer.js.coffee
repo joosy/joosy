@@ -72,8 +72,6 @@ Joosy.Modules.Renderer =
     if Object.isFunction(template)
       return template
 
-    console.log(template)
-
     if template
       if !Object.isString(template)
         throw new Error "template should either be string or function"

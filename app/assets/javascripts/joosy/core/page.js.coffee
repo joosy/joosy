@@ -29,7 +29,7 @@ class Joosy.Page extends Joosy.Module
     @::__scrollElement = element
     @::__scrollSpeed = options.speed || 500
     @::__scrollMargin = options.margin || 0
-    
+
   @layout: (layoutClass) ->
     @::__layoutClass = layoutClass
 
@@ -61,7 +61,7 @@ class Joosy.Page extends Joosy.Module
       scroll = $(@__extractSelector(@__scrollElement)).offset()?.top + @__scrollMargin
       $('html, body').animate({scrollTop: scroll}, @__scrollSpeed)
       Joosy.Modules.Log.debug "#{@constructor.name}> Scrolling to #{@__extractSelector(@__scrollElement)}"
-      
+
     Joosy.Modules.Log.debug "#{@constructor.name}> Page loaded"
 
   __unload: ->
@@ -122,15 +122,15 @@ class Joosy.Page extends Joosy.Module
             @layout.yield()
         @swapContainer @layout.content(), @__renderer(@data)
         @container = @layout.content()
-        
+
         @layout.__load Joosy.Application.content()
         @__load()
-        
+
         Joosy.Beautifier.go()
-        
+
         if @__afterLayoutRender?
           @__afterLayoutRender Joosy.Application.content()
-        
+
         Joosy.Application.content()
 
       if @__onLayoutRender?

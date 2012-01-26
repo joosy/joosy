@@ -64,11 +64,11 @@ describe "Joosy.Modules.WidgetsManager", ->
 
     @seedGround()
     @box.container = $('#application')
-    @box.widgets = 
+    @box.widgets =
       '.post:first': TextWidget
       '.widget:first': (i) -> new TextWidget i
     @box.__setupWidgets()
-    
+
     expect(@ground.find('.post').html()).toEqual 'fluffy'
     expect(@ground.find('.widget').html()).toEqual 'fluffy'
     expect(@box.__activeWidgets[0].tester).toBeUndefined()

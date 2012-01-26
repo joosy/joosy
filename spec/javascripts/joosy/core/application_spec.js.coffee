@@ -1,12 +1,12 @@
 describe "Joosy.Application", ->
-  
+
   beforeEach ->
     sinon.stub(Joosy.Router, "setupRoutes")
     @seedGround()
-    
+
   afterEach ->
     Joosy.Router.setupRoutes.restore()
-  
+
   it "should initialize", ->
     Joosy.Application.initialize 'app', '#application'
     expect(Joosy.Application.page).toBeUndefined()
@@ -15,23 +15,23 @@ describe "Joosy.Application", ->
     expect($(Joosy.Application.sandboxSelector).length).toEqual 1
     expect(Joosy.Router.setupRoutes.callCount).toEqual 1
     expect(Joosy.Application.name).toEqual 'app'
-    
+
   it "should set container", ->
     expect(Joosy.Application.content()).toEqual $('#application')
-  
+
   it "should properly initialize and save pages", ->
     spy = sinon.spy()
     class Page1
       constructor: spy
     class Page2
       constructor: spy
-    
+
     Joosy.Application.setCurrentPage(Page1, {foo: 'bar'})
 
     expect(Joosy.Application.page instanceof Page1).toBeTruthy()
     expect(spy.callCount).toEqual 1
     expect(spy.args[0]).toEqual [{foo: 'bar'}, undefined]
-    
+
     Joosy.Application.setCurrentPage(Page2, {bar: 'baz'})
 
     expect(Joosy.Application.page instanceof Page2).toBeTruthy()

@@ -1,7 +1,7 @@
 Joosy.Modules.Events =
   wait: (events, callback) ->
     events = events.split(/\s+/)
-    
+
     @__oneShotEvents ||= []
     @__oneShotEvents.push [events, callback]
 
@@ -23,10 +23,10 @@ Joosy.Modules.Events =
       for [events, callback], index in @__oneShotEvents
         position = events.indexOf(event)
         events.splice(position, 1) if position >= 0
-      
+
         if events.length == 0
           @__oneShotEvents.splice(index, 1)
-      
+
           callback()
 
     if @__boundEvents

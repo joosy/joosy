@@ -26,7 +26,7 @@ Joosy.Modules.WidgetsManager =
     widgets = @__collectWidgets()
     registereds = Object.extended()
 
-    widgets.each (selector, widget) =>  
+    widgets.each (selector, widget) =>
       if selector == '$container'
         activeSelector = @container
       else

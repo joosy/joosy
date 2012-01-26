@@ -6,7 +6,7 @@ describe "Joosy.Form", ->
     @nudeForm = "<form id='nude'><input name='test[foo]'/><input name='test[bar]'/></form>"
     @putForm  = "<form id='put' method='put'><input name='test[camel_baz]'/></form>"
     @moreForm = "<form id='more' method='put'><input name='test[ololo]'/></form>"
-    
+
     @ground.find('#sidebar').after(@nudeForm).after(@putForm).after(@moreForm)
 
     @nudeForm = $('#nude')
@@ -21,43 +21,43 @@ describe "Joosy.Form", ->
 
   afterEach ->
     @server.restore()
-    
+
   describe "Initialization", ->
-    
+
     beforeEach ->
       @spy = sinon.spy $.fn, 'ajaxForm'
-      
+
     afterEach ->
       @spy.restore()
 
-    it "should properly act with options", ->      
+    it "should properly act with options", ->
       formWithProperties = new Joosy.Form @nudeForm, invalidationClass: 'fluffy'
       expect(formWithProperties.container).toEqual @nudeForm
       expect(formWithProperties.invalidationClass).toEqual 'fluffy'
       expect(formWithProperties.fields.length).toEqual 2
       expect(@nudeForm.attr 'method').toBeUndefined()
-      
+
       expect(@spy.callCount).toEqual 1
-      
+
     it "should properly act with callback", ->
       formWithCallback = new Joosy.Form @putForm, callback=sinon.spy()
       expect(formWithCallback.container).toEqual @putForm
       expect(formWithCallback.invalidationClass).toEqual 'field_with_errors'
       expect(formWithCallback.success).toBe callback
       expect(formWithCallback.fields.length).toEqual 1
-    
+
       expect(@spy.callCount).toEqual 1
-      
+
     it "should hijack form method if it differs from POST/GET", ->
       form   = new Joosy.Form @putForm, callback=sinon.spy()
       marker = @putForm.find "input[type=hidden]"
       expect(@putForm.attr 'method').toEqual 'POST'
       expect(marker.attr 'name').toEqual '_method'
       expect(marker.attr 'value').toEqual 'put'
-  
+
   describe "Filling", ->
 
-    beforeEach ->      
+    beforeEach ->
       @nudeForm = new Joosy.Form @nudeForm
       @putForm  = new Joosy.Form @putForm
       @moreForm = new Joosy.Form @moreForm
@@ -74,28 +74,28 @@ describe "Joosy.Form", ->
       expect(@putForm.fields[0].value).toEqual 'baz'
       expect(@putForm.container.attr 'method').toEqual 'POST'
       expect(@putForm.container.attr 'action').toEqual '/tests/'
-      
+
     it "should fill form with decorator", ->
       @moreForm.fill @resource, (e) ->
         e.ololo = e.camelBaz
         e
       expect(@moreForm.fields[0].value).toEqual 'baz'
-    
+
   describe "Callbacks", ->
     beforeEach ->
       @nudeForm = new Joosy.Form @nudeForm, @spy=sinon.spy()
       @nudeForm.fill @resource
       @nudeForm.container.submit()
       @target = @server.requests.last()
-    
+
     it "should trigger 'success'", ->
       expect(@target.method).toEqual 'POST'
       expect(@target.url).toEqual '/tests/'
       @target.respond 200, 'Content-Type': 'application/json', '{"form": "works"}'
       expect(@spy.callCount).toEqual 1
       expect(@spy.args[0][0]).toEqual {form: 'works'}
-    
-    it "should fill class for invalidated fields by default", ->    
+
+    it "should fill class for invalidated fields by default", ->
       @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
 
@@ -107,20 +107,20 @@ describe "Joosy.Form", ->
       expect(@nudeForm.error.callCount).toEqual 1
       expect(@nudeForm.error.args[0][0]).toEqual Object.extended
         "test[foo]": "error!"
-      
+
     it "should trigger 'error' and skip default action if it returned false", ->
       @nudeForm.error = sinon.spy ->
         false
       @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toNotEqual 'field_with_errors'
       expect(@nudeForm.error.callCount).toEqual 1
-      
+
     it "should clear fields before another submit", ->
       @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
       @nudeForm.container.submit()
       expect($(@nudeForm.fields[0]).attr 'class').toNotEqual 'field_with_errors'
-        
+
     it "should trigger 'before' and do default action if it returns true", ->
       @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
@@ -129,7 +129,7 @@ describe "Joosy.Form", ->
       @nudeForm.container.submit()
       expect($(@nudeForm.fields[0]).attr 'class').toNotEqual 'field_with_errors'
       expect(@nudeForm.before.callCount).toEqual 1
-      
+
     it "should trigger 'before' and skip default action if it returns false", ->
       @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'

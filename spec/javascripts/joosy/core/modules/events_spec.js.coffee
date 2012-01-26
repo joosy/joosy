@@ -44,10 +44,10 @@ describe "Joosy.Modules.Events", ->
 
     @box.trigger 'event'
     expect(callback.callCount).toEqual 3
-    
+
   it "should handle inheritance well", ->
     callback = sinon.spy()
     @sub.wait 'foo', callback
-    
+
     expect(@sub.__oneShotEvents).toEqual [[['foo'], callback]]
     expect(@box.__oneShotEvents).toBeUndefined()

@@ -7,7 +7,7 @@ describe "Joosy.Resource.REST", ->
   afterEach ->
     @server.restore()
 
-  it "should have default primary key", ->    
+  it "should have default primary key", ->
     expect(@Test::__primaryKey).toEqual 'id'
 
   it "should have appropriate accessors", ->

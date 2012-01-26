@@ -22,7 +22,7 @@ window.globalEval = (src) ->
       x = new XMLHttpRequest
     else
       x = new ActiveXObject 'Microsoft.XMLHTTP'
-    
+
     x.open 'GET', url, 1
 
     x.onreadystatechange = () ->
@@ -37,7 +37,7 @@ window.globalEval = (src) ->
         catch e
           # ... IE?
       , 100
-      
+
     x.send()
 
   restore: ->

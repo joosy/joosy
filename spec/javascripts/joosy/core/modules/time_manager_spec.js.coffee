@@ -18,7 +18,7 @@ describe "Joosy.Modules.TimeManager", ->
 
   it "should stop intervals and timeouts", ->
     callback = sinon.spy()
-    runs -> 
+    runs ->
       @box.setTimeout 10, callback
       @box.clearTime()
     waits(10)

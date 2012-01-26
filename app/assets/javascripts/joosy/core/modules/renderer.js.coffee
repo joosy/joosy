@@ -60,6 +60,15 @@ Joosy.Modules.Renderer =
 
     morph.outerHTML()
 
+  __implicitlyRenderPage: (template, locals) ->
+    @render(@__resolveTemplate(template, false), locals)
+
+  __implicitlyRenderPartial: (template, locals) ->
+    @render(@__resolveTemplate(template, true), locals)
+
+  __resolveTemplate: (template, isPartial) ->
+    layoutPath = ""
+
   __removeMetamorphs: ->
     if @__metamorphs
       for [object, callback] in @__metamorphs

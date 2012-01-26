@@ -12,6 +12,21 @@ describe "Joosy", ->
     expect(window.Namespaces.Test1).toBeDefined()
     expect(window.Namespaces.Test2.bingo).toEqual('bongo')
 
+  it "should imprint namespace paths in Joosy.Module descendants", ->
+    Joosy.namespace 'Irish', ->
+      class @Pub extends Joosy.Module
+
+    Joosy.namespace 'British', ->
+      class @Pub extends Joosy.Module
+
+    expect(Irish.Pub.__namespace__).toEqual ["Irish"]
+    expect(British.Pub.__namespace__).toEqual ["British"]
+
+    Joosy.namespace 'Deeply.Nested', ->
+      class @Klass extends Joosy.Module
+
+    expect(Deeply.Nested.Klass.__namespace__).toEqual ["Deeply", "Nested"]
+
   it "should set up helpers", ->
     Joosy.helpers 'Hoge', ->
       @fuga = ->

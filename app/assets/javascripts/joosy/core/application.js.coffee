@@ -14,7 +14,7 @@ Joosy.Application =
 
     @sandboxSelector = Joosy.uuid()
     @content().after("<div id='#{@sandboxSelector}' style='display:none'></div>")
-    @sandboxSelector = '#'+@sandboxSelector
+    @sandboxSelector = '#' + @sandboxSelector
 
   content: ->
     $(@selector)

@@ -41,7 +41,7 @@ Joosy.Modules.Renderer =
     if Object.isString template
       if @__renderSection?
         if partial
-          template = Joosy.Application.templater.resolvePartial @__renderSection(), template, this
+          template = Joosy.Application.templater.resolvePageTemplate @__renderSection(), template, this
         else
           template = Joosy.Application.templater.resolveTemplate @__renderSection(), template
 

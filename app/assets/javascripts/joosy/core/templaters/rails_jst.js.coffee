@@ -16,11 +16,13 @@ class Joosy.Templaters.RailsJST
 
     "#{section}/#{template}"
 
-  resolvePartial: (section, template, entity) ->
+  resolvePageTemplate: (section, template, entity) ->
     return template.substr 1 if template.startsWith '/'
 
-    entity   = entity.constructor.__namespace__.map 'underscore'
-    template = template.split "/"
-    file     = path.pop()
+    if template.indexOf("/") == -1
+      path = entity.constructor.__namespace__.map 'underscore'
+      path.unshift(section)
 
-    "#{section}/#{entity.join('/')}/#{template.join('/')}/_#{file}"
+      "#{path.join('/')}/#{template}"
+    else
+      "#{section}/#{template}"

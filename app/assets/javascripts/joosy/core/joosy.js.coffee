@@ -21,10 +21,11 @@ Joosy.namespace = (name, generator=false) ->
   space = window
   space = space[part] ?= {} for part in name
 
-  # A strange hack to add namespaces to Joosy.Module descendants
-  Joosy.Module.__namespace__ = name
   generator = generator.apply(space) if generator
-  Joosy.Module.__namespace__ = []
+  for key, klass of space
+    if space.hasOwnProperty(key) &&
+          Joosy.Module.hasAncestor(klass, Joosy.Module)
+      klass.__namespace__ = name
 
 Joosy.helpers = (name, generator) ->
   Joosy.namespace("Joosy.Helpers.#{name}", generator)

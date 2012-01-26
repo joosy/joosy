@@ -19,8 +19,12 @@ describe "Joosy", ->
     Joosy.namespace 'British', ->
       class @Pub extends Joosy.Module
 
+    Joosy.namespace 'Keltic', ->
+      class @Pub extends Irish.Pub
+
     expect(Irish.Pub.__namespace__).toEqual ["Irish"]
     expect(British.Pub.__namespace__).toEqual ["British"]
+    expect(Keltic.Pub.__namespace__).toEqual ["Keltic"]
 
     Joosy.namespace 'Deeply.Nested', ->
       class @Klass extends Joosy.Module

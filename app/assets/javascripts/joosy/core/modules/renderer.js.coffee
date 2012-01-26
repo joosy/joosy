@@ -32,7 +32,7 @@ Joosy.Modules.Renderer =
       @__helpersInstance = Object.extended Joosy.Helpers.Global
 
       @__helpersInstance.render = =>
-        @render
+        @render(arguments...)
 
       if @__helpers
         for helper in @__helpers

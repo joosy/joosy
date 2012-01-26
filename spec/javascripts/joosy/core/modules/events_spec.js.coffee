@@ -3,7 +3,10 @@ describe "Joosy.Modules.Events", ->
   beforeEach ->
     class @TestEvents extends Joosy.Module
       @include Joosy.Modules.Events
+    class @SubTestEvents extends @TestEvents
+      @include Joosy.Modules.Events
     @box = new @TestEvents()
+    @sub = new @SubTestEvents()
 
   it "should run callback once when the all listed events have occurred", ->
     callback = sinon.spy()
@@ -41,3 +44,10 @@ describe "Joosy.Modules.Events", ->
 
     @box.trigger 'event'
     expect(callback.callCount).toEqual 3
+    
+  it "should handle inheritance well", ->
+    callback = sinon.spy()
+    @sub.wait 'foo', callback
+    
+    expect(@sub.__oneShotEvents).toEqual [[['foo'], callback]]
+    expect(@box.__oneShotEvents).toBeUndefined()

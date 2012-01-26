@@ -1,7 +1,7 @@
 Joosy.Modules.Events =
   wait: (events, callback) ->
     events = events.split(/\s+/)
-
+    
     @__oneShotEvents ||= []
     @__oneShotEvents.push [events, callback]
 
@@ -18,14 +18,15 @@ Joosy.Modules.Events =
         return
 
   trigger: (event) ->
+    Joosy.Modules.Log.debug "#{@constructor.name}> Event #{event} triggered"
     if @__oneShotEvents
       for [events, callback], index in @__oneShotEvents
-        index = events.indexOf(event)
-        events.splice(index, 1) if index >= 0
-
+        position = events.indexOf(event)
+        events.splice(position, 1) if position >= 0
+      
         if events.length == 0
           @__oneShotEvents.splice(index, 1)
-
+      
           callback()
 
     if @__boundEvents

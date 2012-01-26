@@ -103,6 +103,7 @@ class Joosy.Page extends Joosy.Module
 
     if @__fetch?
       @__fetch =>
+        Joosy.Modules.Log.debug "#{@constructor.name}> Fetch complete"
         @trigger 'dataReceived'
     else
       @trigger 'dataReceived'
@@ -145,6 +146,7 @@ class Joosy.Page extends Joosy.Module
 
     if @__fetch?
       @__fetch =>
+        Joosy.Modules.Log.debug "#{@constructor.name}> Fetch complete"
         @trigger 'dataReceived'
     else
       @trigger 'dataReceived'

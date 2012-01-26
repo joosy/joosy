@@ -4,7 +4,9 @@
 Joosy.Modules.Renderer =
 
   __renderer: ->
-    throw new Error "#{@constructor.name}> Renderer not defined!"
+    throw new Error "#{@constructor.name}> Renderer not defined"
+
+  __helpers: null
 
   included: ->
     @view = (template) ->
@@ -14,11 +16,24 @@ Joosy.Modules.Renderer =
         @::__renderer = (locals={}) ->
           @render(template, locals)
 
+    @helpers = (helpers...) ->
+      @::__helpers ||= []
+      helpers.map (helper) =>
+        module = Joosy.Helpers[helper]
+        unless module
+          throw new Error "Cannot find helper module #{helper}"
+
+        @::__helpers.push module
+
+      @::__helpers = @::__helpers.unique()
+
   __instantiateHelpers: ->
     unless @__helpersInstance
-      @__helpersInstance = {}
+      @__helpersInstance = Object.extended()
 
-      # Mix in the actual helpers
+      if @__helpers
+        for helper in @__helpers
+          @__helpersInstance.merge(helper)
 
     @__helpersInstance
 
@@ -27,7 +42,7 @@ Joosy.Modules.Renderer =
       template = Joosy.Application.templater.buildView(template)
 
     if !Object.isObject(locals)
-      throw new Error "#{@constructor.name}> locals (maybe @data?) can only be dumb hash!"
+      throw new Error "#{@constructor.name}> locals (maybe @data?) can only be dumb hash"
 
     locals.__proto__ = @__instantiateHelpers()
 

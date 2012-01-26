@@ -23,6 +23,9 @@ Joosy.namespace = (name, generator=false) ->
 
   generator = generator.apply(space) if generator
 
+Joosy.helpers = (name, generator) ->
+  Joosy.namespace("Joosy.Helpers.#{name}", generator)
+
 Joosy.test = ->
   text = "Hi :). I'm Joosy. And everything is just fine!"
 

@@ -18,6 +18,10 @@ describe "Joosy.Modules.Renderer", ->
 
     @dummyObject = new @TestObject("initial")
 
+    Joosy.namespace 'Joosy.Helpers.Hoge', ->
+      @multiplier = (value) ->
+        "#{value * 5}"
+
   it "should update contents, but only while it is bound to DOM", ->
     @TestContainer.view (locals) ->
       template = (locals) ->
@@ -40,3 +44,19 @@ describe "Joosy.Modules.Renderer", ->
     @dummyObject.update "afterwards"
 
     expect(elem.text()).toBe "new"
+
+  it "should include rendering helpers in locals", ->
+    @TestContainer.helpers "Hoge"
+
+    @TestContainer.view (locals) ->
+      template = (locals) ->
+        "#{locals.multiplier(10)}"
+
+      @render(template, locals)
+
+    elem = $("<div></div>")
+    @ground.append elem
+
+    elem.html @dummyContainer.__renderer({ })
+
+    expect(elem.text()).toBe "50"

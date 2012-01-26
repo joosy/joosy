@@ -12,6 +12,15 @@ describe "Joosy", ->
     expect(window.Namespaces.Test1).toBeDefined()
     expect(window.Namespaces.Test2.bingo).toEqual('bongo')
 
+  it "should set up helpers", ->
+    Joosy.helpers 'Hoge', ->
+      @fuga = ->
+        "piyo"
+
+    expect(window.Joosy.Helpers).toBeDefined()
+    expect(window.Joosy.Helpers.Hoge).toBeDefined()
+    expect(window.Joosy.Helpers.Hoge.fuga()).toBe "piyo"
+
   it "should generate proper UUIDs", ->
     uuids = []
     2.times ->

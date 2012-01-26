@@ -40,6 +40,8 @@ Joosy.Modules.Renderer =
     @__helpersInstance
 
   render: (template, locals={}) ->
+    template = @constructor.name.underscore() if template == null
+
     if Object.isString template
       if @__renderSection?
         template = Joosy.Application.templater.resolveTemplate @__renderSection(), template, this

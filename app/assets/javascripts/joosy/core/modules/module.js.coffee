@@ -13,7 +13,7 @@ class Joosy.Module
     false
 
   @include: (obj) ->
-    throw 'include(obj) requires obj' unless obj
+    throw new Error 'include(obj) requires obj' unless obj
 
     Object.extended(obj).each (key, value) =>
       if key not in moduleKeywords
@@ -23,7 +23,7 @@ class Joosy.Module
     this
 
   @extend: (obj) ->
-    throw 'extend(obj) requires obj' unless obj
+    throw new Error 'extend(obj) requires obj' unless obj
 
     Object.extended(obj).each (key, value) =>
       if key not in moduleKeywords

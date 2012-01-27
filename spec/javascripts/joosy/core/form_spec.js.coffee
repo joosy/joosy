@@ -37,7 +37,6 @@ describe "Joosy.Form", ->
       expect(formWithProperties.container).toEqual @nudeForm
       expect(formWithProperties.invalidationClass).toEqual 'fluffy'
       expect(formWithProperties.fields.length).toEqual 2
-      expect(@nudeForm.attr 'method').toBeUndefined()
 
       expect(@spy.callCount).toEqual 1
 

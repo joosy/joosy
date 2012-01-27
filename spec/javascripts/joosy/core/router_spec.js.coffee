@@ -70,13 +70,13 @@ describe "Joosy.Router", ->
 
   it "should get route params", ->
     route  = Joosy.Router.prepareRoute "/such/a/long/long/url/:with/:plenty/:of/:params", "123"
-    result = Joosy.Router.paramsFromRouteMatch ['full regex match here', 1,2,3,4], route.values().first()
+    result = Joosy.Router.paramsFromRouteMatch ['full regex match here', 1, 2, 3, 4], route.values().first()
 
     expect(result).toEqual Object.extended
-      with: 1
-      plenty: 2
-      of: 3
-      params: 4
+      'with':   1
+      'plenty': 2
+      'of':     3
+      'params': 4
 
   it "should build query params", ->
     result = Joosy.Router.paramsFromQueryArray ["foo=bar", "bar=baz"]
@@ -116,8 +116,6 @@ describe "Joosy.Router", ->
     Joosy.Application.setCurrentPage.restore()
 
   it "should navigate", ->
-    location.hash = ''
-    expect(location.hash).toEqual ''
     Joosy.Router.navigate 'test'
     expect(location.hash).toEqual '#!test'
     Joosy.Router.navigate ''

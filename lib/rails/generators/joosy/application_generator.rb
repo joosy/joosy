@@ -21,6 +21,7 @@ module Joosy
         template "app/pages/application.js.coffee", "#{file_path}/pages/application.js.coffee"
 
         empty_directory_with_gitkeep "#{file_path}/widgets"
+        empty_directory_with_gitkeep "#{file_path}/resources"
 
         empty_directory_with_gitkeep "#{file_path}/templates/layouts"
         empty_directory_with_gitkeep "#{file_path}/templates/pages"

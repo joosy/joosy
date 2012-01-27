@@ -51,7 +51,7 @@ describe "Joosy.Form", ->
     it "should hijack form method if it differs from POST/GET", ->
       form   = new Joosy.Form @putForm, callback=sinon.spy()
       marker = @putForm.find "input[type=hidden]"
-      expect(@putForm.attr 'method').toEqual 'POST'
+      expect(@putForm.attr('method').toLowerCase()).toEqual 'post'
       expect(marker.attr 'name').toEqual '_method'
       expect(marker.attr 'value').toEqual 'put'
 
@@ -66,13 +66,13 @@ describe "Joosy.Form", ->
       @nudeForm.fill @resource
       expect(@nudeForm.fields[0].value).toEqual 'foo'
       expect(@nudeForm.fields[1].value).toEqual 'bar'
-      expect(@nudeForm.container.attr 'method').toEqual 'POST'
+      expect(@nudeForm.container.attr('method').toLowerCase()).toEqual 'post'
       expect(@nudeForm.container.attr 'action').toEqual '/tests/'
 
     it "should fill form with camelized properties", ->
       @putForm.fill @resource
       expect(@putForm.fields[0].value).toEqual 'baz'
-      expect(@putForm.container.attr 'method').toEqual 'POST'
+      expect(@putForm.container.attr('method').toLowerCase()).toEqual 'post'
       expect(@putForm.container.attr 'action').toEqual '/tests/'
 
     it "should fill form with decorator", ->

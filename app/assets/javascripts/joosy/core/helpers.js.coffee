@@ -1,4 +1,6 @@
 #= require joosy/core/joosy
 
 Joosy.helpers 'Global', ->
-  # global helpers will be here
+  
+  @nl2br = (text) ->
+    text.toString().replace(/\n/g, '<br/>')

@@ -10,3 +10,6 @@ Joosy.Modules.Log =
 
   debug: (args...) ->
     @log(args...) if Joosy.debug
+
+  debugAs: (context, string, args...) ->
+    @debug "#{Joosy.Module.__className__(context) || 'unknown context'}> #{string}", args...

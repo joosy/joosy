@@ -53,7 +53,7 @@ Joosy.Modules.Container =
 
       if selector == ""
         @container.bind(eventName, callback)
-        Joosy.Modules.Log.debug "#{Joosy.Module.cname @}> #{eventName} binded on container"
+        Joosy.Modules.Log.debugAs @, "#{eventName} binded on container"
       else
         @container.on(eventName, selector, callback)
-        Joosy.Modules.Log.debug "#{Joosy.Module.cname @}> #{eventName} binded on #{selector}"
+        Joosy.Modules.Log.debugAs @, "#{eventName} binded on #{selector}"

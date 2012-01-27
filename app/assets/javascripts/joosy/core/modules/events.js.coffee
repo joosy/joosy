@@ -18,7 +18,7 @@ Joosy.Modules.Events =
         return
 
   trigger: (event) ->
-    Joosy.Modules.Log.debug "#{Joosy.Module.cname @}> Event #{event} triggered"
+    Joosy.Modules.Log.debugAs @, "Event #{event} triggered"
     if @__oneShotEvents
       for [events, callback], index in @__oneShotEvents
         position = events.indexOf(event)

@@ -60,7 +60,7 @@ describe "Joosy.Resource.REST", ->
     expect(callback.callCount).toEqual 1
     expect(beforeLoadCallback.callCount).toEqual 1
 
-  it 'should find objects collection', ->
+  it 'should find objects collection with params', ->
     callback = sinon.spy (collection) ->
       i = 1
       collection.data.each (target) ->
@@ -68,6 +68,21 @@ describe "Joosy.Resource.REST", ->
         expect(target.e?.name).toEqual 'test' + i
         i += 1
     @Test.find null, callback
+    target = @server.requests[0]
+    expect(target.method).toEqual 'GET'
+    expect(target.url).toMatch /^\/tests\/\?_=\d+/
+    target.respond 200, 'Content-Type': 'application/json',
+      '[{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]'
+    expect(callback.callCount).toEqual 1
+
+  it 'should find all objects collection', ->
+    callback = sinon.spy (collection) ->
+      i = 1
+      collection.data.each (target) ->
+        expect(target.id).toEqual i
+        expect(target.e?.name).toEqual 'test' + i
+        i += 1
+    @Test.find callback
     target = @server.requests[0]
     expect(target.method).toEqual 'GET'
     expect(target.url).toMatch /^\/tests\/\?_=\d+/

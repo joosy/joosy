@@ -32,6 +32,9 @@ class Joosy.Resource.REST extends Joosy.Module
       resource.fetch callback, options
       resource
     else
+      if Object.isFunction(description) && !callback
+        callback = description
+        description = undefined
       resources = new Joosy.Resource.RESTCollection(@, description)
       resources.fetch callback, options
       resources

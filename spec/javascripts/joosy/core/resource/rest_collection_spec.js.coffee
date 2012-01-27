@@ -1,6 +1,7 @@
 describe "Joosy.Resource.RESTCollection", ->
 
   class Test extends Joosy.Resource.REST
+    @entity 'test'
 
   data = '[{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]'
 

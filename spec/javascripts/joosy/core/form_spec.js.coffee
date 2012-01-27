@@ -14,6 +14,8 @@ describe "Joosy.Form", ->
     @moreForm = $('#more')
 
     class Test extends Joosy.Resource.REST
+      @entity 'test'
+
     @resource = new Test
       foo: 'foo'
       bar: 'bar'

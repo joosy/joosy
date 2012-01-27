@@ -3,8 +3,8 @@
 
 Joosy.Modules.Renderer =
 
-  __renderer: (locals={}) ->
-    @render(null, locals)
+  __renderer: ->
+    throw new Error "#{@constructor.name} does not have an attached template"
 
   __helpers: null
 
@@ -41,8 +41,6 @@ Joosy.Modules.Renderer =
     @__helpersInstance
 
   render: (template, locals={}) ->
-    template = Joosy.Module.cname(this).underscore() if template == null
-
     if Object.isString template
       if @__renderSection?
         template = Joosy.Application.templater.resolveTemplate @__renderSection(), template, this

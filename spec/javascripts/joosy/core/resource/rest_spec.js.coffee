@@ -3,6 +3,7 @@ describe "Joosy.Resource.REST", ->
   beforeEach ->
     @server = sinon.fakeServer.create()
     class @Test extends Joosy.Resource.REST
+      @entity 'test'
 
   afterEach ->
     @server.restore()
@@ -22,11 +23,6 @@ describe "Joosy.Resource.REST", ->
     @Test.beforeLoad 'function'
     expect(@Test::__beforeLoad).toEqual 'function'
 
-  it "should extract entity name from class name", ->
-    class SubTest extends @Test
-    expect(@Test.entityName()).toEqual 'test'
-    expect(SubTest.entityName()).toEqual 'sub_test'
-
   it "should build source url based on entity name", ->
     options =
       extension: 'id'
@@ -35,13 +31,13 @@ describe "Joosy.Resource.REST", ->
     expect(@Test.__buildSource(options)).toEqual '/tests/id?test=1'
 
   it "should have overloaded constructor", ->
-    resource = new Joosy.Resource.REST 'someId'
+    resource = new @Test 'someId'
     expect(resource.id).toEqual 'someId'
 
     data = {id: 'someId', field: 'value'}
 
-    rooted   = new Joosy.Resource.REST {rest: data}
-    unrooted = new Joosy.Resource.REST data
+    rooted   = new @Test {test: data}
+    unrooted = new @Test data
 
     expect(rooted.e).toEqual unrooted.e
     expect(rooted.id).toEqual 'someId'

@@ -3,14 +3,6 @@ moduleKeywords = ['included', 'extended']
 class Joosy.Module
   @__namespace__: []
 
-  @cname = (klass) ->
-    klass = klass.constructor unless Object.isFunction(klass)
-
-    if klass.name?
-      klass.name
-    else
-      klass.toString().replace(/^function ([a-zA-Z]+)\([\s\S]+/, '$1')
-
   @hasAncestor = (what, klass) ->
     [ what, klass ] = [ what.prototype, klass.prototype ]
 

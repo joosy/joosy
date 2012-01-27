@@ -33,6 +33,19 @@ Joosy.Modules.Renderer =
 
       @__helpersInstance.render = =>
         @render(arguments...)
+        
+      @__helpersInstance.widget = (element, widget) =>
+        @widgets ||= {}
+        
+        uuid    = Joosy.uuid()
+        element = document.createElement(element)
+        temp    = document.createElement("div")
+        
+        element.id     = uuid
+        @widgets['#'+uuid] = widget
+
+        temp.appendChild(element)
+        temp.innerHTML
 
       if @__helpers
         for helper in @__helpers

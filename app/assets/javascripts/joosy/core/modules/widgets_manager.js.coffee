@@ -4,7 +4,7 @@ Joosy.Modules.WidgetsManager =
       widget = new widget()
 
     @__activeWidgets ||= []
-    @__activeWidgets.push widget.__load(this, container)
+    @__activeWidgets.push widget.__load(this, $(container))
 
     widget
 

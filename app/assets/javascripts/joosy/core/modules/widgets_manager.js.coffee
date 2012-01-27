@@ -6,12 +6,12 @@ Joosy.Modules.WidgetsManager =
     @__activeWidgets ||= []
     @__activeWidgets.push widget.__load(this, container)
 
-    return widget
+    widget
 
   unregisterWidget: (widget) ->
     widget.__unload()
 
-    @__activeWidgets.splice(@__activeWidgets.indexOf(widget))
+    @__activeWidgets.splice(@__activeWidgets.indexOf(widget), 1)
 
   __collectWidgets: ->
     widgets = Object.extended(@widgets || {})
@@ -23,8 +23,8 @@ Joosy.Modules.WidgetsManager =
     widgets
 
   __setupWidgets: ->
-    widgets = @__collectWidgets()
-    registereds = Object.extended()
+    widgets    = @__collectWidgets()
+    registered = Object.extended()
 
     widgets.each (selector, widget) =>
       if selector == '$container'
@@ -32,22 +32,23 @@ Joosy.Modules.WidgetsManager =
       else
         if r = selector.match(/\$([A-z_]+)/)
           selector = @elements[r[1]]
+
         activeSelector = $(selector, @container)
 
-      registereds[selector] = Object.extended()
+      registered[selector] = Object.extended()
 
-      activeSelector.each (i, elem) =>
+      activeSelector.each (index, elem) =>
         if Joosy.Module.hasAncestor(widget, Joosy.Widget)
-          w = new widget
+          instance = new widget
         else
-          w = widget.call this, i
+          instance = widget.call this, index
 
-        registereds[selector][Joosy.Module.__className__ w] ||= 0
-        registereds[selector][Joosy.Module.__className__ w]  += 1
+        registered[selector][Joosy.Module.__className__ instance] ||= 0
+        registered[selector][Joosy.Module.__className__ instance]  += 1
 
-        @registerWidget($(elem), w)
+        @registerWidget($(elem), instance)
 
-    registereds.each (selector, value) =>
+    registered.each (selector, value) =>
       value.each (widget, count) =>
         Joosy.Modules.Log.debugAs @, "Widget #{widget} registered at '#{selector}'. Elements: #{count}"
 

@@ -20,7 +20,7 @@ class Joosy.Resource.REST extends Joosy.Module
 
   @entityName: ->
     unless @::hasOwnProperty '__entityName'
-      @::__entityName = @name.underscore()
+      @::__entityName = Joosy.Module.cname(this).underscore()
     @::__entityName
 
   # Returns single entity if int/string given

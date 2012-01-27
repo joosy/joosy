@@ -63,9 +63,9 @@ class Joosy.Page extends Joosy.Module
     if @__scrollElement
       scroll = $(@__extractSelector(@__scrollElement)).offset()?.top + @__scrollMargin
       $('html, body').animate({scrollTop: scroll}, @__scrollSpeed)
-      Joosy.Modules.Log.debug "#{@constructor.name}> Scrolling to #{@__extractSelector(@__scrollElement)}"
+      Joosy.Modules.Log.debug "#{Joosy.Module.cname @}> Scrolling to #{@__extractSelector(@__scrollElement)}"
 
-    Joosy.Modules.Log.debug "#{@constructor.name}> Page loaded"
+    Joosy.Modules.Log.debug "#{Joosy.Module.cname @}> Page loaded"
 
   __unload: ->
     @clearTime()
@@ -75,7 +75,7 @@ class Joosy.Page extends Joosy.Module
     delete @previous
 
   __bootstrap: ->
-    Joosy.Modules.Log.debug "#{@constructor.name}> Boostraping page"
+    Joosy.Modules.Log.debug "#{Joosy.Module.cname @}> Boostraping page"
     @layout = @previous.layout
 
     @wait "stageClear dataReceived", =>
@@ -106,13 +106,13 @@ class Joosy.Page extends Joosy.Module
 
     if @__fetch?
       @__fetch =>
-        Joosy.Modules.Log.debug "#{@constructor.name}> Fetch complete"
+        Joosy.Modules.Log.debug "#{Joosy.Module.cname @}> Fetch complete"
         @trigger 'dataReceived'
     else
       @trigger 'dataReceived'
 
   __bootstrapLayout: ->
-    Joosy.Modules.Log.debug "#{@constructor.name}> Boostraping page with layout"
+    Joosy.Modules.Log.debug "#{Joosy.Module.cname @}> Boostraping page with layout"
     @layout = new @__layoutClass
 
     @wait "stageClear dataReceived", =>
@@ -149,7 +149,7 @@ class Joosy.Page extends Joosy.Module
 
     if @__fetch?
       @__fetch =>
-        Joosy.Modules.Log.debug "#{@constructor.name}> Fetch complete"
+        Joosy.Modules.Log.debug "#{Joosy.Module.cname @}> Fetch complete"
         @trigger 'dataReceived'
     else
       @trigger 'dataReceived'

@@ -41,7 +41,7 @@ Joosy.Modules.Renderer =
     @__helpersInstance
 
   render: (template, locals={}) ->
-    template = @constructor.name.underscore() if template == null
+    template = Joosy.Module.cname(this).underscore() if template == null
 
     if Object.isString template
       if @__renderSection?
@@ -49,10 +49,10 @@ Joosy.Modules.Renderer =
 
       template = Joosy.Application.templater.buildView template
     else if !Object.isFunction(template)
-      throw new Error "#{@constructor.name}> template (maybe @view) does not look like a string or lambda"
+      throw new Error "#{Joosy.Module.cname @}> template (maybe @view) does not look like a string or lambda"
 
     if !Object.isObject locals
-      throw new Error "#{@constructor.name}> locals (maybe @data?) can only be dumb hash"
+      throw new Error "#{Joosy.Module.cname @}> locals (maybe @data?) can only be dumb hash"
 
     locals.__proto__ = @__instantiateHelpers()
 

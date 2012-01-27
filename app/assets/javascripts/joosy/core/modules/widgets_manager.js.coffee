@@ -42,14 +42,14 @@ Joosy.Modules.WidgetsManager =
         else
           w = widget.call this, i
 
-        registereds[selector][w.constructor.name] ||= 0
-        registereds[selector][w.constructor.name] += 1
+        registereds[selector][Joosy.Module.cname w] ||= 0
+        registereds[selector][Joosy.Module.cname w] += 1
 
         @registerWidget($(elem), w)
 
     registereds.each (selector, value) =>
       value.each (widget, count) =>
-        Joosy.Modules.Log.debug "#{@constructor.name}> Widget #{widget} registered at '#{selector}'. Elements: #{count}"
+        Joosy.Modules.Log.debug "#{Joosy.Module.cname @}> Widget #{widget} registered at '#{selector}'. Elements: #{count}"
 
   __unloadWidgets: ->
     if @__activeWidgets

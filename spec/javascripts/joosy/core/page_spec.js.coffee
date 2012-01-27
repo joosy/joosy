@@ -36,17 +36,17 @@ describe "Joosy.Page", ->
 
     it "should not render layout if it not changes", ->
       @box.layout = new ApplicationLayout()
+      @box.layout.yield()
       new @TestPage {}, @box
       expect(@TestPage::__bootstrap.callCount).toEqual 1
       expect(@TestPage::__bootstrapLayout.callCount).toEqual 1
 
     it "should render layout if it changes", ->
       class SubLayout extends Joosy.Layout
-      @box.constructor.view SubLayout
       @box = new @TestPage()
       new @TestPage {}, @box
-      expect(@TestPage::__bootstrap.callCount).toEqual 1
-      expect(@TestPage::__bootstrapLayout.callCount).toEqual 2
+      expect(@TestPage::__bootstrap.callCount).toEqual 0
+      expect(@TestPage::__bootstrapLayout.callCount).toEqual 3
 
     it "should stop render on beforeFilter result", ->
       sinon.stub @TestPage.prototype, '__runBeforeLoads'

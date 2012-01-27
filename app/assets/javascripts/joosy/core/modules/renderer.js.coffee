@@ -54,7 +54,7 @@ Joosy.Modules.Renderer =
     if !Object.isObject locals
       throw new Error "#{Joosy.Module.cname @}> locals (maybe @data?) can only be dumb hash"
 
-    locals.__proto__ = @__instantiateHelpers()
+    locals.prototype = locals.__proto__ = @__instantiateHelpers()
 
     morph = Metamorph template(locals)
 

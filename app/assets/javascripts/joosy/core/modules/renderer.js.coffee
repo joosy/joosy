@@ -40,6 +40,21 @@ Joosy.Modules.Renderer =
 
     @__helpersInstance
 
+  # If we do not have __proto__ available...
+  __proxifyHelpers: (locals) ->
+    if locals.hasOwnProperty '__proto__'
+      locals.__proto__ = @__instantiateHelpers()
+
+      locals
+    else
+      unless @__helpersProxyInstance
+        @__helpersProxyInstance = (locals) ->
+          Object.merge(this, locals)
+
+        @__helpersProxyInstance.prototype = @__instantiateHelpers()
+
+      new @__helpersProxyInstance(locals)
+
   render: (template, locals={}) ->
     if Object.isString template
       if @__renderSection?
@@ -52,7 +67,7 @@ Joosy.Modules.Renderer =
     if !Object.isObject locals
       throw new Error "#{Joosy.Module.__className__ @}> locals (maybe @data?) can only be dumb hash"
 
-    locals.prototype = locals.__proto__ = @__instantiateHelpers()
+    locals = @__proxifyHelpers(locals)
 
     morph = Metamorph template(locals)
 

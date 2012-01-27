@@ -45,7 +45,7 @@ class Joosy.Page extends Joosy.Module
     @__layoutClass ||= ApplicationLayout
 
     if @__runBeforeLoads(@params, @previous)
-      if !@previous?.layout? || @previous?.__layoutClass != @__layoutClass
+      if !@previous?.layout?.uuid? || @previous?.__layoutClass != @__layoutClass
         @__bootstrapLayout()
       else
         @__bootstrap()

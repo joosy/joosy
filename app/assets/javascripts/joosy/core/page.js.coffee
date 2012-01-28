@@ -20,7 +20,7 @@ class Joosy.Page extends Joosy.Module
   layout: false
   previous: false
   params: false
-  data: {}
+  data: false
 
   @fetch: (callback) ->
     @::__fetch = callback
@@ -82,7 +82,7 @@ class Joosy.Page extends Joosy.Module
       @previous?.__unload()
 
       complete = =>
-        @swapContainer @layout.content(), @__renderer(@data)
+        @swapContainer @layout.content(), @__renderer(@data || {})
         @container = @layout.content()
 
         @__load()
@@ -123,7 +123,7 @@ class Joosy.Page extends Joosy.Module
         @swapContainer Joosy.Application.content(), @layout.__renderer
           yield: =>
             @layout.yield()
-        @swapContainer @layout.content(), @__renderer(@data)
+        @swapContainer @layout.content(), @__renderer(@data || {})
         @container = @layout.content()
 
         @layout.__load Joosy.Application.content()

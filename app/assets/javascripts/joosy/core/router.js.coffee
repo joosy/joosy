@@ -39,6 +39,8 @@ Joosy.Router =
     result
 
   respondRoute: (hash) ->
+    Joosy.Modules.Log.debug "Router> Answering '#{hash}'"
+
     fullPath = hash.replace(/^#!?/, '')
 
     @currentPath = fullPath

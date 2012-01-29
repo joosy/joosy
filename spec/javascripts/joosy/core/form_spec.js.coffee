@@ -52,7 +52,7 @@ describe "Joosy.Form", ->
     it "should hijack form method if it differs from POST/GET", ->
       form   = new Joosy.Form @putForm, callback=sinon.spy()
       marker = @putForm.find "input[type=hidden]"
-      expect(@putForm.attr('method').toLowerCase()).toEqual 'post'
+      expect(@putForm.attr('method')?.toLowerCase()).toEqual 'post'
       expect(marker.attr 'name').toEqual '_method'
       expect(marker.attr 'value').toEqual 'put'
 

@@ -13,9 +13,10 @@ Gem::Specification.new do |s|
   s.files         = `git ls-files`.split("\n")
   s.require_paths = ["lib"]
 
-  s.add_dependency 'rails', ">= 3.0.0"
+  s.add_dependency 'rails', ">= 3.1.0"
   s.add_dependency 'coffee-rails'
   s.add_dependency 'jquery-rails'
+  s.add_dependency 'haml_coffee_assets'
 
   s.add_development_dependency 'guard'
   s.add_development_dependency 'guard-coffeescript'

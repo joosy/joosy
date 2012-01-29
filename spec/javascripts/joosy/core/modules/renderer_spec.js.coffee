@@ -62,7 +62,7 @@ describe "Joosy.Modules.Renderer", ->
     expect(elem.text()).toBe "50"
 
   it "should include global rendering helpers in locals", ->
-    Joosy.Helpers.Global.globalMultiplier = (value) ->
+    Joosy.Helpers.Application.globalMultiplier = (value) ->
       value * 6
 
     @TestContainer.view (locals) ->

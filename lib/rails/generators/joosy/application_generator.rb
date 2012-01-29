@@ -14,6 +14,9 @@ module Joosy
 
         template "app/routes.js.coffee", "#{file_path}/routes.js.coffee"
 
+        empty_directory "#{file_path}/helpers"
+        template "app/helpers/application.js.coffee", "#{file_path}/helpers/application.js.coffee"
+
         empty_directory "#{file_path}/layouts"
         template "app/layouts/application.js.coffee", "#{file_path}/layouts/application.js.coffee"
 

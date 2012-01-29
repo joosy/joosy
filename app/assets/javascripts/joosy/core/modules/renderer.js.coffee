@@ -29,7 +29,7 @@ Joosy.Modules.Renderer =
 
   __instantiateHelpers: ->
     unless @__helpersInstance
-      @__helpersInstance = Object.extended Joosy.Helpers.Global
+      @__helpersInstance = Object.extended Joosy.Helpers.Application
 
       @__helpersInstance.render = =>
         @render(arguments...)

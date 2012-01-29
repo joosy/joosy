@@ -1,5 +1,6 @@
 #= require joosy
 #
+#= require_tree ./<%= file_name %>/helpers
 #= require_tree ./<%= file_name %>/templates
 #= require_tree ./<%= file_name %>/resources
 #= require_tree ./<%= file_name %>/widgets

@@ -1,1 +1,2 @@
-%div{:id => @yield()}
+#page{:style => 'font-family: "Lucida Grande", "Verdana"; text-align: center'}
+  .content{:id => @yield()}

@@ -1,8 +1,8 @@
-@Preloader =
+@Preloader = @InlinePreloader =
   receive: (url, callback) ->
     head   = document.getElementsByTagName("head")[0]
     script = document.createElement("script")
-    script.src = url# + (if url.match(/\?/) then '&' else '?') + "rand=" + Math.random()
+    script.src = url
 
     done = false
 
@@ -18,7 +18,8 @@
     head.appendChild(script)
     return undefined
 
-  load: (libraries) ->
+  load: (libraries, options) ->
+    @[key] = val for key, val of options
     @start?.call window
 
     if libraries.length > 0

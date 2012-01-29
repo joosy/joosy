@@ -5,8 +5,7 @@ html
 
     javascript:
       window.preload = {
-        libraries:   #{extract_sources_and_sizes_from_include_tag('<%= file_path %>')},
-        development: #{Rails.env.development?}
+        libraries: #{extract_sources_and_sizes_from_include_tag('<%= file_path %>')}
       };
 
     = stylesheet_link_tag 'application'

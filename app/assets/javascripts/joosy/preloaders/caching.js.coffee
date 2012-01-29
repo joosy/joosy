@@ -8,7 +8,7 @@ window.globalEval = (src) ->
       window.eval.call window,src
     fn()
 
-@Preloader =
+@Preloader = @CachingPreloader =
   force: false
   prefix: "cache:"
 
@@ -25,18 +25,19 @@ window.globalEval = (src) ->
 
     x.open 'GET', url, 1
 
-    x.onreadystatechange = () ->
-      if callback? && x.readyState > 3
-        clearInterval(interval)
-        callback(x)
+    x.onreadystatechange = () =>
+      if x.readyState > 3
+        clearInterval(@interval)
+        callback?(x)
 
     if @progress
-      interval = setInterval =>
+      poller = =>
         try
           @progress.call window, Math.round((x.responseText.length / size) * (@counter / @libraries.length) * 100)
         catch e
           # ... IE?
-      , 100
+
+      @interval = setInterval poller, 100
 
     x.send()
 
@@ -61,9 +62,10 @@ window.globalEval = (src) ->
         @download libraries
     else
       @clean()
-      @complete?.call window, false
+      @complete?.call window
 
-  load: (libraries) ->
+  load: (libraries, options={}) ->
+    @[key] = val for key, val of options
     @libraries = libraries.slice()
 
     for lib, i in @libraries

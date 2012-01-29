@@ -1,16 +1,11 @@
-<%= '<% require_asset "joosy/preloader/#{Rails.env}" %'+'>' %>
+<%= "require_joosy_preloader_for '<%= file_name %>', preloader: 'caching', force: false" %>
 
 bootstrap = ->
-  $('#preloader').slideUp ->
-    location.hash = '!/' if !location.hash
-    
-    Joosy.debug = window.preload.development
-    Joosy.Application.initialize('<%= file_name %>','#application')
+  $('#preloader').remove()
+  Joosy.Application.initialize '<%= file_name %>','#application', debug: false
 
 window.onload = ->
-  Preloader.force    = false
-  Preloader.complete = bootstrap
-  Preloader.start    = -> document.getElementById('preloader').style.display = 'block'
-  Preloader.progress = (percent) -> document.getElementById('percents').innerHTML = percent + '%'
-
-  Preloader.load window.preload.libraries
+  Preloader.load window.preload,
+    complete: bootstrap
+    start: -> document.getElementById('preloader').style.display = 'block'
+    progress: (percent) -> document.getElementById('percents').innerHTML = percent + '%'

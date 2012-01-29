@@ -1,13 +1,14 @@
 #= require joosy/core/joosy
 
-Joosy.Application =
+Joosy.Application = Object.extended
   Pages: {}
   Layouts: {}
   Controls: {}
 
   selector: false
 
-  initialize: (@name, @selector) ->
+  initialize: (@name, @selector, options={}) ->
+    @merge options
     @templater = new Joosy.Templaters.RailsJST(@name)
 
     Joosy.Router.setupRoutes()

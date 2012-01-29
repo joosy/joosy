@@ -3,8 +3,8 @@ require 'rails/generators/named_base'
 module Rails
   module Generators
     class JoosyBase < ::Rails::Generators::NamedBase
-      class_option :template_kind, :type => :string, :aliases => "-T", :default => 'jade',
-                                   :desc => "Generate templates with specified extension (default: .jade)"
+      class_option :template_kind, :type => :string, :aliases => "-T", :default => 'hamlc',
+                                   :desc => "Generate templates with specified extension (default: .hamlc)"
 
       class_option :skip_git,      :type => :boolean, :aliases => "-G", :default => false,
                                    :desc => "Skip Git keeps"

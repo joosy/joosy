@@ -2,10 +2,12 @@
 
 bootstrap = ->
   $('#preloader').remove()
-  Joosy.Application.initialize '<%= file_name %>','#application', debug: false
+  Joosy.Application.initialize '<%= file_name %>','#application',
+    environment: window.joosy.environment
+    debug: false
 
 window.onload = ->
-  Preloader.load window.preload,
+  Preloader.load window.joosy.libraries,
     complete: bootstrap
     start: -> document.getElementById('preloader').style.display = 'block'
     progress: (percent) -> document.getElementById('percents').innerHTML = percent + '%'

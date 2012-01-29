@@ -4,8 +4,9 @@
     <title>Loading...</title>
 
     <script type="text/javascript">
-      window.preload = {
-        libraries: <%= "<%= extract_sources_and_sizes_from_include_tag('#{file_path}') %"+">" %>
+      window.joosy = {
+        libraries: <%= "<%= extract_sources_and_sizes_from_include_tag('#{file_path}') %"+">" %>,
+        environment: '<%= "<%= Rails.env.to_s %"+">" %>'
       };
     </script>
 

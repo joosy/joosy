@@ -23,9 +23,6 @@
     @start?.call window
 
     if libraries.length > 0
-      if !Object.isArray(libraries?[0])
-        throw new Error "Array of arrays expected"
-      
       @receive libraries.shift()[0], => @load(libraries)
     else
       @complete?.call window

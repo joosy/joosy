@@ -1,7 +1,7 @@
 describe "InlinePreloader", ->
 
   it "should load JS", ->
-    expect(window.variable_assigned_on_load).toBeUndefined()
+    window.variable_assigned_on_load = undefined
     callback = sinon.spy()
     
     runs ->
@@ -13,4 +13,4 @@ describe "InlinePreloader", ->
     runs ->
       expect(callback.callCount).toEqual 1
       expect(window.variable_assigned_on_load).toEqual 'yapyap'
-      delete window.variable_assigned_on_load
+      window.variable_assigned_on_load = undefined

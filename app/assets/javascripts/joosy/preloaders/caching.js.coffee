@@ -65,6 +65,9 @@ window.globalEval = (src) ->
       @complete?.call window
 
   load: (libraries, options={}) ->
+    if !Object.isArray(libraries) || !Object.isArray(libraries?[0])
+      throw new Error "Array of arrays expected"
+    
     @[key] = val for key, val of options
     @libraries = libraries.slice()
 

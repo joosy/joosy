@@ -58,7 +58,7 @@ describe "Joosy", ->
     expect(Joosy.buildUrl 'http://www.org?bar=baz', {foo: 'bar'}).toEqual('http://www.org?bar=baz&foo=bar')
 
   it "should preload images", ->
-    path   = "/spec/javascripts/support/images/"
+    path   = "/spec/javascripts/support/assets/"
     images = [path+"okay.jpg", path+"okay.jpg"]
 
     callback = sinon.spy()

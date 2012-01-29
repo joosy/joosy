@@ -20,14 +20,20 @@ module Joosy
         empty_directory "#{file_path}/layouts"
         template "app/layouts/application.js.coffee", "#{file_path}/layouts/application.js.coffee"
 
-        empty_directory "#{file_path}/pages"
+        empty_directory "#{file_path}/pages/welcome"
         template "app/pages/application.js.coffee", "#{file_path}/pages/application.js.coffee"
+        template "app/pages/welcome/index.js.coffee", "#{file_path}/pages/welcome/index.js.coffee"
+
+        empty_directory "#{file_path}/templates/layouts"
+        template "app/templates/layouts/application.jst.hamlc", "#{file_path}/templates/layouts/application.jst.hamlc"
+
+        empty_directory "#{file_path}/templates/pages/welcome"
+        template "app/templates/pages/welcome/index.jst.hamlc", "#{file_path}/templates/pages/welcome/index.jst.hamlc"
 
         empty_directory_with_gitkeep "#{file_path}/widgets"
         empty_directory_with_gitkeep "#{file_path}/resources"
 
         empty_directory_with_gitkeep "#{file_path}/templates/layouts"
-        empty_directory_with_gitkeep "#{file_path}/templates/pages"
         empty_directory_with_gitkeep "#{file_path}/templates/widgets"
       end
     end

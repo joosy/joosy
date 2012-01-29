@@ -1,3 +1,4 @@
+#= require hamlcoffee
 #= require joosy
 #
 #= require_tree ./<%= file_name %>/helpers

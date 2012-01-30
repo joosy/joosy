@@ -17,9 +17,7 @@ describe "Joosy.Page", ->
 
 
     it "should have appropriate accessors", ->
-      callback_names = ['fetch', 'beforePageRender', 'afterPageRender',
-        'onPageRender', 'beforeLayoutRender', 'afterLayoutRender',
-        'onLayoutRender']
+      callback_names = ['fetch', 'beforeRender', 'afterRender', 'onRender']
       callback_names.each (func) =>
         @TestPage[func] 'callback'
         expect(@TestPage::['__' + func]).toEqual 'callback'
@@ -94,7 +92,7 @@ describe "Joosy.Page", ->
       it "should wait stageClear and dataReceived event to start render", ->
         spies = []
 
-        spies.push @box.__beforePageRender = sinon.spy (stage, callback) ->
+        spies.push @box.__beforeRender = sinon.spy (stage, callback) ->
           expect(stage.selector).toEqual @layout.content().selector
           expect(@__oneShotEvents[0][0]).toEqual ['stageClear', 'dataReceived']
           callback()
@@ -107,7 +105,7 @@ describe "Joosy.Page", ->
 
         spies.push sinon.spy(@box.previous, '__unload')
 
-        spies.push @box.__onPageRender = sinon.spy (stage, callback) ->
+        spies.push @box.__onRender = sinon.spy (stage, callback) ->
           expect(stage.selector).toEqual @layout.content().selector
           expect(typeof callback).toEqual 'function'
           # callback()  - start rendering
@@ -122,24 +120,21 @@ describe "Joosy.Page", ->
         spies.push @box.__renderer
         spies.push sinon.spy(@box, 'swapContainer')
         spies.push sinon.spy(@box, '__load')
-        spies.push sinon.spy(Joosy.Beautifier, 'go')
 
-        spies.push @box.__afterPageRender = sinon.spy (stage) ->
+        spies.push @box.__afterRender = sinon.spy (stage) ->
           expect(stage.selector).toEqual @layout.content().selector
 
         @box.__bootstrap()
         expect(spies).toBeSequenced()
 
-        Joosy.Beautifier.go.restore()
-
       it "should wait stageClear and dataReceived event to start layout render", ->
         spies = []
 
-        spies.push @box.__beforeLayoutRender = sinon.spy (stage, callback) ->
+        spies.push ApplicationLayout::__beforeRender = sinon.spy (stage, callback) =>
           expect(stage.selector).toEqual Joosy.Application.content().selector
-          expect(@__oneShotEvents[0][0]).toEqual ['stageClear', 'dataReceived']
+          expect(@box.__oneShotEvents[0][0]).toEqual ['stageClear', 'dataReceived']
           callback()
-          expect(@__oneShotEvents[0][0]).toEqual ['dataReceived']
+          expect(@box.__oneShotEvents[0][0]).toEqual ['dataReceived']
 
         spies.push @box.__fetch = sinon.spy (callback) ->
           expect(@__oneShotEvents[0][0]).toEqual ['dataReceived']
@@ -149,7 +144,7 @@ describe "Joosy.Page", ->
         spies.push sinon.spy(@box.previous.layout, '__unload')
         spies.push sinon.spy(@box.previous, '__unload')
 
-        spies.push @box.__onLayoutRender = sinon.spy (stage, callback) ->
+        spies.push ApplicationLayout::__onRender = sinon.spy (stage, callback) ->
           expect(stage.selector).toEqual Joosy.Application.content().selector
           expect(typeof callback).toEqual 'function'
           # callback()  - start rendering
@@ -166,13 +161,10 @@ describe "Joosy.Page", ->
         swapContainer = sinon.spy(@box, 'swapContainer')
         spies.push @box.__layoutClass.prototype.__load = sinon.spy()
         spies.push sinon.spy(@box, '__load')
-        spies.push sinon.spy(Joosy.Beautifier, 'go')
 
-        spies.push @box.__afterLayoutRender = sinon.spy (stage) ->
+        spies.push ApplicationLayout::__afterRender = sinon.spy (stage) ->
           expect(stage.selector).toEqual Joosy.Application.content().selector
 
         @box.__bootstrapLayout()
         expect(spies).toBeSequenced()
         expect(swapContainer.callCount).toEqual 2
-
-        Joosy.Beautifier.go.restore()

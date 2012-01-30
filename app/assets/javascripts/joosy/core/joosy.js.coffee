@@ -6,16 +6,6 @@
   Resource: {}
   Templaters: {}
 
-Joosy.Beautifier =
-  beautifiers: []
-
-  add: (callback) ->
-    @beautifiers.push callback
-
-  go: ->
-    for b in @beautifiers
-      b()
-
 Joosy.namespace = (name, generator=false) ->
   name  = name.split('.')
   space = window

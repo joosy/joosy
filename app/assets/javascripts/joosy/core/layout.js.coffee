@@ -19,6 +19,10 @@ class Joosy.Layout extends Joosy.Module
 
   @view 'layouts/default'
 
+  @beforeRender: (callback) -> @::__beforeRender = callback
+  @afterRender: (callback) -> @::__afterRender = callback
+  @onRender: (callback) -> @::__onRender = callback
+
   navigate: (args...) ->
     Joosy.Router.navigate(args...)
 

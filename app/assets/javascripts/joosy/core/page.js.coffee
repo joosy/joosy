@@ -33,13 +33,9 @@ class Joosy.Page extends Joosy.Module
   @layout: (layoutClass) ->
     @::__layoutClass = layoutClass
 
-  @beforePageRender: (callback) -> @::__beforePageRender = callback
-  @afterPageRender:  (callback) -> @::__afterPageRender = callback
-  @onPageRender: (callback) -> @::__onPageRender = callback
-
-  @beforeLayoutRender: (callback) -> @::__beforeLayoutRender = callback
-  @afterLayoutRender: (callback) -> @::__afterLayoutRender = callback
-  @onLayoutRender: (callback) -> @::__onLayoutRender = callback
+  @beforeRender: (callback) -> @::__beforeRender = callback
+  @afterRender:  (callback) -> @::__afterRender = callback
+  @onRender: (callback) -> @::__onRender = callback
 
   constructor: (@params, @previous) ->
     @__layoutClass ||= ApplicationLayout
@@ -86,20 +82,19 @@ class Joosy.Page extends Joosy.Module
         @container = @layout.content()
 
         @__load()
-        Joosy.Beautifier.go()
 
-        if @__afterPageRender?
-          @__afterPageRender @layout.content()
+        if @__afterRender?
+          @__afterRender @layout.content()
 
         @layout.content()
 
-      if @__onPageRender?
-        @__onPageRender @layout.content(), complete
+      if @__onRender?
+        @__onRender @layout.content(), complete
       else
         complete()
 
-    if @__beforePageRender?
-      @__beforePageRender @layout.content(), =>
+    if @__beforeRender?
+      @__beforeRender @layout.content(), =>
         @trigger 'stageClear'
     else
       @trigger 'stageClear'
@@ -129,20 +124,17 @@ class Joosy.Page extends Joosy.Module
         @layout.__load Joosy.Application.content()
         @__load()
 
-        Joosy.Beautifier.go()
-
-        if @__afterLayoutRender?
-          @__afterLayoutRender Joosy.Application.content()
+        @layout.__afterRender? Joosy.Application.content()
 
         Joosy.Application.content()
 
-      if @__onLayoutRender?
-        @__onLayoutRender Joosy.Application.content(), complete
+      if @layout.__onRender?
+        @layout.__onRender Joosy.Application.content(), complete
       else
         complete()
 
-    if @__beforeLayoutRender?
-      @__beforeLayoutRender Joosy.Application.content(), =>
+    if @layout.__beforeRender?
+      @layout.__beforeRender Joosy.Application.content(), =>
         @trigger 'stageClear'
     else
       @trigger 'stageClear'

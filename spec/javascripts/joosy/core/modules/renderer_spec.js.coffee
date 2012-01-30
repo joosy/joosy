@@ -33,17 +33,87 @@ describe "Joosy.Modules.Renderer", ->
     @ground.append elem
 
     elem.html @dummyContainer.__renderer({ object: @dummyObject })
-
     expect(elem.text()).toBe "initial"
 
     @dummyObject.update "new"
 
-    expect(elem.text()).toBe "new"
+    waits 0
+      
+    runs ->
+      expect(elem.text()).toBe "new"
+    
+    waits 0
+    
+    runs ->
+      @dummyContainer.__removeMetamorphs()
+      @dummyObject.update "afterwards"
+    
+    waits 0
+    
+    runs ->
+      expect(elem.text()).toBe "new"
+    
+  it "should render resources and keep html up2date", ->
+    data = Joosy.Resource.Generic.create zombie: 'rock'
 
-    @dummyContainer.__removeMetamorphs()
-    @dummyObject.update "afterwards"
+    @TestContainer.view (locals) ->
+      template = (locals) -> 
+        "#{locals.zombie}"
 
-    expect(elem.text()).toBe "new"
+      @render(template, locals)
+
+    elem = $("<div></div>")
+    @ground.append elem
+  
+    elem.html @dummyContainer.__renderer(data)
+    
+    waits 0
+
+    runs -> 
+      expect(elem.text()).toBe "rock"
+    
+    runs ->
+      data 'zombie', 'suck'
+    
+    waits 0 
+
+    runs ->
+      expect(elem.text()).toBe "suck"
+
+  it "should debounce morpher updates", ->
+    @TestContainer.view (locals) ->
+      template = (locals) ->
+        "#{locals.object.value}"
+  
+      @render(template, locals)
+  
+    elem = $("<div></div>")
+    @ground.append elem
+    
+    sinon.spy window, 'Metamorph'
+  
+    elem.html @dummyContainer.__renderer({ object: @dummyObject })
+    expect(elem.text()).toBe "initial"
+    
+    updater = sinon.spy window.Metamorph.returnValues[0], 'html'
+  
+    @dummyObject.update "new"
+    
+    waits 0
+    
+    runs ->
+      expect(elem.text()).toBe "new"
+      expect(updater.callCount).toEqual 1
+      
+    runs ->
+      @dummyObject.update "don't make"
+      @dummyObject.update "me evil"
+    
+    waits 0
+    
+    runs ->
+      expect(elem.text()).toBe "me evil"
+      expect(updater.callCount).toEqual 2
 
   it "should include rendering helpers in locals", ->
     @TestContainer.helpers "Hoge"

@@ -90,6 +90,10 @@ Joosy.Modules.Renderer =
 
     update = =>
       morph.html template(locals)
+      
+    # This is here to break stack tree and save from 
+    # repeating DOM handling
+    update = update.debounce(0)
 
     @__metamorphs ||= []
 

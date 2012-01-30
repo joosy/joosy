@@ -77,8 +77,12 @@ Joosy.Modules.Renderer =
     else if !Object.isFunction(template)
       throw new Error "#{Joosy.Module.__className__ @}> template (maybe @view) does not look like a string or lambda"
 
-    if !Object.isObject locals
-      throw new Error "#{Joosy.Module.__className__ @}> locals (maybe @data?) can only be dumb hash"
+    if !Object.isObject(locals) && !Joosy.Module.hasAncestor(locals.__resource, Joosy.Resource.Generic)
+      throw new Error "#{Joosy.Module.__className__ @}> locals (maybe @data?) can only be dumb hash or Resource"
+
+    if Joosy.Module.hasAncestor(locals.__resource, Joosy.Resource.Generic)
+      binding = locals
+      locals  = locals.e
 
     locals = @__proxifyHelpers(locals)
 
@@ -89,11 +93,14 @@ Joosy.Modules.Renderer =
 
     @__metamorphs ||= []
 
-    for key, object of locals
-      if locals.hasOwnProperty key
-        if object?.bind? && object?.unbind?
-          object.bind 'changed', update
-          @__metamorphs.push [object, update]
+    if binding
+      binding.bind 'changed', update
+    else
+      for key, object of locals
+        if locals.hasOwnProperty key
+          if object?.bind? && object?.unbind?
+            object.bind 'changed', update
+            @__metamorphs.push [object, update]
 
     morph.outerHTML()
 

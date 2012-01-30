@@ -13,6 +13,8 @@ class Joosy.Resource.Generic extends Joosy.Module
     else
       for key, value of @prototype
         shim[key] = value
+        
+    shim.__resource = @
     
     @apply(shim, arguments)
 
@@ -26,9 +28,8 @@ class Joosy.Resource.Generic extends Joosy.Module
     target[0][target[1]]
 
   set: (path, value) ->
-    target = @__callTarget(path)
+    target = @__callTarget(path)    
     target[0][target[1]] = value
-
     @trigger 'changed'
 
   __callTarget: (path) ->

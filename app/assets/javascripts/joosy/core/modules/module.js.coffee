@@ -12,6 +12,8 @@ class Joosy.Module
       klass.toString().replace(/^function ([a-zA-Z]+)\([\s\S]+/, '$1')
 
   @hasAncestor = (what, klass) ->
+    return false unless what?
+
     [ what, klass ] = [ what.prototype, klass.prototype ]
 
     while what

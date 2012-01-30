@@ -11,11 +11,11 @@
     </script>
 
     <%= "<%= stylesheet_link_tag 'application' %"+">" %>
-    <%= "<%= javascript_include_tag '#{file_path}_preloader' %"+">" %>
     <%= "<%= csrf_meta_tags %"+">" %>
   </head>
 
   <body>
+    <%= "<%= javascript_include_tag '#{file_path}_preloader' %"+">" %>
     <div id="application">
       <div id="preloader">
         Loading application...

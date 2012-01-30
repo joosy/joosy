@@ -9,10 +9,10 @@
       };
 
     = stylesheet_link_tag 'application'
-    = javascript_include_tag '<%= file_path %>_preloader'
     = csrf_meta_tags
 
   %body
+    = javascript_include_tag '<%= file_path %>_preloader'
     #application
       #preloader
         Loading application...

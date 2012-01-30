@@ -17,7 +17,7 @@ describe "Joosy.Page", ->
 
 
     it "should have appropriate accessors", ->
-      callback_names = ['fetch', 'beforeRender', 'afterRender', 'onRender']
+      callback_names = ['fetch', 'beforeRender', 'onRender']
       callback_names.each (func) =>
         @TestPage[func] 'callback'
         expect(@TestPage::['__' + func]).toEqual 'callback'
@@ -121,9 +121,6 @@ describe "Joosy.Page", ->
         spies.push sinon.spy(@box, 'swapContainer')
         spies.push sinon.spy(@box, '__load')
 
-        spies.push @box.__afterRender = sinon.spy (stage) ->
-          expect(stage.selector).toEqual @layout.content().selector
-
         @box.__bootstrap()
         expect(spies).toBeSequenced()
 
@@ -161,9 +158,6 @@ describe "Joosy.Page", ->
         swapContainer = sinon.spy(@box, 'swapContainer')
         spies.push @box.__layoutClass.prototype.__load = sinon.spy()
         spies.push sinon.spy(@box, '__load')
-
-        spies.push ApplicationLayout::__afterRender = sinon.spy (stage) ->
-          expect(stage.selector).toEqual Joosy.Application.content().selector
 
         @box.__bootstrapLayout()
         expect(spies).toBeSequenced()

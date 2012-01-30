@@ -33,9 +33,10 @@ class Joosy.Page extends Joosy.Module
   @layout: (layoutClass) ->
     @::__layoutClass = layoutClass
 
-  @beforeRender: (callback) -> @::__beforeRender = callback
-  @afterRender:  (callback) -> @::__afterRender = callback
-  @onRender: (callback) -> @::__onRender = callback
+  @beforePaint: (callback) -> @::__beforePaint = callback
+  @paint: (callback) -> @::__paint = callback
+  @afterPaint: (callback) -> @::__afterPaint = callback
+  @erase: (callback) -> @::__erase = callback
 
   constructor: (@params, @previous) ->
     @__layoutClass ||= ApplicationLayout
@@ -70,78 +71,75 @@ class Joosy.Page extends Joosy.Module
     @__runAfterUnloads(@params, @previous)
     delete @previous
 
+
+  __callSyncedThrough: (entity, receiver, params, callback) ->
+    if entity[receiver]?
+      entity[receiver].apply entity, params.clone().add(callback)
+    else
+      callback()
+
+  # Boot Sequence:
+  #
+  # previous::erase  \
+  # previous::unload  \
+  # beforePaint        \
+  #                     > paint
+  # fetch             /
+  #
   __bootstrap: ->
     Joosy.Modules.Log.debugAs @, "Boostraping page"
     @layout = @previous.layout
 
-    @wait "stageClear dataReceived", =>
-      @previous?.__unload()
+    callbacksParams = [@layout.content()]
 
-      complete = =>
+    @wait "stageClear dataReceived", =>
+      @__callSyncedThrough this, '__paint', callbacksParams, =>
+        # Page HTML
         @swapContainer @layout.content(), @__renderer(@data || {})
         @container = @layout.content()
 
+        # Loading
         @__load()
-
-        if @__afterRender?
-          @__afterRender @layout.content()
-
+        
         @layout.content()
 
-      if @__onRender?
-        @__onRender @layout.content(), complete
-      else
-        complete()
-
-    if @__beforeRender?
-      @__beforeRender @layout.content(), =>
+    @__callSyncedThrough this, '__erase', callbacksParams, =>
+      @previous?.__unload()
+      @__callSyncedThrough this, '__beforePaint', callbacksParams, =>
         @trigger 'stageClear'
-    else
-      @trigger 'stageClear'
 
-    if @__fetch?
-      @__fetch =>
-        Joosy.Modules.Log.debugAs @, "Fetch complete"
-        @trigger 'dataReceived'
-    else
+    @__callSyncedThrough this, '__fetch', [], =>
+      Joosy.Modules.Log.debugAs @, "Fetch complete"
       @trigger 'dataReceived'
 
   __bootstrapLayout: ->
     Joosy.Modules.Log.debugAs @, "Boostraping page with layout"
     @layout = new @__layoutClass
 
-    @wait "stageClear dataReceived", =>
-      @previous?.layout?.__unload?()
-      @previous?.__unload()
+    callbacksParams = [Joosy.Application.content(), this]
 
-      complete = =>
+    @wait "stageClear dataReceived", =>
+      @__callSyncedThrough @layout, '__paint', callbacksParams, =>
+        # Layout HTML
         @swapContainer Joosy.Application.content(), @layout.__renderer
-          yield: =>
-            @layout.yield()
+          yield: => @layout.yield()
+
+        # Page HTML
         @swapContainer @layout.content(), @__renderer(@data || {})
         @container = @layout.content()
 
+        # Loading
         @layout.__load Joosy.Application.content()
         @__load()
 
-        @layout.__afterRender? Joosy.Application.content(), this
-
         Joosy.Application.content()
 
-      if @layout.__onRender?
-        @layout.__onRender Joosy.Application.content(), this, complete
-      else
-        complete()
-
-    if @layout.__beforeRender?
-      @layout.__beforeRender Joosy.Application.content(), this, =>
+    @__callSyncedThrough @layout, '__erase', callbacksParams, =>
+      @previous?.layout?.__unload?()
+      @previous?.__unload()
+      @__callSyncedThrough @layout, '__beforePaint', callbacksParams, =>
         @trigger 'stageClear'
-    else
-      @trigger 'stageClear'
 
-    if @__fetch?
-      @__fetch =>
-        Joosy.Modules.Log.debugAs @, "Fetch complete"
-        @trigger 'dataReceived'
-    else
+    @__callSyncedThrough this, '__fetch', [], =>
+      Joosy.Modules.Log.debugAs @, "Fetch complete"
       @trigger 'dataReceived'

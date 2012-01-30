@@ -124,17 +124,17 @@ class Joosy.Page extends Joosy.Module
         @layout.__load Joosy.Application.content()
         @__load()
 
-        @layout.__afterRender? Joosy.Application.content()
+        @layout.__afterRender? Joosy.Application.content(), this
 
         Joosy.Application.content()
 
       if @layout.__onRender?
-        @layout.__onRender Joosy.Application.content(), complete
+        @layout.__onRender Joosy.Application.content(), this, complete
       else
         complete()
 
     if @layout.__beforeRender?
-      @layout.__beforeRender Joosy.Application.content(), =>
+      @layout.__beforeRender Joosy.Application.content(), this, =>
         @trigger 'stageClear'
     else
       @trigger 'stageClear'

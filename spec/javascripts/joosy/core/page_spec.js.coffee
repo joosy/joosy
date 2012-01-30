@@ -130,7 +130,7 @@ describe "Joosy.Page", ->
       it "should wait stageClear and dataReceived event to start layout render", ->
         spies = []
 
-        spies.push ApplicationLayout::__beforeRender = sinon.spy (stage, callback) =>
+        spies.push ApplicationLayout::__beforeRender = sinon.spy (stage, page, callback) =>
           expect(stage.selector).toEqual Joosy.Application.content().selector
           expect(@box.__oneShotEvents[0][0]).toEqual ['stageClear', 'dataReceived']
           callback()
@@ -144,7 +144,7 @@ describe "Joosy.Page", ->
         spies.push sinon.spy(@box.previous.layout, '__unload')
         spies.push sinon.spy(@box.previous, '__unload')
 
-        spies.push ApplicationLayout::__onRender = sinon.spy (stage, callback) ->
+        spies.push ApplicationLayout::__onRender = sinon.spy (stage, page, callback) ->
           expect(stage.selector).toEqual Joosy.Application.content().selector
           expect(typeof callback).toEqual 'function'
           # callback()  - start rendering

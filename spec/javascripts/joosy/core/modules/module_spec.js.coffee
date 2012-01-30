@@ -42,13 +42,6 @@ describe "Joosy.Module", ->
       expect(TestModule[callback].callCount).toEqual 1
       expect(TestModule[callback].getCall(0).calledOn(Klass)).toBeTruthy()
 
-  it "should run init hook", ->
-    class Klass extends Joosy.Module
-      init: sinon.spy()
-    target = (new Klass 1, 2).init
-    expect(target.callCount).toEqual(1)
-    expect(target.alwaysCalledWithExactly 1, 2).toBeTruthy()
-
   it "should have minimal set of properties", ->
     expect(Object.extended(Joosy.Module).keys()).toEqual ['__namespace__', '__className__', 'hasAncestor', 'include', 'extend']
     expect(Object.extended(Joosy.Module.prototype).keys()).toEqual []

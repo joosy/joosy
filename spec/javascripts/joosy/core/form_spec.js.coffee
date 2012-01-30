@@ -16,8 +16,8 @@ describe "Joosy.Form", ->
     class Test extends Joosy.Resource.REST
       @entity 'test'
 
-    @resource = new Test
-      foo: 'foo'
+    @resource = Test.create
+      foo: 'foo',
       bar: 'bar'
       camelBaz: 'baz'
 

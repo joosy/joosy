@@ -31,13 +31,13 @@ describe "Joosy.Resource.REST", ->
     expect(@Test.__buildSource(options)).toEqual '/tests/id?test=1'
 
   it "should have overloaded constructor", ->
-    resource = new @Test 'someId'
+    resource = @Test.create 'someId'
     expect(resource.id).toEqual 'someId'
 
     data = {id: 'someId', field: 'value'}
 
-    rooted   = new @Test {test: data}
-    unrooted = new @Test data
+    rooted   = @Test.create {test: data}
+    unrooted = @Test.create data
 
     expect(rooted.e).toEqual unrooted.e
     expect(rooted.id).toEqual 'someId'
@@ -91,7 +91,7 @@ describe "Joosy.Resource.REST", ->
     expect(callback.callCount).toEqual 1
 
   it 'should destroy single object', ->
-    obj = new @Test 1
+    obj = @Test.create 1
     callback = sinon.spy (target) ->
       expect(target).toBe obj
     obj.destroy callback

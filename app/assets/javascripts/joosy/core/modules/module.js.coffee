@@ -39,6 +39,3 @@ class Joosy.Module
 
     obj.extended?.apply(this)
     this
-
-  constructor: ->
-    @init?(arguments...)

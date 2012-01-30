@@ -1,21 +1,18 @@
 #= require ./rest_collection
 
-class Joosy.Resource.REST extends Joosy.Module
-  @include Joosy.Modules.Log
-  @include Joosy.Modules.Events
+class Joosy.Resource.REST extends Joosy.Resource.Generic
 
   __primaryKey: 'id'
 
   @entity: (name) -> @::__entityName = name
   @source: (source) -> @::__source = source
   @primary: (primary) -> @::__primaryKey = primary
-  @beforeLoad: (action) -> @::__beforeLoad = action
 
   constructor: (description) ->
     if @constructor.__isId(description)
       @id = description
     else
-      @__fillData(description)
+      super description
       @id = @e[@__primaryKey]
 
   @entityName: ->
@@ -71,9 +68,8 @@ class Joosy.Resource.REST extends Joosy.Module
     source = Joosy.buildUrl("#{@::__source}/#{options.extension || ''}", options.params)
 
   __fillData: (data) ->
-    data = Object.extended(data)
-    data = @__beforeLoad(data) if @__beforeLoad?
-
+    data = @__prepareData data
+    
     if Object.isObject(data) && data[@constructor.entityName()] && data.keys().length == 1
       @e = Object.extended data[@constructor.entityName()]
     else

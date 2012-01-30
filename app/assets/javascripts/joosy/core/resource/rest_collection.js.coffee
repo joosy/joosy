@@ -43,6 +43,6 @@ class Joosy.Resource.RESTCollection extends Joosy.Module
   modelize: (collection) ->
     if collection instanceof Array
       collection.map (x) =>
-        new @model(x)
+        @model.create x
     else
       []

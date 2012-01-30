@@ -67,7 +67,7 @@ class Joosy.Page extends Joosy.Module
       scroll = $(@__extractSelector(@__scrollElement)).offset()?.top + @__scrollMargin
       Joosy.Modules.Log.debugAs @, "Scrolling to #{@__extractSelector(@__scrollElement)}"
       $('html, body').animate {scrollTop: scroll}, @__scrollSpeed, =>
-        @__releaseHeight()
+        @__releaseHeight() if @__scrollSpeed != 0
 
     Joosy.Modules.Log.debugAs @, "Page loaded"
 
@@ -99,7 +99,7 @@ class Joosy.Page extends Joosy.Module
 
     callbacksParams = [@layout.content()]
     
-    @__fixHeight() if @__scrollElement
+    @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
 
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough this, '__paint', callbacksParams, =>
@@ -127,7 +127,7 @@ class Joosy.Page extends Joosy.Module
 
     callbacksParams = [Joosy.Application.content(), this]
     
-    @__fixHeight() if @__scrollElement
+    @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
 
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough @layout, '__paint', callbacksParams, =>

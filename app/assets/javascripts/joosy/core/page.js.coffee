@@ -52,6 +52,12 @@ class Joosy.Page extends Joosy.Module
   __renderSection: ->
     'pages'
 
+  __fixHeight: ->
+    $('html').css 'min-height', $(document).height()
+    
+  __releaseHeight: ->
+    $('html').css 'min-height', ''
+
   __load: ->
     @refreshElements()
     @__delegateEvents()
@@ -59,8 +65,9 @@ class Joosy.Page extends Joosy.Module
     @__runAfterLoads(@params, @previous)
     if @__scrollElement
       scroll = $(@__extractSelector(@__scrollElement)).offset()?.top + @__scrollMargin
-      $('html, body').animate({scrollTop: scroll}, @__scrollSpeed)
       Joosy.Modules.Log.debugAs @, "Scrolling to #{@__extractSelector(@__scrollElement)}"
+      $('html, body').animate {scrollTop: scroll}, @__scrollSpeed, =>
+        @__releaseHeight()
 
     Joosy.Modules.Log.debugAs @, "Page loaded"
 
@@ -73,7 +80,7 @@ class Joosy.Page extends Joosy.Module
 
 
   __callSyncedThrough: (entity, receiver, params, callback) ->
-    if entity[receiver]?
+    if entity?[receiver]?
       entity[receiver].apply entity, params.clone().add(callback)
     else
       callback()
@@ -91,6 +98,8 @@ class Joosy.Page extends Joosy.Module
     @layout = @previous.layout
 
     callbacksParams = [@layout.content()]
+    
+    @__fixHeight() if @__scrollElement
 
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough this, '__paint', callbacksParams, =>
@@ -103,7 +112,7 @@ class Joosy.Page extends Joosy.Module
         
         @layout.content()
 
-    @__callSyncedThrough this, '__erase', callbacksParams, =>
+    @__callSyncedThrough @previous, '__erase', callbacksParams, =>
       @previous?.__unload()
       @__callSyncedThrough this, '__beforePaint', callbacksParams, =>
         @trigger 'stageClear'
@@ -117,6 +126,8 @@ class Joosy.Page extends Joosy.Module
     @layout = new @__layoutClass
 
     callbacksParams = [Joosy.Application.content(), this]
+    
+    @__fixHeight() if @__scrollElement
 
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough @layout, '__paint', callbacksParams, =>
@@ -134,7 +145,7 @@ class Joosy.Page extends Joosy.Module
 
         Joosy.Application.content()
 
-    @__callSyncedThrough @layout, '__erase', callbacksParams, =>
+    @__callSyncedThrough @previous?.layout, '__erase', callbacksParams, =>
       @previous?.layout?.__unload?()
       @previous?.__unload()
       @__callSyncedThrough @layout, '__beforePaint', callbacksParams, =>

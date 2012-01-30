@@ -11,11 +11,11 @@ describe "Joosy.Resource.Generic", ->
 
   it "should remember where it belongs", ->
     resource = new Joosy.Resource.Generic foo: 'bar'
-    expect(resource.e).toEqual foo: 'bar'
+    expect(resource.e).toEqual Object.extended(foo: 'bar')
     
   it "should produce magic function", ->
     expect(Object.isFunction @resource).toBeTruthy()
-    expect(@resource.e).toEqual @data
+    expect(@resource.e).toEqual Object.extended(@data)
     
   it "should get values", ->
     expect(@resource 'foo').toEqual 'bar'

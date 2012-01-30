@@ -14,7 +14,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       for key, value of @prototype
         shim[key] = value
         
-    shim.__resource = @
+    shim.constructor = @
     
     @apply(shim, arguments)
 

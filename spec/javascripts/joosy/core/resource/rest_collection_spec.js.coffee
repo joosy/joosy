@@ -8,7 +8,7 @@ describe "Joosy.Resource.RESTCollection", ->
   checkData = (collection) ->
     expect(collection.data.length).toEqual 2
     expect(collection.pages[1]).toEqual collection.data
-    expect(collection.data[0] instanceof Test).toBeTruthy()
+    expect(collection.data[0].constructor == Test).toBeTruthy()
     expect(collection.data[0].e.name).toEqual 'test1'
 
   spoofData = (server) ->
@@ -32,7 +32,7 @@ describe "Joosy.Resource.RESTCollection", ->
 
   it "should modelize", ->
     result = @collection.modelize $.parseJSON(data)
-    expect(result[0] instanceof Test).toBeTruthy()
+    expect(result[0].constructor == Test).toBeTruthy()
     expect(result[0].e.name).toEqual 'test1'
 
   it "should reset", ->
@@ -53,7 +53,7 @@ describe "Joosy.Resource.RESTCollection", ->
     spoofData @server
     expect(callback.callCount).toEqual 1
     expect(@collection.data.length).toEqual 4
-    expect(@collection.data[2] instanceof Test).toBeTruthy()
+    expect(@collection.data[2].constructor == Test).toBeTruthy()
     expect(@collection.data[2].e.name).toEqual 'test1'
 
     # Again from cache
@@ -61,5 +61,5 @@ describe "Joosy.Resource.RESTCollection", ->
     spoofData @server
     expect(callback.callCount).toEqual 1
     expect(@collection.data.length).toEqual 4
-    expect(@collection.data[2] instanceof Test).toBeTruthy()
+    expect(@collection.data[2].constructor == Test).toBeTruthy()
     expect(@collection.data[2].e.name).toEqual 'test1'

@@ -17,7 +17,7 @@ describe "Joosy.Page", ->
 
 
     it "should have appropriate accessors", ->
-      callback_names = ['fetch', 'beforeRender', 'onRender']
+      callback_names = ['fetch', 'beforePaint', 'paint', 'afterPaint', 'erase']
       callback_names.each (func) =>
         @TestPage[func] 'callback'
         expect(@TestPage::['__' + func]).toEqual 'callback'
@@ -31,6 +31,9 @@ describe "Joosy.Page", ->
       expect(@TestPage::__scrollElement).toEqual '#there'
       expect(@TestPage::__scrollSpeed).toEqual 1000
       expect(@TestPage::__scrollMargin).toEqual -5
+
+      @TestPage.layout 'test'
+      expect(@TestPage::__layoutClass).toEqual 'test'
 
     it "should not render layout if it not changes", ->
       @box.layout = new ApplicationLayout()
@@ -92,7 +95,13 @@ describe "Joosy.Page", ->
       it "should wait stageClear and dataReceived event to start render", ->
         spies = []
 
-        spies.push @box.__beforeRender = sinon.spy (stage, callback) ->
+        spies.push @box.previous.__erase = sinon.spy (stage, callback) ->
+          expect(stage.selector).toEqual @layout.content().selector
+          callback()
+
+        spies.push sinon.spy(@box.previous, '__unload')
+
+        spies.push @box.__beforePaint = sinon.spy (stage, callback) ->
           expect(stage.selector).toEqual @layout.content().selector
           expect(@__oneShotEvents[0][0]).toEqual ['stageClear', 'dataReceived']
           callback()
@@ -103,9 +112,7 @@ describe "Joosy.Page", ->
           callback()
           expect(@__oneShotEvents).toEqual []
 
-        spies.push sinon.spy(@box.previous, '__unload')
-
-        spies.push @box.__onRender = sinon.spy (stage, callback) ->
+        spies.push @box.__paint = sinon.spy (stage, callback) ->
           expect(stage.selector).toEqual @layout.content().selector
           expect(typeof callback).toEqual 'function'
           # callback()  - start rendering
@@ -127,7 +134,14 @@ describe "Joosy.Page", ->
       it "should wait stageClear and dataReceived event to start layout render", ->
         spies = []
 
-        spies.push ApplicationLayout::__beforeRender = sinon.spy (stage, page, callback) =>
+        spies.push ApplicationLayout::__erase = sinon.spy (stage, page, callback) ->
+          expect(stage.selector).toEqual Joosy.Application.content().selector
+          callback()
+
+        spies.push sinon.spy(@box.previous.layout, '__unload')
+        spies.push sinon.spy(@box.previous, '__unload')
+
+        spies.push ApplicationLayout::__beforePaint = sinon.spy (stage, page, callback) =>
           expect(stage.selector).toEqual Joosy.Application.content().selector
           expect(@box.__oneShotEvents[0][0]).toEqual ['stageClear', 'dataReceived']
           callback()
@@ -138,10 +152,7 @@ describe "Joosy.Page", ->
           callback()
           expect(@__oneShotEvents).toEqual []
 
-        spies.push sinon.spy(@box.previous.layout, '__unload')
-        spies.push sinon.spy(@box.previous, '__unload')
-
-        spies.push ApplicationLayout::__onRender = sinon.spy (stage, page, callback) ->
+        spies.push ApplicationLayout::__paint = sinon.spy (stage, page, callback) ->
           expect(stage.selector).toEqual Joosy.Application.content().selector
           expect(typeof callback).toEqual 'function'
           # callback()  - start rendering

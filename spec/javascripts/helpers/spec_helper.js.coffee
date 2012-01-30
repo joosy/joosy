@@ -25,16 +25,18 @@ beforeEach ->
       if !Object.isArray(@actual) || @actual.length == 0
         console.log 'toBeSequenced: not array or empty array given'
         return false
+      i = 0
       for spy in @actual
         unless spy.callCount == 1
-          console.log "toBeSequenced: #{spy} was called #{spy.callCount} times"
+          console.log "toBeSequenced: spy ##{i} was called #{spy.callCount} times"
           return false
+        i++
       if @actual.length > 1
         for spy in @actual.from(1)
           i = @actual.indexOf spy
           previous = @actual[i - 1]
           unless spy.calledAfter previous
-            console.log "toBeSequenced: ##{spy} wasn't called after ##{previous}"
+            console.log "toBeSequenced: spy ##{i} wasn't called after spy ##{i - 1}"
             return false
       return true
 

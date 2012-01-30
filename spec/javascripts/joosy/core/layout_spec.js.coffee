@@ -4,6 +4,12 @@ describe "Joosy.Layout", ->
     class @TestLayout extends Joosy.Layout
     @box = new @TestLayout()
 
+  it "should have appropriate accessors", ->
+    callback_names = ['beforePaint', 'paint', 'erase']
+    callback_names.each (func) =>
+      @TestLayout[func] 'callback'
+      expect(@TestLayout::['__' + func]).toEqual 'callback'
+
   it "should have default view", ->
     @box = new @TestLayout()
     expect(@box.__renderer instanceof Function).toBeTruthy()

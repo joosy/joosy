@@ -81,7 +81,7 @@ Joosy.Modules.Renderer =
       throw new Error "#{Joosy.Module.__className__ @}> template (maybe @view) does not look like a string or lambda"
 
     if !Object.isObject(locals) && !isResource && !isCollection
-      throw new Error "#{Joosy.Module.__className__ @}> locals (maybe @data?) can only be dumb hash or Resource"
+      throw new Error "#{Joosy.Module.__className__ @}> locals (maybe @data?) not in: dumb hash, Resource, Collection"
 
     # Small code dup due to the fact we sometimes 
     # actually CLONE object when proxying helpers

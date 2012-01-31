@@ -1,5 +1,5 @@
 Joosy.namespace '<%= namespace_name %>', ->
 
   class @<%= file_name.camelize %>Page extends ApplicationPage
-    @layout <%= layout_name.camelize %>Layout
+    @layout ApplicationLayout
     @view   '<%= file_name %>'

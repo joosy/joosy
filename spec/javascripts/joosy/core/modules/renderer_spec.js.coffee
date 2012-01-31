@@ -80,6 +80,42 @@ describe "Joosy.Modules.Renderer", ->
     runs ->
       expect(elem.text()).toBe "suck"
 
+  it "should render collections and keep html up2date", ->
+    class Foo extends Joosy.Resource.Generic
+      @entity 'foo'
+
+    data = new Joosy.Resource.GenericCollection(Foo)
+    
+    data.reset [
+        { zombie: 'rock' },
+        { zombie: 'never sleep' }
+      ]
+
+    @TestContainer.view (locals) ->
+      template = (locals) -> 
+        "#{locals.data[1] 'zombie'}"
+
+      @render(template, locals)
+
+    elem = $("<div></div>")
+    @ground.append elem
+
+    elem.html @dummyContainer.__renderer(data)
+
+    waits 0
+
+    runs -> 
+      expect(elem.text()).toBe "never sleep"
+
+    runs ->
+      data.data[1] 'zombie', 'suck'
+    
+    waits 0 
+    
+    runs ->
+      expect(elem.text()).toBe "suck"
+
+
   it "should debounce morpher updates", ->
     @TestContainer.view (locals) ->
       template = (locals) ->

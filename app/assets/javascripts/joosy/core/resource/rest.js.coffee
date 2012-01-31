@@ -4,7 +4,6 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
 
   __primaryKey: 'id'
 
-  @entity: (name) -> @::__entityName = name
   @source: (source) -> @::__source = source
   @primary: (primary) -> @::__primaryKey = primary
 
@@ -14,12 +13,6 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     else
       super description
       @id = @e[@__primaryKey]
-
-  @entityName: ->
-    unless @::hasOwnProperty '__entityName'
-      throw new Error "Joosy.Resource.REST does not have entity name"
-
-    @::__entityName
 
   # Returns single entity if int/string given
   # Returns collection if no value or Object (with parameters) given

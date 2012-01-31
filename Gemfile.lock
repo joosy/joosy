@@ -19,7 +19,7 @@ GIT
 PATH
   remote: .
   specs:
-    joosy (0.1.0.alpha)
+    joosy (0.1.0.RC1)
       coffee-rails
       haml_coffee_assets
       jquery-rails

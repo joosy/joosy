@@ -2,6 +2,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
 
+  @entity: (name) -> @::__entityName = name
   @beforeLoad: (action) -> @::__beforeLoad = action
 
   @create: ->
@@ -19,6 +20,12 @@ class Joosy.Resource.Generic extends Joosy.Module
     @apply(shim, arguments)
 
     shim
+
+  @entityName: ->
+    unless @::hasOwnProperty '__entityName'
+      throw new Error "Resource does not have entity name"
+
+    @::__entityName
 
   constructor: (data) ->
     @__fillData(data)

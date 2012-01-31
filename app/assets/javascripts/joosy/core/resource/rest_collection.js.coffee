@@ -1,19 +1,11 @@
-class Joosy.Resource.RESTCollection extends Joosy.Module
+class Joosy.Resource.RESTCollection extends Joosy.Resource.GenericCollection
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
 
-  data:  []
   pages: Object.extended()
 
   constructor: (@model, params={}) ->
     @params = Object.extended(params)
-
-  # Clears the storage and attempts to import given JSON
-  reset: (entities) ->
-    @data  = @modelize entities
-    @pages = Object.extended().merge { 1: @data }
-
-    this
 
   # Clears the storage and gets new data from server
   fetch: (callback, options) ->
@@ -39,10 +31,3 @@ class Joosy.Resource.RESTCollection extends Joosy.Module
       callback?(@pages[number])
 
     this
-
-  modelize: (collection) ->
-    if collection instanceof Array
-      collection.map (x) =>
-        @model.create x
-    else
-      []

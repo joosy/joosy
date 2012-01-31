@@ -69,7 +69,8 @@ Joosy.Modules.Renderer =
       new @__helpersProxyInstance(locals)
 
   render: (template, locals={}) ->
-    isResource = Joosy.Module.hasAncestor(locals.constructor, Joosy.Resource.Generic)
+    isResource   = Joosy.Module.hasAncestor(locals.constructor, Joosy.Resource.Generic)
+    isCollection = Joosy.Module.hasAncestor(locals.constructor, Joosy.Resource.GenericCollection)
     
     if Object.isString template
       if @__renderSection?
@@ -79,27 +80,34 @@ Joosy.Modules.Renderer =
     else if !Object.isFunction(template)
       throw new Error "#{Joosy.Module.__className__ @}> template (maybe @view) does not look like a string or lambda"
 
-    if !Object.isObject(locals) && !isResource
+    if !Object.isObject(locals) && !isResource && !isCollection
       throw new Error "#{Joosy.Module.__className__ @}> locals (maybe @data?) can only be dumb hash or Resource"
 
     # Small code dup due to the fact we sometimes 
     # actually CLONE object when proxying helpers
-    if !isResource
-      locals = @__proxifyHelpers(locals)
-      morph  = Metamorph template(locals)
-      update = => morph.html template(locals)
-    else
+    if isCollection
+      context  = @__proxifyHelpers {data: locals.data}
+      morph    = Metamorph template(context)
+      update   = => morph.html template(context)
+    else if isResource
       locals.e = @__proxifyHelpers(locals.e)
       morph    = Metamorph template(locals.e)
       update   = => morph.html template(locals.e)
-      
+    else
+      locals  = @__proxifyHelpers(locals)
+      morph   = Metamorph template(locals)
+      update  = => morph.html template(locals)
+
     # This is here to break stack tree and save from 
     # repeating DOM handling
     update = update.debounce(0)
 
     @__metamorphs ||= []
 
-    if isResource
+    if isCollection
+      for resource in locals.data
+        resource.bind 'changed', update
+    if isResource || isCollection
       locals.bind 'changed', update
     else
       for key, object of locals

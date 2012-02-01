@@ -28,7 +28,7 @@ class Joosy.Form extends Joosy.Module
       Object.each opts, (key, value) =>
         @[key] = value
 
-    @container = $ form
+    @container = $(form)
     @refreshElements()
     @__delegateEvents()
 
@@ -100,8 +100,9 @@ class Joosy.Form extends Joosy.Module
         @notification? input, notifications
 
   __markMethod: (method='PUT') ->
-    method = $ '<input/>',
+    method = $('<input/>',
       type: 'hidden'
       name: '_method'
       value: method
+    )
     @container.append method

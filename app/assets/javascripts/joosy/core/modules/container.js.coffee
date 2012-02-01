@@ -5,12 +5,12 @@ Joosy.Modules.Container =
   eventSplitter: /^(\S+)\s*(.*)$/
 
   $: (selector) ->
-    $ selector, @container
+    $(selector, @container)
 
   refreshElements: ->
     @__collectElements().each (key, value) =>
       # TODO: Check for possible collisions?
-      @[key] = @$ value
+      @[key] = @$(value)
 
   swapContainer: (container, data) ->
     realContainer = container.clone().html data

@@ -4,7 +4,7 @@ Joosy.Modules.WidgetsManager =
       widget = new widget()
 
     @__activeWidgets ||= []
-    @__activeWidgets.push widget.__load(this, $ container)
+    @__activeWidgets.push widget.__load(this, $(container))
 
     widget
 
@@ -33,7 +33,7 @@ Joosy.Modules.WidgetsManager =
         if r = selector.match /\$([A-z_]+)/
           selector = @elements[r[1]]
 
-        activeSelector = $ selector, @container
+        activeSelector = $(selector, @container)
 
       registered[selector] = Object.extended()
 

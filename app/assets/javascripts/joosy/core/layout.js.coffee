@@ -47,4 +47,4 @@ class Joosy.Layout extends Joosy.Module
     @uuid = Joosy.uuid()
 
   content: ->
-    $ "##{@uuid}"
+    $("##{@uuid}")

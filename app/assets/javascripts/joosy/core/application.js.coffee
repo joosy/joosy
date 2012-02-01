@@ -18,10 +18,10 @@ Joosy.Application =
     @sandboxSelector = '#' + @sandboxSelector
 
   content: ->
-    $ @selector
+    $(@selector)
 
   sandbox: ->
-    $ @sandboxSelector
+    $(@sandboxSelector)
 
   setCurrentPage: (page, params) ->
     #if @page not instanceof page

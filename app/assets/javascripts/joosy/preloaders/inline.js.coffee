@@ -22,12 +22,12 @@
   #
   load: (libraries, options) ->    
     @[key] = val for key, val of options
-    @start?.call window
+    @start?()
 
     if libraries.length > 0
       @receive libraries.shift()[0], => @load(libraries)
     else
-      @complete?.call window
+      @complete?()
 
   #
   # Loads one script by adding <script src> to DOM head
@@ -43,7 +43,7 @@
     done = false
 
     proceed = ->
-      if !done && (!@readyState? || ['loaded', 'completed'].has @readyState)
+      if !done && (!@readyState? || @readyState == "loaded" || @readyState == "complete")
         done = true
         callback?()
         script.onload = script.onreadystatechange = null

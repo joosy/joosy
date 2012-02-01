@@ -14,7 +14,7 @@ Joosy.Application =
     Joosy.Router.setupRoutes()
 
     @sandboxSelector = Joosy.uuid()
-    @content().after "<div id='#{@sandboxSelector}' style='display:none'/>"
+    @content().after "<div id='#{@sandboxSelector}' style='display:none'></div>"
     @sandboxSelector = '#' + @sandboxSelector
 
   content: ->

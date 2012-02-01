@@ -6,16 +6,18 @@ class Joosy.Resource.Generic extends Joosy.Module
   @beforeLoad: (action) -> @::__beforeLoad = action
 
   @map: (name, klass=false) ->
-    klass = window[name.singularize().camelize()] unless klass
+    unless klass
+      klass = window[name.singularize().camelize()]
 
     @beforeLoad (data) ->
-      @[name] = new Joosy.Resource.GenericCollection(klass)
-      @[name].reset data[name] if Object.isArray(data[name])
+      @[name] = new Joosy.Resource.GenericCollection klass
+      if Object.isArray data[name]
+        @[name].reset data[name]
       data
 
   @create: ->
     shim = ->
-      shim.__call.apply(shim, arguments)
+      shim.__call.apply shim, arguments
 
     if shim.__proto__
       shim.__proto__ = @prototype
@@ -25,7 +27,7 @@ class Joosy.Resource.Generic extends Joosy.Module
         
     shim.constructor = @
     
-    @apply(shim, arguments)
+    @apply shim, arguments
 
     shim
 
@@ -36,14 +38,14 @@ class Joosy.Resource.Generic extends Joosy.Module
     @::__entityName
 
   constructor: (data) ->
-    @__fillData(data)
+    @__fillData data
     
   get: (path) ->
-    target = @__callTarget(path)
+    target = @__callTarget path
     target[0][target[1]]
 
   set: (path, value) ->
-    target = @__callTarget(path)    
+    target = @__callTarget path
     target[0][target[1]] = value
     @trigger 'changed'
     null
@@ -69,8 +71,9 @@ class Joosy.Resource.Generic extends Joosy.Module
       @get path
 
   __fillData: (data) ->
-    @e = @__prepareData(data)
+    @e = @__prepareData data
 
   __prepareData: (data) ->
-    data = @__beforeLoad(data) if @__beforeLoad?
+    if @__beforeLoad?
+      data = @__beforeLoad data
     data

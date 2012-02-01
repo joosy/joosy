@@ -1,15 +1,17 @@
 Joosy.Modules.Log =
   log: (args...) ->
-    return if typeof console is 'undefined'
+    return unless console?
 
     if console.log.apply?
       args.unshift "Joosy>"
-      console.log(args...)
+      console.log args...
     else
-      console.log(args.first())
+      console.log args.first()
 
   debug: (args...) ->
-    @log(args...) if Joosy.debug
+    if Joosy.debug
+      @log args...
 
   debugAs: (context, string, args...) ->
-    @debug "#{Joosy.Module.__className__(context) || 'unknown context'}> #{string}", args...
+    context = Joosy.Module.__className__(context) || 'unknown context'
+    @debug "#{context}> #{string}", args...

@@ -66,8 +66,10 @@
   #
   restore: ->
     for name, i in @libraries
-      code = window.localStorage.getItem(name)
-      @evalGlobaly if window.navigator.appName == "Microsoft Internet Explorer" then Base64.decode(code) else code
+      code = window.localStorage.getItem name
+      if window.navigator.appName == "Microsoft Internet Explorer"
+        code = Base64.decode code
+      @evalGlobaly code
     @complete?.call window, true
 
   #
@@ -86,7 +88,9 @@
 
       @ajax url, size, (xhr) =>
         code = xhr.responseText
-        window.localStorage.setItem @prefix+url, (if window.navigator.appName == "Microsoft Internet Explorer" then Base64.encode(code) else code)
+        if window.navigator.appName == "Microsoft Internet Explorer"
+          code = Base64.encode code
+        window.localStorage.setItem @prefix+url, code
         @evalGlobaly xhr.responseText
         @download libraries
     else
@@ -112,8 +116,8 @@
 
     x.onreadystatechange = () =>
       if x.readyState > 3
-        clearInterval(@interval)
-        callback?(x)
+        clearInterval @interval
+        callback? x
 
     if @progress
       poller = =>
@@ -133,7 +137,7 @@
     removed = 0
 
     for element, i in window.localStorage
-      key = window.localStorage.key(i-removed)
+      key = window.localStorage.key i-removed
 
       if key.indexOf(@prefix) == 0 && @libraries.indexOf(key) < 0
         window.localStorage.removeItem key

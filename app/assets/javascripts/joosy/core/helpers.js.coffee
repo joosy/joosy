@@ -3,4 +3,4 @@
 Joosy.helpers 'Application', ->
   
   @nl2br = (text) ->
-    text.toString().replace(/\n/g, '<br/>')
+    text.toString().replace /\n/g, '<br/>'

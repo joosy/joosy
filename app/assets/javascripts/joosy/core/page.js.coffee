@@ -33,21 +33,26 @@ class Joosy.Page extends Joosy.Module
   @layout: (layoutClass) ->
     @::__layoutClass = layoutClass
 
-  @beforePaint: (callback) -> @::__beforePaint = callback
-  @paint: (callback) -> @::__paint = callback
-  @afterPaint: (callback) -> @::__afterPaint = callback
-  @erase: (callback) -> @::__erase = callback
+  @beforePaint: (callback) ->
+    @::__beforePaint = callback
+  @paint: (callback) ->
+    @::__paint = callback
+  @afterPaint: (callback) ->
+    @::__afterPaint = callback
+  @erase: (callback) ->
+    @::__erase = callback
 
   constructor: (@params, @previous) ->
     @__layoutClass ||= ApplicationLayout
 
-    if @__runBeforeLoads(@params, @previous)
+    if @__runBeforeLoads @params, @previous
       if !@previous?.layout?.uuid? || @previous?.__layoutClass != @__layoutClass
         @__bootstrapLayout()
       else
         @__bootstrap()
 
-  navigate: (args...) -> Joosy.Router.navigate(args...)
+  navigate: (args...) ->
+    Joosy.Router.navigate(args...)
 
   __renderSection: ->
     'pages'
@@ -62,12 +67,13 @@ class Joosy.Page extends Joosy.Module
     @refreshElements()
     @__delegateEvents()
     @__setupWidgets()
-    @__runAfterLoads(@params, @previous)
+    @__runAfterLoads @params, @previous
     if @__scrollElement
-      scroll = $(@__extractSelector(@__scrollElement)).offset()?.top + @__scrollMargin
-      Joosy.Modules.Log.debugAs @, "Scrolling to #{@__extractSelector(@__scrollElement)}"
+      scroll = $(@__extractSelector @__scrollElement).offset()?.top + @__scrollMargin
+      Joosy.Modules.Log.debugAs @, "Scrolling to #{@__extractSelector @__scrollElement}"
       $('html, body').animate {scrollTop: scroll}, @__scrollSpeed, =>
-        @__releaseHeight() if @__scrollSpeed != 0
+        if @__scrollSpeed != 0
+          @__releaseHeight()
 
     Joosy.Modules.Log.debugAs @, "Page loaded"
 
@@ -75,9 +81,8 @@ class Joosy.Page extends Joosy.Module
     @clearTime()
     @__unloadWidgets()
     @__removeMetamorphs()
-    @__runAfterUnloads(@params, @previous)
+    @__runAfterUnloads @params, @previous
     delete @previous
-
 
   __callSyncedThrough: (entity, receiver, params, callback) ->
     if entity?[receiver]?
@@ -99,7 +104,8 @@ class Joosy.Page extends Joosy.Module
 
     callbacksParams = [@layout.content()]
     
-    @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
+    if @__scrollElement && @__scrollSpeed != 0
+     @__fixHeight()
 
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough this, '__paint', callbacksParams, =>
@@ -127,7 +133,8 @@ class Joosy.Page extends Joosy.Module
 
     callbacksParams = [Joosy.Application.content(), this]
     
-    @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
+    if @__scrollElement && @__scrollSpeed != 0
+      @__fixHeight()
 
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough @layout, '__paint', callbacksParams, =>

@@ -4,20 +4,20 @@
 Joosy.Modules.Renderer =
 
   __renderer: ->
-    throw new Error "#{@constructor.name} does not have an attached template"
+    throw new Error "#{Joosy.Module.__className__ @constructor} does not have an attached template"
 
   __helpers: null
 
   included: ->
     @view = (template, options={}) ->
-      if Object.isFunction(template)
+      if Object.isFunction template
         @::__renderer = template
       else
         @::__renderer = (locals={}) ->
           if options.dynamic
-            @renderDynamic(template, locals)
+            @renderDynamic template, locals
           else
-            @render(template, locals)
+            @render template, locals
 
     @helpers = (helpers...) ->
       @::__helpers ||= []
@@ -38,13 +38,13 @@ Joosy.Modules.Renderer =
         @widgets ||= {}
         
         uuid    = Joosy.uuid()
-        element = document.createElement(element)
-        temp    = document.createElement("div")
+        element = document.createElement element
+        temp    = document.createElement 'div'
         
         element.id = uuid
         @widgets['#'+uuid] = widget
 
-        temp.appendChild(element)
+        temp.appendChild element
         temp.innerHTML
 
       if @__helpers
@@ -65,7 +65,7 @@ Joosy.Modules.Renderer =
 
         @__helpersProxyInstance.prototype = @__instantiateHelpers()
 
-      new @__helpersProxyInstance(locals)
+      new @__helpersProxyInstance locals
 
   render: (template, locals={}, parentStackPointer=false) ->
     @__render false, template, locals, parentStackPointer
@@ -74,50 +74,51 @@ Joosy.Modules.Renderer =
     @__render true, template, locals, parentStackPointer
 
   __render: (dynamic, template, locals={}, parentStackPointer=false) ->
-    stack = @__renderingStackChildFor(parentStackPointer)
+    stack = @__renderingStackChildFor parentStackPointer
     
     stack.template = template
     
-    isResource   = Joosy.Module.hasAncestor(locals.constructor, Joosy.Resource.Generic)
-    isCollection = Joosy.Module.hasAncestor(locals.constructor, Joosy.Resource.GenericCollection)
+    isResource   = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Generic
+    isCollection = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.GenericCollection
     
     if Object.isString template
       if @__renderSection?
         template = Joosy.Application.templater.resolveTemplate @__renderSection(), template, this
 
       template = Joosy.Application.templater.buildView template
-    else if !Object.isFunction(template)
+    else if !Object.isFunction template
       throw new Error "#{Joosy.Module.__className__ @}> template (maybe @view) does not look like a string or lambda"
 
     if !Object.isObject(locals) && !isResource && !isCollection
       throw new Error "#{Joosy.Module.__className__ @}> locals (maybe @data?) not in: dumb hash, Resource, Collection"
 
     if isCollection
-      stack.locals = @__proxifyHelpers {data: locals.data}
+      stack.locals = @__proxifyHelpers data: locals.data
     else if isResource
-      stack.locals = locals.e = @__proxifyHelpers(locals.e)
+      stack.locals = locals.e = @__proxifyHelpers locals.e
     else
-      stack.locals = locals = @__proxifyHelpers(locals)
+      stack.locals = locals = @__proxifyHelpers locals
       
     if !stack.locals.render
       stack.locals.render = (template, locals={}) =>
-        @render(template, locals, stack)
+        @render template, locals, stack
         
     if !stack.locals.renderDynamic
       stack.locals.renderDynamic = (template, locals={}) =>
-        @renderDynamic(template, locals, stack)
+        @renderDynamic template, locals, stack
     
     if dynamic
       morph  = Metamorph template(stack.locals)
       update = =>
-        @__removeMetamorphs(child) for child in stack.children
+        for child in stack.children
+          @__removeMetamorphs child
         stack.children = []
         morph.html template(stack.locals)
         @refreshElements?()
 
       # This is here to break stack tree and save from 
       # repeating DOM handling
-      update = update.debounce(0)
+      update = update.debounce 0
 
       if isCollection
         for resource in locals.data
@@ -135,7 +136,7 @@ Joosy.Modules.Renderer =
 
       morph.outerHTML()
     else
-      template(stack.locals)
+      template stack.locals
 
   __renderingStackElement: (parent=null) ->
     metamorphBindings: []
@@ -153,7 +154,7 @@ Joosy.Modules.Renderer =
       @__renderingStack.push element
       element
     else
-      element = @__renderingStackElement(parentPointer)
+      element = @__renderingStackElement parentPointer
       parentPointer.children.push element
       element
 
@@ -161,7 +162,7 @@ Joosy.Modules.Renderer =
     remove = (stackPointer) ->
       if stackPointer?.children
         for child in stackPointer.children
-          @__removeMetamorphs(child)
+          @__removeMetamorphs child
   
       if stackPointer?.metamorphBindings
         for [object, callback] in stackPointer.metamorphBindings
@@ -170,7 +171,6 @@ Joosy.Modules.Renderer =
     
     unless stackPointer
       @__renderingStack?.each (stackPointer) ->
-        remove(stackPointer)
+        remove stackPointer
     else
-      remove(stackPointer)
-        
+      remove stackPointer

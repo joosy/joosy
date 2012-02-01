@@ -1,4 +1,4 @@
-@Joosy = Object.extended(if @Joosy? then @Joosy else {})
+@Joosy = Object.extended @Joosy || {}
 
 @Joosy.merge
   debug: false
@@ -7,18 +7,20 @@
   Templaters: {}
 
 Joosy.namespace = (name, generator=false) ->
-  name  = name.split('.')
+  name  = name.split '.'
   space = window
-  space = space[part] ?= {} for part in name
+  for part in name
+    space = space[part] ?= {}
 
-  generator = generator.apply(space) if generator
+  if generator
+    generator = generator.apply space
   for key, klass of space
     if space.hasOwnProperty(key) &&
-          Joosy.Module.hasAncestor(klass, Joosy.Module)
+       Joosy.Module.hasAncestor klass, Joosy.Module
       klass.__namespace__ = name
 
 Joosy.helpers = (name, generator) ->
-  Joosy.namespace("Joosy.Helpers.#{name}", generator)
+  Joosy.namespace "Joosy.Helpers.#{name}", generator
 
 Joosy.test = ->
   text = "Hi :). I'm Joosy. And everything is just fine!"
@@ -36,13 +38,16 @@ Joosy.uuid = ->
   .toUpperCase()
 
 Joosy.preloadImages = (images, callback) ->
-  images = [images] if !Object.isArray(images)
-  callback() if images.length == 0
+  unless Object.isArray(images)
+    images = [images]
+  if images.length == 0
+    callback()
 
   ticks   = images.length
   result  = []
   checker = ->
-    callback?() if (ticks -= 1) == 0
+    if (ticks -= 1) == 0
+      callback?()
 
   for p in images
     result.push $('<img/>').load(checker).attr('src', p)
@@ -53,13 +58,15 @@ Joosy.buildUrl = (url, params) ->
   paramsString = []
 
   Object.each params, (key, value) ->
-    paramsString.push("#{key}=#{value}")
+    paramsString.push "#{key}=#{value}"
 
   hash = url.match(/(\#.*)?$/)[0]
-  url  = url.replace(/\#.*$/, '')
-  url  = url + "?" if !paramsString.isEmpty() && !url.has(/\?/)
+  url  = url.replace /\#.*$/, ''
+  if !paramsString.isEmpty() && !url.has(/\?/)
+    url  = url + "?"
 
-  paramsString = paramsString.join('&')
-  paramsString = '&' + paramsString if paramsString != '' && url.last() != '?'
+  paramsString = paramsString.join '&'
+  if !paramsString.isBlank() && url.last() != '?'
+    paramsString = '&' + paramsString
 
   url + paramsString + hash

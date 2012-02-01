@@ -4,40 +4,47 @@ class Joosy.Module
   @__namespace__: []
 
   @__className__ = (klass) ->
-    klass = klass.constructor unless Object.isFunction(klass)
+    unless Object.isFunction(klass)
+      klass = klass.constructor
 
     if klass.name?
       klass.name
     else
-      klass.toString().replace(/^function ([a-zA-Z]+)\([\s\S]+/, '$1')
+      klass.toString().replace /^function ([a-zA-Z]+)\([\s\S]+/, '$1'
 
   @hasAncestor = (what, klass) ->
-    return false unless what?
+    unless what? && klass?
+      return false
 
-    [ what, klass ] = [ what.prototype, klass.prototype ]
+    [what, klass] = [what.prototype, klass.prototype]
 
     while what
-      return true if what == klass
+      if what == klass
+        return true
       what = what.constructor?.__super__
 
     false
 
   @include: (obj) ->
-    throw new Error 'include(obj) requires obj' unless obj
+    unless obj
+      throw new Error 'include(obj) requires obj'
 
     Object.each obj, (key, value) =>
       if key not in moduleKeywords
         this::[key] = value
 
-    obj.included?.apply(this)
+    obj.included?.apply this
+
     this
 
   @extend: (obj) ->
-    throw new Error 'extend(obj) requires obj' unless obj
+    unless obj
+      throw new Error 'extend(obj) requires obj'
 
     Object.each obj, (key, value) =>
       if key not in moduleKeywords
         this[key] = value
 
-    obj.extended?.apply(this)
+    obj.extended?.apply this
+
     this

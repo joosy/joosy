@@ -9,20 +9,20 @@ Joosy.Application =
 
   initialize: (@name, @selector, options={}) ->
     @[key] = value for key, value of options
-    @templater = new Joosy.Templaters.RailsJST(@name)
+    @templater = new Joosy.Templaters.RailsJST @name
 
     Joosy.Router.setupRoutes()
 
     @sandboxSelector = Joosy.uuid()
-    @content().after("<div id='#{@sandboxSelector}' style='display:none'></div>")
+    @content().after "<div id='#{@sandboxSelector}' style='display:none'/>"
     @sandboxSelector = '#' + @sandboxSelector
 
   content: ->
-    $(@selector)
+    $ @selector
 
   sandbox: ->
-    $(@sandboxSelector)
+    $ @sandboxSelector
 
   setCurrentPage: (page, params) ->
     #if @page not instanceof page
-    @page = new page(params, @page)
+    @page = new page params, @page

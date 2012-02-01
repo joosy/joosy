@@ -19,9 +19,12 @@ class Joosy.Layout extends Joosy.Module
 
   @view 'layouts/default'
 
-  @beforePaint: (callback) -> @::__beforePaint = callback
-  @paint: (callback) -> @::__paint = callback
-  @erase: (callback) -> @::__erase = callback
+  @beforePaint: (callback) ->
+    @::__beforePaint = callback
+  @paint: (callback) ->
+    @::__paint = callback
+  @erase: (callback) ->
+    @::__erase = callback
 
   navigate: (args...) ->
     Joosy.Router.navigate(args...)
@@ -44,4 +47,4 @@ class Joosy.Layout extends Joosy.Module
     @uuid = Joosy.uuid()
 
   content: ->
-    $("##{@uuid}")
+    $ "##{@uuid}"

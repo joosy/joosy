@@ -37,19 +37,18 @@
   #
   receive: (url, callback) ->
     head   = document.getElementsByTagName("head")[0]
-    script = document.createElement("script")
+    script = document.createElement "script"
     script.src = url
 
     done = false
 
     proceed = ->
-      if ( !done && (!this.readyState ||
-            this.readyState == "loaded" || this.readyState == "complete") )
-
-        done = true and callback() if callback
+      if !done && (!@readyState? || ['loaded', 'completed'].has @readyState)
+        done = true
+        callback?()
         script.onload = script.onreadystatechange = null
 
     script.onload = script.onreadystatechange = proceed
 
-    head.appendChild(script)
+    head.appendChild script
     return undefined

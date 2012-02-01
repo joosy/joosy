@@ -13,9 +13,9 @@ Joosy.Router =
 
   setupRoutes: ->
     @prepareRoutes @rawRoutes
-
-    @respondRoute(location.hash)
-    $(window).hashchange => @respondRoute(location.hash)
+    @respondRoute location.hash
+    $(window).hashchange =>
+      @respondRoute location.hash
 
   prepareRoutes: (routes, namespace='') ->
     if !namespace && routes[404]
@@ -23,9 +23,9 @@ Joosy.Router =
       delete routes[404]
 
     Object.each routes, (path, response) =>
-      path = (namespace + path).replace(/\/{2,}/, '/')
-      if response && (typeof(response) == 'function' || response.prototype?)
-        @routes.merge @prepareRoute path,response
+      path = (namespace + path).replace /\/{2,}/, '/'
+      if response && (Object.isFunction(response) || response.prototype?)
+        @routes.merge @prepareRoute(path, response)
       else
         @prepareRoutes response, path
 
@@ -34,36 +34,34 @@ Joosy.Router =
     result    = Object.extended()
 
     result[matchPath] =
-      capture: (path.match(/\/:[^\/]+/g) || []).map((str) -> str.substr(2))
+      capture: (path.match(/\/:[^\/]+/g) || []).map (str) ->
+        str.substr 2
       action: response
     result
 
   respondRoute: (hash) ->
     Joosy.Modules.Log.debug "Router> Answering '#{hash}'"
-
-    fullPath = hash.replace(/^#!?/, '')
-
+    fullPath = hash.replace /^#!?/, ''
     @currentPath = fullPath
     found = false
-
-    queryArray = fullPath.split('&')
+    queryArray = fullPath.split '&'
     path       = queryArray.shift()
-    urlParams  = @paramsFromQueryArray(queryArray)
+    urlParams  = @paramsFromQueryArray queryArray
 
-    for regex, route of @routes when @routes.hasOwnProperty(regex)
-      if vals = path.match(new RegExp(regex))
+    for regex, route of @routes when @routes.hasOwnProperty regex
+      if vals = path.match new RegExp(regex)
         params = @paramsFromRouteMatch(vals, route).merge urlParams
 
-        if !Joosy.Module.hasAncestor(route.action, Joosy.Page)
-          route.action.call(this, params)
+        if Joosy.Module.hasAncestor route.action, Joosy.Page
+          Joosy.Application.setCurrentPage route.action, params
         else
-          Joosy.Application.setCurrentPage(route.action, params)
+          route.action.call this, params
 
         found = true
         break
 
-    if !found && @wildcardAction
-      @wildcardAction(path, urlParams)
+    if !found && @wildcardAction?
+      @wildcardAction path, urlParams
 
   paramsFromRouteMatch: (vals, route) ->
     params = Object.extended()
@@ -78,8 +76,8 @@ Joosy.Router =
     params = Object.extended()
 
     if queryArray
-      $.each queryArray, () ->
-        if this != ''
+      $.each queryArray, ->
+        unless @isBlank()
           pair = @split '='
           params[pair[0]] = pair[1]
 

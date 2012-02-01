@@ -16,13 +16,13 @@ class Joosy.Widget extends Joosy.Module
   __renderer: false
 
   setInterval: (args...) ->
-    @parent.setInterval(args...)
+    @parent.setInterval args...
 
   setTimeout: (args...) ->
-    @parent.setTimeout(args...)
+    @parent.setTimeout args...
 
   navigate: (args...) ->
-    Joosy.Router.navigate(args...)
+    Joosy.Router.navigate args...
 
   __renderSection: ->
     'widgets'

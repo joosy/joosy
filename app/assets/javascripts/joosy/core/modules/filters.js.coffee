@@ -1,39 +1,43 @@
 Joosy.Modules.Filters =
   included: ->
     @beforeLoad = (callback) ->
-      unless @::hasOwnProperty('__beforeLoads')
+      unless @::hasOwnProperty '__beforeLoads'
         @::__beforeLoads = [].concat @.__super__.__beforeLoads || []
       @::__beforeLoads.push callback
 
     @afterLoad = (callback) ->
-      unless @::hasOwnProperty('__afterLoads')
+      unless @::hasOwnProperty '__afterLoads'
         @::__afterLoads = [].concat @.__super__.__afterLoads || []
       @::__afterLoads.push callback
 
     @afterUnload = (callback) ->
-      unless @::hasOwnProperty('__afterUnloads')
+      unless @::hasOwnProperty '__afterUnloads'
         @::__afterUnloads = [].concat @.__super__.__afterUnloads || []
       @::__afterUnloads.push callback
 
   __runBeforeLoads: (opts...) ->
-    return true unless @__beforeLoads?.length > 0
+    unless @__beforeLoads?.length > 0
+      return true
 
     flag = true
 
     for filter in @__beforeLoads
-      filter = @[filter] unless typeof(filter) is 'function'
-      flag = flag && filter.apply(@, opts)
+      unless Object.isFunction filter
+        filter = @[filter]
+      flag = flag && filter.apply @, opts
 
     return flag
 
   __runAfterLoads: (opts...) ->
-    if @__afterLoads?
+    if @__afterLoads?.length > 0
       for filter in @__afterLoads
-        filter = @[filter] unless typeof(filter) is 'function'
-        filter.apply(@, opts)
+        unless Object.isFunction filter
+          filter = @[filter]
+        filter.apply @, opts
 
   __runAfterUnloads: (opts...) ->
-    if @__afterUnloads?
+    if @__afterUnloads?.length > 0
       for filter in @__afterUnloads
-        filter = @[filter] unless typeof(filter) is 'function'
-        filter.apply(@, opts)
+        unless Object.isFunction filter
+          filter = @[filter]
+        filter.apply @, opts

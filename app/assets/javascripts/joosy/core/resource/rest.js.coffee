@@ -8,7 +8,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   @primary: (primary) -> @::__primaryKey = primary
 
   constructor: (description={}) ->
-    if @constructor.__isId(description)
+    if @constructor.__isId description
       @id = description
     else
       super description
@@ -17,34 +17,35 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   # Returns single entity if int/string given
   # Returns collection if no value or Object (with parameters) given
   @find: (description, callback, options) ->
-    if @__isId(description)
-      resource = new @(description)
+    if @__isId description
+      resource = new @ description
       resource.fetch callback, options
       resource
     else
-      if Object.isFunction(description) && !callback
+      if !callback? && Object.isFunction description
         callback = description
         description = undefined
-      resources = new Joosy.Resource.RESTCollection(@, description)
+      resources = new Joosy.Resource.RESTCollection @, description
       resources.fetch callback, options
       resources
 
   fetch: (callback, options) ->
     @constructor.__ajax 'get', @constructor.__buildSource(extension: @id), options, (e) =>
-      @__fillData(e)
-      callback?(this)
+      @__fillData e
+      callback? @
 
-    this
+    @
 
   save: ->
 
   destroy: (callback, options) ->
     @constructor.__ajax 'delete', @constructor.__buildSource(extension: @id), options, (e) =>
-      callback?(this)
+      callback? @
 
-    this
+    @
 
-  @__isId: (something) -> Object.isNumber(something) || Object.isString(something)
+  @__isId: (something) ->
+    Object.isNumber(something) || Object.isString(something)
 
   @__ajax: (method, url, options={}, callback) ->
     $.ajax url, Object.merge options,
@@ -57,7 +58,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     unless @::hasOwnProperty '__source'
       @::__source = "/" + @entityName().pluralize()
 
-    source = Joosy.buildUrl("#{@::__source}/#{options.extension || ''}", options.params)
+    source = Joosy.buildUrl "#{@::__source}/#{options.extension || ''}", options.params
 
   __fillData: (data) ->
     data = @__prepareData data

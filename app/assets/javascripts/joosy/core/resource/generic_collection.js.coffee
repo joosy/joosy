@@ -9,7 +9,7 @@ class Joosy.Resource.GenericCollection extends Joosy.Module
   reset: (entities) ->
     @data  = @modelize entities
 
-    this
+    @
     
   modelize: (collection) ->
     root = @model.entityName().pluralize()

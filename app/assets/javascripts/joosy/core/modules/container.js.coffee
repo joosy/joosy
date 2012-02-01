@@ -4,37 +4,39 @@ Joosy.Modules.Container =
 
   eventSplitter: /^(\S+)\s*(.*)$/
 
-  $: (selector) -> $(selector, @container)
+  $: (selector) ->
+    $ selector, @container
 
   refreshElements: ->
     @__collectElements().each (key, value) =>
-      @[key] = @$(value)
+      # TODO: Check for possible collisions?
+      @[key] = @$ value
 
   swapContainer: (container, data) ->
-    realContainer = container.clone().html(data)
+    realContainer = container.clone().html data
     container.replaceWith realContainer
     realContainer
 
   __collectElements: ->
-    elements = Object.extended(@elements || {})
+    elements = Object.extended @elements || {}
 
     klass = this
     while klass = klass.constructor.__super__
-      elements.merge(klass.elements, false)
+      elements.merge klass.elements, false
 
     elements
 
   __collectEvents: ->
-    events = Object.extended(@events || {})
+    events = Object.extended @events || {}
 
     klass = this
     while klass = klass.constructor.__super__
-      events.merge(klass.events, false)
+      events.merge klass.events, false
 
     events
 
   __extractSelector: (selector) ->
-    if r = selector.match(/\$([A-z]+)/)
+    if r = selector.match /\$([A-z]+)/
       selector = @__collectElements()[r[1]]
 
     selector
@@ -44,16 +46,18 @@ Joosy.Modules.Container =
     events = @__collectEvents()
 
     events.each (key, method) =>
-      method   = @[method] unless typeof(method) == 'function'
-      callback = (event) -> method.call(module, this, event)
+      unless Object.isFunction method
+        method = @[method]
+      callback = (event) ->
+        method.call module, this, event
 
-      match      = key.match(@eventSplitter)
+      match      = key.match @eventSplitter
       eventName  = match[1]
-      selector   = @__extractSelector(match[2])
+      selector   = @__extractSelector match[2]
 
       if selector == ""
-        @container.bind(eventName, callback)
+        @container.bind eventName, callback
         Joosy.Modules.Log.debugAs @, "#{eventName} binded on container"
       else
-        @container.on(eventName, selector, callback)
+        @container.on eventName, selector, callback
         Joosy.Modules.Log.debugAs @, "#{eventName} binded on #{selector}"

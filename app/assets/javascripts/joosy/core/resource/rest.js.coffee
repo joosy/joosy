@@ -7,7 +7,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   @source: (source) -> @::__source = source
   @primary: (primary) -> @::__primaryKey = primary
 
-  constructor: (description) ->
+  constructor: (description={}) ->
     if @constructor.__isId(description)
       @id = description
     else

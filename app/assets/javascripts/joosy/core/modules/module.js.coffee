@@ -25,7 +25,7 @@ class Joosy.Module
   @include: (obj) ->
     throw new Error 'include(obj) requires obj' unless obj
 
-    Object.extended(obj).each (key, value) =>
+    Object.each obj, (key, value) =>
       if key not in moduleKeywords
         this::[key] = value
 
@@ -35,7 +35,7 @@ class Joosy.Module
   @extend: (obj) ->
     throw new Error 'extend(obj) requires obj' unless obj
 
-    Object.extended(obj).each (key, value) =>
+    Object.each obj, (key, value) =>
       if key not in moduleKeywords
         this[key] = value
 

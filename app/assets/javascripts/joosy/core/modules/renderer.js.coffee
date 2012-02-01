@@ -29,7 +29,7 @@ Joosy.Modules.Renderer =
 
   __instantiateHelpers: ->
     unless @__helpersInstance
-      @__helpersInstance = Object.extended Joosy.Helpers.Application
+      @__helpersInstance = Joosy.Helpers.Application
 
       @__helpersInstance.render = =>
         @render(arguments...)
@@ -49,7 +49,7 @@ Joosy.Modules.Renderer =
 
       if @__helpers
         for helper in @__helpers
-          @__helpersInstance.merge helper
+          Object.merge @__helpersInstance, helper
 
     @__helpersInstance
 

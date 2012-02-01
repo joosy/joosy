@@ -1,5 +1,5 @@
 # Preloader stub
-@Preloader = Object.extended
+@Preloader =
   load: (libraries, options) ->
-    @.merge options
+    @[key] = val for key, val of options
     @complete?.call window

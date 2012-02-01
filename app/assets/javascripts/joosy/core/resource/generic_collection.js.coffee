@@ -8,7 +8,6 @@ class Joosy.Resource.GenericCollection extends Joosy.Module
   # Clears the storage and attempts to import given JSON
   reset: (entities) ->
     @data  = @modelize entities
-    @pages = Object.extended().merge { 1: @data }
 
     this
     

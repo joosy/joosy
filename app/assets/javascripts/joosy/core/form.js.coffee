@@ -19,7 +19,7 @@ class Joosy.Form extends Joosy.Module
     if Object.isFunction opts
       @success = opts
     else
-      Object.extended(opts).each (key, value) =>
+      Object.each opts, (key, value) =>
         @[key] = value
 
     @container = $(form)
@@ -67,14 +67,14 @@ class Joosy.Form extends Joosy.Module
   __error: (data) ->
     errors = if data.responseText
       try
-        Object.extended(jQuery.parseJSON(data.responseText))
+        jQuery.parseJSON(data.responseText)
       catch error
-        Object.extended()
+        {}
     else
-      Object.extended(data)
+      data
 
     if !@error? || @error(errors) is true
-      errors.each (field, notifications) =>
+      Object.each errors, (field, notifications) =>
         field = @substitutions[field] if @substitutions[field]?
         input = @fields.filter("[name='#{field}']").addClass(@invalidationClass)
         @notification?(input, notifications)

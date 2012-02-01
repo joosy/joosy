@@ -63,6 +63,5 @@ class Joosy.Resource.Generic extends Joosy.Module
     @e = @__prepareData(data)
 
   __prepareData: (data) ->
-    data = Object.extended(data)
     data = @__beforeLoad(data) if @__beforeLoad?
     data

@@ -22,12 +22,12 @@ Joosy.Router =
       @wildcardAction = routes[404]
       delete routes[404]
 
-    routes.each (path, response) =>
+    Object.each routes, (path, response) =>
       path = (namespace + path).replace(/\/{2,}/, '/')
       if response && (typeof(response) == 'function' || response.prototype?)
         @routes.merge @prepareRoute path,response
       else
-        @prepareRoutes Object.extended(response), path
+        @prepareRoutes response, path
 
   prepareRoute: (path, response) ->
     matchPath = path.replace(/\/:([^\/]+)/g, '/([^/]+)').replace(/^\/?/, '^/?').replace(/\/?$/, '/?$')

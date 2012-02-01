@@ -158,13 +158,19 @@ Joosy.Modules.Renderer =
       element
 
   __removeMetamorphs: (stackPointer=false) ->
-    unless stackPointer
-      @__renderingStack.each (stackPointer) =>
-        if stackPointer?.children
-          for child in stackPointer.children
-            @__removeMetamorphs(child)
+    remove = (stackPointer) ->
+      if stackPointer?.children
+        for child in stackPointer.children
+          @__removeMetamorphs(child)
+  
+      if stackPointer?.metamorphBindings
+        for [object, callback] in stackPointer.metamorphBindings
+          object.unbind callback
+        stackPointer.metamorphBindings = []
     
-        if stackPointer?.metamorphBindings
-          for [object, callback] in stackPointer.metamorphBindings
-            object.unbind callback
-          stackPointer.metamorphBindings = []
+    unless stackPointer
+      @__renderingStack?.each (stackPointer) ->
+        remove(stackPointer)
+    else
+      remove(stackPointer)
+        

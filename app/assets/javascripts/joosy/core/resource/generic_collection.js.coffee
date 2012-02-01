@@ -22,3 +22,9 @@ class Joosy.Resource.GenericCollection extends Joosy.Module
 
     collection.map (x) =>
       @model.create x
+      
+  each: (callback) ->
+    @data.each callback
+    
+  at: (i) ->
+    @data[i]

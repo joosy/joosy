@@ -29,10 +29,7 @@ Joosy.Modules.Renderer =
 
   __instantiateHelpers: ->
     unless @__helpersInstance
-      @__helpersInstance = Joosy.Helpers.Application
-
-      @__helpersInstance.render = =>
-        @render(arguments...)
+      @__helpersInstance = Object.extended Joosy.Helpers.Application
         
       @__helpersInstance.widget = (element, widget) =>
         @widgets ||= {}
@@ -41,7 +38,7 @@ Joosy.Modules.Renderer =
         element = document.createElement(element)
         temp    = document.createElement("div")
         
-        element.id     = uuid
+        element.id = uuid
         @widgets['#'+uuid] = widget
 
         temp.appendChild(element)
@@ -57,18 +54,21 @@ Joosy.Modules.Renderer =
   __proxifyHelpers: (locals) ->
     if locals.hasOwnProperty '__proto__'
       locals.__proto__ = @__instantiateHelpers()
-
       locals
     else
       unless @__helpersProxyInstance
         @__helpersProxyInstance = (locals) ->
-          Object.merge(this, locals)
+          Object.merge this, locals
 
         @__helpersProxyInstance.prototype = @__instantiateHelpers()
 
       new @__helpersProxyInstance(locals)
 
-  render: (template, locals={}) ->
+  render: (template, locals={}, parentStackPointer=false) ->
+    stack = @__renderingStackChildFor(parentStackPointer)
+    
+    stack.template = template
+    
     isResource   = Joosy.Module.hasAncestor(locals.constructor, Joosy.Resource.Generic)
     isCollection = Joosy.Module.hasAncestor(locals.constructor, Joosy.Resource.GenericCollection)
     
@@ -83,42 +83,69 @@ Joosy.Modules.Renderer =
     if !Object.isObject(locals) && !isResource && !isCollection
       throw new Error "#{Joosy.Module.__className__ @}> locals (maybe @data?) not in: dumb hash, Resource, Collection"
 
-    # Small code dup due to the fact we sometimes 
-    # actually CLONE object when proxying helpers
     if isCollection
-      context  = @__proxifyHelpers {data: locals.data}
-      morph    = Metamorph template(context)
-      update   = => morph.html template(context)
+      stack.locals = @__proxifyHelpers {data: locals.data}
     else if isResource
-      locals.e = @__proxifyHelpers(locals.e)
-      morph    = Metamorph template(locals.e)
-      update   = => morph.html template(locals.e)
+      stack.locals = locals.e = @__proxifyHelpers(locals.e)
     else
-      locals  = @__proxifyHelpers(locals)
-      morph   = Metamorph template(locals)
-      update  = => morph.html template(locals)
+      stack.locals = locals = @__proxifyHelpers(locals)
+      
+    if !stack.locals.render
+      stack.locals.render = (template, locals={}) =>
+        @render(template, locals, stack)
+    
+    morph  = Metamorph template(stack.locals)
+    update = =>
+      @__removeMetamorphs(child) for child in stack.children
+      stack.children = []
+      morph.html template(stack.locals)
 
     # This is here to break stack tree and save from 
     # repeating DOM handling
     update = update.debounce(0)
 
-    @__metamorphs ||= []
-
     if isCollection
       for resource in locals.data
         resource.bind 'changed', update
+        stack.metamorphBindings.push [resource, update]
     if isResource || isCollection
       locals.bind 'changed', update
+      stack.metamorphBindings.push [locals, update]
     else
       for key, object of locals
         if locals.hasOwnProperty key
           if object?.bind? && object?.unbind?
             object.bind 'changed', update
-            @__metamorphs.push [object, update]
+            stack.metamorphBindings.push [object, update]
 
     morph.outerHTML()
 
-  __removeMetamorphs: ->
-    if @__metamorphs
-      for [object, callback] in @__metamorphs
+  __renderingStackElement: (parent=null) ->
+    metamorphBindings: []
+    locals: null
+    template: null
+    children: []
+    parent: parent
+
+  __renderingStackChildFor: (parentPointer) ->
+    if !@__renderingStack
+      @__renderingStack = @__renderingStackElement()
+    
+    if !parentPointer
+      @__renderingStack
+    else
+      element = @__renderingStackElement(parentPointer)
+      parentPointer.children.push element
+      element
+
+  __removeMetamorphs: (stackPointer=false) ->
+    stackPointer = @__renderingStack unless stackPointer
+    
+    if stackPointer?.children
+      for child in stackPointer.children
+        @__removeMetamorphs(child)
+    
+    if stackPointer?.metamorphBindings
+      for [object, callback] in stackPointer.metamorphBindings
         object.unbind callback
+      stackPointer.metamorphBindings = []

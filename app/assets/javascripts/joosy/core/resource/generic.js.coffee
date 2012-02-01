@@ -5,6 +5,14 @@ class Joosy.Resource.Generic extends Joosy.Module
   @entity: (name) -> @::__entityName = name
   @beforeLoad: (action) -> @::__beforeLoad = action
 
+  @map: (name, klass=false) ->
+    klass = window[name.singularize().camelize()] unless klass
+
+    @beforeLoad (data) ->
+      @[name] = new Joosy.Resource.GenericCollection(klass)
+      @[name].reset data[name] if Object.isArray(data[name])
+      data
+
   @create: ->
     shim = ->
       shim.__call.apply(shim, arguments)
@@ -38,6 +46,7 @@ class Joosy.Resource.Generic extends Joosy.Module
     target = @__callTarget(path)    
     target[0][target[1]] = value
     @trigger 'changed'
+    null
 
   __callTarget: (path) ->
     if path.has(/\./) && !@e[path]?

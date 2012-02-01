@@ -15,6 +15,12 @@ class Joosy.Form extends Joosy.Module
   elements:
     'fields': 'input,select,textarea'
 
+  @submit: (form, opts={}) ->
+    form = new @(form, opts)
+    form.container.submit()
+    form.unbind()
+    null
+
   constructor: (form, opts={}) ->
     if Object.isFunction opts
       @success = opts
@@ -41,6 +47,9 @@ class Joosy.Form extends Joosy.Module
           xhr.upload.onprogress = (event) =>
             @progress (event.position/event.total*100).round(2) if event.lengthComputable
         xhr
+
+  unbind: ->
+    @container.unbind('submit').find('input:submit,input:image,button:submit').unbind('click');
 
   fill: (resource, decorator) ->
     e = if decorator? then decorator(resource.e) else resource.e

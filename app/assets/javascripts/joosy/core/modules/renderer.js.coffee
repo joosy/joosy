@@ -9,12 +9,15 @@ Joosy.Modules.Renderer =
   __helpers: null
 
   included: ->
-    @view = (template) ->
+    @view = (template, options={}) ->
       if Object.isFunction(template)
         @::__renderer = template
       else
         @::__renderer = (locals={}) ->
-          @render(template, locals)
+          if options.dynamic
+            @renderDynamic(template, locals)
+          else
+            @render(template, locals)
 
     @helpers = (helpers...) ->
       @::__helpers ||= []
@@ -65,6 +68,12 @@ Joosy.Modules.Renderer =
       new @__helpersProxyInstance(locals)
 
   render: (template, locals={}, parentStackPointer=false) ->
+    @__render false, template, locals, parentStackPointer
+    
+  renderDynamic: (template, locals={}, parentStackPointer=false) ->
+    @__render true, template, locals, parentStackPointer
+
+  __render: (dynamic, template, locals={}, parentStackPointer=false) ->
     stack = @__renderingStackChildFor(parentStackPointer)
     
     stack.template = template
@@ -93,32 +102,40 @@ Joosy.Modules.Renderer =
     if !stack.locals.render
       stack.locals.render = (template, locals={}) =>
         @render(template, locals, stack)
+        
+    if !stack.locals.renderDynamic
+      stack.locals.renderDynamic = (template, locals={}) =>
+        @renderDynamic(template, locals, stack)
     
-    morph  = Metamorph template(stack.locals)
-    update = =>
-      @__removeMetamorphs(child) for child in stack.children
-      stack.children = []
-      morph.html template(stack.locals)
+    if dynamic
+      morph  = Metamorph template(stack.locals)
+      update = =>
+        @__removeMetamorphs(child) for child in stack.children
+        stack.children = []
+        morph.html template(stack.locals)
+        @refreshElements?()
 
-    # This is here to break stack tree and save from 
-    # repeating DOM handling
-    update = update.debounce(0)
+      # This is here to break stack tree and save from 
+      # repeating DOM handling
+      update = update.debounce(0)
 
-    if isCollection
-      for resource in locals.data
-        resource.bind 'changed', update
-        stack.metamorphBindings.push [resource, update]
-    if isResource || isCollection
-      locals.bind 'changed', update
-      stack.metamorphBindings.push [locals, update]
+      if isCollection
+        for resource in locals.data
+          resource.bind 'changed', update
+          stack.metamorphBindings.push [resource, update]
+      if isResource || isCollection
+        locals.bind 'changed', update
+        stack.metamorphBindings.push [locals, update]
+      else
+        for key, object of locals
+          if locals.hasOwnProperty key
+            if object?.bind? && object?.unbind?
+              object.bind 'changed', update
+              stack.metamorphBindings.push [object, update]
+
+      morph.outerHTML()
     else
-      for key, object of locals
-        if locals.hasOwnProperty key
-          if object?.bind? && object?.unbind?
-            object.bind 'changed', update
-            stack.metamorphBindings.push [object, update]
-
-    morph.outerHTML()
+      template(stack.locals)
 
   __renderingStackElement: (parent=null) ->
     metamorphBindings: []

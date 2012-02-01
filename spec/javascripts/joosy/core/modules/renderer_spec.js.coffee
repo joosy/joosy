@@ -27,7 +27,7 @@ describe "Joosy.Modules.Renderer", ->
       template = (locals) ->
         "#{locals.object.value}"
 
-      @render(template, locals)
+      @renderDynamic(template, locals)
 
     elem = $("<div></div>")
     @ground.append elem
@@ -60,7 +60,7 @@ describe "Joosy.Modules.Renderer", ->
       template = (locals) -> 
         "#{locals.zombie}"
 
-      @render(template, locals)
+      @renderDynamic(template, locals)
 
     elem = $("<div></div>")
     @ground.append elem
@@ -95,7 +95,7 @@ describe "Joosy.Modules.Renderer", ->
       template = (locals) -> 
         "#{locals.data[1] 'zombie'}"
 
-      @render(template, locals)
+      @renderDynamic(template, locals)
 
     elem = $("<div></div>")
     @ground.append elem
@@ -121,7 +121,7 @@ describe "Joosy.Modules.Renderer", ->
       template = (locals) ->
         "#{locals.object.value}"
   
-      @render(template, locals)
+      @renderDynamic(template, locals)
   
     elem = $("<div></div>")
     @ground.append elem

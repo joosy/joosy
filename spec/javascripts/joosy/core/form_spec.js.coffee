@@ -3,7 +3,7 @@ describe "Joosy.Form", ->
   beforeEach ->
     @server = sinon.fakeServer.create()
     @seedGround()
-    @nudeForm = "<form id='nude'><input name='test[foo]'/><input name='test[bar]'/></form>"
+    @nudeForm = "<form id='nude'><input name='test[foo]'/><input name='test[bar]'/><input name='test[bool]' type='checkbox' value='1'/></form>"
     @putForm  = "<form id='put' method='put'><input name='test[camel_baz]'/></form>"
     @moreForm = "<form id='more' method='put'><input name='test[ololo]'/></form>"
 
@@ -20,6 +20,7 @@ describe "Joosy.Form", ->
       foo: 'foo',
       bar: 'bar'
       camelBaz: 'baz'
+      bool: true
 
   afterEach ->
     @server.restore()
@@ -67,6 +68,8 @@ describe "Joosy.Form", ->
       @nudeForm.fill @resource
       expect(@nudeForm.fields[0].value).toEqual 'foo'
       expect(@nudeForm.fields[1].value).toEqual 'bar'
+      expect(@nudeForm.fields[2].checked).toEqual 'checked'
+      expect(@nudeForm.fields[2].value).toEqual '1'
       expect(@nudeForm.container.attr('method').toLowerCase()).toEqual 'post'
       expect(@nudeForm.container.attr 'action').toEqual '/tests/'
 

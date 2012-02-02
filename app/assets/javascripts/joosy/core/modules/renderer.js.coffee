@@ -159,7 +159,7 @@ Joosy.Modules.Renderer =
       element
 
   __removeMetamorphs: (stackPointer=false) ->
-    remove = (stackPointer) ->
+    remove = (stackPointer) =>
       if stackPointer?.children
         for child in stackPointer.children
           @__removeMetamorphs child

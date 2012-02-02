@@ -20,16 +20,16 @@ class Joosy.Resource.Generic extends Joosy.Module
       data
 
   @at: ->
-    if !Object.isFunction(@__source)
+    if !Object.isFunction @__source
       throw new Error "#{Joosy.Module.__className @}> should be created directly (without `at')"
     
     class clone extends this
-    clone.__source = @__source(arguments...)
+    clone.__source = @__source arguments...
 
     clone
 
   @create: ->
-    if Object.isFunction(@__source)
+    if Object.isFunction @__source
       throw new Error "#{Joosy.Module.__className @}> should be created through #{Joosy.Module.__className @}.at()"
     
     shim = ->

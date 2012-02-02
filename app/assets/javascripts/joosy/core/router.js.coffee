@@ -9,7 +9,7 @@ Joosy.Router =
     @routes = Object.extended()
 
   map: (routes) ->
-    @rawRoutes.merge routes
+    Joosy.Module.merge @rawRoutes, routes
 
   setupRoutes: ->
     @prepareRoutes @rawRoutes
@@ -25,7 +25,7 @@ Joosy.Router =
     Object.each routes, (path, response) =>
       path = (namespace + path).replace /\/{2,}/, '/'
       if response && (Object.isFunction(response) || response.prototype?)
-        @routes.merge @prepareRoute(path, response)
+        Joosy.Module.merge @routes, @prepareRoute(path, response)
       else
         @prepareRoutes response, path
 

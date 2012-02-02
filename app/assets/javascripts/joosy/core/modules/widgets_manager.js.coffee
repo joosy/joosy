@@ -18,7 +18,7 @@ Joosy.Modules.WidgetsManager =
 
     klass = this
     while klass = klass.constructor.__super__
-      widgets.merge klass.widgets, false
+      Joosy.Module.merge widgets, klass.widgets, false
 
     widgets
 

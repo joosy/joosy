@@ -1,6 +1,4 @@
-@Joosy = Object.extended @Joosy || {}
-
-@Joosy.merge
+@Joosy = Object.extended
   debug: false
   Modules: {}
   Resource: {}

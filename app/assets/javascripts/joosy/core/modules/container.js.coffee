@@ -22,7 +22,7 @@ Joosy.Modules.Container =
 
     klass = this
     while klass = klass.constructor.__super__
-      elements.merge klass.elements, false
+      Joosy.Module.merge elements, klass.elements, false
 
     elements
 
@@ -31,7 +31,7 @@ Joosy.Modules.Container =
 
     klass = this
     while klass = klass.constructor.__super__
-      events.merge klass.events, false
+      Joosy.Module.merge events, klass.events, false
 
     events
 

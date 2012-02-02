@@ -48,7 +48,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     Object.isNumber(something) || Object.isString(something)
 
   @__ajax: (method, url, options={}, callback) ->
-    $.ajax url, Object.merge options,
+    $.ajax url, Joosy.Module.merge options,
       type: method
       success: callback
       cache: false

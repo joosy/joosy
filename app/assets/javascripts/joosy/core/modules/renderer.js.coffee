@@ -49,7 +49,7 @@ Joosy.Modules.Renderer =
 
       if @__helpers
         for helper in @__helpers
-          Object.merge @__helpersInstance, helper
+          Joosy.Module.merge @__helpersInstance, helper
 
     @__helpersInstance
 
@@ -61,7 +61,7 @@ Joosy.Modules.Renderer =
     else
       unless @__helpersProxyInstance
         @__helpersProxyInstance = (locals) ->
-          Object.merge this, locals
+          Joosy.Module.merge this, locals
 
         @__helpersProxyInstance.prototype = @__instantiateHelpers()
 
@@ -108,7 +108,7 @@ Joosy.Modules.Renderer =
     context = =>
       data = {}
       Joosy.Module.merge data, stack.locals
-      Joosy.Module.merge data, @__instantiateHelpers(), true
+      Joosy.Module.merge data, @__instantiateHelpers(), false
       Joosy.Module.merge data, renderers
       data
     

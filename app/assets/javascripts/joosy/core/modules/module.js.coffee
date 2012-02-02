@@ -25,11 +25,12 @@ class Joosy.Module
 
     false
     
-  @merge: (destination, source, safe=false) ->
+  @merge: (destination, source, unsafe=true) ->
     for key, value of source
       if source.hasOwnProperty(key)
-        unless safe && destination.hasOwnProperty(key)
+        if unsafe || !destination.hasOwnProperty(key)
           destination[key] = value
+    destination
 
   @include: (object) ->
     unless object

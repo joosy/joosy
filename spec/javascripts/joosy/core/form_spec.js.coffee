@@ -37,7 +37,7 @@ describe "Joosy.Form", ->
       formWithProperties = new Joosy.Form @nudeForm, invalidationClass: 'fluffy'
       expect(formWithProperties.container).toEqual @nudeForm
       expect(formWithProperties.invalidationClass).toEqual 'fluffy'
-      expect(formWithProperties.fields.length).toEqual 2
+      expect(formWithProperties.fields.length).toEqual 3
 
       expect(@spy.callCount).toEqual 1
 
@@ -68,7 +68,7 @@ describe "Joosy.Form", ->
       @nudeForm.fill @resource
       expect(@nudeForm.fields[0].value).toEqual 'foo'
       expect(@nudeForm.fields[1].value).toEqual 'bar'
-      expect(@nudeForm.fields[2].checked).toEqual 'checked'
+      expect(@nudeForm.fields[2].checked).toEqual true
       expect(@nudeForm.fields[2].value).toEqual '1'
       expect(@nudeForm.container.attr('method').toLowerCase()).toEqual 'post'
       expect(@nudeForm.container.attr 'action').toEqual '/tests/'

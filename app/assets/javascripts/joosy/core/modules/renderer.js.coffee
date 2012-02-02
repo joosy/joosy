@@ -4,7 +4,7 @@
 Joosy.Modules.Renderer =
 
   __renderer: ->
-    throw new Error "#{Joosy.Module.__className__ @constructor} does not have an attached template"
+    throw new Error "#{Joosy.Module.__className @constructor} does not have an attached template"
 
   __helpers: null
 
@@ -87,33 +87,38 @@ Joosy.Modules.Renderer =
 
       template = Joosy.Application.templater.buildView template
     else if !Object.isFunction template
-      throw new Error "#{Joosy.Module.__className__ @}> template (maybe @view) does not look like a string or lambda"
+      throw new Error "#{Joosy.Module.__className @}> template (maybe @view) does not look like a string or lambda"
 
     if !Object.isObject(locals) && !isResource && !isCollection
-      throw new Error "#{Joosy.Module.__className__ @}> locals (maybe @data?) not in: dumb hash, Resource, Collection"
+      throw new Error "#{Joosy.Module.__className @}> locals (maybe @data?) not in: dumb hash, Resource, Collection"
 
     if isCollection
-      stack.locals = @__proxifyHelpers data: locals.data
+      stack.locals = data: locals.data
     else if isResource
-      stack.locals = locals.e = @__proxifyHelpers locals.e
+      stack.locals = locals.e
     else
-      stack.locals = locals = @__proxifyHelpers locals
+      stack.locals = locals
       
-    if !stack.locals.render
-      stack.locals.render = (template, locals={}) =>
+    renderers =
+      render: (template, locals={}) =>
         @render template, locals, stack
-        
-    if !stack.locals.renderDynamic
-      stack.locals.renderDynamic = (template, locals={}) =>
+      renderDynamic: (template, locals={}) =>
         @renderDynamic template, locals, stack
+        
+    context = =>
+      data = {}
+      Joosy.Module.merge data, stack.locals
+      Joosy.Module.merge data, @__instantiateHelpers(), true
+      Joosy.Module.merge data, renderers
+      data
     
     if dynamic
-      morph  = Metamorph template(stack.locals)
+      morph  = Metamorph template(context())
       update = =>
         for child in stack.children
           @__removeMetamorphs child
         stack.children = []
-        morph.html template(stack.locals)
+        morph.html template(context())
         @refreshElements?()
 
       # This is here to break stack tree and save from 
@@ -136,7 +141,7 @@ Joosy.Modules.Renderer =
 
       morph.outerHTML()
     else
-      template stack.locals
+      template context()
 
   __renderingStackElement: (parent=null) ->
     metamorphBindings: []

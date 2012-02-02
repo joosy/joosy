@@ -43,8 +43,8 @@ Joosy.Modules.WidgetsManager =
         else
           instance = widget.call this, index
 
-        registered[selector][Joosy.Module.__className__ instance] ||= 0
-        registered[selector][Joosy.Module.__className__ instance]  += 1
+        registered[selector][Joosy.Module.__className instance] ||= 0
+        registered[selector][Joosy.Module.__className instance]  += 1
 
         @registerWidget $(elem), instance
 

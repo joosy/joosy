@@ -13,5 +13,5 @@ Joosy.Modules.Log =
       @log args...
 
   debugAs: (context, string, args...) ->
-    context = Joosy.Module.__className__(context) || 'unknown context'
+    context = Joosy.Module.__className(context) || 'unknown context'
     @debug "#{context}> #{string}", args...

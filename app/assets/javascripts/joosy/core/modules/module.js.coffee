@@ -3,7 +3,7 @@ moduleKeywords = ['included', 'extended']
 class Joosy.Module
   @__namespace__: []
 
-  @__className__ = (klass) ->
+  @__className = (klass) ->
     unless Object.isFunction(klass)
       klass = klass.constructor
 
@@ -12,7 +12,7 @@ class Joosy.Module
     else
       klass.toString().replace /^function ([a-zA-Z]+)\([\s\S]+/, '$1'
 
-  @hasAncestor = (what, klass) ->
+  @hasAncestor: (what, klass) ->
     unless what? && klass?
       return false
 
@@ -24,27 +24,29 @@ class Joosy.Module
       what = what.constructor?.__super__
 
     false
+    
+  @merge: (destination, source, safe=false) ->
+    for key, value of source
+      if source.hasOwnProperty(key)
+        unless safe && destination.hasOwnProperty(key)
+          destination[key] = value
 
-  @include: (obj) ->
-    unless obj
-      throw new Error 'include(obj) requires obj'
+  @include: (object) ->
+    unless object
+      throw new Error 'include(object) requires obj'
 
-    Object.each obj, (key, value) =>
+    Object.each object, (key, value) =>
       if key not in moduleKeywords
         this::[key] = value
 
-    obj.included?.apply this
+    object.included?.apply this
+    null
 
-    this
+  @extend: (object) ->
+    unless object
+      throw new Error 'extend(object) requires object'
 
-  @extend: (obj) ->
-    unless obj
-      throw new Error 'extend(obj) requires obj'
+    @merge this, object
 
-    Object.each obj, (key, value) =>
-      if key not in moduleKeywords
-        this[key] = value
-
-    obj.extended?.apply this
-
-    this
+    object.extended?.apply this
+    null

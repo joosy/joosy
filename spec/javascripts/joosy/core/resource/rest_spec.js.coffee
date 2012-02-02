@@ -16,7 +16,7 @@ describe "Joosy.Resource.REST", ->
     expect(@Test::__entityName).toEqual 'tada'
     expect(@Test.entityName()).toEqual 'tada'
     @Test.source 'uri'
-    expect(@Test::__source).toEqual 'uri'
+    expect(@Test.__source).toEqual 'uri'
     expect(@Test.__buildSource()).toEqual 'uri/'
     @Test.primary 'uid'
     expect(@Test::__primaryKey).toEqual 'uid'

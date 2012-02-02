@@ -33,3 +33,17 @@ describe "Joosy.Resource.Generic", ->
     
     @resource 'another.deep.value', 'banana strikes back'
     expect(@resource 'another.deep').toEqual value: 'banana strikes back'
+    
+  it "should handle lambdas in @source properly", ->
+    class Fluffy extends Joosy.Resource.Generic
+      @source (rumbas) -> "#{rumbas}!"
+
+    expect(-> Fluffy.create {}).toThrow(new Error 'Fluffy> should be created through Fluffy.at()')
+
+    clone = Fluffy.at('rumbas')    
+    
+    expect(-> clone.at 'kutuzka').toThrow(new Error 'clone> should be created directly (without `at\')')
+    expect(clone.__source).toEqual 'rumbas!'
+    
+    expect(Joosy.Module.hasAncestor clone, Fluffy).toBeTruthy()
+    expect(clone.create({}) instanceof Fluffy).toBeTruthy()

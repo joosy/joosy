@@ -13,7 +13,6 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.GenericCollection
 
     @
 
-
   # Clears the storage and gets new data from server
   fetch: (callback, options) ->
     @model.__ajax 'get', @model.__buildSource(params: @params), options, (data) =>

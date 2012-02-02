@@ -4,7 +4,6 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
 
   __primaryKey: 'id'
 
-  @source: (source) -> @::__source = source
   @primary: (primary) -> @::__primaryKey = primary
 
   constructor: (description={}) ->
@@ -18,7 +17,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   # Returns collection if no value or Object (with parameters) given
   @find: (description, callback, options) ->
     if @__isId description
-      resource = new @ description
+      resource = @create description
       resource.fetch callback, options
       resource
     else
@@ -55,10 +54,10 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
       dataType: 'json'
 
   @__buildSource: (options={}) ->
-    unless @::hasOwnProperty '__source'
-      @::__source = "/" + @entityName().pluralize()
+    unless @hasOwnProperty '__source'
+      @__source = "/" + @entityName().pluralize()
 
-    source = Joosy.buildUrl "#{@::__source}/#{options.extension || ''}", options.params
+    source = Joosy.buildUrl "#{@__source}/#{options.extension || ''}", options.params
 
   __fillData: (data) ->
     data = @__prepareData data

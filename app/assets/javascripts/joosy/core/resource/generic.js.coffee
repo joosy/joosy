@@ -2,7 +2,11 @@ class Joosy.Resource.Generic extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
 
+  # These two (and proxying) have no use at Generic 
+  # but will have in any descendant
+  @source: (source) -> @__source = source
   @entity: (name) -> @::__entityName = name
+
   @beforeLoad: (action) -> @::__beforeLoad = action
 
   @map: (name, klass=false) ->
@@ -15,7 +19,19 @@ class Joosy.Resource.Generic extends Joosy.Module
         @[name].reset data[name]
       data
 
+  @at: ->
+    if !Object.isFunction(@__source)
+      throw new Error "#{Joosy.Module.__className @}> should be created directly (without `at')"
+    
+    class clone extends this
+    clone.__source = @__source(arguments...)
+
+    clone
+
   @create: ->
+    if Object.isFunction(@__source)
+      throw new Error "#{Joosy.Module.__className @}> should be created through #{Joosy.Module.__className @}.at()"
+    
     shim = ->
       shim.__call.apply shim, arguments
 

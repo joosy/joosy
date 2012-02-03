@@ -24,24 +24,22 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
       if !callback? && Object.isFunction description
         callback = description
         description = undefined
-      resources = new Joosy.Resource.RESTCollection @, description
+      resources = new Joosy.Resource.RESTCollection this, description
       resources.fetch callback, options
       resources
 
   fetch: (callback, options) ->
     @constructor.__ajax 'get', @constructor.__buildSource(extension: @id), options, (e) =>
       @__fillData e
-      callback? @
-
-    @
+      callback? this
+    this
 
   save: ->
 
   destroy: (callback, options) ->
     @constructor.__ajax 'delete', @constructor.__buildSource(extension: @id), options, (e) =>
-      callback? @
-
-    @
+      callback? this
+    this
 
   @__isId: (something) ->
     Object.isNumber(something) || Object.isString(something)

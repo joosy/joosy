@@ -3,15 +3,21 @@ class Joosy.Resource.GenericCollection extends Joosy.Module
   
   @beforeLoad: (action) -> @::__beforeLoad = action
   
-  data:  []
+  data: []
   
   constructor: (@model) ->
   
   # Clears the storage and attempts to import given JSON
-  reset: (entities) ->
-    @data  = @modelize entities
+  reset: (entities, notify=true) ->
+    if @__beforeLoad?
+      entities = @__beforeLoad entities
 
-    @
+    @data = @modelize entities
+    
+    if notify
+      @trigger 'updated'
+    
+    this
     
   modelize: (collection) ->
     root = @model.entityName().pluralize()

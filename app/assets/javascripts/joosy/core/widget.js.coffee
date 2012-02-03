@@ -14,6 +14,8 @@ class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Filters
 
   __renderer: false
+  
+  data: false
 
   setInterval: (args...) ->
     @parent.setInterval args...
@@ -29,7 +31,7 @@ class Joosy.Widget extends Joosy.Module
 
   __load: (@parent, @container) ->
     if @__renderer
-      @container.html @__renderer()
+      @container.html @__renderer(@data || {})
     @refreshElements()
     @__delegateEvents()
     @__runAfterLoads()

@@ -92,9 +92,7 @@ Joosy.Modules.Renderer =
     if !Object.isObject(locals) && !isResource && !isCollection
       throw new Error "#{Joosy.Module.__className @}> locals (maybe @data?) not in: dumb hash, Resource, Collection"
 
-    if isCollection
-      stack.locals = data: locals.data
-    else if isResource
+    if isResource
       stack.locals = locals.e
     else
       stack.locals = locals

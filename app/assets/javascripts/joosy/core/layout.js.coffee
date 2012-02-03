@@ -25,6 +25,11 @@ class Joosy.Layout extends Joosy.Module
     @::__paint = callback
   @erase: (callback) ->
     @::__erase = callback
+    
+  @fetch: (callback) ->
+    @::__fetch = callback
+
+  data: false
 
   navigate: (args...) ->
     Joosy.Router.navigate(args...)

@@ -139,8 +139,10 @@ class Joosy.Page extends Joosy.Module
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough @layout, '__paint', callbacksParams, =>
         # Layout HTML
-        @swapContainer Joosy.Application.content(), @layout.__renderer
-          yield: => @layout.yield()
+        data = Joosy.Module.merge {}, @layout.data || {}
+        data = Joosy.Module.merge data, yield: => @layout.yield()
+        
+        @swapContainer Joosy.Application.content(), @layout.__renderer data
 
         # Page HTML
         @swapContainer @layout.content(), @__renderer(@data || {})
@@ -158,6 +160,7 @@ class Joosy.Page extends Joosy.Module
       @__callSyncedThrough @layout, '__beforePaint', callbacksParams, =>
         @trigger 'stageClear'
 
-    @__callSyncedThrough this, '__fetch', [], =>
-      Joosy.Modules.Log.debugAs @, "Fetch complete"
-      @trigger 'dataReceived'
+    @__callSyncedThrough @layout, '__fetch', [], =>
+      @__callSyncedThrough this, '__fetch', [], =>
+        Joosy.Modules.Log.debugAs @, "Fetch complete"
+        @trigger 'dataReceived'

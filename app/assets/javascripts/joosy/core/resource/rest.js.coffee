@@ -60,11 +60,3 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
       throw new Error "#{Joosy.Module.__className @}> should be chained to #{Joosy.Module.__className @}.at()"
 
     source = Joosy.buildUrl "#{@__source}/#{options.extension || ''}", options.params
-
-  __fillData: (data) ->
-    data = @__prepareData data
-    
-    if Object.isObject(data) && data[@constructor.entityName()] && Object.keys(data).length == 1
-      @e = data[@constructor.entityName()]
-    else
-      @e = data

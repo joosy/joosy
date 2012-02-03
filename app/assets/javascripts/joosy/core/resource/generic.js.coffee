@@ -90,6 +90,9 @@ class Joosy.Resource.Generic extends Joosy.Module
     @e = @__prepareData data
 
   __prepareData: (data) ->
+    if Object.isObject(data) && data[@constructor.entityName()] && Object.keys(data).length == 1
+      data = data[@constructor.entityName()]
     if @__beforeLoad?
       data = @__beforeLoad data
+      
     data

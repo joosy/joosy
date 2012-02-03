@@ -89,9 +89,11 @@ class Joosy.Resource.Generic extends Joosy.Module
   __fillData: (data) ->
     @e = @__prepareData data
 
-  __prepareData: (data) ->
-    if Object.isObject(data) && data[@constructor.entityName()] && Object.keys(data).length == 1
-      data = data[@constructor.entityName()]
+  __prepareData: (data) ->    
+    if Object.isObject(data) && Object.keys(data).length == 1 && @__entityName
+      if data[@constructor.entityName()]
+        data = data[@constructor.entityName()]
+
     if @__beforeLoad?
       data = @__beforeLoad data
       

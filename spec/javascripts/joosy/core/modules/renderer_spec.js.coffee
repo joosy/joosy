@@ -92,7 +92,7 @@ describe "Joosy.Modules.Renderer", ->
       ]
 
     @TestContainer.view (locals) ->
-      template = (locals) -> 
+      template = (locals) ->
         "#{locals.data[1] 'zombie'}"
 
       @renderDynamic(template, locals)

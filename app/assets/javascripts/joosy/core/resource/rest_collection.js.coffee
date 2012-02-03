@@ -8,6 +8,7 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.GenericCollection
     @params = Object.extended params
 
   reset: (entities) ->
+    @rawData = Joosy.Module.merge {}, entities
     super entities
     @pages = Object.extended 1: @data
 

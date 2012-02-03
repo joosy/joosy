@@ -129,7 +129,7 @@ class Joosy.Page extends Joosy.Module
 
   __bootstrapLayout: ->
     Joosy.Modules.Log.debugAs @, "Boostraping page with layout"
-    @layout = new @__layoutClass
+    @layout = new @__layoutClass(@params)
 
     callbacksParams = [Joosy.Application.content(), this]
     

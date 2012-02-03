@@ -30,6 +30,8 @@ class Joosy.Layout extends Joosy.Module
     @::__fetch = callback
 
   data: false
+  
+  constructor: (@params) ->
 
   navigate: (args...) ->
     Joosy.Router.navigate(args...)

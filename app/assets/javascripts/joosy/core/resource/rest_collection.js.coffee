@@ -28,7 +28,7 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.GenericCollection
 
     @__fetch {}, options, (data) =>
       @reset data
-      @pages[number] = data
+      @pages[number] = @data
       callback? @pages[number]
     this
     

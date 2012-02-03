@@ -48,7 +48,7 @@ class Joosy.Resource.Generic extends Joosy.Module
     shim
 
   @entityName: ->
-    unless @::hasOwnProperty '__entityName'
+    unless @::__entityName
       throw new Error "Resource does not have entity name"
 
     @::__entityName

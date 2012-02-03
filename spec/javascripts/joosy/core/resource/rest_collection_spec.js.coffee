@@ -52,14 +52,14 @@ describe "Joosy.Resource.RESTCollection", ->
     @collection.page 2, callback=sinon.spy()
     spoofData @server
     expect(callback.callCount).toEqual 1
-    expect(@collection.data.length).toEqual 4
-    expect(@collection.data[2].constructor == Test).toBeTruthy()
-    expect(@collection.data[2].e.name).toEqual 'test1'
+    expect(@collection.data.length).toEqual 2
+    expect(@collection.data[0].constructor == Test).toBeTruthy()
+    expect(@collection.data[0].e.name).toEqual 'test1'
 
     # Again from cache
     @collection.page 2, callback=sinon.spy()
     spoofData @server
     expect(callback.callCount).toEqual 1
-    expect(@collection.data.length).toEqual 4
-    expect(@collection.data[2].constructor == Test).toBeTruthy()
-    expect(@collection.data[2].e.name).toEqual 'test1'
+    expect(@collection.data.length).toEqual 2
+    expect(@collection.data[0].constructor == Test).toBeTruthy()
+    expect(@collection.data[0].e.name).toEqual 'test1'

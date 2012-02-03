@@ -8,33 +8,30 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.GenericCollection
     @params = Object.extended params
 
   reset: (entities) ->
-    @rawData = Joosy.Module.merge {}, entities
     super entities
     @pages = Object.extended 1: @data
-
-    @
+    this
 
   # Clears the storage and gets new data from server
   fetch: (callback, options) ->
-    @model.__ajax 'get', @model.__buildSource(params: @params), options, (data) =>
+    @__fetch {}, options, (data) =>
       @reset data
-      callback? @
-
-    @
+      callback? this
+    this
 
   # Returns the subset for requested page. Requests with &page=x if not found localy.
-  page: (number, callback=false) ->
+  page: (number, callback=false, options) ->
     if @pages[number]?
+      @reset @pages[number]
       callback? @pages[number]
       return @
 
-    @model.__ajax 'get', @model.__buildSource(params: @params.merge(page: number)), {}, (data) =>
-      @pages[number] = @modelize data
-
-      @data = []
-      @pages.keys().sort().each (x) =>
-        @data.add @pages[x]
-
+    @__fetch {}, options, (data) =>
+      @reset data
+      @pages[number] = data
       callback? @pages[number]
-
-    @
+    this
+    
+  __fetch: (urlOptions, ajaxOptions, callback) ->
+    @model.__ajax 'get', @model.__buildSource(params: @params.merge(urlOptions)), ajaxOptions, (data) ->
+      callback(data)

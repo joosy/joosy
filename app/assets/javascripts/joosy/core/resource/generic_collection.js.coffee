@@ -15,8 +15,7 @@ class Joosy.Resource.GenericCollection extends Joosy.Module
     @data = @modelize entities
     
     if notify
-      @trigger 'updated'
-    
+      @trigger 'changed'
     this
     
   modelize: (collection) ->

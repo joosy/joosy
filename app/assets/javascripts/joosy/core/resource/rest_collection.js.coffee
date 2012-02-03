@@ -12,27 +12,30 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.GenericCollection
     @pages = Object.extended 1: @data
     
     if notify
-      @trigger 'updated'
+      @trigger 'changed'
     this
 
   # Clears the storage and gets new data from server
   fetch: (callback, options) ->
-    @__fetch {}, options, (data) =>
-      @reset data
+    @__fetch @params, options, (data) =>
+      @reset data, false
       callback? this
+      @trigger 'changed'
     this
 
   # Returns the subset for requested page. Requests with &page=x if not found localy.
   page: (number, callback, options) ->
     if @pages[number]?
-      @reset @pages[number]
+      @reset @pages[number], false
       callback? @pages[number]
+      @trigger 'changed'
       return @
 
-    @__fetch {}, options, (data) =>
-      @reset data
+    @__fetch @params, options, (data) =>
+      @reset data, false
       @pages[number] = data
       callback? @data
+      @trigger 'changed'
     this
     
   __fetch: (urlOptions, ajaxOptions, callback) ->

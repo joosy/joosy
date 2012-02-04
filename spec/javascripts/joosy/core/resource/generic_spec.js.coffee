@@ -56,3 +56,14 @@ describe "Joosy.Resource.Generic", ->
     @resource 'foo', 'baz2'
     
     expect(callback.callCount).toEqual(2)
+    
+  it "should properly handle the before filter", ->
+    class R extends Joosy.Resource.Generic
+      @beforeLoad (data) ->
+        data ||= {}
+        data.tested = true
+        data
+        
+      resource = R.create()
+      
+      expect(resource 'tested').toBeTruthy()

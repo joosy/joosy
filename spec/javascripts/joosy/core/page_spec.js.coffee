@@ -163,6 +163,8 @@ describe "Joosy.Page", ->
 
       it "should render layout and page", ->
         spies = []
+        
+        @box.params = {tested: true}
 
         spies.push @box.__layoutClass.prototype.__renderer
         spies.push @box.__renderer
@@ -173,3 +175,4 @@ describe "Joosy.Page", ->
         @box.__bootstrapLayout()
         expect(spies).toBeSequenced()
         expect(swapContainer.callCount).toEqual 2
+        expect(@box.layout.params).toEqual {tested: true}

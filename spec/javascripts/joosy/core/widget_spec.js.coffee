@@ -32,6 +32,7 @@ describe "Joosy.Widget", ->
     Joosy.Router.navigate.restore()
 
   it "should load itself", ->
+    @box.data = {tested: true}
     spies = [sinon.spy()]
     @TestWidget.view spies[0]
     @parent = new Joosy.Layout()
@@ -41,6 +42,7 @@ describe "Joosy.Widget", ->
     target = @box.__load @parent, @ground
     expect(target).toBe @box
     expect(@box.__renderer.getCall(0).calledOn()).toBeFalsy()
+    expect(@box.__renderer.getCall(0).args[0]).toEqual {tested: true}
     expect(spies).toBeSequenced()
 
   it "should unload itself", ->

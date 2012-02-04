@@ -14,7 +14,6 @@ describe "Joosy.Resource.REST", ->
   it "should have appropriate accessors", ->
     @Test.entity 'tada'
     expect(@Test::__entityName).toEqual 'tada'
-    expect(@Test.entityName()).toEqual 'tada'
     @Test.source 'uri'
     expect(@Test.__source).toEqual 'uri'
     expect(@Test.__buildSource()).toEqual 'uri/'

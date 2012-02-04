@@ -19,7 +19,7 @@ class Joosy.Resource.GenericCollection extends Joosy.Module
     this
     
   modelize: (collection) ->
-    root = @model.entityName().pluralize()
+    root = @model::__entityName.pluralize()
 
     if collection not instanceof Array
       collection = collection?[root]

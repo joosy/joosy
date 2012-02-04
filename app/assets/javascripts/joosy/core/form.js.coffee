@@ -62,7 +62,7 @@ class Joosy.Form extends Joosy.Module
     else
       e = resource.e
     Object.each e, (key, val) =>
-      key = resource.constructor.entityName() + "[#{key}]"
+      key = resource.__entityName + "[#{key}]"
       input = @fields.filter("[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
       unless input.is ':checkbox'
         input.val val

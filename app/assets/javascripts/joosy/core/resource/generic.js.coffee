@@ -42,14 +42,14 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # Required to do some magic like skipping the root node
   #
-  # @param [String] Singular name of resource
+  # @param [String] name    Singular name of resource
   #
   @entity: (name) -> @::__entityName = name
   
   #
   # Allows to modify data before it gets stored
   #
-  # @param [Function] `(Object) -> Object` to call
+  # @param [Function] action    `(Object) -> Object` to call
   #
   @beforeLoad: (action) -> @::__beforeLoad = action
 
@@ -71,8 +71,8 @@ class Joosy.Resource.Generic extends Joosy.Module
   #   p.zombies               # Wrapped Collection of Zombie instances
   #   p.zombies.at(0)('foo')  # bar
   #
-  # @param [String] Pluralized name of property to define
-  # @param [Class] Resource class to instantiate
+  # @param [String] name    Pluralized name of property to define
+  # @param [Class] klass    Resource class to instantiate
   #
   @map: (name, klass=false) ->
     unless klass
@@ -124,7 +124,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # Should NOT be called directly, use .create() instead
   #
-  # @param [Object] Data to store
+  # @param [Object] data      Data to store
   #
   constructor: (data) ->
     @__fillData data
@@ -132,8 +132,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # Getter for wrapped data
   #
-  # @param [String] Attribute name to get
-  #   Can contain dots to get inline Objects values
+  # @param [String] path    Attribute name to get. Can contain dots to get inline Objects values
   # @return [mixed]
   #
   get: (path) ->
@@ -143,9 +142,8 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # Setter for wrapped data, triggers 'changed'
   #
-  # @param [String] attribute name to set
-  #   Can contain dots to get inline Objects values
-  # @param [mixed] value to set
+  # @param [String] path    Attribute name to set. Can contain dots to get inline Objects values
+  # @param [mixed] value    Value to set
   #
   set: (path, value) ->
     target = @__callTarget path
@@ -156,8 +154,8 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # Locates the actual instance of dotted path from get/set
   #
-  # @param [String] Path to the attribute ('foo.bar')
-  # @return [Array] Instance of object containing last step of path and keyword for required field
+  # @param [String] path    Path to the attribute ('foo.bar')
+  # @return [Array]         Instance of object containing last step of path and keyword for required field
   #
   __callTarget: (path) ->
     if path.has(/\./) && !@e[path]?
@@ -185,7 +183,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # Defines how exactly prepared data should be saved
   #
-  # @param [Object] raw data to store
+  # @param [Object] data    Raw data to store
   #
   __fillData: (data, notify=true) ->
     @e = @__prepareData data
@@ -198,7 +196,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # Prepares raw data: cuts the root node if it exists, runs before filters
   #
-  # @param [Object] raw data to prepare
+  # @param [Object] data    Raw data to prepare
   # @return [Object]
   #
   __prepareData: (data) ->    

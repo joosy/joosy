@@ -31,14 +31,14 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   # That's said: REST resource can work without primary at all. It's here 
   # just to improve end-users experience for cases when primary exists.
   #
-  # @param [String] Name of the field
+  # @param [String] primary     Name of the field
   #
   @primary: (primary) -> @::__primaryKey = primary
 
   #
   # Should NOT be called directly, use .create() instead
   #
-  # @param [Integer|String|Object] ID of entity or full data to store
+  # @param [Integer|String|Object] description    ID of entity or full data to store
   #
   constructor: (description={}) ->
     if @constructor.__isId description
@@ -65,9 +65,10 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #   Rocket.find (data) -> data
   #   Rocket.find 1, ((data) -> data), cache: true
   #
-  # @param [Integer|String|Object] ID of entity or full data to store
-  # @param [Function] `(Resource) -> null` to call when data received
-  # @param [Object] Ajax options to pass with request
+  # @param [Integer|String|Object] description      ID of entity or full data to store
+  # @param [Function] callback                      `(Resource) -> null` to call when data received
+  # @param [Object] options                         AJAX options to pass with request
+  #
   # @return [Joosy.Resource.REST|Joosy.Resource.RESTCollection]
   #
   @find: (description, callback, options) ->
@@ -86,8 +87,8 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Queries the resource url and reloads the data from server
   #
-  # @param [Function] `(Resource) -> null` to call when data received
-  # @param [Object] Ajax options to pass with request
+  # @param [Function] callback        `(Resource) -> null` to call when data received
+  # @param [Object] options           AJAX options to pass with request
   # @return [Joosy.Resource.REST]
   #
   fetch: (callback, options) ->
@@ -102,8 +103,8 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Destroys the resource by DELETE query
   #
-  # @param [Function] `(Resource) -> null` to call on complete
-  # @param [Object] Ajax options to pass with request
+  # @param [Function] callback        `(Resource) -> null` to call on complete
+  # @param [Object] options           AJAX options to pass with request
   # @return [Joosy.Resource.REST]
   #
   destroy: (callback, options) ->
@@ -114,19 +115,19 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Checks if given description can be considered as ID
   #
-  # @param [Integer|String|Object] Value to test
+  # @param [Integer|String|Object] something Value to test
   # @return [Boolean]
   #
   @__isId: (something) ->
     Object.isNumber(something) || Object.isString(something)
 
   #
-  # jQuery Ajax wrapper
+  # jQuery AJAX wrapper
   #
-  # @param [String] HTTP Method (GET/POST/PUT/DELETE)
-  # @param [String] URL to query
-  # @param [Object] Ajax options to pass with request
-  # @param [Function] XHR callback
+  # @param [String] method      HTTP Method (GET/POST/PUT/DELETE)
+  # @param [String] url         URL to query
+  # @param [Object] options     AJAX options to pass with request
+  # @param [Function] callback  XHR callback
   #
   @__ajax: (method, url, options={}, callback) ->
     $.ajax url, Joosy.Module.merge options,
@@ -138,7 +139,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Builds URL for current resource location
   #
-  # @param [Object] Options
+  # @param [Object] options     Handling options
   #   extension: string to add to resource base url
   #   params: GET-params to add to resulting url
   #

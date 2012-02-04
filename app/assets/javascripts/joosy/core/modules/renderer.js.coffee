@@ -79,7 +79,7 @@ Joosy.Modules.Renderer =
     stack.template = template
     
     isResource   = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Generic
-    isCollection = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.GenericCollection
+    isCollection = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Collection
     
     if Object.isString template
       if @__renderSection?

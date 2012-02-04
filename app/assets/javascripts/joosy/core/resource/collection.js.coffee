@@ -1,4 +1,4 @@
-class Joosy.Resource.GenericCollection extends Joosy.Module
+class Joosy.Resource.Collection extends Joosy.Module
   @include Joosy.Modules.Events
   
   @beforeLoad: (action) -> @::__beforeLoad = action

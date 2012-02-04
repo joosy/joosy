@@ -84,7 +84,7 @@ describe "Joosy.Modules.Renderer", ->
     class Foo extends Joosy.Resource.Generic
       @entity 'foo'
 
-    data = new Joosy.Resource.GenericCollection(Foo)
+    data = new Joosy.Resource.Collection(Foo)
     
     data.reset [
         { zombie: 'rock' },

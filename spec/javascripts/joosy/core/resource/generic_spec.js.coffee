@@ -48,3 +48,11 @@ describe "Joosy.Resource.Generic", ->
     expect(Joosy.Module.hasAncestor clone, Fluffy).toBeTruthy()
     # clone won't be instanceof Fluffy in IE
     #expect(clone.create({}) instanceof Fluffy).toBeTruthy()
+    
+  it "should trigger 'changed' right", ->
+    callback = sinon.spy()
+    @resource.bind 'changed', callback
+    @resource 'foo', 'baz'
+    @resource 'foo', 'baz2'
+    
+    expect(callback.callCount).toEqual(2)

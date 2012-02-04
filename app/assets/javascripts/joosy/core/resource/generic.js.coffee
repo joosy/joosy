@@ -68,7 +68,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #   p = Puppy.create {zombies: [{foo: 'bar'}]}
   #
   #   p('zombies')            # Direct access: [{foo: 'bar'}]
-  #   p.zombies               # Wrapped GenericCollection of Zombie instances
+  #   p.zombies               # Wrapped Collection of Zombie instances
   #   p.zombies.at(0)('foo')  # bar
   #
   # @param [String] Pluralized name of property to define
@@ -79,7 +79,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       klass = window[name.singularize().camelize()]
 
     @beforeLoad (data) ->
-      @[name] = new Joosy.Resource.GenericCollection klass
+      @[name] = new Joosy.Resource.Collection klass
       if Object.isArray data[name]
         @[name].reset data[name]
       data
@@ -187,8 +187,12 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # @param [Object] raw data to store
   #
-  __fillData: (data) ->
+  __fillData: (data, notify=true) ->
     @e = @__prepareData data
+    
+    if notify
+      @trigger 'changed'
+
     null
 
   #

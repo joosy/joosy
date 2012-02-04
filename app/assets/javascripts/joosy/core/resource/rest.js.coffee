@@ -92,8 +92,9 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   fetch: (callback, options) ->
     @constructor.__ajax 'get', @constructor.__buildSource(extension: @id), options, (e) =>
-      @__fillData e
+      @__fillData e, false
       callback? this
+      @trigger 'changed'
     this
 
   save: ->

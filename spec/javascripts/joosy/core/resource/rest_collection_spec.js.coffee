@@ -24,21 +24,6 @@ describe "Joosy.Resource.RESTCollection", ->
   afterEach ->
     @server.restore()
 
-  it "should initialize", ->
-    expect(@collection.model).toEqual Test
-    expect(@collection.params).toEqual Object.extended()
-    expect(@collection.data).toEqual []
-    expect(@collection.pages).toEqual Object.extended()
-
-  it "should modelize", ->
-    result = @collection.modelize $.parseJSON(data)
-    expect(result[0].constructor == Test).toBeTruthy()
-    expect(result[0].e.name).toEqual 'test1'
-
-  it "should reset", ->
-    @collection.reset $.parseJSON(data)
-    checkData @collection
-
   it "should fetch", ->
     @collection.fetch()
     spoofData @server
@@ -63,3 +48,12 @@ describe "Joosy.Resource.RESTCollection", ->
     expect(@collection.data.length).toEqual 2
     expect(@collection.data[0].constructor == Test).toBeTruthy()
     expect(@collection.data[0].e.name).toEqual 'test1'
+    
+  it "should trigger changes", ->
+    @collection.bind 'changed', callback = sinon.spy()
+    @collection.fetch()
+    spoofData @server
+    expect(callback.callCount).toEqual 1
+    @collection.page 2
+    spoofData @server
+    expect(callback.callCount).toEqual 2

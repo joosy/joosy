@@ -105,3 +105,25 @@ describe "Joosy.Resource.REST", ->
       expect(@Test.__isId variant).toBeTruthy()
     [(->) , [], {}, null, undefined, true, false].each (variant) =>
       expect(@Test.__isId variant).toBeFalsy()
+
+  it "should trigger 'changed' on fetch", ->
+    resource = @Test.find 1, callback = sinon.spy (target) ->
+      expect(target.id).toEqual 1
+      expect(target.e?.name).toEqual 'test1'
+    target = @server.requests[0]
+    expect(target.method).toEqual 'GET'
+    expect(target.url).toMatch /^\/tests\/1\?_=\d+/
+    target.respond 200, 'Content-Type': 'application/json',
+      '{"test": {"id": 1, "name": "test1"}}'
+    expect(callback.callCount).toEqual 1
+    
+    resource.bind 'changed', callback = sinon.spy()
+    resource.fetch()
+    
+    target = @server.requests[1]
+    expect(target.method).toEqual 'GET'
+    expect(target.url).toMatch /^\/tests\/1\?_=\d+/
+    target.respond 200, 'Content-Type': 'application/json',
+      '{"test": {"id": 1, "name": "test1"}}'
+      
+    expect(callback.callCount).toEqual 1

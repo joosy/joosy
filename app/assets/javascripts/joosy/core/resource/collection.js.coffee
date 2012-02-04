@@ -3,8 +3,8 @@
 # Turns JSON array into array of Resources and manages them
 #
 # Generally you should not use Collection directly. It will be
-# automatically created by things like Resource.Generic#map or
-# Resource.REST#find.
+# automatically created by things like Joosy.Resource.Generic#map 
+# or Joosy.Resource.REST#find.
 #
 # Example:
 #   class R extends Joosy.Resource.Generic

@@ -84,3 +84,6 @@ So there templates come. Each layout and page should have a template. By default
 The great thing about Joosy templates is that they're really like Rails ones. In Joosy you can nest templates to as deep level as you want to. Joosy also provides you sort of Rails partials so your code stays really DRY.
 
 The great thing is, templates can be rendered dynamically. Let me explain that: if you render some partial for your app's object or some template local vars, and then you object or var gets changed, this change is dynamically reflected on the template.
+
+# License
+Joosy is licensed under MIT. See MIT-LICENSE for the full license text.

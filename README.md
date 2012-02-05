@@ -1,4 +1,4 @@
-# Joosy
+![Joosy](http://f.cl.ly/items/2q1f2C3V2411242V2s0e/Joosy.png)
 ## What's Joosy
 Joosy is a full-stack javascript MVC framework, which follows Rails philosophy of using conventions over configuration, which eliminates boilerplate and makes it easy to extend an app.
 

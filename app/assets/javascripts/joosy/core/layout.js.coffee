@@ -46,7 +46,7 @@ class Joosy.Layout extends Joosy.Module
     @__runAfterLoads()
 
   __unload: ->
-    @clearTime()
+    @__clearTime()
     @__unloadWidgets()
     @__runAfterUnloads()
 

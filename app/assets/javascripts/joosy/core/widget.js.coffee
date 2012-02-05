@@ -12,16 +12,11 @@ class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Container
   @include Joosy.Modules.Renderer
   @include Joosy.Modules.Filters
+  @include Joosy.Modules.TimeManager
 
   __renderer: false
   
   data: false
-
-  setInterval: (args...) ->
-    @parent.setInterval args...
-
-  setTimeout: (args...) ->
-    @parent.setTimeout args...
 
   navigate: (args...) ->
     Joosy.Router.navigate args...
@@ -39,5 +34,6 @@ class Joosy.Widget extends Joosy.Module
     this
 
   __unload: ->
+    @__clearTime()
     @__removeMetamorphs()
     @__runAfterUnloads()

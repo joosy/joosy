@@ -20,6 +20,6 @@ describe "Joosy.Modules.TimeManager", ->
     callback = sinon.spy()
     runs ->
       @box.setTimeout 10, callback
-      @box.clearTime()
+      @box.__clearTime()
     waits(10)
     runs -> expect(callback.callCount).toEqual(0)

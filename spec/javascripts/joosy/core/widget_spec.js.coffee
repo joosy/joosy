@@ -11,19 +11,6 @@ describe "Joosy.Widget", ->
     @TestWidget.view 'test'
     expect(@TestWidget::__renderer instanceof Function).toBeTruthy()
 
-  it "should use parent's TimeManager", ->
-    @box.parent =
-      setInterval: sinon.spy()
-      setTimeout: sinon.spy()
-    @box.setInterval 1, 2, 3
-    @box.setTimeout 1, 2, 3
-    target = @box.parent.setInterval
-    expect(target.callCount).toEqual 1
-    expect(target.alwaysCalledWithExactly 1, 2, 3).toBeTruthy()
-    target = @box.parent.setTimeout
-    expect(target.callCount).toEqual 1
-    expect(target.alwaysCalledWithExactly 1, 2, 3).toBeTruthy()
-
   it "should use Router", ->
     target = sinon.stub Joosy.Router, 'navigate'
     @box.navigate 'there'

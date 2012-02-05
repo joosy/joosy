@@ -78,7 +78,7 @@ class Joosy.Page extends Joosy.Module
     Joosy.Modules.Log.debugAs @, "Page loaded"
 
   __unload: ->
-    @clearTime()
+    @__clearTime()
     @__unloadWidgets()
     @__removeMetamorphs()
     @__runAfterUnloads @params, @previous

@@ -15,7 +15,7 @@ Joosy.Modules.TimeManager =
 
     timer
 
-  clearTime: ->
+  __clearTime: ->
     if @__intervals
       for entry in @__intervals
         window.clearInterval entry

@@ -74,7 +74,7 @@ describe "Joosy.Page", ->
 
     it "should unload itself", ->
       spies = []
-      spies.push sinon.spy(@box, 'clearTime')
+      spies.push sinon.spy(@box, '__clearTime')
       spies.push sinon.spy(@box, '__unloadWidgets')
       spies.push sinon.spy(@box, '__removeMetamorphs')
       spies.push sinon.spy(@box, '__runAfterUnloads')

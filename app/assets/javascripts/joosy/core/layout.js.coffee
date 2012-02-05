@@ -17,7 +17,7 @@ class Joosy.Layout extends Joosy.Module
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
 
-  @view 'layouts/default'
+  @view 'default'
 
   @beforePaint: (callback) ->
     @::__beforePaint = callback

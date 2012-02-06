@@ -134,14 +134,13 @@
   # Searches through localStorage for outdated entries with our prefix and removes them
   #
   clean: ->
-    removed = 0
+    i = 0
 
-    for element, i in window.localStorage
-      key = window.localStorage.key i-removed
-
+    while i < window.localStorage.length && key = window.localStorage.key(i)
       if key.indexOf(@prefix) == 0 && @libraries.indexOf(key) < 0
         window.localStorage.removeItem key
-        removed += 1
+      else
+        i += 1
 
   #
   # Evals source at a global scope

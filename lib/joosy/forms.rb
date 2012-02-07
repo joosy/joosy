@@ -9,23 +9,13 @@ module Joosy
         if entity.save
           joosy_succeed(data, entity, &block)
         else
-          joosy_fail(entity.errors.messages, entity.class.name)
+          joosy_fail(entity.errors, entity.class.name)
         end
       end
 
       def joosy_fail(errors, entity=false)
         errors = Hash[*errors.map {|x| [x, nil]}.flatten] if errors.is_a?(Array)
-
-        if !entity
-          notifications = errors
-        else
-          notifications = {}
-          errors.each do |k, v|
-            notifications["#{entity.underscore}[#{k}]"] = v
-          end
-        end
-
-        joosy_respond notifications, :unprocessable_entity
+        joosy_respond errors, :unprocessable_entity
       end
 
       def joosy_succeed(data, entity=nil, &block)

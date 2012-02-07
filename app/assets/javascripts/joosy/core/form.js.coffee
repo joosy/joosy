@@ -148,8 +148,15 @@ class Joosy.Form extends Joosy.Module
         Object.each @__foldInlineEntities(notifications), (key, value) ->
           result[field+key] = value
       else
-        if @__resource
+        if field.indexOf(".") != -1
+          splited = field.split '.'
+          field   = splited.shift()
+          field   = @__resource.__entityName + "[#{field}]" if @__resource
+          field  += "[#{f}]" for f in splited
+      
+        else if @__resource
           field = @__resource.__entityName + "[#{field}]"
+
         result[field] = notifications
 
     result

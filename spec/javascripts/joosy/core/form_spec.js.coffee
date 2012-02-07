@@ -156,6 +156,18 @@ describe "Joosy.Form", ->
       
       expect(result).toEqual zombie: ['suck'], puppies: ['rock']
       
+    it "should prepare inline response", ->
+      errors = {"zombie.in1.subin1": ['suck'], "zombie.in2": ['rock']}
+      result = @nudeForm.__stringifyErrors(errors)
+      
+      expect(result).toEqual {"zombie[in1][subin1]": ['suck'], "zombie[in2]": ['rock']}
+      
+    it "should prepare inline response with resource attached", ->
+      @nudeForm.fill @resource
+      errors = {"zombie.in1.subin1": ['suck'], "zombie.in2": ['rock']}
+      result = @nudeForm.__stringifyErrors(errors)
+
+      expect(result).toEqual {"test[zombie][in1][subin1]": ['suck'], "test[zombie][in2]": ['rock']}
       
     it "should prepare simple response with resource attached", ->
       @nudeForm.fill @resource

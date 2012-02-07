@@ -64,7 +64,7 @@ describe "Joosy.Form", ->
       @putForm  = new Joosy.Form @putForm
       @moreForm = new Joosy.Form @moreForm
 
-    it "should fill form and set propert action and method", ->
+    it "should fill form, set propert action and method and store resource", ->
       @nudeForm.fill @resource
       expect(@nudeForm.fields[0].value).toEqual 'foo'
       expect(@nudeForm.fields[1].value).toEqual 'bar'
@@ -72,6 +72,7 @@ describe "Joosy.Form", ->
       expect(@nudeForm.fields[2].value).toEqual '1'
       expect(@nudeForm.container.attr('method').toLowerCase()).toEqual 'post'
       expect(@nudeForm.container.attr 'action').toEqual '/tests/'
+      expect(@nudeForm.__resource).toEqual @resource
 
     it "should fill form with camelized properties", ->
       @putForm.fill @resource
@@ -86,6 +87,7 @@ describe "Joosy.Form", ->
       expect(@moreForm.fields[0].value).toEqual 'baz'
 
   describe "Callbacks", ->
+
     beforeEach ->
       @nudeForm = new Joosy.Form @nudeForm, @spy=sinon.spy()
       @nudeForm.fill @resource
@@ -100,33 +102,33 @@ describe "Joosy.Form", ->
       expect(@spy.args[0][0]).toEqual {form: 'works'}
 
     it "should fill class for invalidated fields by default", ->
-      @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
+      @target.respond 422, 'Content-Type': 'application/json', '{"foo": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
 
     it "should trigger 'error' and complete default action if it returned true", ->
       @nudeForm.error = sinon.spy ->
         true
-      @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
+      @target.respond 422, 'Content-Type': 'application/json', '{"foo": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
       expect(@nudeForm.error.callCount).toEqual 1
       expect(@nudeForm.error.args[0][0]).toEqual
-        "test[foo]": "error!"
+        "foo": "error!"
 
     it "should trigger 'error' and skip default action if it returned false", ->
       @nudeForm.error = sinon.spy ->
         false
-      @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
+      @target.respond 422, 'Content-Type': 'application/json', '{"foo": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toNotEqual 'field_with_errors'
       expect(@nudeForm.error.callCount).toEqual 1
 
     it "should clear fields before another submit", ->
-      @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
+      @target.respond 422, 'Content-Type': 'application/json', '{"foo": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
       @nudeForm.container.submit()
       expect($(@nudeForm.fields[0]).attr 'class').toNotEqual 'field_with_errors'
 
     it "should trigger 'before' and do default action if it returns true", ->
-      @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
+      @target.respond 422, 'Content-Type': 'application/json', '{"foo": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
       @nudeForm.before = sinon.spy ->
         true
@@ -135,10 +137,36 @@ describe "Joosy.Form", ->
       expect(@nudeForm.before.callCount).toEqual 1
 
     it "should trigger 'before' and skip default action if it returns false", ->
-      @target.respond 422, 'Content-Type': 'application/json', '{"test[foo]": "error!"}'
+      @target.respond 422, 'Content-Type': 'application/json', '{"foo": "error!"}'
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
       @nudeForm.before = sinon.spy ->
         false
       @nudeForm.container.submit()
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
       expect(@nudeForm.before.callCount).toEqual 1
+      
+  describe "Error response handling", ->
+    
+    beforeEach ->
+      @nudeForm = new Joosy.Form @nudeForm, @spy=sinon.spy()
+    
+    it "should prepare simple response", ->
+      errors = {zombie: ['suck'], puppies: ['rock']}
+      result = @nudeForm.__stringifyErrors(errors)
+      
+      expect(result).toEqual zombie: ['suck'], puppies: ['rock']
+      
+      
+    it "should prepare simple response with resource attached", ->
+      @nudeForm.fill @resource
+      errors = {zombie: ['suck'], puppies: ['rock']}
+      result = @nudeForm.__stringifyErrors(errors)
+
+      expect(result).toEqual { "test[zombie]": ['suck'], "test[puppies]": ['rock'] }
+      
+    it "should prepare complexe response", ->
+      @nudeForm.fill @resource
+      errors = {fluffies: {zombie: {mumbas: ['ololo']}}}
+      result = @nudeForm.__stringifyErrors(errors)
+
+      expect(result).toEqual { "fluffies[zombie][mumbas]": ['ololo'] }

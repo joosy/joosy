@@ -40,8 +40,6 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
   #
   reset: (entities, notify=true) ->
     super entities, false
-    @pages = Object.extended 1: @data
-    
     if notify
       @trigger 'changed'
     this
@@ -69,15 +67,8 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
   # @param [Object] options       AJAX options to pass with request
   #
   page: (number, callback, options) ->
-    if @pages[number]?
-      @reset @pages[number], false
-      callback? @pages[number]
-      @trigger 'changed'
-      return @
-
-    @__fetch @params, options, (data) =>
+    @__fetch Joosy.Module.merge({page: number}, @params), options, (data) =>
       @reset data, false
-      @pages[number] = data
       callback? @data
       @trigger 'changed'
     this

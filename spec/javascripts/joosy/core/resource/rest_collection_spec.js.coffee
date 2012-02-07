@@ -7,7 +7,6 @@ describe "Joosy.Resource.RESTCollection", ->
 
   checkData = (collection) ->
     expect(collection.data.length).toEqual 2
-    expect(collection.pages[1]).toEqual collection.data
     expect(collection.data[0].constructor == Test).toBeTruthy()
     expect(collection.data[0].e.name).toEqual 'test1'
 

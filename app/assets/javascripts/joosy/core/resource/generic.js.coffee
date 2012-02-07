@@ -102,10 +102,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # @return [Joosy.Resource.Generic]
   #
-  @create: ->
-    if Object.isFunction @__source
-      throw new Error "#{Joosy.Module.__className @}> should be created through #{Joosy.Module.__className @}.at()"
-    
+  @create: ->    
     shim = ->
       shim.__call.apply shim, arguments
 

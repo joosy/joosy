@@ -38,8 +38,6 @@ describe "Joosy.Resource.Generic", ->
     class Fluffy extends Joosy.Resource.Generic
       @source (rumbas) -> "#{rumbas}!"
 
-    expect(-> Fluffy.create {}).toThrow(new Error 'Fluffy> should be created through Fluffy.at()')
-
     clone = Fluffy.at('rumbas')    
     
     expect(-> clone.at 'kutuzka').toThrow(new Error 'clone> should be created directly (without `at\')')

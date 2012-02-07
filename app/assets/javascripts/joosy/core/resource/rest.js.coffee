@@ -146,7 +146,6 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   @__buildSource: (options={}) ->
     unless @hasOwnProperty '__source'
       @__source = "/" + @::__entityName.pluralize()
-    else if Object.isFunction @__source
-      throw new Error "#{Joosy.Module.__className @}> should be chained to #{Joosy.Module.__className @}.at()"
-
-    source = Joosy.buildUrl "#{@__source}/#{options.extension || ''}", options.params
+      
+    source = if Object.isFunction(@__source) then @__source() else @__source
+    source = Joosy.buildUrl "#{source}/#{options.extension || ''}", options.params

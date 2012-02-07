@@ -40,6 +40,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   # Clears the storage and attempts to import given JSON
   #
   # @param [Object] entities    Entities to import
+  # @param [Boolean] notify     Indicates whether to trigger 'changed' event
   #
   reset: (entities, notify=true) ->
     if @__beforeLoad?
@@ -77,9 +78,27 @@ class Joosy.Resource.Collection extends Joosy.Module
     @data.each callback
   
   #
-  # Gets resource by it's index inside collection
+  # Gets resource by its index inside collection
   #
   # @param [Integer] i    Index
   #
   at: (i) ->
     @data[i]
+
+  #
+  # Removes resource from collection by its index or by === comparison
+  #
+  # @param [Integer] target     Index
+  # @param [Object]  target     Resource by itself
+  # @param [Boolean] notify     Indicates whether to trigger 'changed' event
+  #
+  remove: (target, notify=true) ->
+    if Object.isNumber target
+      index = target
+    else
+      index = @data.indexOf target
+    if index >= 0
+      result = @data.splice(index, 1)[0]
+      if notify
+        @trigger 'changed'
+    result

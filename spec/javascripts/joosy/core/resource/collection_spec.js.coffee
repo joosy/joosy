@@ -30,7 +30,12 @@ describe "Joosy.Resource.Collection", ->
     @collection.bind 'changed', callback = sinon.spy()
     @collection.reset $.parseJSON(data)
     expect(callback.callCount).toEqual 1
-    
+
+  it "should not trigger changes", ->
+    @collection.bind 'changed', callback = sinon.spy()
+    @collection.reset $.parseJSON(data), false
+    expect(callback.callCount).toEqual 0
+
   it "should properly handle the before filter", ->
     class RC extends Joosy.Resource.Collection
       @beforeLoad (data) ->
@@ -42,3 +47,21 @@ describe "Joosy.Resource.Collection", ->
     collection.reset $.parseJSON(data)
 
     expect(collection.at(0)('tested')).toBeTruthy()
+
+  it "should remove item from collection", ->
+    @collection.reset $.parseJSON(data)
+    @collection.bind 'changed', callback = sinon.spy()
+    @collection.remove @collection.data[1]
+    expect(@collection.data.length).toEqual 1
+    @collection.remove 0
+    expect(@collection.data.length).toEqual 0
+    expect(callback.callCount).toEqual 2
+
+  it "should silently remove item from collection", ->
+    @collection.reset $.parseJSON(data)
+    @collection.bind 'changed', callback = sinon.spy()
+    @collection.remove @collection.data[1], false
+    expect(@collection.data.length).toEqual 1
+    @collection.remove 0, false
+    expect(@collection.data.length).toEqual 0
+    expect(callback.callCount).toEqual 0

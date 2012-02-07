@@ -4,23 +4,88 @@
 #= require joosy/core/modules/events
 #= require joosy/core/modules/container
 
+#
+# AJAXifies form including file uploads and stuff. Built on top of jQuery.Form
+#
+# Joosy.Form automatically cares of form validation hihglights. It can
+# read common server error responses and add .field_with_errors class to proper 
+# field.
+#
+# If you don't have resource associated (#fill) with form it will try to find fields
+# by exact keywords from response. Otherwise it will search for resource_name[field].
+#
+#
+# Example
+#   form = new Joosy.Form, -> (response)
+#     console.log "Saved and got some: #{response}"
+#
+#   form.progress = (percent) -> console.log "Uploaded by #{percent}%"
+#   form.fill @resource
+#
 class Joosy.Form extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
   @include Joosy.Modules.Container
 
+  #
+  # Marks the CSS class to use to mark invalidated fields
+  #
   invalidationClass: 'field_with_errors'
+  
+  #
+  # List of mappings for fields of invalidated data which comes from server
+  #
+  # If you have something like {foo: 'bar', bar: 'baz'} coming from server
+  # substitutions = {foo: 'foo_id'} will change it to {foo_id: 'bar', bar: 'baz'}
+  #
   substitutions: {}
 
+  #
+  # List of elements for internal usage
+  #
   elements:
     'fields': 'input,select,textarea'
 
+  #
+  # Submits your form once and unbinds leaving it simple form without AJAX
+  #
+  # @param [Element] form       Instance of HTML form element
+  # @param [Object] opts        Map of additional options (see constructor)
+  #
   @submit: (form, opts={}) ->
     form = new @(form, opts)
     form.container.submit()
     form.unbind()
     null
 
+  #
+  # During initialization replaces your basic form submit with AJAX request
+  #
+  # If method of form differs from POST or GET it will simulate it
+  # by adding hidden _method input. In this cases the method itself will be
+  # set to POST.
+  #
+  # For browsers having no support of HTML5 Forms it may do an iframe requests
+  # to handle file uploading.
+  #
+  # Supported options are:
+  #
+  # * before: `(XHR) -> Boolean` triggers right before submit.
+  #   By default will run form invalidation cleanup. This behavior can be canceled
+  #   by returning false from your own before callback. Both of callbacks will run if
+  #   you return true.
+  #
+  # * success: `(Object) -> null` triggers on 200 HTTP code from server. Pases 
+  #   in the parsed JSON.
+  #
+  # * progress: `(Float) -> null` runs peridically while form is uploading.
+  #
+  # * error: `(Object) -> Boolean` triggers if server responsed with anything but 200.
+  #   By default will run form invalidation routine. This behavior can be canceled
+  #   by returning false from your own error callback. Both of callbacks will run if
+  #   you return true.
+  # 
+  #
   constructor: (form, opts={}) ->
     if Object.isFunction opts
       @success = opts
@@ -53,9 +118,20 @@ class Joosy.Form extends Joosy.Module
               @progress (event.position / event.total * 100).round 2
         xhr
 
+  #
+  # Resets form submit behavior
+  #
   unbind: ->
     @container.unbind('submit').find('input:submit,input:image,button:submit').unbind('click');
 
+  #
+  # Sets values of form inputs from given resource.
+  # Form will remember given resource and will use it while doing
+  # invalidation routine.
+  #
+  # @param [Resource] resource      Resource to fill fields with
+  # @param [Function] decorator     Decoration callback
+  #
   fill: (resource, decorator) ->
     @__resource = resource
     
@@ -78,6 +154,9 @@ class Joosy.Form extends Joosy.Module
     @__markMethod() if resource.id
     @container.attr 'method', 'POST'
 
+  #
+  # Inner success callback
+  #
   __success: (response, status, xhr) ->
     if xhr
       @success? response
@@ -86,10 +165,18 @@ class Joosy.Form extends Joosy.Module
     else
       @__error response.json
 
+  #
+  # Inner before callback
+  # By default will clean invalidation
+  #
   __before: (xhr, settings) ->
     if !@before? || @before(arguments...) is true
       @fields.removeClass @invalidationClass
 
+  #
+  # Inner error callback
+  # By default will trigger basic invalidation
+  #
   __error: (data) ->
     errors = if data.responseText
       try
@@ -106,6 +193,12 @@ class Joosy.Form extends Joosy.Module
         input = @fields.filter("[name='#{field}']").addClass @invalidationClass
         @notification? input, notifications
 
+  #
+  # Simulates REST methods by adding hidden _method input with real method
+  # while setting POST as the transport method
+  #
+  # @param [String] method      Real method to simulate
+  #
   __markMethod: (method='PUT') ->
     method = $('<input/>',
       type: 'hidden'

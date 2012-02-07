@@ -120,4 +120,4 @@ reflected on the template.
 
 # License
 
-Joosy is licensed under MIT. See MIT-LICENSE for the full license text.
+Joosy is licensed under MIT: [www.opensource.org/licenses/MIT](www.opensource.org/licenses/MIT)

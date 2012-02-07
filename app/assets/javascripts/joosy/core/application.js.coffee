@@ -9,7 +9,7 @@ Joosy.Application =
   Controls: {}
 
   #
-  # Starts Joost application by binding to element and bootstraping routes
+  # Starts Joosy application by binding to element and bootstraping routes
   #
   # @param [String] name        Name of app (the dir its located in)
   # @param [String] selector    jQuery-compatible selector of root application element

@@ -17,7 +17,7 @@ module Joosy::SprocketsHelper
     if force_preloader
       require_asset preloader_asset
     else
-      require_asset Rails.env == 'production' ? preloader_asset  : app_asset
+      require_asset Rails.env == 'development' ? app_asset : preloader_asset
     end
   end
 end

@@ -47,11 +47,16 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
   #
   # Clears the storage and gets new data from server
   #
-  # @param [Function] callback    `(RESTCollection) -> null` to call when data arrived
-  #   Can be used to modify collection after fetch but before 'changed' trigger
-  # @param [Object] options       AJAX options to pass with request
+  # @param [Function|Object] options                AJAX options.
+  #   Will be considered as a success callback if function given
   #
-  fetch: (callback, options) ->
+  fetch: (options) ->
+    if Object.isFunction options
+      callback = options
+    else
+      callback = options?.success
+      delete options?.success
+    
     @__fetch @params, options, (data) =>
       @reset data, false
       callback? this
@@ -61,12 +66,17 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
   #
   # Returns the subset for requested page. Requests with &page=x if not found localy.
   #
-  # @param [Integer] number       Index of page
-  # @param [Function] callback    `(RESTCollection) -> null` to call when data arrived
-  #   Can be used to modify collection after fetch but before 'changed' trigger
-  # @param [Object] options       AJAX options to pass with request
+  # @param [Integer] number               Index of page
+  # @param [Function|Object] options      AJAX options.
+  #   Will be considered as a success callback if function given
   #
-  page: (number, callback, options) ->
+  page: (number, options) ->
+    if Object.isFunction options
+      callback = options
+    else
+      callback = options?.success
+      delete options?.success
+    
     @__fetch Joosy.Module.merge({page: number}, @params), options, (data) =>
       @reset data, false
       callback? @data

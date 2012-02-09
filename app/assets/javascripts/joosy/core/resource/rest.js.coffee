@@ -63,35 +63,46 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #   Rocket.find 1
   #   Rocket.find {type: 'nuclear'}, (data) -> data
   #   Rocket.find (data) -> data
-  #   Rocket.find 1, ((data) -> data), cache: true
+  #   Rocket.find 1, 
+  #     success: (data) -> data)
+  #     cache: true
   #
   # @param [Integer|String|Object] description      ID of entity or full data to store
-  # @param [Function] callback                      `(Resource) -> null` to call when data received
-  # @param [Object] options                         AJAX options to pass with request
+  # @param [Function|Object] options                AJAX options.
+  #   Will be considered as a success callback if function given
   #
   # @return [Joosy.Resource.REST|Joosy.Resource.RESTCollection]
   #
-  @find: (description, callback, options) ->
+  @find: (description, options) ->
+    if Object.isFunction options
+      options = {success: options}
+    
     if @__isId description
       resource = @create description
-      resource.fetch callback, options
+      resource.fetch options
       resource
     else
-      if !callback? && Object.isFunction description
-        callback = description
+      if !options? && Object.isFunction description
+        options = {success: description}
         description = undefined
       resources = new Joosy.Resource.RESTCollection this, description
-      resources.fetch callback, options
+      resources.fetch options
       resources
 
   #
   # Queries the resource url and reloads the data from server
   #
-  # @param [Function] callback        `(Resource) -> null` to call when data received
-  # @param [Object] options           AJAX options to pass with request
+  # @param [Function|Object] options  AJAX options.
+  #   Will be considered as a success callback if function given
   # @return [Joosy.Resource.REST]
   #
-  fetch: (callback, options) ->
+  fetch: (options) ->
+    if Object.isFunction options
+      callback = options
+    else
+      callback = options?.success
+      delete options?.success
+
     @constructor.__ajax 'get', @constructor.__buildSource(extension: @id), options, (e) =>
       @__fillData e, false
       callback? this
@@ -103,14 +114,38 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Destroys the resource by DELETE query
   #
-  # @param [Function] callback        `(Resource) -> null` to call on complete
-  # @param [Object] options           AJAX options to pass with request
+  # @param [Function|Object] options  AJAX options.
+  #   Will be considered as a success callback if function given
   # @return [Joosy.Resource.REST]
   #
-  destroy: (callback, options) ->
+  destroy: (options) ->
+    if Object.isFunction options
+      callback = options
+    else
+      callback = options?.success
+      delete options?.success
+    
     @constructor.__ajax 'delete', @constructor.__buildSource(extension: @id), options, (e) =>
       callback? this
     this
+    
+  #
+  # Requests the REST member URL with POST or any method given in options.type
+  #
+  # @param [String] ending            Member url (like 'foo' or 'foo/bar')
+  # @param [Function|Object] options  AJAX options.
+  #   Will be considered as a success callback if function given
+  #
+  request: (ending, options) ->
+    if Object.isFunction options
+      options = {success: options}
+      
+    if options.method || options.type
+      type = options.method || options.type
+    else
+      type = 'post'
+    
+    @constructor.__ajax type, @constructor.__buildSource(extension: "#{@id}/#{ending}"), options
 
   #
   # Checks if given description can be considered as ID

@@ -65,3 +65,14 @@ describe "Joosy.Resource.Collection", ->
     @collection.remove 0, false
     expect(@collection.data.length).toEqual 0
     expect(callback.callCount).toEqual 0
+    
+  it "should add item from collection", ->
+    @collection.reset $.parseJSON(data)
+    @collection.bind 'changed', callback = sinon.spy()
+    @collection.add new Test {'rocking': 'mocking'}
+    expect(@collection.data.length).toEqual 3
+    expect(@collection.at(2).e).toEqual {'rocking': 'mocking'}
+    @collection.add new Test({'rocking': 'mocking'}), 1
+    expect(@collection.data.length).toEqual 4
+    expect(@collection.at(1).e).toEqual {'rocking': 'mocking'}
+    expect(@collection.at(3).e).toEqual {'rocking': 'mocking'}

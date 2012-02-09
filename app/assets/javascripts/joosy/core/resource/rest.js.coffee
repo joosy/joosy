@@ -138,14 +138,17 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   request: (ending, options) ->
     if Object.isFunction options
-      options = {success: options}
+      callback = options
+    else
+      callback = options?.success
+      delete options?.success
       
     if options.method || options.type
       type = options.method || options.type
     else
       type = 'post'
     
-    @constructor.__ajax type, @constructor.__buildSource(extension: "#{@id}/#{ending}"), options
+    @constructor.__ajax type, @constructor.__buildSource(extension: "#{@id}/#{ending}"), options, callback
 
   #
   # Checks if given description can be considered as ID

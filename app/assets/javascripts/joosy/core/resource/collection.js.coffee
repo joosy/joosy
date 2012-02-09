@@ -89,7 +89,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   # Removes resource from collection by its index or by === comparison
   #
   # @param [Integer] target     Index
-  # @param [Object]  target     Resource by itself
+  # @param [Resource] target    Resource by itself
   # @param [Boolean] notify     Indicates whether to trigger 'changed' event
   #
   remove: (target, notify=true) ->
@@ -102,3 +102,20 @@ class Joosy.Resource.Collection extends Joosy.Module
       if notify
         @trigger 'changed'
     result
+
+  #
+  # Adds resource to collection to given index or to the end
+  #
+  # @param [Resource] element       Resource to add
+  # @param [Integer] index          Index to add to. If omited will be pushed to the end
+  # @param [Boolean] notify         Indicates whether to trigger 'changed' event
+  #
+  add: (element, index=false, notify=true) ->
+    if index
+      @data.splice index, 0, element
+    else
+      @data.push element
+      
+    if notify
+      @trigger 'changed'
+    element

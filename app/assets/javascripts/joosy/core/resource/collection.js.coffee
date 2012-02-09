@@ -61,7 +61,7 @@ class Joosy.Resource.Collection extends Joosy.Module
     root = @model::__entityName.pluralize()
 
     if collection not instanceof Array
-      collection = collection?[root]
+      collection = collection?[root.camelize(false)]
 
       if collection not instanceof Array
         throw new Error "Can not read incoming JSON" 

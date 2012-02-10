@@ -88,7 +88,7 @@ Joosy.Modules.Renderer =
       template = Joosy.Application.templater.buildView template
     else if !Object.isFunction template
       throw new Error "#{Joosy.Module.__className @}> template (maybe @view) does not look like a string or lambda"
-
+    
     if !Object.isObject(locals) && !isResource && !isCollection
       throw new Error "#{Joosy.Module.__className @}> locals (maybe @data?) not in: dumb hash, Resource, Collection"
 

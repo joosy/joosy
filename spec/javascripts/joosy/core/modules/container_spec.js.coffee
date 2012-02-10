@@ -30,7 +30,6 @@ describe "Joosy.Modules.Container", ->
     new_container.trigger 'test'
     expect(new_container.html()).toEqual 'new content'
     expect(new_container.parent().get(0)).toBe parent.get 0
-    expect(old_container.parent().get(0)).toBeUndefined()
     expect(callback.callCount).toEqual 1
 
   it "should inherit element declarations", ->

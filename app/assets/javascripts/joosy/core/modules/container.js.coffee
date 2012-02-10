@@ -13,9 +13,9 @@ Joosy.Modules.Container =
       @[key] = @$(value)
 
   swapContainer: (container, data) ->
-    realContainer = container.clone().html data
-    container.replaceWith realContainer
-    realContainer
+    container.unbind().off()
+    container.html data
+    container
 
   __collectElements: ->
     elements = Object.extended @elements || {}

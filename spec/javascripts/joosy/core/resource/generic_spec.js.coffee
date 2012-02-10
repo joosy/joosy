@@ -65,3 +65,54 @@ describe "Joosy.Resource.Generic", ->
       resource = R.create()
       
       expect(resource 'tested').toBeTruthy()
+      
+  it "should map inlines", ->
+    class RumbaMumba extends Joosy.Resource.Generic   
+      @entity 'rumba_mumba'
+ 
+    class R extends Joosy.Resource.Generic
+      @map 'rumbaMumbas', RumbaMumba
+
+    resource = R.create
+      rumbaMumbas: [
+        {foo: 'bar'},
+        {bar: 'baz'}
+      ]
+    expect(resource.rumbaMumbas instanceof Joosy.Resource.Collection).toBeTruthy()
+    expect(resource.rumbaMumbas.at(0)('foo')).toEqual 'bar'
+    
+    
+  it "should use magic collections", ->
+    class window.RumbaMumbasCollection extends Joosy.Resource.Collection
+      
+    class RumbaMumba extends Joosy.Resource.Generic
+      @entity 'rumba_mumba'
+    class R extends Joosy.Resource.Generic
+      @map 'rumbaMumbas', RumbaMumba
+
+    resource = R.create
+      rumbaMumbas: [
+        {foo: 'bar'},
+        {bar: 'baz'}
+      ]
+    expect(resource.rumbaMumbas instanceof RumbaMumbasCollection).toBeTruthy()
+    expect(resource.rumbaMumbas.at(0)('foo')).toEqual 'bar'
+    
+    delete window.RumbaMumbasCollection
+    
+  it "should use manually set collections", ->
+    class OloCollection extends Joosy.Resource.Collection
+
+    class RumbaMumba extends Joosy.Resource.Generic
+      @entity 'rumba_mumba'
+      @collection OloCollection
+    class R extends Joosy.Resource.Generic
+      @map 'rumbaMumbas', RumbaMumba
+
+    resource = R.create
+      rumbaMumbas: [
+        {foo: 'bar'},
+        {bar: 'baz'}
+      ]
+    expect(resource.rumbaMumbas instanceof OloCollection).toBeTruthy()
+    expect(resource.rumbaMumbas.at(0)('foo')).toEqual 'bar'

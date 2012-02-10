@@ -47,6 +47,17 @@ class Joosy.Resource.Generic extends Joosy.Module
   @entity: (name) -> @::__entityName = name
   
   #
+  # Sets the collection of current Resource
+  #
+  # @param [Object] klass       Class to assign as collection
+  #
+  @collection: (klass) -> @::__collection = -> klass
+  
+  __collection: ->
+    named = @__entityName.camelize().pluralize() + 'Collection'
+    if window[named] then window[named] else Joosy.Resource.Collection
+  
+  #
   # Allows to modify data before it gets stored
   #
   # @param [Function] action    `(Object) -> Object` to call
@@ -77,9 +88,12 @@ class Joosy.Resource.Generic extends Joosy.Module
   @map: (name, klass=false) ->
     unless klass
       klass = window[name.singularize().camelize()]
+      
+    if !klass
+      throw new Error "#{Joosy.Module.__className @}> class can not be detected for '#{name}' mapping"
 
     @beforeLoad (data) ->
-      @[name] = new Joosy.Resource.Collection klass
+      @[name] = new (klass::__collection()) klass
       if Object.isArray data[name]
         @[name].reset data[name]
       data

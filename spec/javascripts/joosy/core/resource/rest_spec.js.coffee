@@ -62,6 +62,7 @@ describe "Joosy.Resource.REST", ->
   it 'should find objects collection with params', ->
     callback = sinon.spy (collection) ->
       i = 1
+      expect(collection instanceof Joosy.Resource.RESTCollection).toBeTruthy()
       collection.data.each (target) ->
         expect(target.id).toEqual i
         expect(target.e?.name).toEqual 'test' + i
@@ -77,6 +78,7 @@ describe "Joosy.Resource.REST", ->
   it 'should find all objects collection', ->
     callback = sinon.spy (collection) ->
       i = 1
+      expect(collection instanceof Joosy.Resource.RESTCollection).toBeTruthy()
       collection.data.each (target) ->
         expect(target.id).toEqual i
         expect(target.e?.name).toEqual 'test' + i

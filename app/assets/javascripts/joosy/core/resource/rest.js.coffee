@@ -23,6 +23,16 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   # Default primary key field 'id'
   #
   __primaryKey: 'id'
+  
+  
+  #
+  # Default value of resource collection
+  # Will try to seek for EntityNamesCollection
+  # Will fallback to Joosy.Resource.RESTCollection
+  #
+  __collection: ->
+    named = @__entityName.camelize().pluralize() + 'Collection'
+    if window[named] then window[named] else Joosy.Resource.RESTCollection
 
   #
   # Sets the field containing primary key
@@ -85,7 +95,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
       if !options? && Object.isFunction description
         options = {success: description}
         description = undefined
-      resources = new Joosy.Resource.RESTCollection this, description
+      resources = new (@::__collection()) this, description
       resources.fetch options
       resources
 

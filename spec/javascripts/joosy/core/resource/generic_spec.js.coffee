@@ -98,7 +98,7 @@ describe "Joosy.Resource.Generic", ->
     expect(resource.rumbaMumbas instanceof RumbaMumbasCollection).toBeTruthy()
     expect(resource.rumbaMumbas.at(0)('foo')).toEqual 'bar'
     
-    delete window.RumbaMumbasCollection
+    window.RumbaMumbasCollection = undefined
     
   it "should use manually set collections", ->
     class OloCollection extends Joosy.Resource.Collection

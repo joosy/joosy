@@ -84,6 +84,27 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
     this
     
   #
+  # Requests the REST collection URL with POST or any method given in options.type
+  #
+  # @param [String] ending            Collection url (like 'foo' or 'foo/bar')
+  # @param [Function|Object] options  AJAX options.
+  #   Will be considered as a success callback if function given
+  #
+  request: (ending, options) ->
+    if Object.isFunction options
+      callback = options
+    else
+      callback = options?.success
+      delete options?.success
+      
+    if options.method || options.type
+      type = options.method || options.type
+    else
+      type = 'post'
+    
+    @model.__ajax type, @model.__buildSource(extension: ending), options, callback
+    
+  #
   # Does AJAX request
   #
   # @param [Object] urlOptions      GET-params for request

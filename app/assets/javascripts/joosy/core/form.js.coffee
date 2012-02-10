@@ -180,7 +180,7 @@ class Joosy.Form extends Joosy.Module
   __error: (data) ->
     errors = if data.responseText
       try
-        jQuery.parseJSON data.responseText
+        data = jQuery.parseJSON(data.responseText)
       catch error
         {}
     else

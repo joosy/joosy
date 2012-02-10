@@ -198,8 +198,8 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   __prepareData: (data) ->    
     if Object.isObject(data) && Object.keys(data).length == 1 && @__entityName
-      if data[@__entityName]
-        data = data[@__entityName]
+      name = @__entityName.camelize(false)
+      data = data[name] if data[name]
 
     if @__beforeLoad?
       data = @__beforeLoad data

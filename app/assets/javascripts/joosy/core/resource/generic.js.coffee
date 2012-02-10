@@ -191,7 +191,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   # Wrapper for .create() magic
   #
   __call: (path, value) ->
-    if value
+    if arguments.length > 1
       @set path, value
     else
       @get path

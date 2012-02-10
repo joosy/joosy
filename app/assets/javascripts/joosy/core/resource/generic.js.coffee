@@ -53,6 +53,11 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   @collection: (klass) -> @::__collection = -> klass
   
+  #
+  # Default value of resource collection
+  # Will try to seek for EntityNamesCollection
+  # Will fallback to Joosy.Resource.Collection
+  #
   __collection: ->
     named = @__entityName.camelize().pluralize() + 'Collection'
     if window[named] then window[named] else Joosy.Resource.Collection

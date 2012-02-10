@@ -76,6 +76,22 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   each: (callback) ->
     @data.each callback
+    
+  #
+  # Gets first resource matching description (see Sugar.js Array#find)
+  #
+  # @param [Function] description       Callback matcher
+  #
+  find: (description) ->
+    @data.find description
+  
+  #
+  # Gets resource by id
+  #
+  # @param [Integer] id       Id to find
+  #
+  findById: (id) ->
+    @data.find (x) -> x('id').toString() == id.toString()
   
   #
   # Gets resource by its index inside collection

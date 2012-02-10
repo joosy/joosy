@@ -76,3 +76,9 @@ describe "Joosy.Resource.Collection", ->
     expect(@collection.data.length).toEqual 4
     expect(@collection.at(1).e).toEqual {'rocking': 'mocking'}
     expect(@collection.at(3).e).toEqual {'rocking': 'mocking'}
+    
+  it "should find items by id", ->
+    @collection.reset $.parseJSON(data)
+    
+    expect(@collection.findById 1).toEqual @collection.data[0]
+    expect(@collection.findById 2).toEqual @collection.data[1]

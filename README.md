@@ -38,13 +38,13 @@ Unlike server-side, client-side has a state. At server-side you only have incomi
 
 They are:
 
-##### Pages
+###### Pages
 Pages are the heart of the entire application. They are used to fetch data, bind events, setup widgets, trig visual effects, and pass the data to the templates.
 
-##### Layouts 
+###### Layouts 
 Layouts are mainly used to set a part of your page that won't be reloaded often. Pages are wrapped into Layouts. Just like pages Layouts can bind events and setup widgets. Consider layouts as a bit extended version of what you have in Rails.
 
-##### Widgets 
+###### Widgets 
 Widgets are needed to keep your code DRY. They help you organize it in reusable modules.
 
 #### Models

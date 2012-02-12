@@ -73,9 +73,13 @@ Compare Joosy to Backbone like Rails to Sinatra. While Rails engine is much more
 
 ## What's next?
 
-We have a set of guidelines showing you, step-by-step, how to create a Joosy application. You should probably follow them starting from [Creating a new project](http://roundlake.github.com/joosy/guides/creating-a-new-project.html)
+We have a set of guidelines showing you, step-by-step, how to create a Joosy application. Follow them at our [Guides site](http://roundlake.github.com/joosy/).
 
 ### Hello world app
+
+Add Joosy gem to your Gemfile:
+
+    gem 'joosy'
 
 Using built-in generators you can quickly generate small app inside your Rails app to see Joosy application from inside a bit.
 
@@ -83,6 +87,8 @@ Using built-in generators you can quickly generate small app inside your Rails a
     rails g joosy:preloader dummy
 
 Now you can `rails s` and see Joosy placeholder at [localhost:3000/dummy](http://localhost:3000/dummy)
+
+Generated application will consist of one `Layout` and one `Page` both including very basic practices of Joosy.
 
 # License
 

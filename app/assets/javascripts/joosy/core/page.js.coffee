@@ -29,6 +29,15 @@ class Joosy.Page extends Joosy.Module
     @::__scrollElement = element
     @::__scrollSpeed = options.speed || 500
     @::__scrollMargin = options.margin || 0
+    
+  @title: (title) ->
+    @afterLoad ->
+      title = title.apply(this) if Object.isFunction(title)
+      @__previousTitle = Joosy.Application.title.text()
+      Joosy.Application.title.text(title)
+    
+    @afterUnload ->
+      Joosy.Application.title.text @__previousTitle
 
   @layout: (layoutClass) ->
     @::__layoutClass = layoutClass

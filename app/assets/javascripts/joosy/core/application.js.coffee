@@ -24,6 +24,8 @@ Joosy.Application =
     @sandboxSelector = Joosy.uuid()
     @content().after "<div id='#{@sandboxSelector}' style='display:none'></div>"
     @sandboxSelector = '#' + @sandboxSelector
+    
+    @title = $('head title')
 
   #
   # Gets current application root node

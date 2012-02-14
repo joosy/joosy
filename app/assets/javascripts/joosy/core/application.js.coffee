@@ -19,7 +19,7 @@ Joosy.Application =
     @[key] = value for key, value of options
     @templater = new Joosy.Templaters.RailsJST @name
 
-    Joosy.Router.setupRoutes()
+    Joosy.Router.__setupRoutes()
 
     @sandboxSelector = Joosy.uuid()
     @content().after "<div id='#{@sandboxSelector}' style='display:none'></div>"

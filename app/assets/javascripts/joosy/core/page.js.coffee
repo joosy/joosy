@@ -52,6 +52,8 @@ class Joosy.Page extends Joosy.Module
     @::__erase = callback
 
   constructor: (@params, @previous) ->
+    Joosy.Application.loading = true
+    
     @__layoutClass ||= ApplicationLayout
 
     if @__runBeforeLoads @params, @previous
@@ -83,6 +85,7 @@ class Joosy.Page extends Joosy.Module
       $('html, body').animate {scrollTop: scroll}, @__scrollSpeed, =>
         if @__scrollSpeed != 0
           @__releaseHeight()
+    Joosy.Application.loading = false
 
     Joosy.Modules.Log.debugAs @, "Page loaded"
 

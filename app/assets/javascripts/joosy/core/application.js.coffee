@@ -7,6 +7,8 @@ Joosy.Application =
   Pages: {}
   Layouts: {}
   Controls: {}
+  
+  loading: true
 
   #
   # Starts Joosy application by binding to element and bootstraping routes

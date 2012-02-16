@@ -190,8 +190,18 @@ class Joosy.Form extends Joosy.Module
       errors = @__stringifyErrors(errors)
       
       Object.each errors, (field, notifications) =>
-        input = @fields.filter("[name='#{field}']").addClass @invalidationClass
+        input = @__findField(field).addClass @invalidationClass
         @notification? input, notifications
+        
+  #
+  # Finds field by field name.
+  # This is not inlined since we want to override
+  # or monkeypatch it from time to time
+  #
+  # @param [String] field         Name of field to find
+  #
+  __findField: (field) ->
+    @fields.filter("[name='#{field}']")
 
   #
   # Simulates REST methods by adding hidden _method input with real method

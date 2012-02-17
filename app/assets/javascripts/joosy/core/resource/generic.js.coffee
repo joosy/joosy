@@ -1,15 +1,15 @@
 #
-# Basic data wrapper with triggering
+# Basic data wrapper with triggering and entity name binding
 #
-# Example:
+# @example Basic usage
 #   class R extends Joosy.Resource.Generic
 #     @entity 'r'
-#
+#   
 #     @beforeLoad (data) ->
 #       data.real = true
-#
+#   
 #   r = R.create {r: {foo: {bar: 'baz'}}}
-#
+#   
 #   r('foo')                  # {baz: 'baz'}
 #   r('real')                 # true
 #   r('foo.bar')              # baz
@@ -21,42 +21,65 @@ class Joosy.Resource.Generic extends Joosy.Module
 
   #
   # Sets the data source description (which is NOT required)
-  # This has no use in Generic but is required in any descendant
+  # @note This has no use in Generic but is required in any descendant
   # 
-  # @param [mixed] Source can be any type including lambda
-  #   If lambda is given resource will not expect direct .create() calls
-  #   You'll have to prepare descendant with .at() first
+  # @param [mixed] Source can be any type including lambda.
+  #   If lambda is given resource will not expect direct {::create} calls
+  #   You'll have to prepare descendant with {::at} first.
   #
-  # Example:
+  # @example Simple case
   #   Class Y extends Joosy.Resource.Generic
   #     @source 'fluffies'
+  #   
+  #   r = Y.create {}
+  #
+  # @example Case with lambda
   #   class R extends Joosy.Resource.Generic
   #     @source -> (path) "/"+path
-  #
-  #   r = Y.create{}                  # will work as expected
+  #   
   #   r = R.create {}                 # will raise exception
   #   r = R.at('foo/bar').create {}   # will work as expected
   #
   @source: (source) -> @__source = source
+  
+  #
+  # Creates the proxy of current resource with proper {::source} value
+  #
+  # @note Should be used together with lambda source (see {::source} for example)
+  #
+  @at: ->
+    if !Object.isFunction @__source
+      throw new Error "#{Joosy.Module.__className @}> should be created directly (without `at')"
+
+    #
+    # Class inheritance used to create proxy
+    #
+    # @private
+    #
+    class clone extends this
+    clone.__source = @__source arguments...
+    clone
 
   #
-  # Required to do some magic like skipping the root node
+  # Sets the entity text name:
+  #   required to do some magic like skipping the root node.
   #
   # @param [String] name    Singular name of resource
   #
   @entity: (name) -> @::__entityName = name
   
   #
-  # Sets the collection of current Resource
+  # Sets the collection to use
+  #
+  # @note By default will try to seek for `EntityNamesCollection`.
+  #   Will fallback to {Joosy.Resource.Collection}
   #
   # @param [Object] klass       Class to assign as collection
   #
   @collection: (klass) -> @::__collection = -> klass
   
   #
-  # Default value of resource collection
-  # Will try to seek for EntityNamesCollection
-  # Will fallback to Joosy.Resource.Collection
+  # Implements {::collection} default behavior.
   #
   __collection: ->
     named = @__entityName.camelize().pluralize() + 'Collection'
@@ -70,19 +93,20 @@ class Joosy.Resource.Generic extends Joosy.Module
   @beforeLoad: (action) -> @::__beforeLoad = action
 
   #
-  # Dynamically creates collection of inline resources
-  # Inline resource share the instance with direct data and therefore can be used
-  # to better handle inline changes
+  # Dynamically creates collection of inline resources.
   #
-  # Example:
+  # Inline resources share the instance with direct data and therefore can be used
+  #   to handle inline changes with triggers and all that resources stuff
+  #
+  # @example Basic usage
   #   class Zombie extends Joosy.Resource.Generic
-  #     @entity 'a'
+  #     @entity 'zombie'
   #   class Puppy extends Joosy.Resource.Generic
-  #     @entity 'b'
+  #     @entity 'puppy'
   #     @maps 'zombies'
-  #
+  #   
   #   p = Puppy.create {zombies: [{foo: 'bar'}]}
-  #
+  #   
   #   p('zombies')            # Direct access: [{foo: 'bar'}]
   #   p.zombies               # Wrapped Collection of Zombie instances
   #   p.zombies.at(0)('foo')  # bar
@@ -102,23 +126,6 @@ class Joosy.Resource.Generic extends Joosy.Module
       if Object.isArray data[name]
         @[name].reset data[name]
       data
-
-  #
-  # Creates the descnendant of current resource with proper source
-  # Should be used together with lambda source (see @source for example)
-  #
-  @at: ->
-    if !Object.isFunction @__source
-      throw new Error "#{Joosy.Module.__className @}> should be created directly (without `at')"
-
-    #
-    # Class inheritance used to create proxy
-    #
-    # @private
-    #
-    class clone extends this
-    clone.__source = @__source arguments...
-    clone
 
   #
   # Wraps instance of resource inside shim-function allowing to track
@@ -143,8 +150,9 @@ class Joosy.Resource.Generic extends Joosy.Module
     shim
 
   #
-  # Should NOT be called directly, use .create() instead
+  # Should NOT be called directly, use {#create} instead
   #
+  # @abstract
   # @param [Object] data      Data to store
   #
   constructor: (data) ->
@@ -169,7 +177,7 @@ class Joosy.Resource.Generic extends Joosy.Module
     target[0][target[1]]
 
   #
-  # Setter for wrapped data, triggers 'changed'
+  # Setter for wrapped data, triggers `changed` event.
   #
   # @param [String] path    Attribute name to set. Can contain dots to get inline Objects values
   # @param [mixed] value    Value to set
@@ -181,9 +189,9 @@ class Joosy.Resource.Generic extends Joosy.Module
     null
 
   #
-  # Locates the actual instance of dotted path from get/set
+  # Locates the actual instance of attribute path `foo.bar` from get/set
   #
-  # @param [String] path    Path to the attribute ('foo.bar')
+  # @param [String] path    Path to the attribute (`foo.bar`)
   # @return [Array]         Instance of object containing last step of path and keyword for required field
   #
   __callTarget: (path) ->
@@ -201,7 +209,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       [@e, path]
 
   #
-  # Wrapper for .create() magic
+  # Wrapper for {#create} magic
   #
   __call: (path, value) ->
     if arguments.length > 1

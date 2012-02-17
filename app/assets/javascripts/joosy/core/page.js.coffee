@@ -24,6 +24,12 @@ class Joosy.Page extends Joosy.Module
 
   @fetch: (callback) ->
     @::__fetch = callback
+    
+  @fetchSynchronized: (callback) ->
+    @::__fetch = (complete) ->
+      @synchronize (context) ->
+        context.after -> complete()
+        callback.call(this, context)
 
   @scroll: (element, options={}) ->
     @::__scrollElement = element

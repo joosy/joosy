@@ -1,6 +1,6 @@
 Joosy.Modules.Events =
   wait: (events, callback) ->
-    events = events.split /\s+/
+    events = events.split /\s+/ if Object.isString events
 
     @__oneShotEvents ||= []
     @__oneShotEvents.push [events, callback]
@@ -34,3 +34,31 @@ Joosy.Modules.Events =
       for [events, callback] in @__boundEvents
         if events.has event
           callback()
+          
+  synchronize: (block) ->
+    context = new Joosy.SynchronizationContext(this)
+    block.call(this, context)
+    
+    @wait context.expectations, => context.after.call(this)
+
+    context.actions.each (data) =>
+      data[0].call this, =>
+        @trigger data[1]
+
+
+class Joosy.SynchronizationContext
+  @uid = 0
+  
+  constructor: (@parent) ->
+    @expectations = []
+    @actions = []
+  
+  uid: ->
+    @constructor.uid += 1
+  
+  do: (action) ->
+    event = "synchro-#{@uid()}"
+    @expectations.push event
+    @actions.push [action, event]
+  
+  after: (@after) ->

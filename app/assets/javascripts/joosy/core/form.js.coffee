@@ -155,6 +155,23 @@ class Joosy.Form extends Joosy.Module
     @container.attr 'method', 'POST'
 
   #
+  # Submit the HTML Form
+  #
+  submit: ->
+    @container.submit()
+  
+  #
+  # Serializes form into query string
+  #
+  # @param [Boolean] skipMethod         Determines if we should skip magical _method field
+  #
+  serialize: (skipMethod=true) ->
+    data = @container.serialize()
+    data = data.replace /\&?\_method\=put/i, '' if skipMethod
+    
+    data
+
+  #
   # Inner success callback
   #
   __success: (response, status, xhr) ->

@@ -143,6 +143,14 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @param [Object] data      Data to store
   #
   constructor: (data) ->
+    @__fillData data, false
+    
+  #
+  # Set the resource data manually
+  #
+  # @param [Object] data      Data to store
+  #
+  reset: (data) ->
     @__fillData data
   
   #

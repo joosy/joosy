@@ -27,6 +27,15 @@ class Joosy.Resource.Collection extends Joosy.Module
   @beforeLoad: (action) -> @::__beforeLoad = action
   
   #
+  # Sets the default model for collection
+  #
+  # Supposed to be used in descendants
+  #
+  # @param [Class] klass     Model class
+  #
+  @model: (model) -> @::model = model
+  
+  #
   # Modelized data storage
   #
   data: []
@@ -34,7 +43,8 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # @param [Class] model    Resource class this collection will handle
   #
-  constructor: (@model) ->
+  constructor: (model=false) ->
+    @model = model if model
   
   #
   # Clears the storage and attempts to import given JSON

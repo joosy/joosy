@@ -30,7 +30,8 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
   # @param [Class] model      Resource class this collection will handle
   # @param [Object] params    Additional GET-parameters to supply when fetching
   #
-  constructor: (@model, params={}) ->
+  constructor: (model, params={}) ->
+    super model
     @params = Object.extended params
 
   #

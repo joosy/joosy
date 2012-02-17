@@ -111,6 +111,11 @@ class Joosy.Resource.Generic extends Joosy.Module
     if !Object.isFunction @__source
       throw new Error "#{Joosy.Module.__className @}> should be created directly (without `at')"
 
+    #
+    # Class inheritance used to create proxy
+    #
+    # @private
+    #
     class clone extends this
     clone.__source = @__source arguments...
     clone

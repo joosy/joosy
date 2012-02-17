@@ -1,0 +1,5 @@
+--readme	README.md
+--title		"Joosy API"
+--verbose
+--output-dir	./doc
+./app

@@ -11,14 +11,13 @@
 # read common server error responses and add .field_with_errors class to proper 
 # field.
 #
-# If you don't have resource associated (#fill) with form it will try to find fields
+# If you don't have resource associated with form (#fill), it will try to find fields
 # by exact keywords from response. Otherwise it will search for resource_name[field].
 #
-#
-# Example
+# @example Joosy.Form usage
 #   form = new Joosy.Form, -> (response)
 #     console.log "Saved and got some: #{response}"
-#
+#   
 #   form.progress = (percent) -> console.log "Uploaded by #{percent}%"
 #   form.fill @resource
 #
@@ -47,7 +46,7 @@ class Joosy.Form extends Joosy.Module
     'fields': 'input,select,textarea'
 
   #
-  # Submits your form once and unbinds leaving it simple form without AJAX
+  # Makes one AJAX request with form data without binding (see #constructor)
   #
   # @param [Element] form       Instance of HTML form element
   # @param [Object] opts        Map of additional options (see constructor)
@@ -70,7 +69,7 @@ class Joosy.Form extends Joosy.Module
   #
   # Supported options are:
   #
-  # * before: `(XHR) -> Boolean` triggers right before submit.
+  # * before: `(XHR) -> Boolean` to trigger right before submit.
   #   By default will run form invalidation cleanup. This behavior can be canceled
   #   by returning false from your own before callback. Both of callbacks will run if
   #   you return true.
@@ -78,9 +77,9 @@ class Joosy.Form extends Joosy.Module
   # * success: `(Object) -> null` triggers on 200 HTTP code from server. Pases 
   #   in the parsed JSON.
   #
-  # * progress: `(Float) -> null` runs peridically while form is uploading.
+  # * progress: `(Float) -> null` runs periodically while form is uploading.
   #
-  # * error: `(Object) -> Boolean` triggers if server responsed with anything but 200.
+  # * error: `(Object) -> Boolean` triggers if server responded with anything but 200.
   #   By default will run form invalidation routine. This behavior can be canceled
   #   by returning false from your own error callback. Both of callbacks will run if
   #   you return true.
@@ -239,9 +238,7 @@ class Joosy.Form extends Joosy.Module
   # Turns all possible response notations into form notation (foo[bar])
   # Every direct field of incoming data will be decorated by @substitutions
   #
-  # Possible notations:
-  #
-  # * Flat validation result
+  # @example Flat validation result
   #   # input
   #   { field1: ['error'] }
   #   # if form was not associated with @__resource (see #fill)
@@ -249,7 +246,7 @@ class Joosy.Form extends Joosy.Module
   #   # if form was associated with resource (named fluffy)
   #   { "fluffy[field1]": ['error']}
   #
-  # * Complex validation result
+  # @example Complex validation result
   #   # input
   #   { foo: { bar: { baz: ['error'] } } }
   #   # output

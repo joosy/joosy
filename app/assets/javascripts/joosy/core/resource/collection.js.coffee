@@ -86,7 +86,13 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   each: (callback) ->
     @data.each callback
-    
+
+  #
+  # Returns number of Resources inside Collection
+  #
+  size: ->
+    @data.length
+
   #
   # Gets first resource matching description (see Sugar.js Array#find)
   #

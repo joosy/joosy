@@ -19,8 +19,6 @@ describe "Joosy.Resource.REST", ->
     expect(@Test.__buildSource()).toEqual 'uri/'
     @Test.primary 'uid'
     expect(@Test::__primaryKey).toEqual 'uid'
-    @Test.beforeLoad 'function'
-    expect(@Test::__beforeLoad).toEqual 'function'
 
   it "should build source url based on entity name", ->
     options =

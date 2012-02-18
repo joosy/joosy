@@ -86,11 +86,15 @@ class Joosy.Resource.Generic extends Joosy.Module
     if window[named] then window[named] else Joosy.Resource.Collection
   
   #
-  # Allows to modify data before it gets stored
+  # Allows to modify data before it gets stored.
+  # You can define several beforeLoad filters.
   #
   # @param [Function] action    `(Object) -> Object` to call
   #
-  @beforeLoad: (action) -> @::__beforeLoad = action
+  @beforeLoad: (action) ->
+    unless @::hasOwnProperty '__beforeLoads'
+      @::__beforeLoads = [].concat @.__super__.__beforeLoads || []
+    @::__beforeLoads.push action
 
   #
   # Dynamically creates collection of inline resources.
@@ -241,7 +245,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       name = @__entityName.camelize(false)
       data = data[name] if data[name]
 
-    if @__beforeLoad?
-      data = @__beforeLoad data
+    if @__beforeLoads?
+      data = bl.call(this, data) for bl in @__beforeLoads
       
     data

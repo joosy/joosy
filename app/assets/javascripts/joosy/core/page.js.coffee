@@ -8,6 +8,14 @@
 #= require joosy/core/modules/widgets_manager
 #= require joosy/core/modules/filters
 
+#
+# Base class for all of your Joosy Pages.
+# @see http://guides.joosy.ws/guides/layouts-pages-and-routing.html
+#
+# @example Sample application page
+#   class @RumbaPage extends Joosy.Layout
+#     @view 'rumba'
+#
 class Joosy.Page extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
@@ -17,14 +25,56 @@ class Joosy.Page extends Joosy.Module
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
 
+  #
+  # Default layout is no layout.
+  #
   layout: false
+  
+  #
+  # Previous page.
+  #
   previous: false
+  
+  #
+  # Route params.
+  #
   params: false
+  
+  #
+  # Prefetched page data.
+  #
   data: false
 
+  #
+  # Sets the method which will controll the data fetching proccess.
+  #
+  # @note Given method will be called with `complete` function as parameter. As soon as your
+  #   preparations are done you should call that function.
+  #
+  # @example Basic usage
+  #   @fetch (complete) ->
+  #     $.get '/rumbas', (@data) => complete()
+  #
   @fetch: (callback) ->
     @::__fetch = callback
     
+  #
+  # Sets the several separate methods that will fetch data in parallel.
+  #
+  # @note This will work through {Joosy.Modules.Events#synchronize}
+  #
+  # @example Basic usage
+  #   @fetchSynchronized (context) ->
+  #     context.do (done) ->
+  #       $.get '/rumbas', (data) =>
+  #         @data.rumbas = data
+  #         done()
+  #     
+  #     context.do (done) ->
+  #       $.get '/kutuzkas', (data) =>
+  #         @data.kutuzkas = data
+  #         done()
+  #
   @fetchSynchronized: (callback) ->
     @::__fetch = (complete) ->
       @synchronize (context) ->

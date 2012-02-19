@@ -88,6 +88,10 @@ class Joosy.Layout extends Joosy.Module
   # @note You are strongly encouraged to NOT fetch anything with Layout!
   #   Use {Joosy.Page::fetch}
   #
+  # @example Basic usage
+  #   @fetch (complete) ->
+  #     $.get '/rumbas', (@data) => complete()
+  #
   @fetch: (callback) ->
     @::__fetch = callback
 

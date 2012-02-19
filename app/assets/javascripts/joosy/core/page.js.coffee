@@ -46,6 +46,73 @@ class Joosy.Page extends Joosy.Module
   data: false
 
   #
+  # Sets layout for current page
+  #
+  # @param [Class] layoutClass      Layout to use
+  #
+  @layout: (layoutClass) ->
+    @::__layoutClass = layoutClass
+
+  #
+  # Sets the method which will controll the painting preparation proccess.
+  #
+  # This method will be called right ater previous page {::erase} and in parallel with
+  #   page data fetching so you can use it to initiate preloader.
+  #
+  # @note Given method will be called with `complete` function as parameter. As soon as your
+  #   preparations are done you should call that function.
+  #
+  # @example Sample before painter
+  #   @beforePaint (complete) ->
+  #     if !@data # checks if parallel fetching finished
+  #       $('preloader').slideDown -> complete()
+  # 
+  #
+  @beforePaint: (callback) ->
+    @::__beforePaint = callback
+    
+  #
+  # Sets the method which will controll the painting proccess.
+  #
+  # This method will be called after fetching, erasing and beforePaint is complete.
+  # It should be used to setup appearance effects of page.
+  #
+  # @note Given method will be called with `complete` function as parameter. As soon as your
+  #   preparations are done you should call that function.
+  #
+  # @example Sample painter
+  #   @paint (complete) ->
+  #     @container.fadeIn -> complete()
+  #
+  @paint: (callback) ->
+    @::__paint = callback
+
+  #
+  # @todo Does anybody have idea why we could need this method?
+  #   Looks like something should be removed from here and bootstrap proccess.
+  #
+  @afterPaint: (callback) ->
+    @::__afterPaint = callback
+    
+  #
+  # Sets the method which will controll the erasing proccess.
+  #
+  # Use this method to setup hiding effect.
+  #
+  # @note Given method will be called with `complete` function as parameter. As soon as your
+  #   preparations are done you should call that function.
+  #
+  # @note This method will be caled _before_ unload routines so in theory you can
+  #   access page data from that. Think twice if you are doing it right though.
+  #
+  # @example Sample eraser
+  #   @erase (complete) ->
+  #     @container.fadeOut -> complete()
+  #
+  @erase: (callback) ->
+    @::__erase = callback
+
+  #
   # Sets the method which will controll the data fetching proccess.
   #
   # @note Given method will be called with `complete` function as parameter. As soon as your
@@ -81,11 +148,31 @@ class Joosy.Page extends Joosy.Module
         context.after -> complete()
         callback.call(this, context)
 
+  #
+  # Sets the position where page will be scrolled to after load.
+  #
+  # @note If you use animated scroll joosy will atempt to temporarily fix the 
+  #   height of your document while scrolling to prevent jump effect.
+  #
+  # @param [jQuery] element         Element to scroll to
+  # @param [Hash] options
+  #
+  # @option options [Integer] speed       Sets the animation duration (500 is default)
+  # @option options [Integer] margin      Defines the margin from element position.
+  #   Can be negative.
+  #
   @scroll: (element, options={}) ->
     @::__scrollElement = element
     @::__scrollSpeed = options.speed || 500
     @::__scrollMargin = options.margin || 0
-    
+  
+  #
+  # Sets the page HTML title.
+  #
+  # @note Title will be reverted on unload.
+  #
+  # @param [String] title       Title to set.
+  #
   @title: (title) ->
     @afterLoad ->
       title = title.apply(this) if Object.isFunction(title)
@@ -95,18 +182,12 @@ class Joosy.Page extends Joosy.Module
     @afterUnload ->
       Joosy.Application.title.text @__previousTitle
 
-  @layout: (layoutClass) ->
-    @::__layoutClass = layoutClass
-
-  @beforePaint: (callback) ->
-    @::__beforePaint = callback
-  @paint: (callback) ->
-    @::__paint = callback
-  @afterPaint: (callback) ->
-    @::__afterPaint = callback
-  @erase: (callback) ->
-    @::__erase = callback
-
+  #
+  # Constructor is very destructive (c), it calls bootstrap directly so use with caution.
+  #
+  # @params [Hash] params             Route params
+  # @params [Joosy.Page] previous     Previous page to unload
+  #
   constructor: (@params, @previous) ->
     Joosy.Application.loading = true
     
@@ -118,18 +199,42 @@ class Joosy.Page extends Joosy.Module
       else
         @__bootstrap()
 
+  #
+  # @see {Joosy.Router#navigate}
+  #
   navigate: (args...) ->
     Joosy.Router.navigate(args...)
 
+  #
+  # This is required by {Joosy.Modules.Renderer}
+  # Sets the base template dir to app_name/templates/pages
+  #
   __renderSection: ->
     'pages'
 
+  #
+  # Freezes the page height through $(html).
+  #
+  # Required to implement better {::scroll} behavior.
+  #
   __fixHeight: ->
     $('html').css 'min-height', $(document).height()
-    
+  
+  #
+  # Undo {#__fixHeight}
+  #
   __releaseHeight: ->
     $('html').css 'min-height', ''
 
+  #
+  # Page bootstrap proccess
+  #
+  #   * {Joosy.Modules.Container#refreshElements}
+  #   * {Joosy.Modules.Events#__delegateEvents}
+  #   * {Joosy.Modules.WidgetsManager#__setupWidgets}
+  #   * {Joosy.Modules.Filters#__runAfterLoads}
+  #   * Scrolling
+  #
   __load: ->
     @refreshElements()
     @__delegateEvents()
@@ -145,6 +250,14 @@ class Joosy.Page extends Joosy.Module
 
     Joosy.Modules.Log.debugAs @, "Page loaded"
 
+  #
+  # Page destruction proccess.
+  #
+  #   * {Joosy.Modules.TimeManager#__clearTime}
+  #   * {Joosy.Modules.WidgetsManager#__unloadWidgets}
+  #   * {Joosy.Modules.Renderer#__removeMetamorphs}
+  #   * {Joosy.Modules.Filters#__runAfterUnloads}
+  #
   __unload: ->
     @__clearTime()
     @__unloadWidgets()
@@ -152,19 +265,35 @@ class Joosy.Page extends Joosy.Module
     @__runAfterUnloads @params, @previous
     delete @previous
 
+  #
+  # Proxies callback through possible async wrapper.
+  #
+  # If wrapper is defined, it will be called with given callback as one of parameters.
+  # If wrapper is not defined callback will be called directly.
+  #
+  # @note Magic People Voodoo People
+  #
+  # @param [Object] entity        Object possibly containing wrapper method
+  # @param [String] receiver      String name of wrapper method inside entity
+  # @param [Hash] params          Params to send to wrapper, callback will be 
+  #   attached as the last of them.
+  # @param [Function] callback    Callback to run
+  #
   __callSyncedThrough: (entity, receiver, params, callback) ->
     if entity?[receiver]?
       entity[receiver].apply entity, params.clone().add(callback)
     else
       callback()
-
-  # Boot Sequence:
+  
   #
-  # previous::erase  \
-  # previous::unload  \
-  # beforePaint        \
-  #                     > paint
-  # fetch             /
+  # The single page (without layout reloading) bootstrap logic
+  #
+  # @example Hacky boot sequence description
+  #   previous::erase  \
+  #   previous::unload  \
+  #   beforePaint        \
+  #                       > paint
+  #   fetch             /
   #
   __bootstrap: ->
     Joosy.Modules.Log.debugAs @, "Boostraping page"
@@ -195,6 +324,16 @@ class Joosy.Page extends Joosy.Module
       Joosy.Modules.Log.debugAs @, "Fetch complete"
       @trigger 'dataReceived'
 
+  #
+  # The page+layout bootstrap logic
+  #
+  # @example Hacky boot sequence description
+  #   previous::erase  \
+  #   previous::unload  \
+  #   beforePaint        \
+  #                       > paint
+  #   fetch             /
+  #
   __bootstrapLayout: ->
     Joosy.Modules.Log.debugAs @, "Boostraping page with layout"
     @layout = new @__layoutClass(@params)

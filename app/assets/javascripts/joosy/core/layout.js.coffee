@@ -54,7 +54,7 @@ class Joosy.Layout extends Joosy.Module
   # @note Given method will be called with `complete` function as parameter. As soon as your
   #   preparations are done you should call that function.
   #
-  # @example Sample before painter
+  # @example Sample painter
   #   @paint (complete) ->
   #     @container.fadeIn -> complete()
   #
@@ -62,7 +62,7 @@ class Joosy.Layout extends Joosy.Module
     @::__paint = callback
 
   #
-  # Sets the method which will controll the painting proccess.
+  # Sets the method which will controll the erasing proccess.
   #
   # Use this method to setup hiding effect.
   #
@@ -72,7 +72,7 @@ class Joosy.Layout extends Joosy.Module
   # @note This method will be caled _before_ unload routines so in theory you can
   #   access layout data from that. Think twice if you are doing it right though.
   #
-  # @example Sample before painter
+  # @example Sample eraser
   #   @erase (complete) ->
   #     @container.fadeOut -> complete()
   #
@@ -137,11 +137,13 @@ class Joosy.Layout extends Joosy.Module
   #
   #   * {Joosy.Modules.TimeManager#__clearTime}
   #   * {Joosy.Modules.WidgetsManager#__unloadWidgets}
+  #   * {Joosy.Modules.Renderer#__removeMetamorphs}
   #   * {Joosy.Modules.Filters#__runAfterUnloads}
   #
   __unload: ->
     @__clearTime()
     @__unloadWidgets()
+    @__removeMetamorphs()
     @__runAfterUnloads()
 
   #

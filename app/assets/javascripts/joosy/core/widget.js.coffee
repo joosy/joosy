@@ -7,7 +7,13 @@
 #= require joosy/core/modules/filters
 
 #
-# Base Widget class
+# Base class for all of your Joosy Layouts.
+#
+# @todo Add link to the 5th chapter of guides here.
+#
+# @example Sample widget
+#   class @FooWidget extends Joosy.Widget
+#     @view 'foo'
 #
 class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Log
@@ -35,18 +41,22 @@ class Joosy.Widget extends Joosy.Module
     Joosy.Router.navigate args...
 
   #
-  # This is required by Joosy.Modules.Renderer
-  # Sets the base template dit to app_name/templates/widgets
+  # This is required by {Joosy.Modules.Renderer}
+  # Sets the base template dir to app_name/templates/widgets
   #
   __renderSection: ->
     'widgets'
 
   #
-  # The bootstrap mechanic
+  # Widget bootstrap proccess
   #
-  # @param [Joosy.Page] parent          Page to attach to
-  # @param [Joosy.Layout] parent        Layout to attach to
-  # @param [jQuery] container           jQuery element with container to attach to
+  #   * Rendering (if required)
+  #   * {Joosy.Modules.Container#refreshElements}
+  #   * {Joosy.Modules.Events#__delegateEvents}
+  #   * {Joosy.Modules.Filters#__runAfterLoads}
+  #
+  # @param [Joosy.Page, Joosy.Layout]     Page or Layout to attach to
+  # @param [jQuery] container             Container to attach to
   #
   __load: (@parent, @container) ->
     if @__renderer
@@ -58,7 +68,11 @@ class Joosy.Widget extends Joosy.Module
     this
 
   #
-  # Unload mechanic
+  # Layout destruction proccess.
+  #
+  #   * {Joosy.Modules.TimeManager#__clearTime}
+  #   * {Joosy.Modules.Renderer#__removeMetamorphs}
+  #   * {Joosy.Modules.Filters#__runAfterUnloads}
   #
   __unload: ->
     @__clearTime()

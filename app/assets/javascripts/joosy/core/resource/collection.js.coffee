@@ -1,17 +1,17 @@
 #
-# Basic collection of Resources
-# Turns JSON array into array of Resources and manages them
+# Basic collection of Resources.
+# Turns JSON array into array of Resources and manages them.
 #
-# Generally you should not use Collection directly. It will be
-# automatically created by things like Joosy.Resource.Generic#map 
-# or Joosy.Resource.REST#find.
+# @note You should not use Collection directly. It will be
+#   automatically created by things like {Joosy.Resource.Generic#map} 
+#   or {Joosy.Resource.REST#find}.
 #
-# Example:
+# @example Basic sample
 #   class R extends Joosy.Resource.Generic
 #     @entity 'r'
-#
+#     
 #   collection = new Joosy.Resource.Collection(R)
-#
+#     
 #   collection.reset [{foo: 'bar'}, {foo: 'baz'}]
 #   collection.each (resource) ->
 #     resource('foo')
@@ -22,6 +22,8 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # Allows to modify data before it gets stored
   #
+  # @note Supposed to be used in descendants
+  #
   # @param [Function] action    `(Object) -> Object` to call
   #
   @beforeLoad: (action) -> @::__beforeLoad = action
@@ -29,9 +31,9 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # Sets the default model for collection
   #
-  # Supposed to be used in descendants
+  # @note Supposed to be used in descendants
   #
-  # @param [Class] klass     Model class
+  # @param [Class] model     Model class
   #
   @model: (model) -> @::model = model
   
@@ -41,16 +43,25 @@ class Joosy.Resource.Collection extends Joosy.Module
   data: []
   
   #
-  # @param [Class] model    Resource class this collection will handle
+  # If model param was empty it will fallback to {::class}.
+  # If both param and {::class} were empty it will throw an exception.
+  #
+  # @param [Class] model    Resource class which this collection will handle
   #
   constructor: (model=false) ->
     @model = model if model
+    
+    if !@model
+      throw new Error "#{Joosy.Module.__className @}> model can't be empty"
   
   #
-  # Clears the storage and attempts to import given JSON
+  # Clears the storage and attempts to import given array
   #
-  # @param [Object] entities    Entities to import
-  # @param [Boolean] notify     Indicates whether to trigger 'changed' event
+  # @param [Array, Hash] entities     Array of entities to import.
+  #   If hash was given will seek for moodel name camelized and pluralized.
+  # @param [Boolean] notify           Indicates whether to trigger 'changed' event
+  #
+  # @return [Joosy.Resource.Collection]   Returns self.
   #
   reset: (entities, notify=true) ->
     if @__beforeLoad?
@@ -82,7 +93,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # Calls callback for each Resource inside Collection
   #
-  # @param [Function] callback
+  # @param [Function] callback        `(mixed) -> mixed` to call for each Resource in collection
   #
   each: (callback) ->
     @data.each callback
@@ -98,6 +109,8 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # @param [Function] description       Callback matcher
   #
+  # @return [Joosy.Resource.Generic]
+  #
   find: (description) ->
     @data.find description
   
@@ -106,6 +119,8 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # @param [Integer] id       Id to find
   #
+  # @return [Joosy.Resource.Generic]
+  #
   findById: (id) ->
     @data.find (x) -> x('id').toString() == id.toString()
   
@@ -113,6 +128,8 @@ class Joosy.Resource.Collection extends Joosy.Module
   # Gets resource by its index inside collection
   #
   # @param [Integer] i    Index
+  #
+  # @return [Joosy.Resource.Generic]
   #
   at: (i) ->
     @data[i]
@@ -123,6 +140,8 @@ class Joosy.Resource.Collection extends Joosy.Module
   # @param [Integer] target     Index
   # @param [Resource] target    Resource by itself
   # @param [Boolean] notify     Indicates whether to trigger 'changed' event
+  #
+  # @return [Joosy.Resource.Generic]        Removed element
   #
   remove: (target, notify=true) ->
     if Object.isNumber target
@@ -141,6 +160,8 @@ class Joosy.Resource.Collection extends Joosy.Module
   # @param [Resource] element       Resource to add
   # @param [Integer] index          Index to add to. If omited will be pushed to the end
   # @param [Boolean] notify         Indicates whether to trigger 'changed' event
+  #
+  # @return [Joosy.Resource.Generic]    Added element
   #
   add: (element, index=false, notify=true) ->
     if index

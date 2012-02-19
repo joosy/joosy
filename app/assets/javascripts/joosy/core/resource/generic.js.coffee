@@ -74,7 +74,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @note By default will try to seek for `EntityNamesCollection`.
   #   Will fallback to {Joosy.Resource.Collection}
   #
-  # @param [Object] klass       Class to assign as collection
+  # @param [Class] klass       Class to assign as collection
   #
   @collection: (klass) -> @::__collection = -> klass
   
@@ -87,7 +87,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   
   #
   # Allows to modify data before it gets stored.
-  # You can define several beforeLoad filters.
+  # You can define several beforeLoad filters that will be chained.
   #
   # @param [Function] action    `(Object) -> Object` to call
   #
@@ -154,9 +154,9 @@ class Joosy.Resource.Generic extends Joosy.Module
     shim
 
   #
-  # Should NOT be called directly, use {#create} instead
+  # Should NOT be called directly, use {::create} instead
   #
-  # @abstract
+  # @private
   # @param [Object] data      Data to store
   #
   constructor: (data) ->
@@ -167,8 +167,11 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # @param [Object] data      Data to store
   #
+  # @return [Joosy.Resource.Generic]      Returns self
+  #
   reset: (data) ->
     @__fillData data
+    return this
   
   #
   # Getter for wrapped data
@@ -237,8 +240,8 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # Prepares raw data: cuts the root node if it exists, runs before filters
   #
-  # @param [Object] data    Raw data to prepare
-  # @return [Object]
+  # @param [Hash] data    Raw data to prepare
+  # @return [Hash]
   #
   __prepareData: (data) ->    
     if Object.isObject(data) && Object.keys(data).length == 1 && @__entityName

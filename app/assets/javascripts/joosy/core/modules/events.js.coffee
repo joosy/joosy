@@ -36,7 +36,7 @@ Joosy.Modules.Events =
           callback()
           
   synchronize: (block) ->
-    context = new Joosy.SynchronizationContext(this)
+    context = new Joosy.Modules.Events.SynchronizationContext(this)
     block.call(this, context)
     
     @wait context.expectations, => context.after.call(this)
@@ -44,21 +44,40 @@ Joosy.Modules.Events =
     context.actions.each (data) =>
       data[0].call this, =>
         @trigger data[1]
-
-
-class Joosy.SynchronizationContext
+        
+#
+# Internal representation of {Joosy.Modules.Events#synchronize} context
+#
+# @see Joosy.Modules.Events#synchronize
+#
+class Joosy.Modules.Events.SynchronizationContext
   @uid = 0
-  
+
   constructor: (@parent) ->
     @expectations = []
     @actions = []
-  
+
+  #
+  # Internal simple counter to separate given synchronization actions
+  #
   uid: ->
     @constructor.uid += 1
-  
+
+  #
+  # Registeres another async function that should be synchronized
+  #
+  # @param [Function] action        `(Function) -> null` to call.
+  #   Should call given function to mark itself complete.
+  #
   do: (action) ->
     event = "synchro-#{@uid()}"
     @expectations.push event
     @actions.push [action, event]
-  
+
+  #
+  # Registers finalizer: the action that will be called when all do-functions 
+  #   marked themselves as complete.
+  #
+  # @param [Function] after       Function to call.
+  #
   after: (@after) ->

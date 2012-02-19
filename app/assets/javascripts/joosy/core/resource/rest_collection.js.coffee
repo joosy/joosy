@@ -1,18 +1,18 @@
 #
-# Collection of Resources with REST-fetching capabilities
+# Collection of Resources with REST-fetching capabilities.
 #
-# Generally you should not use RESTCollection directly. It will be
-# automatically created by Joosy.Resource.REST#find.
+# @note Generally you should not use RESTCollection directly. It will be
+#   automatically created by Joosy.Resource.REST#find.
 #
-# Example:
+# @example Basic samples
 #   class R extends Joosy.Resource.REST
 #     @entity 'r'
-#
+#   
 #   collection = new Joosy.Resource.RESTCollection(R, {color: 'green'})
-#
+#   
 #   collection.fetch()
 #   collection.page 2
-#
+#   
 #   collection.params = {color: 'red', sort: 'date'}
 #   collection.fetch()
 #
@@ -21,23 +21,27 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
   @include Joosy.Modules.Events
 
   #
-  # Hash containing the cache for pages of raw data
-  # Keys are pages numbers, values are stored AJAX response
+  # Hash containing the cache for pages of raw data.
+  # Keys are pages numbers, values are stored AJAX response.
   #
   pages: Object.extended()
 
   #
   # @param [Class] model      Resource class this collection will handle
-  # @param [Object] params    Additional GET-parameters to supply when fetching
+  # @param [Hash] params      Additional parameters that will be added to all REST requests.
   #
   constructor: (model, params={}) ->
     super model
     @params = Object.extended params
 
   #
-  # Clears the storage and attempts to import given JSON
+  # Clears the storage and attempts to import given array
   #
-  # @param [Object] entities    Entities to import
+  # @param [Array, Hash] entities     Array of entities to import.
+  #   If hash was given will seek for moodel name camelized and pluralized.
+  # @param [Boolean] notify           Indicates whether to trigger 'changed' event
+  #
+  # @return [Joosy.Resource.RESTCollection]   Returns self.
   #
   reset: (entities, notify=true) ->
     super entities, false
@@ -46,10 +50,12 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
     this
 
   #
-  # Clears the storage and gets new data from server
+  # Clears the storage and gets new data from server.
   #
-  # @param [Function|Object] options                AJAX options.
-  #   Will be considered as a success callback if function given
+  # @param [Hash, Function] options     AJAX options.
+  #   Will be considered as a success callback if function is given.
+  #
+  # @return [Joosy.Resource.RESTCollection]   Returns self.
   #
   fetch: (options) ->
     if Object.isFunction options
@@ -65,11 +71,13 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
     this
 
   #
-  # Returns the subset for requested page. Requests with &page=x if not found localy.
+  # Returns the subset for requested page: requests with &page=x.
   #
-  # @param [Integer] number               Index of page
-  # @param [Function|Object] options      AJAX options.
-  #   Will be considered as a success callback if function given
+  # @param [Integer] number             Index of page
+  # @param [Hash, Function] options     AJAX options.
+  #   Will be considered as a success callback if function is given.
+  #
+  # @return [Joosy.Resource.RESTCollection]   Returns self.
   #
   page: (number, options) ->
     if Object.isFunction options
@@ -85,11 +93,11 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
     this
     
   #
-  # Requests the REST collection URL with POST or any method given in options.type
+  # Requests the REST collection URL with POST or any method given in options.type.
   #
-  # @param [String] ending            Collection url (like 'foo' or 'foo/bar')
-  # @param [Function|Object] options  AJAX options.
-  #   Will be considered as a success callback if function given
+  # @param [String] ending              Collection url (like 'foo' or 'foo/bar')
+  # @param [Hash, Function] options     AJAX options.
+  #   Will be considered as a success callback if function is given.
   #
   request: (ending, options) ->
     if Object.isFunction options
@@ -106,10 +114,10 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
     @model.__ajax type, @model.__buildSource(extension: ending), options, callback
     
   #
-  # Does AJAX request
+  # Internal AJAX request implementation.
   #
-  # @param [Object] urlOptions      GET-params for request
-  # @param [Object] ajaxOptions     AJAX options to pass with request
+  # @param [Hash] urlOptions      GET-params for request
+  # @param [Hash] ajaxOptions     AJAX options to pass with request
   # @param [Function] callback
   #
   __fetch: (urlOptions, ajaxOptions, callback) ->

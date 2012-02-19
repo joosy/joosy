@@ -5,7 +5,7 @@
 #= require joosy/core/modules/container
 
 #
-# AJAXifies form including file uploads and stuff. Built on top of jQuery.Form
+# AJAXifies form including file uploads and stuff. Built on top of jQuery.Form.
 #
 # Joosy.Form automatically cares of form validation hihglights. It can
 # read common server error responses and add .field_with_errors class to proper 
@@ -46,10 +46,12 @@ class Joosy.Form extends Joosy.Module
     'fields': 'input,select,textarea'
 
   #
-  # Makes one AJAX request with form data without binding (see #constructor)
+  # Makes one AJAX request with form data without binding
+  #
+  # @see #constructor
   #
   # @param [Element] form       Instance of HTML form element
-  # @param [Object] opts        Map of additional options (see constructor)
+  # @param [Hash] opts          Options
   #
   @submit: (form, opts={}) ->
     form = new @(form, opts)
@@ -60,30 +62,30 @@ class Joosy.Form extends Joosy.Module
   #
   # During initialization replaces your basic form submit with AJAX request
   #
-  # If method of form differs from POST or GET it will simulate it
+  # @note If method of form differs from POST or GET it will simulate it
   # by adding hidden _method input. In this cases the method itself will be
   # set to POST.
   #
-  # For browsers having no support of HTML5 Forms it may do an iframe requests
+  # @note For browsers having no support of HTML5 Forms it may do an iframe requests
   # to handle file uploading.
   #
-  # Supported options are:
+  # @param [jQuery] form        Form element instance
+  # @param [Hash] opts          Options
   #
-  # * before: `(XHR) -> Boolean` to trigger right before submit.
+  # @option opts [Function] before        `(XHR) -> Bollean` to trigger right before submit.
   #   By default will run form invalidation cleanup. This behavior can be canceled
   #   by returning false from your own before callback. Both of callbacks will run if
   #   you return true.
   #
-  # * success: `(Object) -> null` triggers on 200 HTTP code from server. Pases 
-  #   in the parsed JSON.
+  # @option opts [Function] success       `(Object) -> null` triggers on 200 HTTP code from server. 
+  #   Pases in the parsed JSON.
   #
-  # * progress: `(Float) -> null` runs periodically while form is uploading.
+  # @option opts [Function] progress      `(Float) -> null` runs periodically while form is uploading
   #
-  # * error: `(Object) -> Boolean` triggers if server responded with anything but 200.
+  # @option opts [Function] error         `(Object) -> Boolean` triggers if server responded with anything but 200.
   #   By default will run form invalidation routine. This behavior can be canceled
   #   by returning false from your own error callback. Both of callbacks will run if
   #   you return true.
-  # 
   #
   constructor: (form, opts={}) ->
     if Object.isFunction opts
@@ -118,15 +120,14 @@ class Joosy.Form extends Joosy.Module
         xhr
 
   #
-  # Resets form submit behavior
+  # Resets form submit behavior to default
   #
   unbind: ->
     @container.unbind('submit').find('input:submit,input:image,button:submit').unbind('click');
 
   #
-  # Sets values of form inputs from given resource.
-  # Form will remember given resource and will use it while doing
-  # invalidation routine.
+  # Links current form with given resource and sets values of form inputs from with it.
+  # Form will use give resource while doing invalidation routine.
   #
   # @param [Resource] resource      Resource to fill fields with
   # @param [Function] decorator     Decoration callback
@@ -160,9 +161,11 @@ class Joosy.Form extends Joosy.Module
     @container.submit()
   
   #
-  # Serializes form into query string
+  # Serializes form into query string.
   #
   # @param [Boolean] skipMethod         Determines if we should skip magical _method field
+  #
+  # @return [String]
   #
   serialize: (skipMethod=true) ->
     data = @container.serialize()
@@ -171,7 +174,7 @@ class Joosy.Form extends Joosy.Module
     data
 
   #
-  # Inner success callback
+  # Inner success callback.
   #
   __success: (response, status, xhr) ->
     if xhr
@@ -182,16 +185,16 @@ class Joosy.Form extends Joosy.Module
       @__error response.json
 
   #
-  # Inner before callback
-  # By default will clean invalidation
+  # Inner before callback.
+  # By default will clean invalidation.
   #
   __before: (xhr, settings) ->
     if !@before? || @before(arguments...) is true
       @fields.removeClass @invalidationClass
 
   #
-  # Inner error callback
-  # By default will trigger basic invalidation
+  # Inner error callback.
+  # By default will trigger basic invalidation.
   #
   __error: (data) ->
     errors = if data.responseText
@@ -239,20 +242,18 @@ class Joosy.Form extends Joosy.Module
   # Every direct field of incoming data will be decorated by @substitutions
   #
   # @example Flat validation result
-  #   # input
-  #   { field1: ['error'] }
-  #   # if form was not associated with @__resource (see #fill)
-  #   { "field1": ['error'] }
-  #   # if form was associated with resource (named fluffy)
-  #   { "fluffy[field1]": ['error']}
+  #   { field1: ['error'] }             # input
+  #   { field1: ['error'] }             # if form was not associated with Resource by {#fill}
+  #   { "fluffy[field1]": ['error']}    # if form was associated with Resource (named fluffy)
   #
   # @example Complex validation result
-  #   # input
-  #   { foo: { bar: { baz: ['error'] } } }
-  #   # output
-  #   { "foo[bar][bar]": ['error'] }
+  #   { foo: { bar: { baz: ['error'] } } }    # input
+  #   { "foo[bar][bar]": ['error'] }          # output
   #
   # @param [Object] errors        Data to prepare
+  #
+  # @return [Hash<String, Array>]          Flat hash with field names in keys and arrays 
+  #   of errors in values
   #
   __stringifyErrors: (errors) ->
     result = {}
@@ -281,15 +282,17 @@ class Joosy.Form extends Joosy.Module
   #
   # Flattens complex inline structures into form notation
   #
-  # Example:
+  # @example Basic flattening
   #   data  = foo: { bar: { baz: [] } }
   #   inner = @__foldInlineEntities(data.foo, 'foo')
-  #
+  #   
   #   inner # { "foo[bar][baz]": [] }
   #
   # @param [Object] hash      Structure to fold
   # @param [String] scope     Prefix for resulting scopes
   # @param [Object] result    Context of result for recursion
+  #
+  # @return [Hash]
   #
   __foldInlineEntities: (hash, scope="", result={}) ->
     Object.each hash, (key, value) =>

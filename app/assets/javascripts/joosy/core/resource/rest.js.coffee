@@ -1,20 +1,20 @@
 #= require ./rest_collection
 
 #
-# Resource with the HTTP REST as the backend
+# Resource with the HTTP REST as the backend.
 #
-# Example:
+# @example Basic usage
 #   class Rocket extends Joosy.Resource.REST
 #     @entity 'rocket'
-#
+#   
 #   r = Rocket.find {speed: 'fast'}   # queries /rockets/?speed=fast to get RESTCollection
 #   r = Rocket.find 1                 # queries /rockets/1 to get Rocket instance
-#
+#   
 #   class Engine extends Joosy.Resource.REST
 #     @entity 'engine'
 #     @source -> 
 #       (rocket) "/rockets/#{rocket 'id'}/engines"
-#
+#   
 #   e = Engine.at(r).find {oil: true} # queries /rockets/1/engies?oil=true
 #
 class Joosy.Resource.REST extends Joosy.Resource.Generic
@@ -24,31 +24,28 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   __primaryKey: 'id'
   
-  
   #
-  # Default value of resource collection
-  # Will try to seek for EntityNamesCollection
-  # Will fallback to Joosy.Resource.RESTCollection
+  # Implements {::collection} default behavior.
+  # Changes the default fallback to Joosy.Resource.RESTCollection.
   #
   __collection: ->
     named = @__entityName.camelize().pluralize() + 'Collection'
     if window[named] then window[named] else Joosy.Resource.RESTCollection
 
   #
-  # Sets the field containing primary key
+  # Sets the field containing primary key.
   #
-  # It has no direct use inside the REST resource itself and can be omited
-  # That's said: REST resource can work without primary at all. It's here 
-  # just to improve end-users experience for cases when primary exists.
+  # @note It has no direct use inside the REST resource itself and can be omited.
+  #   But it usually should not since we have plans on adding some kind of Identity Map to Joosy.
   #
   # @param [String] primary     Name of the field
   #
   @primary: (primary) -> @::__primaryKey = primary
 
   #
-  # Should NOT be called directly, use .create() instead
+  # Should NOT be called directly, use {::create} instead
   #
-  # @param [Integer|String|Object] description    ID of entity or full data to store
+  # @param [Integer, String, Object] description    ID of entity or full data to store
   #
   constructor: (description={}) ->
     if @constructor.__isId description
@@ -58,18 +55,18 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
       @id = @e[@__primaryKey]
 
   #
-  # Queries for REST data and creates resources instances
+  # Queries for REST data and creates resources instances.
   #
-  # Returns single entity if integer or string given
-  # Returns collection if no value or Object (with parameters) given
+  # Returns single entity if integer or string given.
+  # Returns collection if no value or Object (with parameters) given.
   #
-  # If first parameter is a Function it's considered as a result callback
-  # In this case parameters will be considered equal to {}
+  # If first parameter is a Function it's considered as a result callback,
+  #   in this case parameters will be considered equal to {}
   #
-  # Example:
+  # @example Different find
   #   class Rocket extends Joosy.Resource.REST
   #     @entity 'rocket'
-  #
+  #   
   #   Rocket.find 1
   #   Rocket.find {type: 'nuclear'}, (data) -> data
   #   Rocket.find (data) -> data
@@ -77,11 +74,11 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #     success: (data) -> data)
   #     cache: true
   #
-  # @param [Integer|String|Object] description      ID of entity or full data to store
-  # @param [Function|Object] options                AJAX options.
-  #   Will be considered as a success callback if function given
+  # @param [Integer, String, Object] description    ID of entity or full data to store
+  # @param [Hash, Function] options                 AJAX options.
+  #   Will be considered as a success callback if function is given.
   #
-  # @return [Joosy.Resource.REST|Joosy.Resource.RESTCollection]
+  # @return [Joosy.Resource.REST, Joosy.Resource.RESTCollection]
   #
   @find: (description, options) ->
     if Object.isFunction options
@@ -102,8 +99,8 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Queries the resource url and reloads the data from server
   #
-  # @param [Function|Object] options  AJAX options.
-  #   Will be considered as a success callback if function given
+  # @param [Hash, Function] options     AJAX options.
+  #   Will be considered as a success callback if function is given.
   # @return [Joosy.Resource.REST]
   #
   fetch: (options) ->
@@ -124,8 +121,8 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Destroys the resource by DELETE query
   #
-  # @param [Function|Object] options  AJAX options.
-  #   Will be considered as a success callback if function given
+  # @param [Hash, Function] options     AJAX options.
+  #   Will be considered as a success callback if function is given.
   # @return [Joosy.Resource.REST]
   #
   destroy: (options) ->
@@ -140,11 +137,11 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     this
     
   #
-  # Requests the REST member URL with POST or any method given in options.type
+  # Requests the REST member URL with POST or any method given in options.type.
   #
-  # @param [String] ending            Member url (like 'foo' or 'foo/bar')
-  # @param [Function|Object] options  AJAX options.
-  #   Will be considered as a success callback if function given
+  # @param [String] ending              Member url (like 'foo' or 'foo/bar')
+  # @param [Hash, Function] options     AJAX options.
+  #   Will be considered as a success callback if function is given.
   #
   request: (ending, options) ->
     if Object.isFunction options
@@ -163,18 +160,18 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Checks if given description can be considered as ID
   #
-  # @param [Integer|String|Object] something Value to test
+  # @param [Integer, String, Object] something      Value to test
   # @return [Boolean]
   #
   @__isId: (something) ->
     Object.isNumber(something) || Object.isString(something)
 
   #
-  # jQuery AJAX wrapper
+  # jQuery AJAX wrapper.
   #
   # @param [String] method      HTTP Method (GET/POST/PUT/DELETE)
   # @param [String] url         URL to query
-  # @param [Object] options     AJAX options to pass with request
+  # @param [Hash] options       AJAX options to pass with request
   # @param [Function] callback  XHR callback
   #
   @__ajax: (method, url, options={}, callback) ->
@@ -185,11 +182,12 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
       dataType: 'json'
 
   #
-  # Builds URL for current resource location
+  # Builds URL for current resource location.
   #
-  # @param [Object] options     Handling options
-  #   extension: string to add to resource base url
-  #   params: GET-params to add to resulting url
+  # @param [Hash] options     Handling options
+  #
+  # @option options [String] extension      String to add to resource base url
+  # @option options [Hash] params           GET-params to add to resulting url
   #
   @__buildSource: (options={}) ->
     unless @hasOwnProperty '__source'

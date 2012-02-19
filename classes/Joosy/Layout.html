@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Joosy API</title>
+  <link rel='stylesheet' href='../../assets/codo.css' type='text/css'>
+  <script src='../../assets/codo.js'></script>
+</head>
+  <body>
+    <div id='header'>
+  <div id='menu'>
+    <a href='../../_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Layout</span>
+  </div>
+  <div id='search'>
+    <a id='class_list_link' href='../../class_list.html'>Class List</a>
+    <a id='method_list_link' href='../../method_list.html'>Method List</a>
+    <a id='file_list_link' href='../../file_list.html'>File List</a>
+  </div>
+  <iframe id='search_frame'></iframe>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Joosy.Layout
+      </h1>
+      <dl class='box'>
+        <dt>Inherits:</dt>
+        <dd>
+          <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
+        </dd>
+        <dt>Defined in:</dt>
+        <dd>app/assets/javascripts/joosy/core/layout.js.coffee</dd>
+      </dl>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base class for all of your Joosy Layouts.
+
+
+</p>
+
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample application layout
+    </h4>
+    <pre><code class='coffee'>class @ApplicationLayout extends Joosy.Layout
+  @view &apos;application&apos;</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+      <h2>Constant Summary</h2>
+      <h3 class='inherited'>
+        Constants inherited from
+        <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
+      </h3>
+      <p class='inherited'>
+        <a href="../../classes/Joosy/Module.html#__namespace__-constant">__namespace__</a>
+      </p>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#beforePaint-class'>
+        + (void) <strong>beforePaint</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the painting preparation proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#paint-class'>
+        + (void) <strong>paint</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the painting proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#erase-class'>
+        + (void) <strong>erase</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the erasing proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#fetch-class'>
+        + (void) <strong>fetch</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the data fetching proccess.
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(params)
+      </a>
+    </span>
+    <span class='constructor note title'>Constructor</span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#navigate-instance'>
+        - (void) <strong>navigate</strong>(args...)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__renderSection-instance'>
+        - (void) <strong>__renderSection</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      This is required by {Joosy.Modules.Renderer} Sets the base template dir to app_name/templates/layouts
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__load-instance'>
+        - (void) <strong>__load</strong>(container)
+      </a>
+    </span>
+    <span class='desc'>
+      Layout bootstrap proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__unload-instance'>
+        - (void) <strong>__unload</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Layout destruction proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#yield-instance'>
+        - (void) <strong>yield</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#content-instance'>
+        - (jQuery) <strong>content</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Gets layout element.
+    </span>
+  </li>
+</ul>
+      <h3 class='inherited'>
+        Methods inherited from
+        <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
+      </h3>
+      <p class='inherited'>
+        <a href="../../classes/Joosy/Module.html#__className-class">.__className</a>
+        <a href="../../classes/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>
+        <a href="../../classes/Joosy/Module.html#merge-class">.merge</a>
+        <a href="../../classes/Joosy/Module.html#include-class">.include</a>
+        <a href="../../classes/Joosy/Module.html#extend-class">.extend</a>
+      </p>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='beforePaint-class'>
+      + (void) <strong>beforePaint</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the painting preparation proccess.
+
+</p>
+<p>This method will be called right ater previous layout {::erase} and in parallel with layout data fetching so you can use it to initiate preloader.
+
+
+
+
+</p>
+
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample before painter
+    </h4>
+    <pre><code class='coffee'>@beforePaint (complete) -&gt;
+  if !@data # checks if parallel fetching finished
+    $(&apos;preloader&apos;).slideDown -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='paint-class'>
+      + (void) <strong>paint</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the painting proccess.
+
+</p>
+<p>This method will be called after fetching, erasing and beforePaint is complete.
+It should be used to setup appearance effects of layout.
+
+
+
+</p>
+
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample painter
+    </h4>
+    <pre><code class='coffee'>@paint (complete) -&gt;
+  @container.fadeIn -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='erase-class'>
+      + (void) <strong>erase</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <div class='note'>
+    <strong>Note:</strong>
+    This method will be caled _before_ unload routines so in theory you can access layout data from that. Think twice if you are doing it right though.
+  </div>
+  <p>Sets the method which will controll the erasing proccess.
+
+</p>
+<p>Use this method to setup hiding effect.
+
+
+
+
+</p>
+
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample eraser
+    </h4>
+    <pre><code class='coffee'>@erase (complete) -&gt;
+  @container.fadeOut -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='fetch-class'>
+      + (void) <strong>fetch</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <div class='note'>
+    <strong>Note:</strong>
+    You are strongly encouraged to NOT fetch anything with Layout! Use {Joosy.Page::fetch}
+  </div>
+  <p>Sets the method which will controll the data fetching proccess.
+
+
+
+
+</p>
+
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>@fetch (complete) -&gt;
+  $.get &apos;/rumbas&apos;, (@data) =&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(params)
+    </p>
+    <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>params</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>List of route params</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='navigate-instance'>
+      - (void) <strong>navigate</strong>(args...)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__renderSection-instance'>
+      - (void) <strong>__renderSection</strong>()
+    </p>
+    <div class='docstring'>
+  <p>This is required by {Joosy.Modules.Renderer}
+Sets the base template dir to app_name/templates/layouts
+
+</p>
+
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__load-instance'>
+      - (void) <strong>__load</strong>(container)
+    </p>
+    <div class='docstring'>
+  <p>Layout bootstrap proccess.
+
+</p>
+<ul>
+<li>{Joosy.Modules.Container#refreshElements}</li>
+<li>{Joosy.Modules.Events#__delegateEvents}</li>
+<li>{Joosy.Modules.WidgetsManager#__setupWidgets}</li>
+<li>{Joosy.Modules.Filters#__runAfterLoads}</li>
+</ul>
+
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__unload-instance'>
+      - (void) <strong>__unload</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Layout destruction proccess.
+
+</p>
+<ul>
+<li>{Joosy.Modules.TimeManager#__clearTime}</li>
+<li>{Joosy.Modules.WidgetsManager#__unloadWidgets}</li>
+<li>{Joosy.Modules.Renderer#__removeMetamorphs}</li>
+<li>{Joosy.Modules.Filters#__runAfterUnloads}</li>
+</ul>
+
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='yield-instance'>
+      - (void) <strong>yield</strong>()
+    </p>
+    <div class='docstring'>
+  <div class='note todo'>
+    <strong>TODO:</strong>
+    Rename this shit already. We are not going to release having function that marks element with UUID called `yield`.
+  </div>
+  
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='content-instance'>
+      - (jQuery) <strong>content</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Gets layout element.
+
+
+</p>
+
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'>
+        (<tt>jQuery</tt>)
+      </span>
+      &mdash;
+      <span class='desc'></span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Sun Feb 19 2012 23:36:12 GMT+0700 (ICT)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
+  v0.2.1
+  (Node.js v0.6.8).
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

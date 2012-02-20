@@ -176,11 +176,11 @@ class Joosy.Page extends Joosy.Module
   @title: (title) ->
     @afterLoad ->
       title = title.apply(this) if Object.isFunction(title)
-      @__previousTitle = Joosy.Application.title.text()
-      Joosy.Application.title.text(title)
+      @__previousTitle = document.title
+      document.title = title
     
     @afterUnload ->
-      Joosy.Application.title.text @__previousTitle
+      document.title = @__previousTitle
 
   #
   # Constructor is very destructive (c), it calls bootstrap directly so use with caution.

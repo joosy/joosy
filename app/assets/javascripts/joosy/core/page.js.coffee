@@ -173,11 +173,12 @@ class Joosy.Page extends Joosy.Module
   #
   # @param [String] title       Title to set.
   #
-  @title: (title) ->
+  @title: (title, separator=' / ') ->
     @afterLoad ->
-      title = title.apply(this) if Object.isFunction(title)
+      titleStr = if Object.isFunction(title) then title.apply(this) else title
+      titleStr = titleStr.join(separator) if Object.isArray(titleStr)
       @__previousTitle = document.title
-      document.title = title
+      document.title = titleStr
     
     @afterUnload ->
       document.title = @__previousTitle

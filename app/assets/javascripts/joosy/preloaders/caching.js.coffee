@@ -10,9 +10,9 @@
 #     progress: (percent) -> console.log "#{percent}% loaded"
 #     complete: -> console.log 'preloading finished'
 #
-# @class CachingPreloader
+# @module
 #
-@Preloader = @CachingPreloader =
+@CachingPreloader =
   #
   # If set to true, localStorage cache will be avoided
   #
@@ -50,6 +50,7 @@
       @restore()
     else
       @start?.call window
+      @clean()
       @download libraries
 
   #
@@ -94,7 +95,6 @@
         @evalGlobaly xhr.responseText
         @download libraries
     else
-      @clean()
       @complete?.call window
 
   #
@@ -152,3 +152,5 @@
       window.execScript src
     else
       window.eval src
+
+@Preloader = @CachingPreloader

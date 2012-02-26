@@ -1,5 +1,5 @@
 #
-# Preloader for libraries using <script src> without any caching magic
+# Preloader for libraries using `script src` without any caching magic
 #
 # Example:
 #   libraries = [['/test1.js'], ['/test2.js']]
@@ -7,12 +7,11 @@
 #     start:    -> console.log 'preloading started'
 #     complete: -> console.log 'preloading finished'
 #
-# @class InlinePreloader
+# @module
 #
-@Preloader = @InlinePreloader =
-
+@InlinePreloader =
   #
-  # Loads set of libraries by adding <script src> to DOM head 
+  # Loads set of libraries by adding `script src` to DOM head 
   # See class description for example of usage
   #
   # @param [Array] 2-levels array of libraries URLs i.e. [['/test1.js'],['/test2.js']]
@@ -30,7 +29,7 @@
       @complete?()
 
   #
-  # Loads one script by adding <script src> to DOM head
+  # Loads one script by adding `script src` to DOM head
   #
   # @param [String] url to load script from
   # @param [Function] `() -> null` to call after script was loaded and executed
@@ -52,3 +51,5 @@
 
     head.appendChild script
     return undefined
+
+@Preloader = @InlinePreloader

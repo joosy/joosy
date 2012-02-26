@@ -1,70 +1,71 @@
-@Joosy = Object.extended
-  debug: false
+@Joosy =
   Modules: {}
   Resource: {}
   Templaters: {}
 
-Joosy.namespace = (name, generator=false) ->
-  name  = name.split '.'
-  space = window
-  for part in name
-    space = space[part] ?= {}
+  debug: false
 
-  if generator
-    generator = generator.apply space
-  for key, klass of space
-    if space.hasOwnProperty(key) &&
-       Joosy.Module.hasAncestor klass, Joosy.Module
-      klass.__namespace__ = name
+  namespace: (name, generator=false) ->
+    name  = name.split '.'
+    space = window
+    for part in name
+      space = space[part] ?= {}
 
-Joosy.helpers = (name, generator) ->
-  Joosy.namespace "Joosy.Helpers.#{name}", generator
+    if generator
+      generator = generator.apply space
+    for key, klass of space
+      if space.hasOwnProperty(key) &&
+         Joosy.Module.hasAncestor klass, Joosy.Module
+        klass.__namespace__ = name
 
-Joosy.test = ->
-  text = "Hi :). I'm Joosy. And everything is just fine!"
+  helpers: (name, generator) ->
+    Joosy.namespace "Joosy.Helpers.#{name}", generator
 
-  if console
-    console.log text
-  else
-    alert text
+  test: ->
+    text = "Hi :). I'm Joosy. And everything is just fine!"
 
-Joosy.uuid = ->
-  'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
-    r = Math.random() * 16 | 0
-    v = if c is 'x' then r else r & 3 | 8
-    v.toString 16
-  .toUpperCase()
+    if console
+      console.log text
+    else
+      alert text
 
-Joosy.preloadImages = (images, callback) ->
-  unless Object.isArray(images)
-    images = [images]
-  if images.length == 0
-    callback()
+  uuid: ->
+    'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
+      r = Math.random() * 16 | 0
+      v = if c is 'x' then r else r & 3 | 8
+      v.toString 16
+    .toUpperCase()
 
-  ticks   = images.length
-  result  = []
-  checker = ->
-    if (ticks -= 1) == 0
-      callback?()
+  preloadImages: (images, callback) ->
+    unless Object.isArray(images)
+      images = [images]
+    if images.length == 0
+      callback()
 
-  for p in images
-    result.push $('<img/>').load(checker).attr('src', p)
+    ticks   = images.length
+    result  = []
+    checker = ->
+      if (ticks -= 1) == 0
+        callback?()
 
-  result
+    for p in images
+      result.push $('<img/>').load(checker).attr('src', p)
 
-Joosy.buildUrl = (url, params) ->
-  paramsString = []
+    result
 
-  Object.each params, (key, value) ->
-    paramsString.push "#{key}=#{value}"
+  buildUrl: (url, params) ->
+    paramsString = []
 
-  hash = url.match(/(\#.*)?$/)[0]
-  url  = url.replace /\#.*$/, ''
-  if !paramsString.isEmpty() && !url.has(/\?/)
-    url  = url + "?"
+    Object.each params, (key, value) ->
+      paramsString.push "#{key}=#{value}"
 
-  paramsString = paramsString.join '&'
-  if !paramsString.isBlank() && url.last() != '?'
-    paramsString = '&' + paramsString
+    hash = url.match(/(\#.*)?$/)[0]
+    url  = url.replace /\#.*$/, ''
+    if !paramsString.isEmpty() && !url.has(/\?/)
+      url  = url + "?"
 
-  url + paramsString + hash
+    paramsString = paramsString.join '&'
+    if !paramsString.isBlank() && url.last() != '?'
+      paramsString = '&' + paramsString
+
+    url + paramsString + hash

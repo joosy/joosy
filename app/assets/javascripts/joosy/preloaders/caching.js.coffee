@@ -135,9 +135,13 @@
   #
   clean: ->
     i = 0
+    
+    find = (arr, obj) ->
+      (return i if obj == x) for x in arr
+      return -1
 
     while i < window.localStorage.length && key = window.localStorage.key(i)
-      if key.indexOf(@prefix) == 0 && @libraries.indexOf(key) < 0
+      if key.indexOf(@prefix) == 0 && find(@libraries, key) < 0
         window.localStorage.removeItem key
       else
         i += 1

@@ -1,5 +1,3 @@
-#= require base64
-
 #
 # Preloader for libraries with localStorage cache
 #
@@ -61,16 +59,21 @@
     for name, i in @libraries
       flag &&= window.localStorage.getItem(name)?
     flag
-  
+
+  #
+  # Escapes non-printable terminal chars before storing to localStorage to prevent IE bug
+  #
+  # @param [String] String, that will be prepared for localStorage
+  #
+  escapeStr: (str) ->
+    str.replace(new RegExp("\u0001", 'g'), "\\u0001").replace(new RegExp("\u000B", 'g'), "\\u000B")
+
   #
   # Gets sources of scripts from localStorage and evals them
   #
   restore: ->
     for name, i in @libraries
-      code = window.localStorage.getItem name
-      if window.navigator.appName == "Microsoft Internet Explorer"
-        code = Base64.decode code
-      @evalGlobaly code
+      @evalGlobaly window.localStorage.getItem name
     @complete?.call window, true
 
   #
@@ -90,7 +93,7 @@
       @ajax url, size, (xhr) =>
         code = xhr.responseText
         if window.navigator.appName == "Microsoft Internet Explorer"
-          code = Base64.encode code
+          code = @escapeStr code
         window.localStorage.setItem @prefix+url, code
         @evalGlobaly xhr.responseText
         @download libraries

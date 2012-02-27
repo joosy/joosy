@@ -68,8 +68,8 @@
   restore: ->
     for name, i in @libraries
       code = window.localStorage.getItem name
-      # if window.navigator.appName == "Microsoft Internet Explorer"
-      #   code = Base64.decode code
+      if window.navigator.appName == "Microsoft Internet Explorer"
+        code = Base64.decode code
       @evalGlobaly code
     @complete?.call window, true
 
@@ -89,8 +89,8 @@
 
       @ajax url, size, (xhr) =>
         code = xhr.responseText
-        # if window.navigator.appName == "Microsoft Internet Explorer"
-        #   code = Base64.encode code
+        if window.navigator.appName == "Microsoft Internet Explorer"
+          code = Base64.encode code
         window.localStorage.setItem @prefix+url, code
         @evalGlobaly xhr.responseText
         @download libraries

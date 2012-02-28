@@ -1,10 +1,13 @@
+require 'uri'
+
 module Joosy::SprocketsHelper
   def extract_sources_and_sizes_from_include_tag(name)
     code = javascript_include_tag name
     resources = code.scan(/(?:href|src)=['"]([^'"]+)['"]/).flatten
 
     resources.map do |resource|
-      path = ::Rails.root.to_s + "/public" + resource.split('?')[0]
+      uri  = URI.parse resource
+      path = ::Rails.root.to_s + "/public" + uri.path
       size = File.size(path) rescue false
       [resource, size]
     end.to_json.html_safe

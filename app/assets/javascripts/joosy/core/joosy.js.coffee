@@ -49,7 +49,7 @@
         callback?()
 
     for p in images
-      result.push $('<img/>').load(checker).attr('src', p)
+      result.push $('<img/>').load(checker).error(checker).attr('src', p)
 
     result
 

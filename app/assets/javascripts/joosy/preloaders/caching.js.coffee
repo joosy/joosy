@@ -73,7 +73,7 @@
   #
   restore: ->
     for name, i in @libraries
-      @evalGlobaly window.localStorage.getItem name
+      window.evalGlobaly window.localStorage.getItem name
     @complete?.call window, true
 
   #
@@ -95,7 +95,7 @@
         if window.navigator.appName == "Microsoft Internet Explorer"
           code = @escapeStr code
         window.localStorage.setItem @prefix+url, code
-        @evalGlobaly xhr.responseText
+        window.evalGlobaly xhr.responseText
         @download libraries
     else
       @complete?.call window
@@ -149,16 +149,17 @@
       else
         i += 1
 
-  #
-  # Evals source at a global scope
-  #
-  # @param [String] JS source to execute
-  #
-  evalGlobaly: (src) ->
-    return if src.length == 0
-    if window.execScript
-      window.execScript src
-    else
-      window.eval src
+#
+# Evals source at a global scope
+# Don't touch it! It should be window's property, or FF3.6 will execute scripts on preloader context.
+#
+# @param [String] JS source to execute
+#
+window.evalGlobaly = (src) ->
+  return if src.length == 0
+  if window.execScript
+    window.execScript src
+  else
+    window.eval src
 
 @Preloader = @CachingPreloader

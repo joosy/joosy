@@ -2705,7 +2705,7 @@
      *
      ***/
     'capitalize': function(all) {
-      var reg = all ? /\b[a-z]/g : /^[a-z]/;
+      var reg = all ? /^\S|\s\S/g : /^\S/;
       return this.toLowerCase().replace(reg, function(letter) {
         return letter.toUpperCase();
       });

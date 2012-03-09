@@ -107,7 +107,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #     @entity 'zombie'
   #   class Puppy extends Joosy.Resource.Generic
   #     @entity 'puppy'
-  #     @maps 'zombies'
+  #     @map 'zombies'
   #   
   #   p = Puppy.create {zombies: [{foo: 'bar'}]}
   #   

@@ -211,7 +211,7 @@ class Joosy.Form extends Joosy.Module
       Object.each errors, (field, notifications) =>
         input = @__findField(field).addClass @invalidationClass
         @notification? input, notifications
-        
+  
   #
   # Finds field by field name.
   # This is not inlined since we want to override

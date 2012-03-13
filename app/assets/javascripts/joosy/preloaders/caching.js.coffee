@@ -1,8 +1,12 @@
 #
 # Preloader for libraries with localStorage cache
 #
-# Example:
+# @note The `start` callback will only be called if loading required. 
+#   While working with cache, `complete` is the only callback that will be triggered.
+#
+# @example Basic usage
 #   libraries = [['/test1.js', 100], ['/test2.js', 500]] #100, 500 - size in bytes
+#   
 #   CachingPreloader.load libraries,
 #     start:    -> console.log 'preloading started'
 #     progress: (percent) -> console.log "#{percent}% loaded"

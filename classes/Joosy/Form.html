@@ -8,16 +8,26 @@
   <body>
     <div id='header'>
   <div id='menu'>
-    <a href='../../_index.html' title='Index'>Index</a>
+    <a href='../../class_index.html' title='Index'>Index</a>
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
     <span class='title'>Form</span>
-  </div>
-  <div id='search'>
-    <a id='class_list_link' href='../../class_list.html'>Class List</a>
-    <a id='method_list_link' href='../../method_list.html'>Method List</a>
-    <a id='file_list_link' href='../../file_list.html'>File List</a>
+    <nav>
+      <ul>
+        <li class='frames'>
+          (<a class='frames' href='../../frames.html'>frames</a>)
+        </li>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../class_list.html'>Class List</a>
+      <a id='method_list_link' href='../../method_list.html'>Method List</a>
+      <a id='file_list_link' href='../../file_list.html'>File List</a>
+    </div>
   </div>
   <iframe id='search_frame'></iframe>
 </div>
@@ -26,14 +36,18 @@
         Class:
         Joosy.Form
       </h1>
-      <dl class='box'>
-        <dt>Inherits:</dt>
-        <dd>
-          <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
-        </dd>
-        <dt>Defined in:</dt>
-        <dd>app/assets/javascripts/joosy/core/form.js.coffee</dd>
-      </dl>
+      <table class='box'>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Defined in:</td>
+          <td>app/assets/javascripts/joosy/core/form.js.coffee</td>
+        </tr>
+      </table>
       <h2>Overview</h2>
       <div class='docstring'>
   <p>AJAXifies form including file uploads and stuff. Built on top of jQuery.Form.
@@ -225,10 +239,10 @@ form.fill @resource</code></pre>
         <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
       </h3>
       <p class='inherited'>
-        <a href="../../classes/Joosy/Module.html#__className-class">.__className</a>
-        <a href="../../classes/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>
-        <a href="../../classes/Joosy/Module.html#merge-class">.merge</a>
-        <a href="../../classes/Joosy/Module.html#include-class">.include</a>
+                <a href="undefinedclasses/Joosy/Module.html#__className-class">.__className</a>,
+                <a href="undefinedclasses/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>,
+                <a href="undefinedclasses/Joosy/Module.html#merge-class">.merge</a>,
+                <a href="undefinedclasses/Joosy/Module.html#include-class">.include</a>,
         <a href="../../classes/Joosy/Module.html#extend-class">.extend</a>
       </p>
       <h2>Class Method Details</h2>
@@ -263,6 +277,12 @@ form.fill @resource</code></pre>
       </span>
       &mdash;
       <span class='desc'>Options</span>
+    </li>
+  </ul>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='../../classes/Joosy/Form.html#constructor-instance'>#constructor</a>
     </li>
   </ul>
 </div>
@@ -331,7 +351,7 @@ set to POST.
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>`(XHR) -&gt; Bollean` to trigger right before submit. By default will run form invalidation cleanup. This behavior can be canceled by returning false from your own before callback. Both of callbacks will run if you return true.</span>
+      <span class='desc'>`(XHR) -> Bollean` to trigger right before submit. By default will run form invalidation cleanup. This behavior can be canceled by returning false from your own before callback. Both of callbacks will run if you return true.</span>
     </li>
     <li>
       <span class='name'>success</span>
@@ -339,7 +359,7 @@ set to POST.
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>`(Object) -&gt; null` triggers on 200 HTTP code from server.  Pases in the parsed JSON.</span>
+      <span class='desc'>`(Object) -> null` triggers on 200 HTTP code from server.  Pases in the parsed JSON.</span>
     </li>
     <li>
       <span class='name'>progress</span>
@@ -347,7 +367,7 @@ set to POST.
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>`(Float) -&gt; null` runs periodically while form is uploading</span>
+      <span class='desc'>`(Float) -> null` runs periodically while form is uploading</span>
     </li>
     <li>
       <span class='name'>error</span>
@@ -355,7 +375,7 @@ set to POST.
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>`(Object) -&gt; Boolean` triggers if server responded with anything but 200. By default will run form invalidation routine. This behavior can be canceled by returning false from your own error callback. Both of callbacks will run if you return true.</span>
+      <span class='desc'>`(Object) -> Boolean` triggers if server responded with anything but 200. By default will run form invalidation routine. This behavior can be canceled by returning false from your own error callback. Both of callbacks will run if you return true.</span>
     </li>
   </ul>
 </div>
@@ -674,10 +694,10 @@ inner # { &quot;foo[bar][baz]&quot;: [] }</code></pre>
     </div>
     <div id='footer'>
   Generated on
-  Sun Feb 19 2012 23:36:12 GMT+0700 (ICT)
+  Tue Mar 13 2012 15:52:10 GMT+0400 (MSK)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
-  v0.2.1
+  v0.4.2
   (Node.js v0.6.8).
   &#10034;
   <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>

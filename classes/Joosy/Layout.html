@@ -8,16 +8,26 @@
   <body>
     <div id='header'>
   <div id='menu'>
-    <a href='../../_index.html' title='Index'>Index</a>
+    <a href='../../class_index.html' title='Index'>Index</a>
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
     <span class='title'>Layout</span>
-  </div>
-  <div id='search'>
-    <a id='class_list_link' href='../../class_list.html'>Class List</a>
-    <a id='method_list_link' href='../../method_list.html'>Method List</a>
-    <a id='file_list_link' href='../../file_list.html'>File List</a>
+    <nav>
+      <ul>
+        <li class='frames'>
+          (<a class='frames' href='../../frames.html'>frames</a>)
+        </li>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../class_list.html'>Class List</a>
+      <a id='method_list_link' href='../../method_list.html'>Method List</a>
+      <a id='file_list_link' href='../../file_list.html'>File List</a>
+    </div>
   </div>
   <iframe id='search_frame'></iframe>
 </div>
@@ -26,14 +36,18 @@
         Class:
         Joosy.Layout
       </h1>
-      <dl class='box'>
-        <dt>Inherits:</dt>
-        <dd>
-          <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
-        </dd>
-        <dt>Defined in:</dt>
-        <dd>app/assets/javascripts/joosy/core/layout.js.coffee</dd>
-      </dl>
+      <table class='box'>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Defined in:</td>
+          <td>app/assets/javascripts/joosy/core/layout.js.coffee</td>
+        </tr>
+      </table>
       <h2>Overview</h2>
       <div class='docstring'>
   <p>Base class for all of your Joosy Layouts.
@@ -51,6 +65,12 @@
   </div>
 </div>
 <div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='http://guides.joosy.ws/guides/layouts-pages-and-routing.html'>http://guides.joosy.ws/guides/layouts-pages-and-routing.html</a>
+    </li>
+  </ul>
 </div>
       <h2>Constant Summary</h2>
       <h3 class='inherited'>
@@ -182,10 +202,10 @@
         <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
       </h3>
       <p class='inherited'>
-        <a href="../../classes/Joosy/Module.html#__className-class">.__className</a>
-        <a href="../../classes/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>
-        <a href="../../classes/Joosy/Module.html#merge-class">.merge</a>
-        <a href="../../classes/Joosy/Module.html#include-class">.include</a>
+                <a href="undefinedclasses/Joosy/Module.html#__className-class">.__className</a>,
+                <a href="undefinedclasses/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>,
+                <a href="undefinedclasses/Joosy/Module.html#merge-class">.merge</a>,
+                <a href="undefinedclasses/Joosy/Module.html#include-class">.include</a>,
         <a href="../../classes/Joosy/Module.html#extend-class">.extend</a>
       </p>
       <h2>Class Method Details</h2>
@@ -349,6 +369,12 @@ It should be used to setup appearance effects of layout.
       - (void) <strong>navigate</strong>(args...)
     </p>
     <div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      Joosy.Router::navigate
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -445,10 +471,10 @@ Sets the base template dir to app_name/templates/layouts
     </div>
     <div id='footer'>
   Generated on
-  Sun Feb 19 2012 23:36:12 GMT+0700 (ICT)
+  Tue Mar 13 2012 15:52:10 GMT+0400 (MSK)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
-  v0.2.1
+  v0.4.2
   (Node.js v0.6.8).
   &#10034;
   <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>

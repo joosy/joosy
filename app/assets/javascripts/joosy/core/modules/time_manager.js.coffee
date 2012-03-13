@@ -1,4 +1,16 @@
+#
+# Comfortable and clever wrappers for timeouts management
+#
+# @module
+#
 Joosy.Modules.TimeManager =
+  
+  #
+  # Registeres timeout for current object
+  #
+  # @param [Integer] timeout          Miliseconds to wait
+  # @param [Function] action          Action to run on timeout
+  #
   setTimeout: (timeout, action) ->
     @__timeouts ||= []
 
@@ -7,6 +19,12 @@ Joosy.Modules.TimeManager =
 
     timer
 
+  #
+  # Registeres interval for current object
+  #
+  # @param [Integer] delay            Miliseconds between runs
+  # @param [Function] action          Action to run
+  #
   setInterval: (delay, action) ->
     @__intervals ||= []
 
@@ -15,6 +33,9 @@ Joosy.Modules.TimeManager =
 
     timer
 
+  #
+  # Drops all registered timeouts and intervals for this object
+  #
   __clearTime: ->
     if @__intervals
       for entry in @__intervals

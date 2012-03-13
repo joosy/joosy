@@ -1,4 +1,16 @@
+#
+# Widgets management routines
+#
+# @module
+#
 Joosy.Modules.WidgetsManager =
+
+  #
+  # Registeres and runs widget inside specified container
+  #
+  # @param [DOM] container              jQuery or direct dom node object
+  # @param [Joosy.Widget] widget        Class or object of Joosy.Widget to register
+  #
   registerWidget: (container, widget) ->
     if Joosy.Module.hasAncestor widget, Joosy.Widget
       widget = new widget()
@@ -8,11 +20,19 @@ Joosy.Modules.WidgetsManager =
 
     widget
 
+  #
+  # Unregisteres and destroys widget
+  #
+  # @param [Joosy.Widget] widget          Object of Joosy.Widget to unregister
+  #
   unregisterWidget: (widget) ->
     widget.__unload()
 
     @__activeWidgets.splice @__activeWidgets.indexOf(widget), 1
 
+  #
+  # Gathers widgets definitions from current and super classes
+  #
   __collectWidgets: ->
     widgets = Object.extended @widgets || {}
 
@@ -22,6 +42,9 @@ Joosy.Modules.WidgetsManager =
 
     widgets
 
+  #
+  # Intialize all widgets for current object
+  #
   __setupWidgets: ->
     widgets    = @__collectWidgets()
     registered = Object.extended()
@@ -52,6 +75,9 @@ Joosy.Modules.WidgetsManager =
       value.each (widget, count) =>
         Joosy.Modules.Log.debugAs @, "Widget #{widget} registered at '#{selector}'. Elements: #{count}"
 
+  #
+  # Unregister all widgets for current object
+  #
   __unloadWidgets: ->
     if @__activeWidgets
       for widget in @__activeWidgets

@@ -1,8 +1,9 @@
 #
 # Preloader for libraries using `script src` without any caching magic
 #
-# Example:
+# @example Basic usage
 #   libraries = [['/test1.js'], ['/test2.js']]
+#   
 #   InlinePreloader.load libraries,
 #     start:    -> console.log 'preloading started'
 #     complete: -> console.log 'preloading finished'

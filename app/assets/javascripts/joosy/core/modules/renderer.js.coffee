@@ -1,13 +1,28 @@
 #= require_tree ../templaters
 #= require metamorph
 
+#
+# Core DOM rendering mechanics
+#
+# @module
+# @todo           Describe this scary thing o_O
+#
 Joosy.Modules.Renderer =
 
+  #
+  # Default behavior for non-set renderer (empty template?)
+  #
   __renderer: ->
     throw new Error "#{Joosy.Module.__className @constructor} does not have an attached template"
 
   __helpers: null
 
+  #
+  # Defines class-level helpers: @view and @helpers
+  #
+  # View (@view): Sets the curent template by specifying its name or lambda
+  # Helpers (@helpers): Lists set of helpers' namespaces to include
+  #
   included: ->
     @view = (template, options={}) ->
       if Object.isFunction template

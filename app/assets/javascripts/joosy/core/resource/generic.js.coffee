@@ -24,8 +24,8 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @note This has no use in Generic but is required in any descendant
   # 
   # @param [mixed] Source can be any type including lambda.
-  #   If lambda is given resource will not expect direct {::create} calls
-  #   You'll have to prepare descendant with {::at} first.
+  #   If lambda is given resource will not expect direct {Joosy.Resource.Generic.create} calls
+  #   You'll have to prepare descendant with {Joosy.Resource.Generic.at} first.
   #
   # @example Simple case
   #   Class Y extends Joosy.Resource.Generic
@@ -43,9 +43,9 @@ class Joosy.Resource.Generic extends Joosy.Module
   @source: (source) -> @__source = source
   
   #
-  # Creates the proxy of current resource with proper {::source} value
+  # Creates the proxy of current resource with proper {Joosy.Resource.Generic.source} value
   #
-  # @note Should be used together with lambda source (see {::source} for example)
+  # @note Should be used together with lambda source (see {Joosy.Resource.Generic.source} for example)
   #
   @at: ->
     if !Object.isFunction @__source
@@ -79,7 +79,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   @collection: (klass) -> @::__collection = -> klass
   
   #
-  # Implements {::collection} default behavior.
+  # Implements {Joosy.Resource.Generic.collection} default behavior.
   #
   __collection: ->
     named = @__entityName.camelize().pluralize() + 'Collection'
@@ -216,7 +216,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       [@e, path]
 
   #
-  # Wrapper for {#create} magic
+  # Wrapper for {Joosy.Resource.Generic.create} magic
   #
   __call: (path, value) ->
     if arguments.length > 1

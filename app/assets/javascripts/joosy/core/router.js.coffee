@@ -13,6 +13,8 @@
 #     '/:id/edit'   : Resource.EditPage
 #     '/new'        : Resource.EditPage
 #
+# @module
+#
 Joosy.Router =
   #
   # The Object containing route parts in keys and pages/lambdas in values

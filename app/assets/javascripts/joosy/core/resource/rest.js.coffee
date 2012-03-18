@@ -25,7 +25,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   __primaryKey: 'id'
   
   #
-  # Implements {::collection} default behavior.
+  # Implements `@collection` default behavior.
   # Changes the default fallback to Joosy.Resource.RESTCollection.
   #
   __collection: ->
@@ -43,7 +43,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   @primary: (primary) -> @::__primaryKey = primary
 
   #
-  # Should NOT be called directly, use {::create} instead
+  # Should NOT be called directly, use {Joosy.Resource.Generic.create} instead
   #
   # @param [Integer, String, Object] description    ID of entity or full data to store
   #

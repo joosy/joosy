@@ -56,7 +56,7 @@ class Joosy.Page extends Joosy.Module
   #
   # Sets the method which will controll the painting preparation proccess.
   #
-  # This method will be called right ater previous page {::erase} and in parallel with
+  # This method will be called right ater previous page {Joosy.Page.erase} and in parallel with
   #   page data fetching so you can use it to initiate preloader.
   #
   # @note Given method will be called with `complete` function as parameter. As soon as your
@@ -201,7 +201,7 @@ class Joosy.Page extends Joosy.Module
         @__bootstrap()
 
   #
-  # @see {Joosy.Router#navigate}
+  # @see Joosy.Router.navigate
   #
   navigate: (args...) ->
     Joosy.Router.navigate(args...)
@@ -216,7 +216,7 @@ class Joosy.Page extends Joosy.Module
   #
   # Freezes the page height through $(html).
   #
-  # Required to implement better {::scroll} behavior.
+  # Required to implement better {Joosy.Page.scroll} behavior.
   #
   __fixHeight: ->
     $('html').css 'min-height', $(document).height()

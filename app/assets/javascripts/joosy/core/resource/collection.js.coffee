@@ -3,8 +3,8 @@
 # Turns JSON array into array of Resources and manages them.
 #
 # @note You should not use Collection directly. It will be
-#   automatically created by things like {Joosy.Resource.Generic#map} 
-#   or {Joosy.Resource.REST#find}.
+#   automatically created by things like {Joosy.Resource.Generic.map} 
+#   or {Joosy.Resource.REST.find}.
 #
 # @example Basic sample
 #   class R extends Joosy.Resource.Generic
@@ -43,8 +43,8 @@ class Joosy.Resource.Collection extends Joosy.Module
   data: []
   
   #
-  # If model param was empty it will fallback to {::class}.
-  # If both param and {::class} were empty it will throw an exception.
+  # If model param was empty it will fallback to {Joosy.Collection.class}.
+  # If both param and {Joosy.Collection.class} were empty it will throw an exception.
   #
   # @param [Class] model    Resource class which this collection will handle
   #

@@ -18,7 +18,7 @@ class Joosy.Module
   #   Remember: minifcation will rename your classes. Therefore it
   #   is only intended for development debugging purposes.
   #
-  # @note Go @jashkenas Go! Give us {https://github.com/jashkenas/coffee-script/issues/2052}.
+  # @note Go @jashkenas Go! Give us https://github.com/jashkenas/coffee-script/issues/2052.
   #   Please go vote for this feature if you are reading this. It will
   #   give us ability to eleminate a lot of boilerplate for you.
   #
@@ -57,7 +57,7 @@ class Joosy.Module
   #
   # Simple and fast shallow merge implementation.
   #
-  # This is here due to: {https://github.com/andrewplummer/Sugar/issues/100}.
+  # This is here due to: https://github.com/andrewplummer/Sugar/issues/100.
   # This bug was closed and we got some performance but this implementation is
   # still like 10x fater for basic tasks.
   #

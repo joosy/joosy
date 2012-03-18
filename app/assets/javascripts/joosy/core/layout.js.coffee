@@ -30,7 +30,7 @@ class Joosy.Layout extends Joosy.Module
   #
   # Sets the method which will controll the painting preparation proccess.
   #
-  # This method will be called right ater previous layout {::erase} and in parallel with
+  # This method will be called right ater previous layout {Joosy.Layout.erase} and in parallel with
   #   layout data fetching so you can use it to initiate preloader.
   #
   # @note Given method will be called with `complete` function as parameter. As soon as your
@@ -86,7 +86,7 @@ class Joosy.Layout extends Joosy.Module
   #   preparations are done you should call that function.
   #
   # @note You are strongly encouraged to NOT fetch anything with Layout!
-  #   Use {Joosy.Page::fetch}
+  #   Use {Joosy.Page.fetch}
   #
   # @example Basic usage
   #   @fetch (complete) ->
@@ -106,7 +106,7 @@ class Joosy.Layout extends Joosy.Module
   constructor: (@params) ->
 
   #
-  # @see Joosy.Router::navigate
+  # @see Joosy.Router.navigate
   #
   navigate: (args...) ->
     Joosy.Router.navigate(args...)

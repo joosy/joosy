@@ -106,7 +106,7 @@ class Joosy.Layout extends Joosy.Module
   constructor: (@params) ->
 
   #
-  # @see Joosy.Router.navigate
+  # @see Joosy.Router#navigate
   #
   navigate: (args...) ->
     Joosy.Router.navigate(args...)
@@ -122,7 +122,7 @@ class Joosy.Layout extends Joosy.Module
   # Layout bootstrap proccess.
   #
   #   * {Joosy.Modules.Container#refreshElements}
-  #   * {Joosy.Modules.Events#__delegateEvents}
+  #   * {Joosy.Modules.Container#__delegateEvents}
   #   * {Joosy.Modules.WidgetsManager#__setupWidgets}
   #   * {Joosy.Modules.Filters#__runAfterLoads}
   #

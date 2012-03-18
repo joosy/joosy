@@ -201,7 +201,7 @@ class Joosy.Page extends Joosy.Module
         @__bootstrap()
 
   #
-  # @see Joosy.Router.navigate
+  # @see Joosy.Router#navigate
   #
   navigate: (args...) ->
     Joosy.Router.navigate(args...)
@@ -231,7 +231,7 @@ class Joosy.Page extends Joosy.Module
   # Page bootstrap proccess
   #
   #   * {Joosy.Modules.Container#refreshElements}
-  #   * {Joosy.Modules.Events#__delegateEvents}
+  #   * {Joosy.Modules.Container#__delegateEvents}
   #   * {Joosy.Modules.WidgetsManager#__setupWidgets}
   #   * {Joosy.Modules.Filters#__runAfterLoads}
   #   * Scrolling

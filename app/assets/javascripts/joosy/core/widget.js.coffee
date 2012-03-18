@@ -52,7 +52,7 @@ class Joosy.Widget extends Joosy.Module
   #
   #   * Rendering (if required)
   #   * {Joosy.Modules.Container#refreshElements}
-  #   * {Joosy.Modules.Events#__delegateEvents}
+  #   * {Joosy.Modules.Container#__delegateEvents}
   #   * {Joosy.Modules.Filters#__runAfterLoads}
   #
   # @param [Joosy.Page, Joosy.Layout]     Page or Layout to attach to

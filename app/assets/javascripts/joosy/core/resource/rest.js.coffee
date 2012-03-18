@@ -61,7 +61,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   # Returns collection if no value or Object (with parameters) given.
   #
   # If first parameter is a Function it's considered as a result callback,
-  #   in this case parameters will be considered equal to {}
+  #   in this case parameters will be considered equal to `{ }`
   #
   # @example Different find
   #   class Rocket extends Joosy.Resource.REST

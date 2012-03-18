@@ -43,8 +43,8 @@ class Joosy.Resource.Collection extends Joosy.Module
   data: []
   
   #
-  # If model param was empty it will fallback to {Joosy.Collection.class}.
-  # If both param and {Joosy.Collection.class} were empty it will throw an exception.
+  # If model param was empty it will fallback to `@model`
+  # If both param and `@model` were empty it will throw an exception.
   #
   # @param [Class] model    Resource class which this collection will handle
   #

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Joosy API</title>
+  <link rel='stylesheet' href='../assets/codo.css' type='text/css'>
+  <script src='../assets/codo.js'></script>
+</head>
+  <body>
+    <div id='header'>
+  <div id='menu'>
+    <a href='../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>CachingPreloader</span>
+    <nav>
+      <ul>
+        <li class='frames'>
+          (<a class='frames' href='../frames.html'>frames</a>)
+        </li>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../class_list.html'>Class List</a>
+      <a id='class_list_link' href='../module_list.html'>Module List</a>
+      <a id='method_list_link' href='../method_list.html'>Method List</a>
+      <a id='file_list_link' href='../file_list.html'>File List</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+</div>
+    <div id='content'>
+      <h1>
+        Module:
+        CachingPreloader
+      </h1>
+      <dl class='box'>
+        <dt>Defined in:</dt>
+        <dd>app/assets/javascripts/joosy/preloaders/caching.js.coffee</dd>
+      </dl>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    The `start` callback will only be called if loading required.  While working with cache, `complete` is the only callback that will be triggered.
+  </div>
+  <p>Preloader for libraries with localStorage cache
+
+
+
+
+</p>
+
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>libraries = [[&apos;/test1.js&apos;, 100], [&apos;/test2.js&apos;, 500]] #100, 500 - size in bytes
+
+CachingPreloader.load libraries,
+  start:    -&gt; console.log &apos;preloading started&apos;
+  progress: (percent) -&gt; console.log &quot;#{percent}% loaded&quot;
+  complete: -&gt; console.log &apos;preloading finished&apos;</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+      <h2>Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#load-instance'>
+        - (void) <strong>load</strong>(libraries, options = {})
+      </a>
+    </span>
+    <span class='desc'>
+      Loads (or takes from cache) set of libraries using xhr and caches them in localStorage See class description for example of usage * start: `() -> null` to call before load starts * progress: `(int percents) -> null` to call each 100ms of load in progress * complete: `() -> null` to call after load completes
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#check-instance'>
+        - (void) <strong>check</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Checks if we can load libraries or have to download them over
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#escapeStr-instance'>
+        - (void) <strong>escapeStr</strong>(str)
+      </a>
+    </span>
+    <span class='desc'>
+      Escapes non-printable terminal chars before storing to localStorage to prevent IE bug
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#restore-instance'>
+        - (void) <strong>restore</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Gets sources of scripts from localStorage and evals them
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#download-instance'>
+        - (void) <strong>download</strong>(libraries)
+      </a>
+    </span>
+    <span class='desc'>
+      Loads set of libraries using xhr and caches them in localStorage
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#ajax-instance'>
+        - (void) <strong>ajax</strong>(url, size, callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Runs XHR request to get single script body Binds poller to call @progress each 100ms if possible (not IE *doh*)
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#clean-instance'>
+        - (void) <strong>clean</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Searches through localStorage for outdated entries with our prefix and removes them
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='load-instance'>
+      - (void) <strong>load</strong>(libraries, options = {})
+    </p>
+    <div class='docstring'>
+  <p>Loads (or takes from cache) set of libraries using xhr and caches them in localStorage
+See class description for example of usage
+
+</p>
+<ul>
+<li>start: <code>() -&gt; null</code> to call before load starts</li>
+<li>progress: <code>(int percents) -&gt; null</code> to call each 100ms of load in progress</li>
+<li>complete: <code>() -&gt; null</code> to call after load completes</li>
+</ul>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>2-levels</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>array of libraries URLs i.e. [['/test1.js', 10],['/test2.js', 20]] Second param of inner level is a size of script in bytes. Can be undefined.</span>
+    </li>
+    <li>
+      <span class='name'>Available</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>options:</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='check-instance'>
+      - (void) <strong>check</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Checks if we can load libraries or have to download them over
+
+</p>
+
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='escapeStr-instance'>
+      - (void) <strong>escapeStr</strong>(str)
+    </p>
+    <div class='docstring'>
+  <p>Escapes non-printable terminal chars before storing to localStorage to prevent IE bug
+
+
+</p>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>String,</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>that will be prepared for localStorage</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='restore-instance'>
+      - (void) <strong>restore</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Gets sources of scripts from localStorage and evals them
+
+</p>
+
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='download-instance'>
+      - (void) <strong>download</strong>(libraries)
+    </p>
+    <div class='docstring'>
+  <p>Loads set of libraries using xhr and caches them in localStorage
+
+
+</p>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>2-levels</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>array of libraries URLs i.e. [['/test1.js', 100],['/test2.js', 500]] Second param of inner level is a size of script in bytes. Can be undefined.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='ajax-instance'>
+      - (void) <strong>ajax</strong>(url, size, callback)
+    </p>
+    <div class='docstring'>
+  <p>Runs XHR request to get single script body
+Binds poller to call @progress each 100ms if possible (not IE <em>doh</em>)
+
+
+</p>
+
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>URL</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>to download from</span>
+    </li>
+    <li>
+      <span class='name'>Expected</span>
+      <span class='type'>
+        (<tt>Float</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>size of download (to calculate percents) Size can not be taken from headers since we are supposed to get gziped content</span>
+    </li>
+    <li>
+      <span class='name'>`(xhr)</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>-> null` to call after script was loaded</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='clean-instance'>
+      - (void) <strong>clean</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Searches through localStorage for outdated entries with our prefix and removes them
+
+</p>
+
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Sun Mar 18 2012 19:00:50 GMT+0400 (MSK)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
+  v0.5.0
+  (Node.js v0.6.8).
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

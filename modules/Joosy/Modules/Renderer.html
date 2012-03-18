@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Joosy API</title>
+  <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
+  <script src='../../../assets/codo.js'></script>
+</head>
+  <body>
+    <div id='header'>
+  <div id='menu'>
+    <a href='../../../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Modules</span>
+    &raquo;
+    <span class='title'>Renderer</span>
+    <nav>
+      <ul>
+        <li class='frames'>
+          (<a class='frames' href='../../../frames.html'>frames</a>)
+        </li>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../../class_list.html'>Class List</a>
+      <a id='class_list_link' href='../../../module_list.html'>Module List</a>
+      <a id='method_list_link' href='../../../method_list.html'>Method List</a>
+      <a id='file_list_link' href='../../../file_list.html'>File List</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+</div>
+    <div id='content'>
+      <h1>
+        Module:
+        Joosy.Modules.Renderer
+      </h1>
+      <dl class='box'>
+        <dt>Defined in:</dt>
+        <dd>app/assets/javascripts/joosy/core/modules/renderer.js.coffee</dd>
+      </dl>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <div class='note todo'>
+    <strong>TODO:</strong>
+    Describe this scary thing o_O
+  </div>
+  <p>Core DOM rendering mechanics
+
+
+</p>
+
+</div>
+<div class='tags'>
+</div>
+      <h2>Constant Summary</h2>
+      <dl class='constants'>
+        <dt id='__helpers-constant'>
+          __helpers
+          =
+          <div class='tags'>
+</div>
+        </dt>
+        <dd>
+          <pre><code class='coffee'>null</code></pre>
+        </dd>
+      </dl>
+      <h2>Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#__renderer-instance'>
+        - (void) <strong>__renderer</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Default behavior for non-set renderer (empty template?)
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#included-instance'>
+        - (void) <strong>included</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Defines class-level helpers: @view and @helpers View (@view): Sets the curent template by specifying its name or lambda Helpers (@helpers): Lists set of helpers' namespaces to include
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__instantiateHelpers-instance'>
+        - (void) <strong>__instantiateHelpers</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__proxifyHelpers-instance'>
+        - (void) <strong>__proxifyHelpers</strong>(locals)
+      </a>
+    </span>
+    <span class='desc'>
+      If we do not have __proto__ available...
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#render-instance'>
+        - (void) <strong>render</strong>(template, locals = {}, parentStackPointer = false)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#renderDynamic-instance'>
+        - (void) <strong>renderDynamic</strong>(template, locals = {}, parentStackPointer = false)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__render-instance'>
+        - (void) <strong>__render</strong>(dynamic, template, locals = {}, parentStackPointer = false)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__renderingStackElement-instance'>
+        - (void) <strong>__renderingStackElement</strong>(parent = null)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__renderingStackChildFor-instance'>
+        - (void) <strong>__renderingStackChildFor</strong>(parentPointer)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__removeMetamorphs-instance'>
+        - (void) <strong>__removeMetamorphs</strong>(stackPointer = false)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='__renderer-instance'>
+      - (void) <strong>__renderer</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Default behavior for non-set renderer (empty template?)
+
+</p>
+
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='included-instance'>
+      - (void) <strong>included</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Defines class-level helpers: @view and @helpers
+
+</p>
+<p>View (@view): Sets the curent template by specifying its name or lambda
+Helpers (@helpers): Lists set of helpers&#39; namespaces to include
+
+</p>
+
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__instantiateHelpers-instance'>
+      - (void) <strong>__instantiateHelpers</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__proxifyHelpers-instance'>
+      - (void) <strong>__proxifyHelpers</strong>(locals)
+    </p>
+    <div class='docstring'>
+  <p>If we do not have <strong>proto</strong> available...
+</p>
+
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='render-instance'>
+      - (void) <strong>render</strong>(template, locals = {}, parentStackPointer = false)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='renderDynamic-instance'>
+      - (void) <strong>renderDynamic</strong>(template, locals = {}, parentStackPointer = false)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__render-instance'>
+      - (void) <strong>__render</strong>(dynamic, template, locals = {}, parentStackPointer = false)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__renderingStackElement-instance'>
+      - (void) <strong>__renderingStackElement</strong>(parent = null)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__renderingStackChildFor-instance'>
+      - (void) <strong>__renderingStackChildFor</strong>(parentPointer)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__removeMetamorphs-instance'>
+      - (void) <strong>__removeMetamorphs</strong>(stackPointer = false)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Sun Mar 18 2012 19:00:50 GMT+0400 (MSK)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
+  v0.5.0
+  (Node.js v0.6.8).
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

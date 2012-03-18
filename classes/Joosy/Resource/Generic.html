@@ -27,6 +27,7 @@
     </nav>
     <div id='search'>
       <a id='class_list_link' href='../../../class_list.html'>Class List</a>
+      <a id='class_list_link' href='../../../module_list.html'>Module List</a>
       <a id='method_list_link' href='../../../method_list.html'>Method List</a>
       <a id='file_list_link' href='../../../file_list.html'>File List</a>
     </div>
@@ -109,7 +110,7 @@ r(&apos;foo.bar&apos;, &apos;fluffy&apos;)    # triggers &apos;changed&apos;</co
       </a>
     </span>
     <span class='desc'>
-      Creates the proxy of current resource with proper {::source} value
+      Creates the proxy of current resource with proper {Joosy.Resource.Generic.source} value
     </span>
   </li>
   <li>
@@ -172,7 +173,7 @@ r(&apos;foo.bar&apos;, &apos;fluffy&apos;)    # triggers &apos;changed&apos;</co
       </a>
     </span>
     <span class='desc'>
-      Implements {::collection} default behavior.
+      Implements {Joosy.Resource.Generic.collection} default behavior.
     </span>
   </li>
   <li>
@@ -222,7 +223,7 @@ r(&apos;foo.bar&apos;, &apos;fluffy&apos;)    # triggers &apos;changed&apos;</co
       </a>
     </span>
     <span class='desc'>
-      Wrapper for {#create} magic
+      Wrapper for {Joosy.Resource.Generic.create} magic
     </span>
   </li>
   <li>
@@ -303,7 +304,7 @@ r = R.at(&apos;foo/bar&apos;).create {}   # will work as expected</code></pre>
         (<tt>mixed</tt>)
       </span>
       &mdash;
-      <span class='desc'>can be any type including lambda. If lambda is given resource will not expect direct {::create} calls You'll have to prepare descendant with {::at} first.</span>
+      <span class='desc'>can be any type including lambda. If lambda is given resource will not expect direct {Joosy.Resource.Generic.create} calls You'll have to prepare descendant with {Joosy.Resource.Generic.at} first.</span>
     </li>
   </ul>
 </div>
@@ -315,9 +316,9 @@ r = R.at(&apos;foo/bar&apos;).create {}   # will work as expected</code></pre>
     <div class='docstring'>
   <div class='note'>
     <strong>Note:</strong>
-    Should be used together with lambda source (see {::source} for example)
+    Should be used together with lambda source (see <a href='../../../classes/Joosy/Resource/Generic.html#source-class'>Joosy.Resource.Generic.source</a> for example)
   </div>
-  <p>Creates the proxy of current resource with proper {::source} value
+  <p>Creates the proxy of current resource with proper <a href='../../../classes/Joosy/Resource/Generic.html#source-class'>Joosy.Resource.Generic.source</a> value
 
 
 </p>
@@ -494,7 +495,7 @@ data changes. See class example
       - (void) <strong>__collection</strong>()
     </p>
     <div class='docstring'>
-  <p>Implements {::collection} default behavior.
+  <p>Implements <a href='../../../classes/Joosy/Resource/Generic.html#collection-class'>Joosy.Resource.Generic.collection</a> default behavior.
 
 </p>
 
@@ -646,7 +647,7 @@ data changes. See class example
       - (void) <strong>__call</strong>(path, value)
     </p>
     <div class='docstring'>
-  <p>Wrapper for {#create} magic
+  <p>Wrapper for <a href='../../../classes/Joosy/Resource/Generic.html#create-class'>Joosy.Resource.Generic.create</a> magic
 
 </p>
 
@@ -718,10 +719,10 @@ data changes. See class example
     </div>
     <div id='footer'>
   Generated on
-  Tue Mar 13 2012 15:52:10 GMT+0400 (MSK)
+  Sun Mar 18 2012 19:00:50 GMT+0400 (MSK)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
-  v0.4.2
+  v0.5.0
   (Node.js v0.6.8).
   &#10034;
   <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>

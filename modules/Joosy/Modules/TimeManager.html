@@ -12,9 +12,9 @@
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
-    <span class='title'>Templaters</span>
+    <span class='title'>Modules</span>
     &raquo;
-    <span class='title'>RailsJST</span>
+    <span class='title'>TimeManager</span>
     <nav>
       <ul>
         <li class='frames'>
@@ -36,76 +36,64 @@
 </div>
     <div id='content'>
       <h1>
-        Class:
-        Joosy.Templaters.RailsJST
+        Module:
+        Joosy.Modules.TimeManager
       </h1>
-      <table class='box'>
-        <tr>
-          <td>Defined in:</td>
-          <td>app/assets/javascripts/joosy/core/templaters/rails_jst.js.coffee</td>
-        </tr>
-      </table>
+      <dl class='box'>
+        <dt>Defined in:</dt>
+        <dd>app/assets/javascripts/joosy/core/modules/time_manager.js.coffee</dd>
+      </dl>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Rails JST template precompilation binding
+  <p>Comfortable and clever wrappers for timeouts management
+
 
 </p>
 
 </div>
 <div class='tags'>
 </div>
-      <h2>Instance Method Summary</h2>
+      <h2>Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(applicationName)
+      <a href='#setTimeout-instance'>
+        - (void) <strong>setTimeout</strong>(timeout, action)
       </a>
     </span>
-    <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      
+      Registeres timeout for current object
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#buildView-instance'>
-        - (void) <strong>buildView</strong>(name)
+      <a href='#setInterval-instance'>
+        - (void) <strong>setInterval</strong>(delay, action)
       </a>
     </span>
     <span class='desc'>
-      Gets template lambda by its full name
+      Registeres interval for current object
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#resolveTemplate-instance'>
-        - (void) <strong>resolveTemplate</strong>(section, template, entity)
+      <a href='#__clearTime-instance'>
+        - (void) <strong>__clearTime</strong>()
       </a>
     </span>
     <span class='desc'>
-      Gets full name of template by several params
+      Drops all registered timeouts and intervals for this object
     </span>
   </li>
 </ul>
-      <h2>Constructor Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(applicationName)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-</div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='buildView-instance'>
-      - (void) <strong>buildView</strong>(name)
+    <p class='signature' id='setTimeout-instance'>
+      - (void) <strong>setTimeout</strong>(timeout, action)
     </p>
     <div class='docstring'>
-  <p>Gets template lambda by its full name
+  <p>Registeres timeout for current object
 
 
 </p>
@@ -115,22 +103,30 @@
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>name</span>
+      <span class='name'>timeout</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Integer</tt>)
       </span>
       &mdash;
-      <span class='desc'>Template name 'foo/bar'</span>
+      <span class='desc'>Miliseconds to wait</span>
+    </li>
+    <li>
+      <span class='name'>action</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Action to run on timeout</span>
     </li>
   </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='resolveTemplate-instance'>
-      - (void) <strong>resolveTemplate</strong>(section, template, entity)
+    <p class='signature' id='setInterval-instance'>
+      - (void) <strong>setInterval</strong>(delay, action)
     </p>
     <div class='docstring'>
-  <p>Gets full name of template by several params
+  <p>Registeres interval for current object
 
 
 </p>
@@ -140,30 +136,35 @@
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>section</span>
+      <span class='name'>delay</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Integer</tt>)
       </span>
       &mdash;
-      <span class='desc'>Section of templates like pages/layouts/...</span>
+      <span class='desc'>Miliseconds between runs</span>
     </li>
     <li>
-      <span class='name'>template</span>
+      <span class='name'>action</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Internal template path</span>
-    </li>
-    <li>
-      <span class='name'>entity</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Entity to lookup template path by its namespace</span>
+      <span class='desc'>Action to run</span>
     </li>
   </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__clearTime-instance'>
+      - (void) <strong>__clearTime</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Drops all registered timeouts and intervals for this object
+
+</p>
+
+</div>
+<div class='tags'>
 </div>
   </div>
 </div>

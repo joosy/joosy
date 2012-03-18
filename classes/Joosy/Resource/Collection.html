@@ -27,6 +27,7 @@
     </nav>
     <div id='search'>
       <a id='class_list_link' href='../../../class_list.html'>Class List</a>
+      <a id='class_list_link' href='../../../module_list.html'>Module List</a>
       <a id='method_list_link' href='../../../method_list.html'>Method List</a>
       <a id='file_list_link' href='../../../file_list.html'>File List</a>
     </div>
@@ -54,7 +55,7 @@
       <div class='docstring'>
   <div class='note'>
     <strong>Note:</strong>
-    You should not use Collection directly. It will be automatically created by things like {Joosy.Resource.Generic#map}  or {Joosy.Resource.REST#find}.
+    You should not use Collection directly. It will be automatically created by things like {Joosy.Resource.Generic.map}  or {Joosy.Resource.REST.find}.
   </div>
   <p>Basic collection of Resources.
 Turns JSON array into array of Resources and manages them.
@@ -125,7 +126,7 @@ collection.each (resource) -&gt;
     </span>
     <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      If model param was empty it will fallback to {::class}.
+      If model param was empty it will fallback to {Joosy.Collection.class}.
     </span>
   </li>
   <li>
@@ -300,8 +301,8 @@ collection.each (resource) -&gt;
       - (void) <strong>constructor</strong>(model = false)
     </p>
     <div class='docstring'>
-  <p>If model param was empty it will fallback to {::class}.
-If both param and {::class} were empty it will throw an exception.
+  <p>If model param was empty it will fallback to {Joosy.Collection.class}.
+If both param and {Joosy.Collection.class} were empty it will throw an exception.
 
 
 </p>
@@ -647,10 +648,10 @@ If both param and {::class} were empty it will throw an exception.
     </div>
     <div id='footer'>
   Generated on
-  Tue Mar 13 2012 15:52:10 GMT+0400 (MSK)
+  Sun Mar 18 2012 19:00:50 GMT+0400 (MSK)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
-  v0.4.2
+  v0.5.0
   (Node.js v0.6.8).
   &#10034;
   <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>

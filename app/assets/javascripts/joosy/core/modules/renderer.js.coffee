@@ -92,6 +92,7 @@ Joosy.Modules.Renderer =
     stack = @__renderingStackChildFor parentStackPointer
     
     stack.template = template
+    stack.locals   = locals
     
     isResource   = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Generic
     isCollection = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Collection
@@ -106,11 +107,6 @@ Joosy.Modules.Renderer =
     
     if !Object.isObject(locals) && !isResource && !isCollection
       throw new Error "#{Joosy.Module.__className @}> locals (maybe @data?) not in: dumb hash, Resource, Collection"
-
-    if isResource
-      stack.locals = locals.e
-    else
-      stack.locals = locals
       
     renderers =
       render: (template, locals={}) =>
@@ -120,7 +116,12 @@ Joosy.Modules.Renderer =
         
     context = =>
       data = {}
-      Joosy.Module.merge data, stack.locals
+
+      if isResource
+        Joosy.Module.merge data, stack.locals.e
+      else
+        Joosy.Module.merge data, stack.locals
+
       Joosy.Module.merge data, @__instantiateHelpers(), false
       Joosy.Module.merge data, renderers
       data

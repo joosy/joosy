@@ -12,7 +12,8 @@ class Joosy.Templaters.RailsJST
   # @param [String] name      Template name 'foo/bar'
   #
   buildView: (name) ->
-    template = JST[location = "#{@applicationName}/templates/#{name}"]
+    unless template = JST[location = "#{@applicationName}/templates/#{name}.#{I18n?.locale}"]
+      template = JST[location = "#{@applicationName}/templates/#{name}"]
 
     unless template
       throw new Error "Template '#{name}' not found. Checked at: #{location}"

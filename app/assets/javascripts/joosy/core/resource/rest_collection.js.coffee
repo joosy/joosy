@@ -64,7 +64,7 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
       callback = options?.success
       delete options?.success
     
-    @__fetch @params, options, (data) =>
+    @__fetch {}, options, (data) =>
       @reset data, false
       callback? this
       @trigger 'changed'
@@ -86,7 +86,7 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
       callback = options?.success
       delete options?.success
     
-    @__fetch Joosy.Module.merge({page: number}, @params), options, (data) =>
+    @__fetch {page: number}, options, (data) =>
       @reset data, false
       callback? @data
       @trigger 'changed'
@@ -121,5 +121,5 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
   # @param [Function] callback
   #
   __fetch: (urlOptions, ajaxOptions, callback) ->
-    @model.__ajax 'get', @model.__buildSource(params: @params.merge(urlOptions)), ajaxOptions, (data) ->
+    @model.__ajax 'get', @model.__buildSource(params: Object.extended({}).merge(@params).merge(urlOptions)), ajaxOptions, (data) ->
       callback(data)

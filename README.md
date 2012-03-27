@@ -90,6 +90,18 @@ Now you can `rails s` and see Joosy placeholder at [localhost:3000/dummy](http:/
 
 Generated application will consist of one `Layout` and one `Page` both including very basic practices of Joosy.
 
+# Hacking
+
+Don't forget to run tests!
+
+```ruby
+bundle install
+rake guard
+rake jasmine
+```
+
+http://localhost:8888/ <- they are here :)
+
 # License
 
 Joosy is licensed under MIT: [www.opensource.org/licenses/MIT](www.opensource.org/licenses/MIT)

@@ -35,5 +35,5 @@ Joosy.Modules.Filters =
     @["__#{filter}s"].reduce (flag, func) =>
       unless Object.isFunction func
         func = @[func]
-      flag && func.apply @, opts
+      flag && func.apply(@, opts) != false
     , true

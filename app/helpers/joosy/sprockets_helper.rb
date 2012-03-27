@@ -8,7 +8,7 @@ module Joosy::SprocketsHelper
     resources.map do |resource|
       uri  = URI.parse resource
       path = ::Rails.root.to_s + "/public" + uri.path
-      size = File.size(path) rescue false
+      size = File.size(path) rescue 0
       [resource, size]
     end.to_json.html_safe
   end

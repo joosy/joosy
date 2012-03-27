@@ -304,7 +304,7 @@ class Joosy.Page extends Joosy.Module
     callbacksParams = [@layout.content()]
     
     if @__scrollElement && @__scrollSpeed != 0
-     @__fixHeight()
+      @__fixHeight()
 
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough this, '__paint', callbacksParams, =>

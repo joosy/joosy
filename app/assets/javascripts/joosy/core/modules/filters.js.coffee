@@ -10,58 +10,30 @@ Joosy.Modules.Filters =
   #
   # @example Set of methods
   #   class Test
-  #     @beforeLoad -> # supposed to run before load and control loading queue
-  #     @afterLoad -> # supposed to run after load to finalize loading
+  #     @beforeLoad ->  # supposed to run before load and control loading queue
+  #     @afterLoad ->   # supposed to run after load to finalize loading
   #     @afterUnload -> # supposed to run after unload to collect garbage
   #
+  #     # private
+  #
+  #     @__runBeforeLoads() # Runs filters registered as beforeLoad
+  #     @__runAfterLoads() # Runs filters registered as afterLoad
+  #     @__runAfterUnloads() # Runs filters registered as afterUnload
+  #
   included: ->
-    @beforeLoad = (callback) ->
-      unless @::hasOwnProperty '__beforeLoads'
-        @::__beforeLoads = [].concat @.__super__.__beforeLoads || []
-      @::__beforeLoads.push callback
+    ['beforeLoad', 'afterLoad', 'afterUnload'].each (filter) =>
+      @[filter] = (callback) ->
+        unless @::hasOwnProperty "__#{filter}s"
+          @::["__#{filter}s"] = [].concat @.__super__["__#{filter}s"] || []
+        @::["__#{filter}s"].push callback
 
-    @afterLoad = (callback) ->
-      unless @::hasOwnProperty '__afterLoads'
-        @::__afterLoads = [].concat @.__super__.__afterLoads || []
-      @::__afterLoads.push callback
 
-    @afterUnload = (callback) ->
-      unless @::hasOwnProperty '__afterUnloads'
-        @::__afterUnloads = [].concat @.__super__.__afterUnloads || []
-      @::__afterUnloads.push callback
+['beforeLoad', 'afterLoad', 'afterUnload'].each (filter) =>
+  Joosy.Modules.Filters["__run#{filter.camelize(true)}s"] = (opts...) ->
+    return true unless @["__#{filter}s"]
 
-  #
-  # Runs filters registered as beforeLoad
-  #
-  __runBeforeLoads: (opts...) ->
-    unless @__beforeLoads?.length > 0
-      return true
-
-    flag = true
-
-    for filter in @__beforeLoads
-      unless Object.isFunction filter
-        filter = @[filter]
-      flag = flag && filter.apply @, opts
-
-    return flag
-
-    #
-    # Runs filters registered as afterLoad
-    #
-  __runAfterLoads: (opts...) ->
-    if @__afterLoads?.length > 0
-      for filter in @__afterLoads
-        unless Object.isFunction filter
-          filter = @[filter]
-        filter.apply @, opts
-
-  #
-  # Runs filters registered as afterUnload
-  #
-  __runAfterUnloads: (opts...) ->
-    if @__afterUnloads?.length > 0
-      for filter in @__afterUnloads
-        unless Object.isFunction filter
-          filter = @[filter]
-        filter.apply @, opts
+    @["__#{filter}s"].reduce (flag, func) =>
+      unless Object.isFunction func
+        func = @[func]
+      flag && func.apply @, opts
+    , true

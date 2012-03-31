@@ -197,6 +197,7 @@ class Joosy.Form extends Joosy.Module
   # By default will trigger basic invalidation.
   #
   __error: (data) ->
+    console.log data
     errors = if data.responseText
       try
         data = jQuery.parseJSON(data.responseText)

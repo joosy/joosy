@@ -127,7 +127,10 @@ Joosy.Router =
         break
 
     if !found && @wildcardAction?
-      @wildcardAction path, urlParams
+      if Joosy.Module.hasAncestor @wildcardAction, Joosy.Page
+        Joosy.Application.setCurrentPage @wildcardAction, urlParams
+      else
+        @wildcardAction path, urlParams
 
   #
   # Collects params from route placeholders (/foo/:placeholder)

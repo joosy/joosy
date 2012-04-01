@@ -33,7 +33,6 @@ Joosy.Modules.Filters =
     return true unless @["__#{filter}s"]
 
     @["__#{filter}s"].reduce (flag, func) =>
-      console.log flag
       unless Object.isFunction func
         func = @[func]
       flag && func.apply(@, opts) != false

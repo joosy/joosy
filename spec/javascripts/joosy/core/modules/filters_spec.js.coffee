@@ -43,6 +43,7 @@ describe "Joosy.Modules.Filters", ->
   it "should chain beforeLoad filters", ->
     callback = 0.upto(2).map -> sinon.stub()
     callback[0].returns true
+    callback[1].returns false
     @box.constructor.beforeLoad(callback[i]) for i in 0.upto 2
     expect(@box.__runBeforeLoads()).toBeFalsy()
     expect(callback[0].callCount).toEqual 1

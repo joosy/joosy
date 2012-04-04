@@ -102,6 +102,17 @@ rake jasmine
 
 http://localhost:8888/ <- they are here :)
 
-# License
+Credits
+-------
 
-Joosy is licensed under MIT: [www.opensource.org/licenses/MIT](www.opensource.org/licenses/MIT)
+<img src="http://roundlake.ru/assets/logo.png" align="right" />
+
+* Boris Staal ([@_inossidabile](http://twitter.com/#!/_inossidabile))
+* Andrew Shaydurov
+* Alexander Pavlenko ([@alerticus](http://twitter.com/#!/alerticus))
+* Peter Zotov ([@whitequark](http://twitter.com/#!/whitequark))
+
+LICENSE
+-------
+
+It is free software, and may be redistributed under the terms of MIT license.

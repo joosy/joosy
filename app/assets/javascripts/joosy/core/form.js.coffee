@@ -91,6 +91,7 @@ class Joosy.Form extends Joosy.Module
   #   you return true.
   #
   # @option opts [Joosy.Resource.Generic] resource      The resource to fill the form with
+  # @option opts [String] resourceName                  The string to use as a resource name prefix for fields to match invalidation
   #
   constructor: (form, opts={}) ->
     if Object.isFunction opts
@@ -127,7 +128,8 @@ class Joosy.Form extends Joosy.Module
         xhr
 
     if opts.resource?
-      @fill(opts.resource)
+      @fill(opts.resource, opts)
+      delete @resource
 
   #
   # Resets form submit behavior to default
@@ -167,7 +169,7 @@ class Joosy.Form extends Joosy.Module
           input.removeAttr 'checked'
 
     if resource.id
-      @__markMethod()
+      @__markMethod(opts?.method || 'PUT')
       url = resource.constructor.__buildSource(extension: resource.id + ("/" if action?) + action)
     else
       url = resource.constructor.__buildSource(extension: action)
@@ -290,11 +292,14 @@ class Joosy.Form extends Joosy.Module
         if field.indexOf(".") != -1
           splited = field.split '.'
           field   = splited.shift()
-          field   = @__resource.__entityName + "[#{field}]" if @__resource
+          if @__resource
+            name    = @resourceName || @__resource.__entityName
+            field   = name + "[#{field}]"
           field  += "[#{f}]" for f in splited
       
         else if @__resource
-          field = @__resource.__entityName + "[#{field}]"
+          name  = @resourceName || @__resource.__entityName
+          field = name + "[#{field}]"
 
         result[field] = notifications
 

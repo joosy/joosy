@@ -67,7 +67,7 @@ Joosy.Modules.Events =
   # Runs set of callbacks finializing with result callback
   #
   # @example Basic usage
-  #   Joosy.Events.synchronize (context) ->
+  #   Joosy.synchronize (context) ->
   #     contet.do (done) -> done()
   #     contet.do (done) -> done()
   #     content.after ->

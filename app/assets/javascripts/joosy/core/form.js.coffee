@@ -59,6 +59,9 @@ class Joosy.Form extends Joosy.Module
     form.unbind()
     null
 
+  @attach: ->
+    new Joosy.Form arguments...
+
   #
   # During initialization replaces your basic form submit with AJAX request
   #
@@ -87,6 +90,8 @@ class Joosy.Form extends Joosy.Module
   #   by returning false from your own error callback. Both of callbacks will run if
   #   you return true.
   #
+  # @option opts [Joosy.Resource.Generic] resource      The resource to fill the form with
+  #
   constructor: (form, opts={}) ->
     if Object.isFunction opts
       @success = opts
@@ -95,6 +100,8 @@ class Joosy.Form extends Joosy.Module
         @[key] = value
 
     @container = $(form)
+    return if @container.length == 0
+
     @refreshElements()
     @__delegateEvents()
 
@@ -118,6 +125,9 @@ class Joosy.Form extends Joosy.Module
             if event.lengthComputable
               @progress (event.position / event.total * 100).round 2
         xhr
+
+    if opts.resource?
+      @fill(opts.resource)
 
   #
   # Resets form submit behavior to default

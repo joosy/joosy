@@ -28,6 +28,16 @@ Joosy.Modules.Container =
       @[key] = @$(value)
 
   #
+  # Clears old HTML links, set the new HTML from the callback and refreshes elements
+  #
+  # @param [Function] htmlCallback       `() -> String` callback that will generate new HTML
+  #
+  reloadContainer: (htmlCallback) ->
+    @__removeMetamorphs?()
+    @container.html htmlCallback()
+    @refreshElements()
+
+  #
   # Fills container with given data removing all events
   #
   # @param [jQuery] container       jQuery entity of container to update

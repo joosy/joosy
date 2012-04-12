@@ -70,6 +70,21 @@
       alert text
 
   #
+  # Runs set of callbacks finializing with result callback
+  #
+  # @example Basic usage
+  #   Joosy.synchronize (context) ->
+  #     contet.do (done) -> done()
+  #     contet.do (done) -> done()
+  #     content.after ->
+  #       console.log 'Success!'
+  #
+  # @param [Function] block           Configuration block (see example)
+  #
+  synchronize: ->
+    Joosy.Modules.Events.synchronize arguments...
+
+  #
   # Generates UUID
   #
   uuid: ->

@@ -58,8 +58,8 @@ class Joosy.Widget extends Joosy.Module
   # @param [Joosy.Page, Joosy.Layout]     Page or Layout to attach to
   # @param [jQuery] container             Container to attach to
   #
-  __load: (@parent, @container) ->
-    if @__renderer
+  __load: (@parent, @container, render=true) ->
+    if render && @__renderer
       @container.html @__renderer(@data || {})
     @refreshElements()
     @__delegateEvents()

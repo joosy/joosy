@@ -127,3 +127,11 @@ describe "Joosy.Resource.REST", ->
       '{"test": {"id": 1, "name": "test1"}}'
       
     expect(callback.callCount).toEqual 1
+
+  it "generates memberUrl", ->
+    resource = @Test.create 'someId'
+    expect(resource.memberUrl 'test').toEqual '/tests/someId/test'
+
+  it "generates collectionUrl", ->
+    resource = @Test.create 'someId'
+    expect(resource.collectionUrl 'test').toEqual '/tests/test'

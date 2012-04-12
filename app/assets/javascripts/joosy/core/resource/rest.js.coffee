@@ -158,6 +158,22 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     @constructor.__ajax type, @constructor.__buildSource(extension: "#{@id}/#{ending}"), options, callback
 
   #
+  # Generates the member url with the given ending (base_url/id/ending)
+  #
+  # @param [String] ending              Url ending (like 'foo' or 'foo/bar')
+  #
+  memberUrl: (ending) ->
+    @constructor.__buildSource(extension: "#{@id}/#{ending}")
+
+  #
+  # Generates the collection url with the given ending (base_url/ending)
+  #
+  # @param [String] ending              Url ending (like 'foo' or 'foo/bar')
+  #
+  collectionUrl: (ending) ->
+    @constructor.__buildSource(extension: ending)
+
+  #
   # Checks if given description can be considered as ID
   #
   # @param [Integer, String, Object] something      Value to test

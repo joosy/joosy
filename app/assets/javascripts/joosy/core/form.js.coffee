@@ -130,13 +130,19 @@ class Joosy.Form extends Joosy.Module
   # Form will use give resource while doing invalidation routine.
   #
   # @param [Resource] resource      Resource to fill fields with
-  # @param [Function] decorator     Decoration callback
+  # @param [Hash] opts              Options
   #
-  fill: (resource, decorator) ->
+  # @option opts [Function] decorator     `(Object) -> Object` decoration callback
+  #   Pases in the parsed JSON.
+  #
+  # @option opts [String] action          URL ending to assign to a form action
+  #
+  fill: (resource, opts) ->
     @__resource = resource
+    action      = if opts?.action? then "#{opts.action}" else ""
     
-    if decorator?
-      e = decorator resource.e
+    if opts?.decorator?
+      e = opts.decorator resource.e
     else
       e = resource.e
     Object.each e, (key, val) =>
@@ -150,8 +156,13 @@ class Joosy.Form extends Joosy.Module
         else
           input.removeAttr 'checked'
 
-    @container.attr 'action', resource.constructor.__buildSource(extension: resource.id)
-    @__markMethod() if resource.id
+    if resource.id
+      @__markMethod()
+      url = resource.constructor.__buildSource(extension: resource.id + ("/" if action?) + action)
+    else
+      url = resource.constructor.__buildSource(extension: action)
+
+    @container.attr 'action', url
     @container.attr 'method', 'POST'
 
   #

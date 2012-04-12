@@ -15,6 +15,7 @@ describe "Joosy.Form", ->
 
     class Test extends Joosy.Resource.REST
       @entity 'test'
+    @Test = Test
 
     @resource = Test.create
       foo: 'foo',
@@ -60,9 +61,9 @@ describe "Joosy.Form", ->
   describe "Filling", ->
 
     beforeEach ->
-      @nudeForm = new Joosy.Form @nudeForm
-      @putForm  = new Joosy.Form @putForm
-      @moreForm = new Joosy.Form @moreForm
+      @nudeForm   = new Joosy.Form @nudeForm
+      @putForm    = new Joosy.Form @putForm
+      @moreForm   = new Joosy.Form @moreForm
 
     it "should fill form, set propert action and method and store resource", ->
       @nudeForm.fill @resource
@@ -81,10 +82,24 @@ describe "Joosy.Form", ->
       expect(@putForm.container.attr 'action').toEqual '/tests/'
 
     it "should fill form with decorator", ->
-      @moreForm.fill @resource, (e) ->
-        e.ololo = e.camelBaz
-        e
+      @moreForm.fill @resource, 
+        decorator: (e) ->
+          e.ololo = e.camelBaz
+          e
       expect(@moreForm.fields[0].value).toEqual 'baz'
+
+    it "should fill form with extended action", ->
+      @nudeForm.fill @resource, 
+        action: 'calculate'
+      expect(@nudeForm.fields[0].value).toEqual 'foo'
+      expect(@nudeForm.fields[1].value).toEqual 'bar'
+      expect(@nudeForm.container.attr 'action').toEqual '/tests/calculate'
+
+      resource = @Test.create 'someId'
+
+      @nudeForm.fill resource, 
+        action: 'calculate'
+      expect(@nudeForm.container.attr 'action').toEqual '/tests/someId/calculate'
 
   describe "Callbacks", ->
 

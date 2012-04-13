@@ -28,6 +28,18 @@ Joosy.Router =
   routes: Object.extended()
 
   #
+  # The regexp to restrict the next loading url. By default set to false and
+  # therefore no restrictions apply.
+  #
+  restrictPattern: false
+
+  #
+  # Set the restriction pattern. If the requested url does not match this it
+  # will not load. Set `false` to avoid check.
+  #
+  restrict: (@restrictPattern) ->
+
+  #
   # Clears the routes
   #
   reset: ->
@@ -108,6 +120,13 @@ Joosy.Router =
   __respondRoute: (hash) ->
     Joosy.Modules.Log.debug "Router> Answering '#{hash}'"
     fullPath = hash.replace /^#!?/, ''
+
+    if (@restrictPattern && fullPath.match(@restrictPattern) == null)
+      @trigger 'restricted', fullPath
+      return
+    else
+      @trigger 'responded', fullPath
+
     @currentPath = fullPath
     found = false
     queryArray = fullPath.split '&'
@@ -164,3 +183,5 @@ Joosy.Router =
           params[pair[0]] = pair[1]
 
     params
+
+Joosy.Module.merge Joosy.Router, Joosy.Modules.Events

@@ -121,3 +121,23 @@ describe "Joosy.Router", ->
     Joosy.Router.navigate ''
     expect(location.hash).toEqual '#!'
     location.hash = ''
+
+  it "should restrict urls", ->
+    sinon.stub Joosy.Router, '__respondRoute'
+    sinon.stub Joosy.Application, 'setCurrentPage'
+
+    Joosy.Router.map map
+    Joosy.Router.__setupRoutes()
+
+    Joosy.Router.__respondRoute.restore()
+
+    Joosy.Router.restrict /^\/page$/
+
+    Joosy.Router.__respondRoute '/page'
+    Joosy.Router.__respondRoute '/section/page/1'
+
+    expect(Joosy.Application.setCurrentPage.callCount).toEqual 1
+    expect(Joosy.Application.setCurrentPage.args.last()).toEqual [TestPage, Object.extended()]
+
+    Joosy.Application.setCurrentPage.restore()
+    Joosy.Router.restrict false

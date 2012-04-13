@@ -248,6 +248,7 @@ class Joosy.Page extends Joosy.Module
         if @__scrollSpeed != 0
           @__releaseHeight()
     Joosy.Application.loading = false
+    Joosy.Router.trigger 'loaded', this
     @trigger 'loaded'
 
     Joosy.Modules.Log.debugAs @, "Page loaded"

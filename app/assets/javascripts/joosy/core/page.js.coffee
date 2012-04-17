@@ -29,17 +29,17 @@ class Joosy.Page extends Joosy.Module
   # Default layout is no layout.
   #
   layout: false
-  
+
   #
   # Previous page.
   #
   previous: false
-  
+
   #
   # Route params.
   #
   params: false
-  
+
   #
   # Prefetched page data.
   #
@@ -66,11 +66,11 @@ class Joosy.Page extends Joosy.Module
   #   @beforePaint (complete) ->
   #     if !@data # checks if parallel fetching finished
   #       $('preloader').slideDown -> complete()
-  # 
+  #
   #
   @beforePaint: (callback) ->
     @::__beforePaint = callback
-    
+
   #
   # Sets the method which will controll the painting proccess.
   #
@@ -93,7 +93,7 @@ class Joosy.Page extends Joosy.Module
   #
   @afterPaint: (callback) ->
     @::__afterPaint = callback
-    
+
   #
   # Sets the method which will controll the erasing proccess.
   #
@@ -124,7 +124,7 @@ class Joosy.Page extends Joosy.Module
   #
   @fetch: (callback) ->
     @::__fetch = callback
-    
+
   #
   # Sets the several separate methods that will fetch data in parallel.
   #
@@ -136,7 +136,7 @@ class Joosy.Page extends Joosy.Module
   #       $.get '/rumbas', (data) =>
   #         @data.rumbas = data
   #         done()
-  #     
+  #
   #     context.do (done) ->
   #       $.get '/kutuzkas', (data) =>
   #         @data.kutuzkas = data
@@ -151,7 +151,7 @@ class Joosy.Page extends Joosy.Module
   #
   # Sets the position where page will be scrolled to after load.
   #
-  # @note If you use animated scroll joosy will atempt to temporarily fix the 
+  # @note If you use animated scroll joosy will atempt to temporarily fix the
   #   height of your document while scrolling to prevent jump effect.
   #
   # @param [jQuery] element         Element to scroll to
@@ -165,7 +165,17 @@ class Joosy.Page extends Joosy.Module
     @::__scrollElement = element
     @::__scrollSpeed = options.speed || 500
     @::__scrollMargin = options.margin || 0
-  
+
+  #
+  # Scrolls page to stored positions
+  #
+  __performScrolling: ->
+    scroll = $(@__extractSelector @__scrollElement).offset()?.top + @__scrollMargin
+    Joosy.Modules.Log.debugAs @, "Scrolling to #{@__extractSelector @__scrollElement}"
+    $('html, body').animate {scrollTop: scroll}, @__scrollSpeed, =>
+      if @__scrollSpeed != 0
+        @__releaseHeight()
+
   #
   # Sets the page HTML title.
   #
@@ -179,7 +189,7 @@ class Joosy.Page extends Joosy.Module
       titleStr = titleStr.join(separator) if Object.isArray(titleStr)
       @__previousTitle = document.title
       document.title = titleStr
-    
+
     @afterUnload ->
       document.title = @__previousTitle
 
@@ -191,7 +201,7 @@ class Joosy.Page extends Joosy.Module
   #
   constructor: (@params, @previous) ->
     Joosy.Application.loading = true
-    
+
     @__layoutClass ||= ApplicationLayout
 
     if @__runBeforeLoads @params, @previous
@@ -220,7 +230,7 @@ class Joosy.Page extends Joosy.Module
   #
   __fixHeight: ->
     $('html').css 'min-height', $(document).height()
-  
+
   #
   # Undo {#__fixHeight}
   #
@@ -241,12 +251,7 @@ class Joosy.Page extends Joosy.Module
     @__delegateEvents()
     @__setupWidgets()
     @__runAfterLoads @params, @previous
-    if @__scrollElement
-      scroll = $(@__extractSelector @__scrollElement).offset()?.top + @__scrollMargin
-      Joosy.Modules.Log.debugAs @, "Scrolling to #{@__extractSelector @__scrollElement}"
-      $('html, body').animate {scrollTop: scroll}, @__scrollSpeed, =>
-        if @__scrollSpeed != 0
-          @__releaseHeight()
+    @__performScrolling() if @__scrollElement
     Joosy.Application.loading = false
     Joosy.Router.trigger 'loaded', this
     @trigger 'loaded'
@@ -278,7 +283,7 @@ class Joosy.Page extends Joosy.Module
   #
   # @param [Object] entity        Object possibly containing wrapper method
   # @param [String] receiver      String name of wrapper method inside entity
-  # @param [Hash] params          Params to send to wrapper, callback will be 
+  # @param [Hash] params          Params to send to wrapper, callback will be
   #   attached as the last of them.
   # @param [Function] callback    Callback to run
   #
@@ -287,7 +292,7 @@ class Joosy.Page extends Joosy.Module
       entity[receiver].apply entity, params.clone().add(callback)
     else
       callback()
-  
+
   #
   # The single page (without layout reloading) bootstrap logic
   #
@@ -303,7 +308,7 @@ class Joosy.Page extends Joosy.Module
     @layout = @previous.layout
 
     callbacksParams = [@layout.content()]
-    
+
     if @__scrollElement && @__scrollSpeed != 0
       @__fixHeight()
 
@@ -315,7 +320,7 @@ class Joosy.Page extends Joosy.Module
 
         # Loading
         @__load()
-        
+
         @layout.content()
 
     @__callSyncedThrough @previous, '__erase', callbacksParams, =>
@@ -342,7 +347,7 @@ class Joosy.Page extends Joosy.Module
     @layout = new @__layoutClass(@params)
 
     callbacksParams = [Joosy.Application.content(), this]
-    
+
     if @__scrollElement && @__scrollSpeed != 0
       @__fixHeight()
 
@@ -351,7 +356,7 @@ class Joosy.Page extends Joosy.Module
         # Layout HTML
         data = Joosy.Module.merge {}, @layout.data || {}
         data = Joosy.Module.merge data, yield: => @layout.yield()
-        
+
         @swapContainer Joosy.Application.content(), @layout.__renderer data
 
         # Page HTML

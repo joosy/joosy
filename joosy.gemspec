@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'coffee-rails'
   s.add_dependency 'jquery-rails'
   s.add_dependency 'haml_coffee_assets'
+  s.add_dependency 'i18n-js'
 
   s.add_development_dependency 'guard'
   s.add_development_dependency 'guard-coffeescript'

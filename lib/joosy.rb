@@ -6,4 +6,6 @@ require 'joosy/rails/engine'
 require 'joosy/rails/version'
 require 'joosy/forms'
 
+require 'i18n-js'
+
 ActionController::Base.send :include, Joosy::Forms

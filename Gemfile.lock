@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/guard/guard-sprockets.git
-  revision: 435f464c9968e72707a7417afbac9507b05e3b87
-  specs:
-    guard-sprockets (0.3.1)
-      guard (>= 0.10.0)
-      sprockets (~> 2.0)
-
-GIT
   remote: git://github.com/pivotal/jasmine-gem.git
   revision: c72e8d248d49a1ebe53f31a09ac511194ad4edf1
   specs:
@@ -16,12 +8,21 @@ GIT
       rspec (>= 1.3.1)
       selenium-webdriver (>= 0.1.3)
 
+GIT
+  remote: git://github.com/roundlake/guard-sprockets.git
+  revision: 77365fbf48b2af0c93a42fcb05747c174b90d8d7
+  specs:
+    guard-sprockets (0.3.1)
+      guard (~> 1.0.0)
+      sprockets (~> 2.0)
+
 PATH
   remote: .
   specs:
     joosy (0.1.0.RC3)
       coffee-rails
       haml_coffee_assets
+      i18n-js
       jquery-rails
       rails (>= 3.1.0)
 
@@ -81,12 +82,14 @@ GEM
     guard-coffeescript (0.5.7)
       coffee-script (>= 2.2.0)
       guard (>= 0.8.3)
-    haml_coffee_assets (0.8.4)
+    haml_coffee_assets (0.8.5)
       execjs (>= 1.2.9)
       sprockets (>= 2.0.3)
       tilt (>= 1.3.3)
     hike (1.2.1)
     i18n (0.6.0)
+    i18n-js (2.1.2)
+      i18n
     jasmine-core (1.2.0.rc3)
     journey (1.0.3)
     jquery-rails (2.0.2)
@@ -153,7 +156,7 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
-    tzinfo (0.3.32)
+    tzinfo (0.3.33)
 
 PLATFORMS
   java

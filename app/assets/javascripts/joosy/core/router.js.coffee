@@ -20,9 +20,9 @@ Joosy.Router =
   # The Object containing route parts in keys and pages/lambdas in values
   #
   rawRoutes: Object.extended()
-  
+
   #
-  # Flattern routes mapped to regexps (to check if current route is what we 
+  # Flattern routes mapped to regexps (to check if current route is what we
   # need) and actual executors
   #
   routes: Object.extended()
@@ -60,10 +60,19 @@ Joosy.Router =
   # Changes current hash with shebang (#!) and therefore triggers new route loading
   # to be loaded
   #
-  # @param [String] to            Route to navigate to
+  # @param [String] to                       Route to navigate to
   #
-  navigate: (to) ->
+  # @option options [Boolean] respond        If false just changes hash without responding
+  #
+  navigate: (to, options={}) ->
+    if options.respond == false
+      old_ignore = @ignore
+      @ignore    = to
     location.hash = '!' + to
+    if options.respond == false
+      setTimeout =>
+        @ignore = old_ignore
+      , 2 # jQuery.hashchange checks hash changing every 1ms
 
   #
   # Inits the routing system and loads the current route
@@ -74,7 +83,7 @@ Joosy.Router =
     @__prepareRoutes @rawRoutes
     @__respondRoute location.hash
     $(window).hashchange =>
-      @__respondRoute location.hash
+      @__respondRoute location.hash unless @ignore && location.hash.match(@ignore)
 
   #
   # Compiles routes to map object
@@ -99,7 +108,7 @@ Joosy.Router =
   # Compiles one single route
   #
   # @param [String] path            Full path from raw route
-  # @param [Joosy.Page] response    Page that should be loaded at this route 
+  # @param [Joosy.Page] response    Page that should be loaded at this route
   # @param [Function] response      Lambda to call at this route
   #
   __prepareRoute: (path, response) ->

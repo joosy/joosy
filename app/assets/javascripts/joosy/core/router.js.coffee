@@ -63,16 +63,21 @@ Joosy.Router =
   # @param [String] to                       Route to navigate to
   #
   # @option options [Boolean] respond        If false just changes hash without responding
+  # @option options [Boolean] replaceState   If true uses replaces history entry instead of adding. Works only in browsers supporting history.pushState
   #
   navigate: (to, options={}) ->
-    if options.respond == false
-      old_ignore = @ignore
-      @ignore    = to
-    location.hash = '!' + to
-    if options.respond == false
-      setTimeout =>
-        @ignore = old_ignore
-      , 2 # jQuery.hashchange checks hash changing every 1ms
+    path = to.replace /^\#?\!?/, '!'
+    if options.respond != false
+      location.hash = path
+    else
+      if !history.pushState
+        @__ignoreRequest = to
+        location.hash = path
+        setTimeout =>
+          @__ignoreRequest = false
+        , 2 # jQuery.hashchange checks hash changing every 1ms
+      else
+        history[if options.replaceState then 'replaceState' else 'pushState'] {}, '', '#'+path
 
   #
   # Inits the routing system and loads the current route
@@ -83,7 +88,7 @@ Joosy.Router =
     @__prepareRoutes @rawRoutes
     @__respondRoute location.hash
     $(window).hashchange =>
-      @__respondRoute location.hash unless @ignore && location.hash.match(@ignore)
+      @__respondRoute location.hash unless @__ignoreRequest && location.hash.match(@__ignoreRequest)
 
   #
   # Compiles routes to map object

@@ -109,6 +109,8 @@ Joosy.Modules.Container =
       if selector == ""
         @container.bind eventName, callback
         Joosy.Modules.Log.debugAs @, "#{eventName} binded on container"
+      else if selector == undefined
+        throw new Error "Unknown element #{match[2]} in #{Joosy.Module.__className @constructor} (maybe typo?)"
       else
         @container.on eventName, selector, callback
         Joosy.Modules.Log.debugAs @, "#{eventName} binded on #{selector}"

@@ -126,9 +126,11 @@ class Joosy.Resource.Generic extends Joosy.Module
       throw new Error "#{Joosy.Module.__className @}> class can not be detected for '#{name}' mapping"
 
     @beforeLoad (data) ->
-      @[name] = new (klass::__collection()) klass
       if Object.isArray data[name]
+        @[name] = new (klass::__collection()) klass
         @[name].reset data[name]
+      else if Object.isObject data[name]
+        @[name] = klass.create data[name]
       data
 
   #

@@ -73,6 +73,9 @@ describe "Joosy.Resource.Generic", ->
     class R extends Joosy.Resource.Generic
       @map 'rumbaMumbas', RumbaMumba
 
+    class S extends Joosy.Resource.Generic
+      @map 'rumbaMumba', RumbaMumba
+
     resource = R.create
       rumbaMumbas: [
         {foo: 'bar'},
@@ -80,8 +83,12 @@ describe "Joosy.Resource.Generic", ->
       ]
     expect(resource.rumbaMumbas instanceof Joosy.Resource.Collection).toBeTruthy()
     expect(resource.rumbaMumbas.at(0)('foo')).toEqual 'bar'
-    
-    
+
+    resource = S.create
+      rumbaMumba: {foo: 'bar'}
+    expect(resource.rumbaMumba instanceof Joosy.Resource.Generic).toBeTruthy()
+    expect(resource.rumbaMumba('foo')).toEqual 'bar'
+
   it "should use magic collections", ->
     class window.RumbaMumbasCollection extends Joosy.Resource.Collection
       

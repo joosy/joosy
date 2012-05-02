@@ -51,3 +51,16 @@ describe "Joosy.Modules.Events", ->
 
     expect(@sub.__oneShotEvents).toEqual [[['foo'], callback]]
     expect(@box.__oneShotEvents).toBeUndefined()
+
+  it "should be safe for concurrent usage", ->
+    Joosy.synchronize (context) ->
+      context.do (done)  ->
+        window.setTimeout ->
+          expect(-> done()).not.toThrow()
+        , 1
+    Joosy.synchronize (context) ->
+      context.do (done)  ->
+        window.setTimeout ->
+          expect(-> done()).not.toThrow()
+        , 2
+    waits 3

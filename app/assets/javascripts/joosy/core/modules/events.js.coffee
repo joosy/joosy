@@ -48,16 +48,15 @@ Joosy.Modules.Events =
   trigger: (event, data...) ->
     Joosy.Modules.Log.debugAs @, "Event #{event} triggered"
     if @__oneShotEvents
+      fire = []
       for [events, callback], index in @__oneShotEvents
-        position = events.indexOf event
-        if position >= 0
-          events.splice position, 1
-
+        events.remove event
         if events.length == 0
-          @__oneShotEvents.splice index, 1
-
-          callback data...
-
+          fire.push index
+      fire.each (index) =>
+        callback = @__oneShotEvents[index][1]
+        @__oneShotEvents.removeAt index
+        callback data...
     if @__boundEvents
       for [events, callback] in @__boundEvents
         if events.has event

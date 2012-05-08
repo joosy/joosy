@@ -1,0 +1,36 @@
+<%= "<%
+# List here modules and sub-modules which resources should be predefined
+# e.g. %w(front front/products) if you have
+# Front::SomeController and Front::Products::AnotherController
+# with associated namespaces in your routes
+# Note that first namespace is considered as default
+NAMESPACES = ['" + file_name + "', nil]
+
+NAMESPACES.each do |namespace|
+  resources = Joosy::Rails::Engine.resources[namespace]
+  next unless resources && resources.size > 0
+  resources.each do |resource, path|
+    joosy_namespace = namespace.to_s.gsub /^#" %><%= "{" + "NAMESPACES[0]}\\/?/, ''
+%" + ">" %>
+<%= "<%  if joosy_namespace.blank? %" + ">" %>
+unless @<%= "<%= class_name = resource.camelize %" + ">" %>
+  class @<%= "<%= class_name %" + ">" %> extends Joosy.Resource.REST
+    @entity '<%= "<%= resource %" + ">" %>'
+    @source '<%= "<%= path %" + ">" %>'
+unless @<%= "<%= collection_name = \"#" %><%= "{" + "resource.pluralize.camelize}Collection\"%" + ">" %>
+  class @<%= "<%= collection_name  %" + ">" %> extends Joosy.Resource.RESTCollection
+    @model <%= "<%= class_name %" + ">" %>
+<%= "<%  else %" + ">" %>
+Joosy.namespace '<%= "<%= joosy_namespace.camelize.split('::').join('.') %" + ">" %>', ->
+  unless @<%= "<%= class_name = resource.camelize %" + ">" %>
+    class @<%= "<%= class_name %" + ">" %> extends Joosy.Resource.REST
+      @entity '<%= "<%= resource %" + ">" %>'
+      @source '<%= "<%= path %" + ">" %>'
+  unless @<%= "<%= collection_name = \"#" %><%= "{" + "resource.pluralize.camelize}Collection\"%" + ">" %>
+    class @<%= "<%= collection_name  %" + ">" %> extends Joosy.Resource.RESTCollection
+      @model <%= "<%= class_name %" + ">" %>
+<%= "<%
+    end
+  end
+end
+%" + ">" %>

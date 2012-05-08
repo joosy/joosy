@@ -5,6 +5,7 @@ require 'coffee-rails'
 require 'joosy/rails/engine'
 require 'joosy/rails/version'
 require 'joosy/forms'
+require 'rails/resources_with_joosy'
 
 require 'i18n-js'
 

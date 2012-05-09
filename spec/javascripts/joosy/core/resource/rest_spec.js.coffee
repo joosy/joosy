@@ -36,10 +36,10 @@ describe "Joosy.Resource.REST", ->
     rooted   = @Test.create {test: data}
     unrooted = @Test.create data
 
-    expect(rooted.e).toEqual unrooted.e
+    expect(rooted.data).toEqual unrooted.data
     expect(rooted.id).toEqual 'someId'
-    expect(rooted.e.id).toEqual 'someId'
-    expect(rooted.e.field).toEqual 'value'
+    expect(rooted.data.id).toEqual 'someId'
+    expect(rooted.data.field).toEqual 'value'
 
   it 'should find single object', ->
     @Test.beforeLoad beforeLoadCallback = sinon.spy (data) ->
@@ -48,7 +48,7 @@ describe "Joosy.Resource.REST", ->
       Object.extended(data)
     @Test.find 1, callback = sinon.spy (target) ->
       expect(target.id).toEqual 1
-      expect(target.e?.name).toEqual 'test1'
+      expect(target.data?.name).toEqual 'test1'
     target = @server.requests[0]
     expect(target.method).toEqual 'GET'
     expect(target.url).toMatch /^\/tests\/1\?_=\d+/
@@ -63,7 +63,7 @@ describe "Joosy.Resource.REST", ->
       expect(collection instanceof Joosy.Resource.RESTCollection).toBeTruthy()
       collection.data.each (target) ->
         expect(target.id).toEqual i
-        expect(target.e?.name).toEqual 'test' + i
+        expect(target.data?.name).toEqual 'test' + i
         i += 1
     @Test.find null, callback
     target = @server.requests[0]
@@ -79,7 +79,7 @@ describe "Joosy.Resource.REST", ->
       expect(collection instanceof Joosy.Resource.RESTCollection).toBeTruthy()
       collection.data.each (target) ->
         expect(target.id).toEqual i
-        expect(target.e?.name).toEqual 'test' + i
+        expect(target.data?.name).toEqual 'test' + i
         i += 1
     @Test.find callback
     target = @server.requests[0]
@@ -109,7 +109,7 @@ describe "Joosy.Resource.REST", ->
   it "should trigger 'changed' on fetch", ->
     resource = @Test.find 1, callback = sinon.spy (target) ->
       expect(target.id).toEqual 1
-      expect(target.e?.name).toEqual 'test1'
+      expect(target.data?.name).toEqual 'test1'
     target = @server.requests[0]
     expect(target.method).toEqual 'GET'
     expect(target.url).toMatch /^\/tests\/1\?_=\d+/

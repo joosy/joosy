@@ -8,7 +8,7 @@ describe "Joosy.Resource.Collection", ->
   checkData = (collection) ->
     expect(collection.data.length).toEqual 2
     expect(collection.data[0].constructor == Test).toBeTruthy()
-    expect(collection.data[0].e.name).toEqual 'test1'
+    expect(collection.data[0].data.name).toEqual 'test1'
 
   beforeEach ->
     @collection = new Joosy.Resource.Collection(Test)
@@ -20,7 +20,7 @@ describe "Joosy.Resource.Collection", ->
   it "should modelize", ->
     result = @collection.modelize $.parseJSON(data)
     expect(result[0].constructor == Test).toBeTruthy()
-    expect(result[0].e.name).toEqual 'test1'
+    expect(result[0].data.name).toEqual 'test1'
 
   it "should load", ->
     @collection.load $.parseJSON(data)
@@ -71,11 +71,11 @@ describe "Joosy.Resource.Collection", ->
     @collection.bind 'changed', callback = sinon.spy()
     @collection.add new Test {'rocking': 'mocking'}
     expect(@collection.data.length).toEqual 3
-    expect(@collection.at(2).e).toEqual {'rocking': 'mocking'}
+    expect(@collection.at(2).data).toEqual {'rocking': 'mocking'}
     @collection.add new Test({'rocking': 'mocking'}), 1
     expect(@collection.data.length).toEqual 4
-    expect(@collection.at(1).e).toEqual {'rocking': 'mocking'}
-    expect(@collection.at(3).e).toEqual {'rocking': 'mocking'}
+    expect(@collection.at(1).data).toEqual {'rocking': 'mocking'}
+    expect(@collection.at(3).data).toEqual {'rocking': 'mocking'}
     
   it "should find items by id", ->
     @collection.load $.parseJSON(data)

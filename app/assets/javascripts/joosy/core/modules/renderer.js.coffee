@@ -118,7 +118,7 @@ Joosy.Modules.Renderer =
       data = {}
 
       if isResource
-        Joosy.Module.merge data, stack.locals.e
+        Joosy.Module.merge data, stack.locals.data
       else
         Joosy.Module.merge data, stack.locals
 

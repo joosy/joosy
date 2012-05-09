@@ -25,6 +25,17 @@ class Joosy.Resource.Generic extends Joosy.Module
   __primaryKey: 'id'
 
   #
+  # Allows to modify data before it gets stored.
+  # You can define several beforeLoad filters that will be chained.
+  #
+  # @param [Function] action    `(Object) -> Object` to call
+  #
+  @beforeLoad: (action) ->
+    unless @::hasOwnProperty '__beforeLoads'
+      @::__beforeLoads = [].concat @.__super__.__beforeLoads || []
+    @::__beforeLoads.push action
+
+  #
   # Sets the field containing primary key.
   #
   # @note It has no direct use inside the REST resource itself and can be omited.
@@ -102,23 +113,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       throw new Error "#{Joosy.Module.__className @}> class can not be detected for '#{name}' mapping"
 
     @beforeLoad (data) ->
-      if Object.isArray data[name]
-        @[name] = new (klass::__collection()) klass
-        @[name].load data[name]
-      else if Object.isObject data[name]
-        @[name] = klass.build data[name]
-      data
-  
-  #
-  # Allows to modify data before it gets stored.
-  # You can define several beforeLoad filters that will be chained.
-  #
-  # @param [Function] action    `(Object) -> Object` to call
-  #
-  @beforeLoad: (action) ->
-    unless @::hasOwnProperty '__beforeLoads'
-      @::__beforeLoads = [].concat @.__super__.__beforeLoads || []
-    @::__beforeLoads.push action
+      @__map(data, name, klass)
 
   #
   # Wraps instance of resource inside shim-function allowing to track
@@ -153,10 +148,10 @@ class Joosy.Resource.Generic extends Joosy.Module
 
 
   id: ->
-    @e[@__primaryKey]
+    @data[@__primaryKey]
 
   knownAttributes: ->
-    @e.keys()
+    @data.keys()
 
   #
   # Set the resource data manually
@@ -177,7 +172,11 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   get: (path) ->
     target = @__callTarget path
-    target[0][target[1]]
+
+    if target[0] instanceof Joosy.Resource.Generic
+      return target[0](target[1])
+    else
+      return target[0][target[1]]
 
   #
   # Setter for wrapped data, triggers `changed` event.
@@ -187,7 +186,12 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   set: (path, value) ->
     target = @__callTarget path
-    target[0][target[1]] = value
+
+    if target[0] instanceof Joosy.Resource.Generic
+      target[0](target[1], value)
+    else
+      target[0][target[1]] = value
+    
     @trigger 'changed'
     null
 
@@ -198,18 +202,21 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @return [Array]         Instance of object containing last step of path and keyword for required field
   #
   __callTarget: (path) ->
-    if path.has(/\./) && !@e[path]?
+    if path.has(/\./) && !@data[path]?
       path    = path.split '.'
       keyword = path.pop()
-      target  = @e
+      target  = @data
       
       for part in path
         target[part] ||= {}
-        target = target[part]
+        if target instanceof Joosy.Resource.Generic
+          target = target(part)
+        else
+          target = target[part]
 
       [target, keyword]
     else
-      [@e, path]
+      [@data, path]
 
   #
   # Wrapper for {Joosy.Resource.Generic.build} magic
@@ -226,7 +233,8 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @param [Object] data    Raw data to store
   #
   __fillData: (data, notify=true) ->
-    @e = @__prepareData data
+    @raw  = data
+    @data = @__prepareData data
     
     if notify
       @trigger 'changed'
@@ -247,4 +255,13 @@ class Joosy.Resource.Generic extends Joosy.Module
     if @__beforeLoads?
       data = bl.call(this, data) for bl in @__beforeLoads
       
+    data
+
+  __map: (data, name, klass) ->
+    if Object.isArray data[name]
+      entry = new (klass::__collection()) klass
+      entry.load data[name]
+      data[name] = entry
+    else if Object.isObject data[name]
+      data[name] = klass.build data[name]
     data

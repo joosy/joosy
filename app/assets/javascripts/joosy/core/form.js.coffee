@@ -154,10 +154,11 @@ class Joosy.Form extends Joosy.Module
     action      = if opts?.action? then "#{opts.action}" else ""
     
     if opts?.decorator?
-      e = opts.decorator resource.e
+      data = opts.decorator resource.data
     else
-      e = resource.e
-    Object.each e, (key, val) =>
+      data = resource.data
+
+    Object.each data, (key, val) =>
       key = resource.__entityName + "[#{key}]"
       input = @fields.filter("[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
       unless input.is ':checkbox'

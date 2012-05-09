@@ -38,7 +38,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
       @id = description
     else
       super description
-      @id = @e[@__primaryKey]
+      @id = @data[@__primaryKey]
 
   #
   # Queries for REST data and creates resources instances.

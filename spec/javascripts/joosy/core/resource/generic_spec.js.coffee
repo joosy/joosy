@@ -11,11 +11,11 @@ describe "Joosy.Resource.Generic", ->
 
   it "should remember where it belongs", ->
     resource = new Joosy.Resource.Generic foo: 'bar'
-    expect(resource.e).toEqual foo: 'bar'
+    expect(resource.data).toEqual foo: 'bar'
     
   it "should produce magic function", ->
     expect(Object.isFunction @resource).toBeTruthy()
-    expect(@resource.e).toEqual @data
+    expect(@resource.data).toEqual @data
     
   it "should get values", ->
     expect(@resource 'foo').toEqual 'bar'
@@ -78,13 +78,13 @@ describe "Joosy.Resource.Generic", ->
         {foo: 'bar'},
         {bar: 'baz'}
       ]
-    expect(resource.rumbaMumbas instanceof Joosy.Resource.Collection).toBeTruthy()
-    expect(resource.rumbaMumbas.at(0)('foo')).toEqual 'bar'
+    expect(resource('rumbaMumbas') instanceof Joosy.Resource.Collection).toBeTruthy()
+    expect(resource('rumbaMumbas').at(0)('foo')).toEqual 'bar'
 
     resource = S.build
       rumbaMumba: {foo: 'bar'}
-    expect(resource.rumbaMumba instanceof Joosy.Resource.Generic).toBeTruthy()
-    expect(resource.rumbaMumba('foo')).toEqual 'bar'
+    expect(resource('rumbaMumba') instanceof Joosy.Resource.Generic).toBeTruthy()
+    expect(resource('rumbaMumba.foo')).toEqual 'bar'
 
   it "should use magic collections", ->
     class window.RumbaMumbasCollection extends Joosy.Resource.Collection
@@ -99,8 +99,8 @@ describe "Joosy.Resource.Generic", ->
         {foo: 'bar'},
         {bar: 'baz'}
       ]
-    expect(resource.rumbaMumbas instanceof RumbaMumbasCollection).toBeTruthy()
-    expect(resource.rumbaMumbas.at(0)('foo')).toEqual 'bar'
+    expect(resource('rumbaMumbas') instanceof RumbaMumbasCollection).toBeTruthy()
+    expect(resource('rumbaMumbas').at(0)('foo')).toEqual 'bar'
     
     window.RumbaMumbasCollection = undefined
     
@@ -118,5 +118,5 @@ describe "Joosy.Resource.Generic", ->
         {foo: 'bar'},
         {bar: 'baz'}
       ]
-    expect(resource.rumbaMumbas instanceof OloCollection).toBeTruthy()
-    expect(resource.rumbaMumbas.at(0)('foo')).toEqual 'bar'
+    expect(resource('rumbaMumbas') instanceof OloCollection).toBeTruthy()
+    expect(resource('rumbaMumbas').at(0)('foo')).toEqual 'bar'

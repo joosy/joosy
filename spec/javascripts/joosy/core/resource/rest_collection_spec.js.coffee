@@ -8,7 +8,7 @@ describe "Joosy.Resource.RESTCollection", ->
   checkData = (collection) ->
     expect(collection.data.length).toEqual 2
     expect(collection.data[0].constructor == Test).toBeTruthy()
-    expect(collection.data[0].e.name).toEqual 'test1'
+    expect(collection.data[0].data.name).toEqual 'test1'
 
   spoofData = (server) ->
     target = server.requests.last()
@@ -38,7 +38,7 @@ describe "Joosy.Resource.RESTCollection", ->
     expect(callback.callCount).toEqual 1
     expect(@collection.data.length).toEqual 2
     expect(@collection.data[0].constructor == Test).toBeTruthy()
-    expect(@collection.data[0].e.name).toEqual 'test1'
+    expect(@collection.data[0].data.name).toEqual 'test1'
 
     # Again from cache
     @collection.page 2, callback=sinon.spy()
@@ -46,7 +46,7 @@ describe "Joosy.Resource.RESTCollection", ->
     expect(callback.callCount).toEqual 1
     expect(@collection.data.length).toEqual 2
     expect(@collection.data[0].constructor == Test).toBeTruthy()
-    expect(@collection.data[0].e.name).toEqual 'test1'
+    expect(@collection.data[0].data.name).toEqual 'test1'
     
   it "should trigger changes", ->
     @collection.bind 'changed', callback = sinon.spy()

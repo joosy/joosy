@@ -1,8 +1,11 @@
-# List here modules and sub-modules which resources should be predefined
+# Whitelist here modules and sub-modules which resources should be predefined
 # e.g. ['front', 'front/products', nil] if you have
 # Front::SomeController and Front::Products::AnotherController
 # with the associated namespaces in your routes
 # and want to predefine resources with no namespace
-<%= "<% NAMESPACES = ['" + file_name + "', nil] %" + ">" %>
 
-Joosy.defineResources <%= "<%= Joosy::SprocketsHelper.joosy_resources(NAMESPACES).to_json %" + ">" %>
+# Joosy.defineResources <%= "<%= Joosy::SprocketsHelper.joosy_resources(['" + file_name + "', nil]).to_json %" + ">" %>
+
+# or predefine all resources
+
+Joosy.defineResources <%= "<%= Joosy::SprocketsHelper.joosy_resources.to_json %" + ">" %>

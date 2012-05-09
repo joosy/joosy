@@ -1,40 +1,8 @@
-<%= "<%
 # List here modules and sub-modules which resources should be predefined
 # e.g. ['front', 'front/products', nil] if you have
 # Front::SomeController and Front::Products::AnotherController
 # with the associated namespaces in your routes
 # and want to predefine resources with no namespace
-# Note that first namespace is considered as default
-NAMESPACES = ['" + file_name + "', nil]
+<%= "<% NAMESPACES = ['" + file_name + "', nil] %" + ">" %>
 
-predefined = {}
-NAMESPACES.each do |namespace|
-  resources = Joosy::Rails::Engine.resources[namespace]
-  next unless resources && resources.size > 0
-  joosy_namespace = namespace.to_s.gsub(/^#" %><%= "{" + "NAMESPACES[0]}\\/?/, '').camelize.split('::').join('.')
-  predefined[joosy_namespace] = resources
-end
-%" + ">" %>
-predefined = Object.extended <%= "<%= predefined.to_json %" + ">" %>
-
-defineResource = (resource, path) ->
-  className = resource.camelize()
-  collectionName = "#{resource.pluralize().camelize()}Collection"
-  unless @[className]
-    Joosy.Modules.Log.debugAs @, "Define #{className}"
-    @[className] = class extends Joosy.Resource.REST
-      @entity resource
-      @source path
-  unless @[collectionName]
-    Joosy.Modules.Log.debugAs @, "Define #{collectionName}"
-    @[collectionName] = class extends Joosy.Resource.RESTCollection
-      @model @[className]
-
-predefined.each (namespace, resources) ->
-  if namespace.isBlank()
-    Object.extended(resources).each (resource, path) ->
-      defineResource.call window, resource, path
-  else
-    Joosy.namespace namespace, ->
-      Object.extended(resources).each (resource, path) =>
-        defineResource.call @, resource, path
+Joosy.defineResources <%= "<%= Joosy::SprocketsHelper.joosy_resources(NAMESPACES).to_json %" + ">" %>

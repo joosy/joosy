@@ -142,3 +142,44 @@
       paramsString = '&' + paramsString
 
     url + paramsString + hash
+
+  #
+  # Creates classes and collection classes for the given resources that might have been extracted from the routes
+  #
+  # @param [Hash] resources      Resources declaration
+  #
+  # @example Basic usage
+  #   Joosy.defineResources {'': {foo: '/foos'}, 'namespace': {bar: '/namespace/bars'}}
+  #
+  defineResources: (resources) ->
+    Object.extended(resources).each (namespace, resources) ->
+      if namespace.isBlank()
+        Object.extended(resources).each (resource, path) ->
+          Joosy.defineResource resource, path
+      else
+        Joosy.namespace namespace, ->
+          Object.extended(resources).each (resource, path) =>
+            Joosy.defineResource resource, path, @
+
+  #
+  # Creates class and collection class for the given resource
+  #
+  # @param [String] resource      Entity name in singular form
+  # @param [String] path          Entity REST end-point
+  # @param [Object] space         Namespace for new classes
+  #
+  # @example Basic usage
+  #   Joosy.defineResource 'foo', '/foos'
+  #
+  defineResource: (resource, path, space=window) ->
+    className = resource.camelize()
+    collectionName = "#{resource.pluralize().camelize()}Collection"
+    unless space[className]
+      Joosy.Modules.Log.debugAs space, "Define #{className}"
+      space[className] = class extends Joosy.Resource.REST
+        @entity resource
+        @source path
+    unless space[collectionName]
+      Joosy.Modules.Log.debugAs space, "Define #{collectionName}"
+      space[collectionName] = class extends Joosy.Resource.RESTCollection
+        @model space[className]

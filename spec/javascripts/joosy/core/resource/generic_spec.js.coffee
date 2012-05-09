@@ -1,7 +1,7 @@
 describe "Joosy.Resource.Generic", ->
 
   beforeEach ->
-    @resource = Joosy.Resource.Generic.create @data =
+    @resource = Joosy.Resource.Generic.build @data =
       foo: 'bar'
       bar: 'baz'
       very:
@@ -34,18 +34,15 @@ describe "Joosy.Resource.Generic", ->
     @resource 'another.deep.value', 'banana strikes back'
     expect(@resource 'another.deep').toEqual value: 'banana strikes back'
     
-  it "should handle lambdas in @source properly", ->
+  it "handles @at", ->
     class Fluffy extends Joosy.Resource.Generic
-      @source (rumbas) -> "#{rumbas}!"
 
-    clone = Fluffy.at('rumbas')    
+    clone = Fluffy.at('rumbas!')
     
-    expect(-> clone.at 'kutuzka').toThrow(new Error 'clone> should be created directly (without `at\')')
     expect(clone.__source).toEqual 'rumbas!'
-    
     expect(Joosy.Module.hasAncestor clone, Fluffy).toBeTruthy()
     # clone won't be instanceof Fluffy in IE
-    #expect(clone.create({}) instanceof Fluffy).toBeTruthy()
+    #expect(clone.build({}) instanceof Fluffy).toBeTruthy()
     
   it "should trigger 'changed' right", ->
     callback = sinon.spy()
@@ -62,7 +59,7 @@ describe "Joosy.Resource.Generic", ->
         data.tested = true
         data
         
-      resource = R.create()
+      resource = R.build()
       
       expect(resource 'tested').toBeTruthy()
       
@@ -76,7 +73,7 @@ describe "Joosy.Resource.Generic", ->
     class S extends Joosy.Resource.Generic
       @map 'rumbaMumba', RumbaMumba
 
-    resource = R.create
+    resource = R.build
       rumbaMumbas: [
         {foo: 'bar'},
         {bar: 'baz'}
@@ -84,7 +81,7 @@ describe "Joosy.Resource.Generic", ->
     expect(resource.rumbaMumbas instanceof Joosy.Resource.Collection).toBeTruthy()
     expect(resource.rumbaMumbas.at(0)('foo')).toEqual 'bar'
 
-    resource = S.create
+    resource = S.build
       rumbaMumba: {foo: 'bar'}
     expect(resource.rumbaMumba instanceof Joosy.Resource.Generic).toBeTruthy()
     expect(resource.rumbaMumba('foo')).toEqual 'bar'
@@ -97,7 +94,7 @@ describe "Joosy.Resource.Generic", ->
     class R extends Joosy.Resource.Generic
       @map 'rumbaMumbas', RumbaMumba
 
-    resource = R.create
+    resource = R.build
       rumbaMumbas: [
         {foo: 'bar'},
         {bar: 'baz'}
@@ -116,7 +113,7 @@ describe "Joosy.Resource.Generic", ->
     class R extends Joosy.Resource.Generic
       @map 'rumbaMumbas', RumbaMumba
 
-    resource = R.create
+    resource = R.build
       rumbaMumbas: [
         {foo: 'bar'},
         {bar: 'baz'}

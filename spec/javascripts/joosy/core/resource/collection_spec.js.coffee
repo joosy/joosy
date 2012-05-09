@@ -22,18 +22,18 @@ describe "Joosy.Resource.Collection", ->
     expect(result[0].constructor == Test).toBeTruthy()
     expect(result[0].e.name).toEqual 'test1'
 
-  it "should reset", ->
-    @collection.reset $.parseJSON(data)
+  it "should load", ->
+    @collection.load $.parseJSON(data)
     checkData @collection
   
   it "should trigger changes", ->
     @collection.bind 'changed', callback = sinon.spy()
-    @collection.reset $.parseJSON(data)
+    @collection.load $.parseJSON(data)
     expect(callback.callCount).toEqual 1
 
   it "should not trigger changes", ->
     @collection.bind 'changed', callback = sinon.spy()
-    @collection.reset $.parseJSON(data), false
+    @collection.load $.parseJSON(data), false
     expect(callback.callCount).toEqual 0
 
   it "should properly handle the before filter", ->
@@ -44,12 +44,12 @@ describe "Joosy.Resource.Collection", ->
         data
       
     collection = new RC(Test)
-    collection.reset $.parseJSON(data)
+    collection.load $.parseJSON(data)
 
     expect(collection.at(0)('tested')).toBeTruthy()
 
   it "should remove item from collection", ->
-    @collection.reset $.parseJSON(data)
+    @collection.load $.parseJSON(data)
     @collection.bind 'changed', callback = sinon.spy()
     @collection.remove @collection.data[1]
     expect(@collection.data.length).toEqual 1
@@ -58,7 +58,7 @@ describe "Joosy.Resource.Collection", ->
     expect(callback.callCount).toEqual 2
 
   it "should silently remove item from collection", ->
-    @collection.reset $.parseJSON(data)
+    @collection.load $.parseJSON(data)
     @collection.bind 'changed', callback = sinon.spy()
     @collection.remove @collection.data[1], false
     expect(@collection.data.length).toEqual 1
@@ -67,7 +67,7 @@ describe "Joosy.Resource.Collection", ->
     expect(callback.callCount).toEqual 0
     
   it "should add item from collection", ->
-    @collection.reset $.parseJSON(data)
+    @collection.load $.parseJSON(data)
     @collection.bind 'changed', callback = sinon.spy()
     @collection.add new Test {'rocking': 'mocking'}
     expect(@collection.data.length).toEqual 3
@@ -78,7 +78,7 @@ describe "Joosy.Resource.Collection", ->
     expect(@collection.at(3).e).toEqual {'rocking': 'mocking'}
     
   it "should find items by id", ->
-    @collection.reset $.parseJSON(data)
+    @collection.load $.parseJSON(data)
     
     expect(@collection.findById 1).toEqual @collection.data[0]
     expect(@collection.findById 2).toEqual @collection.data[1]

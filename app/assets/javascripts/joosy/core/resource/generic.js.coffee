@@ -8,7 +8,7 @@
 #     @beforeLoad (data) ->
 #       data.real = true
 #   
-#   r = R.create {r: {foo: {bar: 'baz'}}}
+#   r = R.build {r: {foo: {bar: 'baz'}}}
 #   
 #   r('foo')                  # {baz: 'baz'}
 #   r('real')                 # true
@@ -20,44 +20,31 @@ class Joosy.Resource.Generic extends Joosy.Module
   @include Joosy.Modules.Events
 
   #
-  # Sets the data source description (which is NOT required)
-  # @note This has no use in Generic but is required in any descendant
-  # 
-  # @param [mixed] Source can be any type including lambda.
-  #   If lambda is given resource will not expect direct {Joosy.Resource.Generic.create} calls
-  #   You'll have to prepare descendant with {Joosy.Resource.Generic.at} first.
+  # Default primary key field 'id'
   #
-  # @example Simple case
-  #   Class Y extends Joosy.Resource.Generic
-  #     @source 'fluffies'
-  #   
-  #   r = Y.create {}
-  #
-  # @example Case with lambda
-  #   class R extends Joosy.Resource.Generic
-  #     @source -> (path) "/"+path
-  #   
-  #   r = R.create {}                 # will raise exception
-  #   r = R.at('foo/bar').create {}   # will work as expected
-  #
-  @source: (source) -> @__source = source
-  
-  #
-  # Creates the proxy of current resource with proper {Joosy.Resource.Generic.source} value
-  #
-  # @note Should be used together with lambda source (see {Joosy.Resource.Generic.source} for example)
-  #
-  @at: ->
-    if !Object.isFunction @__source
-      throw new Error "#{Joosy.Module.__className @}> should be created directly (without `at')"
+  __primaryKey: 'id'
 
+  #
+  # Sets the field containing primary key.
+  #
+  # @note It has no direct use inside the REST resource itself and can be omited.
+  #   But it usually should not since we have plans on adding some kind of Identity Map to Joosy.
+  #
+  # @param [String] primary     Name of the field
+  #
+  @primaryKey: (primaryKey) -> @::__primaryKey = primaryKey
+
+  #
+  # Creates the proxy of current resource binded as a child of given entity
+  #
+  @at: (entity) ->
     #
     # Class inheritance used to create proxy
     #
     # @private
     #
     class clone extends this
-    clone.__source = @__source arguments...
+    clone.__source = entity
     clone
 
   #
@@ -84,17 +71,6 @@ class Joosy.Resource.Generic extends Joosy.Module
   __collection: ->
     named = @__entityName.camelize().pluralize() + 'Collection'
     if window[named] then window[named] else Joosy.Resource.Collection
-  
-  #
-  # Allows to modify data before it gets stored.
-  # You can define several beforeLoad filters that will be chained.
-  #
-  # @param [Function] action    `(Object) -> Object` to call
-  #
-  @beforeLoad: (action) ->
-    unless @::hasOwnProperty '__beforeLoads'
-      @::__beforeLoads = [].concat @.__super__.__beforeLoads || []
-    @::__beforeLoads.push action
 
   #
   # Dynamically creates collection of inline resources.
@@ -109,7 +85,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #     @entity 'puppy'
   #     @map 'zombies'
   #   
-  #   p = Puppy.create {zombies: [{foo: 'bar'}]}
+  #   p = Puppy.build {zombies: [{foo: 'bar'}]}
   #   
   #   p('zombies')            # Direct access: [{foo: 'bar'}]
   #   p.zombies               # Wrapped Collection of Zombie instances
@@ -128,10 +104,21 @@ class Joosy.Resource.Generic extends Joosy.Module
     @beforeLoad (data) ->
       if Object.isArray data[name]
         @[name] = new (klass::__collection()) klass
-        @[name].reset data[name]
+        @[name].load data[name]
       else if Object.isObject data[name]
-        @[name] = klass.create data[name]
+        @[name] = klass.build data[name]
       data
+  
+  #
+  # Allows to modify data before it gets stored.
+  # You can define several beforeLoad filters that will be chained.
+  #
+  # @param [Function] action    `(Object) -> Object` to call
+  #
+  @beforeLoad: (action) ->
+    unless @::hasOwnProperty '__beforeLoads'
+      @::__beforeLoads = [].concat @.__super__.__beforeLoads || []
+    @::__beforeLoads.push action
 
   #
   # Wraps instance of resource inside shim-function allowing to track
@@ -139,7 +126,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # @return [Joosy.Resource.Generic]
   #
-  @create: ->    
+  @build: ->    
     shim = ->
       shim.__call.apply shim, arguments
 
@@ -156,14 +143,21 @@ class Joosy.Resource.Generic extends Joosy.Module
     shim
 
   #
-  # Should NOT be called directly, use {::create} instead
+  # Should NOT be called directly, use {::build} instead
   #
   # @private
   # @param [Object] data      Data to store
   #
   constructor: (data) ->
     @__fillData data, false
-    
+
+
+  id: ->
+    @e[@__primaryKey]
+
+  knownAttributes: ->
+    @e.keys()
+
   #
   # Set the resource data manually
   #
@@ -171,7 +165,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # @return [Joosy.Resource.Generic]      Returns self
   #
-  reset: (data) ->
+  load: (data) ->
     @__fillData data
     return this
   
@@ -218,7 +212,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       [@e, path]
 
   #
-  # Wrapper for {Joosy.Resource.Generic.create} magic
+  # Wrapper for {Joosy.Resource.Generic.build} magic
   #
   __call: (path, value) ->
     if arguments.length > 1

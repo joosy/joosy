@@ -17,7 +17,7 @@ describe "Joosy.Form", ->
       @entity 'test'
     @Test = Test
 
-    @resource = Test.create
+    @resource = Test.build
       foo: 'foo',
       bar: 'bar'
       camelBaz: 'baz'
@@ -95,7 +95,7 @@ describe "Joosy.Form", ->
       expect(@nudeForm.fields[1].value).toEqual 'bar'
       expect(@nudeForm.container.attr 'action').toEqual '/tests/calculate'
 
-      resource = @Test.create 'someId'
+      resource = @Test.build 'someId'
 
       @nudeForm.fill resource, 
         action: 'calculate'

@@ -54,7 +54,7 @@ describe "Joosy.Modules.Renderer", ->
       expect(elem.text()).toBe "new"
     
   it "should render resources and keep html up2date", ->
-    data = Joosy.Resource.Generic.create zombie: 'rock'
+    data = Joosy.Resource.Generic.build zombie: 'rock'
 
     @TestContainer.view (locals) ->
       template = (locals) -> 
@@ -86,7 +86,7 @@ describe "Joosy.Modules.Renderer", ->
 
     data = new Joosy.Resource.Collection(Foo)
     
-    data.reset [
+    data.load [
         { zombie: 'rock' },
         { zombie: 'never sleep' }
       ]

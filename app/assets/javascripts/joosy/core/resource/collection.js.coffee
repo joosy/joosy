@@ -12,7 +12,7 @@
 #     
 #   collection = new Joosy.Resource.Collection(R)
 #     
-#   collection.reset [{foo: 'bar'}, {foo: 'baz'}]
+#   collection.load [{foo: 'bar'}, {foo: 'baz'}]
 #   collection.each (resource) ->
 #     resource('foo')
 #
@@ -57,13 +57,13 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # Clears the storage and attempts to import given array
   #
-  # @param [Array, Hash] entities     Array of entities to import.
-  #   If hash was given will seek for moodel name camelized and pluralized.
-  # @param [Boolean] notify           Indicates whether to trigger 'changed' event
+  # @param [Array, Hash] entities         Array of entities to import.
+  #                                       If hash was given will seek for moodel name camelized and pluralized.
+  # @param [Boolean] notify               Indicates whether to trigger 'changed' event
   #
   # @return [Joosy.Resource.Collection]   Returns self.
   #
-  reset: (entities, notify=true) ->
+  load: (entities, notify=true) ->
     if @__beforeLoad?
       entities = @__beforeLoad entities
 
@@ -88,7 +88,7 @@ class Joosy.Resource.Collection extends Joosy.Module
         throw new Error "Can not read incoming JSON" 
 
     collection.map (x) =>
-      @model.create x
+      @model.build x
       
   #
   # Calls callback for each Resource inside Collection
@@ -122,7 +122,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   # @return [Joosy.Resource.Generic]
   #
   findById: (id) ->
-    @data.find (x) -> x('id').toString() == id.toString()
+    @data.find (x) -> x.id().toString() == id.toString()
   
   #
   # Gets resource by its index inside collection

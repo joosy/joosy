@@ -19,10 +19,6 @@
 #
 class Joosy.Resource.REST extends Joosy.Resource.Generic
 
-  #
-  # Default primary key field 'id'
-  #
-  __primaryKey: 'id'
   
   #
   # Implements `@collection` default behavior.
@@ -31,16 +27,6 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   __collection: ->
     named = @__entityName.camelize().pluralize() + 'Collection'
     if window[named] then window[named] else Joosy.Resource.RESTCollection
-
-  #
-  # Sets the field containing primary key.
-  #
-  # @note It has no direct use inside the REST resource itself and can be omited.
-  #   But it usually should not since we have plans on adding some kind of Identity Map to Joosy.
-  #
-  # @param [String] primary     Name of the field
-  #
-  @primary: (primary) -> @::__primaryKey = primary
 
   #
   # Should NOT be called directly, use {Joosy.Resource.Generic.create} instead

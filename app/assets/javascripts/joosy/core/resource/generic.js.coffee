@@ -24,6 +24,8 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   __primaryKey: 'id'
 
+  __source: false
+
   #
   # Allows to modify data before it gets stored.
   # You can define several beforeLoad filters that will be chained.
@@ -144,6 +146,11 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @param [Object] data      Data to store
   #
   constructor: (data) ->
+    if Object.isNumber(data) || Object.isString(data)
+      id   = data
+      data = {}
+      data[@__primaryKey] = id
+
     @__fillData data, false
 
 
@@ -236,8 +243,7 @@ class Joosy.Resource.Generic extends Joosy.Module
     @raw  = data
     @data = @__prepareData data
     
-    if notify
-      @trigger 'changed'
+    @trigger 'changed' if notify
 
     null
 

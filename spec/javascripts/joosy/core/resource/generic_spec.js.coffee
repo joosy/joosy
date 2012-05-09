@@ -1,6 +1,9 @@
 describe "Joosy.Resource.Generic", ->
 
   beforeEach ->
+    class @Test extends Joosy.Resource.REST
+      @entity 'test'
+
     @resource = Joosy.Resource.Generic.build @data =
       foo: 'bar'
       bar: 'baz'
@@ -8,6 +11,8 @@ describe "Joosy.Resource.Generic", ->
         deep:
           value: 'boo!'
 
+  it "should have default primary key", ->
+    expect(@Test::__primaryKey).toEqual 'id'
 
   it "should remember where it belongs", ->
     resource = new Joosy.Resource.Generic foo: 'bar'

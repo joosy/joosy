@@ -1,7 +1,11 @@
 beforeEach ->
+  Joosy.Resource.Generic.resetIdentity()
+
   window.JST = {}
   $('body').append('<div id="ground">')
+
   @ground = $('body #ground')
+
   @seedGround = ->
     @ground.html('
       <div id="application" class="application">
@@ -20,6 +24,7 @@ beforeEach ->
         <div id="footer" class="footer" />
       </div>
     ')
+
   @addMatchers
     toBeSequenced: () ->
       if !Object.isArray(@actual) || @actual.length == 0

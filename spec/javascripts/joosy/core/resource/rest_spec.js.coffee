@@ -1,10 +1,14 @@
 describe "Joosy.Resource.REST", ->
 
+  class FluffyInline extends Joosy.Resource.REST
+    @entity 'fluffy_inline'
+
   class FluffyParent extends Joosy.Resource.REST
     @entity 'test_parent'
 
   class Fluffy extends Joosy.Resource.REST
     @entity 'test'
+    @map 'test_inlines', FluffyInline
 
   beforeEach ->
     @server = sinon.fakeServer.create()
@@ -152,3 +156,16 @@ describe "Joosy.Resource.REST", ->
         resource.delete callback
         checkAndRespond @server.requests[0], 'DELETE', /^\/tests/, rawData
 
+  describe "identity map", ->
+
+    it "handles finds", ->
+      inline = FluffyInline.build(1)
+      root   = Fluffy.find 1
+
+      inline.bind 'changed', callback = sinon.spy()
+
+      checkAndRespond @server.requests[0], 'GET', /^\/tests\/1\?_=\d+/,
+        '{"id": 1, "test_inlines": [{"id": 1, "name": 1}, {"id": 2, "name": 2}]}'
+
+      expect(inline 'name').toEqual 1
+      expect(callback.callCount).toEqual 1

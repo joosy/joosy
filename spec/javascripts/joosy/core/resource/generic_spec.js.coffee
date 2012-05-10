@@ -1,9 +1,13 @@
 describe "Joosy.Resource.Generic", ->
 
-  beforeEach ->
-    class @Test extends Joosy.Resource.REST
-      @entity 'test'
+  class TestInline extends Joosy.Resource.Generic
+    @entity 'test_inline'
 
+  class Test extends Joosy.Resource.REST
+    @entity 'test'
+    @map 'test_inlines', TestInline
+
+  beforeEach ->
     @resource = Joosy.Resource.Generic.build @data =
       foo: 'bar'
       bar: 'baz'
@@ -11,23 +15,23 @@ describe "Joosy.Resource.Generic", ->
         deep:
           value: 'boo!'
 
-  it "should have default primary key", ->
-    expect(@Test::__primaryKey).toEqual 'id'
+  it "has primary key", ->
+    expect(Test::__primaryKey).toEqual 'id'
 
-  it "should remember where it belongs", ->
+  it "remembers where it belongs", ->
     resource = new Joosy.Resource.Generic foo: 'bar'
     expect(resource.data).toEqual foo: 'bar'
     
-  it "should produce magic function", ->
+  it "produces magic function", ->
     expect(Object.isFunction @resource).toBeTruthy()
     expect(@resource.data).toEqual @data
     
-  it "should get values", ->
+  it "gets values", ->
     expect(@resource 'foo').toEqual 'bar'
     expect(@resource 'very.deep').toEqual value: 'boo!'
     expect(@resource 'very.deep.value').toEqual 'boo!'
     
-  it "should set values", ->
+  it "sets values", ->
     expect(@resource 'foo').toEqual 'bar'
     @resource 'foo', 'baz'
     expect(@resource 'foo').toEqual 'baz'
@@ -49,7 +53,7 @@ describe "Joosy.Resource.Generic", ->
     # clone won't be instanceof Fluffy in IE
     #expect(clone.build({}) instanceof Fluffy).toBeTruthy()
     
-  it "should trigger 'changed' right", ->
+  it "triggers 'changed' right", ->
     callback = sinon.spy()
     @resource.bind 'changed', callback
     @resource 'foo', 'baz'
@@ -57,7 +61,7 @@ describe "Joosy.Resource.Generic", ->
     
     expect(callback.callCount).toEqual(2)
     
-  it "should properly handle the before filter", ->
+  it "handles the before filter", ->
     class R extends Joosy.Resource.Generic
       @beforeLoad (data) ->
         data ||= {}
@@ -125,3 +129,21 @@ describe "Joosy.Resource.Generic", ->
       ]
     expect(resource('rumbaMumbas') instanceof OloCollection).toBeTruthy()
     expect(resource('rumbaMumbas').at(0)('foo')).toEqual 'bar'
+
+  describe "identity map", ->
+
+    it "handles builds", ->
+      foo = Test.build 1
+      bar = Test.build 1
+
+      expect(foo).toEqual bar
+
+    it "handles maps", ->
+      inline = TestInline.build(1)
+      root   = Test.build
+        id: 1
+        test_inlines: [{id: 1}, {id: 2}]
+
+      inline('foo', 'bar')
+
+      expect(root('test_inlines').at(0)('foo')).toEqual 'bar'

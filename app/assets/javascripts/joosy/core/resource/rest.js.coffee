@@ -97,7 +97,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
         result.load data
         callback?(result)
     else
-      result = @build()
+      result = @build where
       @__query @memberPath(where, options), 'GET', options.params, (data) =>
         result.load data
         callback?(result)

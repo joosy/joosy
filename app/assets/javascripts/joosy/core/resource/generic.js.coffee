@@ -26,6 +26,9 @@ class Joosy.Resource.Generic extends Joosy.Module
 
   __source: false
 
+  @resetIdentity: ->
+    Joosy.Resource.Generic.identity = {}
+
   #
   # Allows to modify data before it gets stored.
   # You can define several beforeLoad filters that will be chained.
@@ -47,6 +50,9 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   @primaryKey: (primaryKey) -> @::__primaryKey = primaryKey
 
+  @source: (location) ->
+    @__source = location
+
   #
   # Creates the proxy of current resource binded as a child of given entity
   #
@@ -57,7 +63,12 @@ class Joosy.Resource.Generic extends Joosy.Module
     # @private
     #
     class clone extends this
-    clone.__source = entity
+
+    if entity instanceof Joosy.Resource.Generic
+      clone.__source = entity.memberPath()
+    else
+      clone.__source = entity
+
     clone
 
   #
@@ -123,7 +134,12 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # @return [Joosy.Resource.Generic]
   #
-  @build: ->    
+  @build: (data={}) ->
+    klass = @::__entityName
+
+    Joosy.Resource.Generic.identity ||= {}
+    Joosy.Resource.Generic.identity[klass] ||= {}
+
     shim = ->
       shim.__call.apply shim, arguments
 
@@ -134,8 +150,23 @@ class Joosy.Resource.Generic extends Joosy.Module
         shim[key] = value
         
     shim.constructor = @
+
+    if Object.isNumber(data) || Object.isString(data)
+      id   = data
+      data = {}
+      data[shim.__primaryKey] = id
     
-    @apply shim, arguments
+    if Joosy.Application.identity
+      id = data[shim.__primaryKey]
+
+      if id? && Joosy.Resource.Generic.identity[klass][id]
+        shim = Joosy.Resource.Generic.identity[klass][id]
+        shim.load data
+      else
+        @apply shim, [data]
+        Joosy.Resource.Generic.identity[klass][id] = shim
+    else
+      @apply shim, [data]
 
     shim
 
@@ -146,13 +177,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @param [Object] data      Data to store
   #
   constructor: (data={}) ->
-    if Object.isNumber(data) || Object.isString(data)
-      id   = data
-      data = {}
-      data[@__primaryKey] = id
-
     @__fillData data, false
-
 
   id: ->
     @data[@__primaryKey]
@@ -241,7 +266,9 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   __fillData: (data, notify=true) ->
     @raw  = data
-    @data = @__prepareData data
+    @data = {} unless @hasOwnProperty 'data'
+
+    Joosy.Module.merge @data, @__prepareData(data)
     
     @trigger 'changed' if notify
 

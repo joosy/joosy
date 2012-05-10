@@ -12,8 +12,9 @@ describe "Joosy.Resource.RESTCollection", ->
 
   it "loads", ->
     @collection.load [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]
+    console.log @collection.data[0].constructor
     expect(@collection.data.length).toEqual 2
-    expect(@collection.data[0].constructor == Test).toBeTruthy()
+    expect(@collection.data[0] instanceof Test).toBeTruthy()
     expect(@collection.data[0].data.name).toEqual 'test1'
 
   it "reloads", ->

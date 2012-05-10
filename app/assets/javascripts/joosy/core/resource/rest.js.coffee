@@ -8,11 +8,6 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     named = @__entityName.camelize().pluralize() + 'Collection'
     if window[named] then window[named] else Joosy.Resource.RESTCollection
 
-  #
-  # find(1, parent: foo, from: 'foos', params: {})
-  # find('all', parent: foo, from: 'foos', params: {})
-  #
-
   @memberPath: (id, options={}) ->
     path  = @__source || ("/" + @::__entityName.pluralize())
     path += "/#{id}"
@@ -25,8 +20,8 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     path += "/#{options.from}" if options.from?
     path
 
-  memberPath: ->
-    @constructor.memberPath @id()
+  memberPath: (options={}) ->
+    @constructor.memberPath @id(), options
 
   @collectionPath: (options={}) ->
     path  = @__source || ("/" + @::__entityName.pluralize())
@@ -43,48 +38,85 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     @constructor.collectionPath()
 
   @get: (options, callback) ->
+    if Object.isFunction(options)
+      callback = options
+      options  = {}
     @__query @collectionPath(options), 'GET', options.params, callback
 
   @post: (options, callback) ->
+    if Object.isFunction(options)
+      callback = options
+      options  = {}
     @__query @collectionPath(options), 'POST', options.params, callback
 
   @put: (options, callback) ->
+    if Object.isFunction(options)
+      callback = options
+      options  = {}
     @__query @collectionPath(options), 'PUT', options.params, callback
 
   @delete: (options, callback) ->
+    if Object.isFunction(options)
+      callback = options
+      options  = {}
     @__query @collectionPath(options), 'DELETE', options.params, callback
 
   get: (options, callback) ->
-    @__query @memberPath(options), 'GET', options.params, callback
+    if Object.isFunction(options)
+      callback = options
+      options  = {}
+    @constructor.__query @memberPath(options), 'GET', options.params, callback
 
   post: (options, callback) ->
-    @__query @memberPath(options), 'POST', options.params, callback
+    if Object.isFunction(options)
+      callback = options
+      options  = {}
+    @constructor.__query @memberPath(options), 'POST', options.params, callback
 
   put: (options, callback) ->
-    @__query @memberPath(options), 'PUT', options.params, callback
+    if Object.isFunction(options)
+      callback = options
+      options  = {}
+    @constructor.__query @memberPath(options), 'PUT', options.params, callback
 
   delete: (options, callback) ->
-    @__query @memberPath(options), 'DELETE', options.params, callback
+    if Object.isFunction(options)
+      callback = options
+      options  = {}
+    @constructor.__query @memberPath(options), 'DELETE', options.params, callback
 
-  find: (where, options, callback=nil) ->
+  @find: (where, options={}, callback=false) ->
     if Object.isFunction(options)
       callback = options
       options  = {}
 
     if where == 'all'
-      @constructor.__query @collectionPath(options), 'GET', options.params, (data) =>
-        collection = new (@::__collection()) this, options
-        collection.load data
-        callback(collection)
+      result = new (@::__collection()) this, options
+
+      @__query @collectionPath(options), 'GET', options.params, (data) =>
+        result.load data
+        callback?(result)
     else
-      @constructor.__query @memberPath(where, options), 'GET', options.params, (data) =>
-        resource = @build data
-        callback (resource)
+      result = @build()
+      @__query @memberPath(where, options), 'GET', options.params, (data) =>
+        result.load data
+        callback?(result)
+
+    result
 
   @__query: (path, method, params, callback) ->
-    $.ajax url,
+    $.ajax path,
       data: params
       type: method
       success: callback
       cache: false
       dataType: 'json'
+
+  reload: (options={}, callback=false) ->
+    if Object.isFunction(options)
+      callback = options
+      options  = {}
+
+    @constructor.__query @memberPath(options), 'GET', options.params, (data) =>
+      @load data
+      callback? this

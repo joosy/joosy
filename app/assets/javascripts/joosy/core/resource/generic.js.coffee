@@ -145,7 +145,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @private
   # @param [Object] data      Data to store
   #
-  constructor: (data) ->
+  constructor: (data={}) ->
     if Object.isNumber(data) || Object.isString(data)
       id   = data
       data = {}
@@ -177,7 +177,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @param [String] path    Attribute name to get. Can contain dots to get inline Objects values
   # @return [mixed]
   #
-  get: (path) ->
+  __get: (path) ->
     target = @__callTarget path
 
     if target[0] instanceof Joosy.Resource.Generic
@@ -191,7 +191,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @param [String] path    Attribute name to set. Can contain dots to get inline Objects values
   # @param [mixed] value    Value to set
   #
-  set: (path, value) ->
+  __set: (path, value) ->
     target = @__callTarget path
 
     if target[0] instanceof Joosy.Resource.Generic
@@ -230,9 +230,9 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   __call: (path, value) ->
     if arguments.length > 1
-      @set path, value
+      @__set path, value
     else
-      @get path
+      @__get path
 
   #
   # Defines how exactly prepared data should be saved

@@ -18,6 +18,7 @@ describe "Joosy.Form", ->
     @Test = Test
 
     @resource = Test.build
+      id: 1,
       foo: 'foo',
       bar: 'bar'
       camelBaz: 'baz'
@@ -72,14 +73,14 @@ describe "Joosy.Form", ->
       expect(@nudeForm.fields[2].checked).toEqual true
       expect(@nudeForm.fields[2].value).toEqual '1'
       expect(@nudeForm.container.attr('method').toLowerCase()).toEqual 'post'
-      expect(@nudeForm.container.attr 'action').toEqual '/tests/'
+      expect(@nudeForm.container.attr 'action').toEqual '/tests/1'
       expect(@nudeForm.__resource).toEqual @resource
 
     it "should fill form with camelized properties", ->
       @putForm.fill @resource
       expect(@putForm.fields[0].value).toEqual 'baz'
       expect(@putForm.container.attr('method').toLowerCase()).toEqual 'post'
-      expect(@putForm.container.attr 'action').toEqual '/tests/'
+      expect(@putForm.container.attr 'action').toEqual '/tests/1'
 
     it "should fill form with decorator", ->
       @moreForm.fill @resource, 
@@ -93,7 +94,7 @@ describe "Joosy.Form", ->
         action: 'calculate'
       expect(@nudeForm.fields[0].value).toEqual 'foo'
       expect(@nudeForm.fields[1].value).toEqual 'bar'
-      expect(@nudeForm.container.attr 'action').toEqual '/tests/calculate'
+      expect(@nudeForm.container.attr 'action').toEqual '/tests/1/calculate'
 
       resource = @Test.build 'someId'
 
@@ -111,7 +112,7 @@ describe "Joosy.Form", ->
 
     it "should trigger 'success'", ->
       expect(@target.method).toEqual 'POST'
-      expect(@target.url).toEqual '/tests/'
+      expect(@target.url).toEqual '/tests/1'
       @target.respond 200, 'Content-Type': 'application/json', '{"form": "works"}'
       expect(@spy.callCount).toEqual 1
       expect(@spy.args[0][0]).toEqual {form: 'works'}

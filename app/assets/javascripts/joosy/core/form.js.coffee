@@ -151,7 +151,7 @@ class Joosy.Form extends Joosy.Module
   #
   fill: (resource, opts) ->
     @__resource = resource
-    action      = if opts?.action? then "#{opts.action}" else ""
+    action      = if opts?.action? then "#{opts.action}" else undefined
     
     if opts?.decorator?
       data = opts.decorator resource.data
@@ -169,11 +169,8 @@ class Joosy.Form extends Joosy.Module
         else
           input.removeAttr 'checked'
 
-    if resource.id
-      @__markMethod(opts?.method || 'PUT')
-      url = resource.constructor.__buildSource(extension: resource.id + ("/" if action?) + action)
-    else
-      url = resource.constructor.__buildSource(extension: action)
+    @__markMethod(opts?.method || 'PUT') if resource.id()
+    url = resource.memberPath(from: action)
 
     @container.attr 'action', url
     @container.attr 'method', 'POST'

@@ -66,7 +66,7 @@ describe "Joosy.Form", ->
       @putForm    = new Joosy.Form @putForm
       @moreForm   = new Joosy.Form @moreForm
 
-    it "should fill form, set propert action and method and store resource", ->
+    it "should fill form, set proper action and method and store resource", ->
       @nudeForm.fill @resource
       expect(@nudeForm.fields[0].value).toEqual 'foo'
       expect(@nudeForm.fields[1].value).toEqual 'bar'
@@ -91,7 +91,7 @@ describe "Joosy.Form", ->
 
     it "should fill form with extended action", ->
       @nudeForm.fill @resource, 
-        action: 'calculate'
+        action: @resource.memberPath(from: 'calculate')
       expect(@nudeForm.fields[0].value).toEqual 'foo'
       expect(@nudeForm.fields[1].value).toEqual 'bar'
       expect(@nudeForm.container.attr 'action').toEqual '/tests/1/calculate'
@@ -99,7 +99,7 @@ describe "Joosy.Form", ->
       resource = @Test.build 'someId'
 
       @nudeForm.fill resource, 
-        action: 'calculate'
+        action: resource.memberPath(from: 'calculate')
       expect(@nudeForm.container.attr 'action').toEqual '/tests/someId/calculate'
 
   describe "Callbacks", ->

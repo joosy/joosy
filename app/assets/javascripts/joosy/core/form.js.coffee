@@ -50,11 +50,11 @@ class Joosy.Form extends Joosy.Module
   #
   # @see #constructor
   #
-  # @param [Element] form       Instance of HTML form element
-  # @param [Hash] opts          Options
+  # @param [Element] form          Instance of HTML form element
+  # @param [Hash] options          Options
   #
-  @submit: (form, opts={}) ->
-    form = new @(form, opts)
+  @submit: (form, options={}) ->
+    form = new @(form, options)
     form.container.submit()
     form.unbind()
     null
@@ -73,31 +73,32 @@ class Joosy.Form extends Joosy.Module
   # to handle file uploading.
   #
   # @param [jQuery] form        Form element instance
-  # @param [Hash] opts          Options
+  # @param [Hash] options       Options
   #
-  # @option opts [Function] before        `(XHR) -> Bollean` to trigger right before submit.
+  # @option options [Function] before        `(XHR) -> Bollean` to trigger right before submit.
   #   By default will run form invalidation cleanup. This behavior can be canceled
   #   by returning false from your own before callback. Both of callbacks will run if
   #   you return true.
   #
-  # @option opts [Function] success       `(Object) -> null` triggers on 200 HTTP code from server. 
+  # @option options [Function] success       `(Object) -> null` triggers on 200 HTTP code from server. 
   #   Pases in the parsed JSON.
   #
-  # @option opts [Function] progress      `(Float) -> null` runs periodically while form is uploading
+  # @option options [Function] progress      `(Float) -> null` runs periodically while form is uploading
   #
-  # @option opts [Function] error         `(Object) -> Boolean` triggers if server responded with anything but 200.
+  # @option options [Function] error         `(Object) -> Boolean` triggers if server responded with anything but 200.
   #   By default will run form invalidation routine. This behavior can be canceled
   #   by returning false from your own error callback. Both of callbacks will run if
   #   you return true.
   #
-  # @option opts [Joosy.Resource.Generic] resource      The resource to fill the form with
-  # @option opts [String] resourceName                  The string to use as a resource name prefix for fields to match invalidation
+  # @option options [Joosy.Resource.Generic] resource      The resource to fill the form with
+  # @option options [String] resourceName                  The string to use as a resource name prefix for fields to match invalidation
+  # @option options [String] action                        Action URL for the form
   #
-  constructor: (form, opts={}) ->
-    if Object.isFunction opts
-      @success = opts
+  constructor: (form, options={}) ->
+    if Object.isFunction options
+      @success = options
     else
-      Object.each opts, (key, value) =>
+      Object.each options, (key, value) =>
         @[key] = value
 
     @container = $(form)
@@ -127,8 +128,8 @@ class Joosy.Form extends Joosy.Module
               @progress (event.position / event.total * 100).round 2
         xhr
 
-    if opts.resource?
-      @fill(opts.resource, opts)
+    if options.resource?
+      @fill(options.resource, options)
       delete @resource
 
   #
@@ -142,19 +143,18 @@ class Joosy.Form extends Joosy.Module
   # Form will use give resource while doing invalidation routine.
   #
   # @param [Resource] resource      Resource to fill fields with
-  # @param [Hash] opts              Options
+  # @param [Hash] options           Options
   #
-  # @option opts [Function] decorator     `(Object) -> Object` decoration callback
+  # @option options [Function] decorator     `(Object) -> Object` decoration callback
   #   Pases in the parsed JSON.
   #
-  # @option opts [String] action          URL ending to assign to a form action
+  # @option options [String] action          Action URL for the form
   #
-  fill: (resource, opts) ->
+  fill: (resource, options) ->
     @__resource = resource
-    action      = if opts?.action? then "#{opts.action}" else undefined
-    
-    if opts?.decorator?
-      data = opts.decorator resource.data
+
+    if options?.decorator?
+      data = options.decorator resource.data
     else
       data = resource.data
 
@@ -169,8 +169,8 @@ class Joosy.Form extends Joosy.Module
         else
           input.removeAttr 'checked'
 
-    @__markMethod(opts?.method || 'PUT') if resource.id()
-    url = resource.memberPath(from: action)
+    @__markMethod(options?.method || 'PUT') if resource.id()
+    url = options?.action || resource.memberPath()
 
     @container.attr 'action', url
     @container.attr 'method', 'POST'

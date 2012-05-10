@@ -3,13 +3,6 @@ describe "Joosy.Resource.RESTCollection", ->
   class Test extends Joosy.Resource.REST
     @entity 'test'
 
-  data = '[{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]'
-
-  checkData = (collection) ->
-    expect(collection.data.length).toEqual 2
-    expect(collection.data[0].constructor == Test).toBeTruthy()
-    expect(collection.data[0].data.name).toEqual 'test1'
-
   beforeEach ->
     @server = sinon.fakeServer.create()
     @collection = new Joosy.Resource.RESTCollection(Test)

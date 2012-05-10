@@ -70,3 +70,28 @@ describe "Joosy", ->
     runs -> Joosy.preloadImages images, callback
     waits(150)
     runs -> expect(callback.callCount).toEqual(2)
+
+  it "should define resource", ->
+    container = {}
+    Joosy.defineResource 'foo', '', container
+    expect(Object.isFunction container.Foo).toBeTruthy()
+    expect(Object.isFunction container.FoosCollection).toBeTruthy()
+    Joosy.defineResource 'boo'
+    expect(Object.isFunction Boo).toBeTruthy()
+    expect(Object.isFunction BoosCollection).toBeTruthy()
+
+  it "should define resource", ->
+    window.Defined = 'this'
+    window.DefinedsCollection = 'that'
+    Joosy.defineResources
+      '':
+        test: '/test'
+        defined: 'no'
+      'Scope.Test':
+        another: ''
+    expect(Object.isFunction Test).toBeTruthy()
+    expect(Object.isFunction TestsCollection).toBeTruthy()
+    expect(Object.isFunction Scope.Test.Another).toBeTruthy()
+    expect(Object.isFunction Scope.Test.AnothersCollection).toBeTruthy()
+    expect(Defined).toEqual 'this'
+    expect(DefinedsCollection).toEqual 'that'

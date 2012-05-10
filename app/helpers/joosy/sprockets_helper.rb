@@ -23,4 +23,19 @@ module Joosy::SprocketsHelper
       require_asset Rails.env == 'development' ? app_asset : preloader_asset
     end
   end
+
+  def self.joosy_resources(namespaces=nil)
+    predefined = {}
+    filtered_resources = Joosy::Rails::Engine.resources
+    if namespaces
+      namespaces = Array.wrap namespaces
+      filtered_resources = filtered_resources.select{|key, _| namespaces.include? key }
+    end
+    filtered_resources.each do |namespace, resources|
+      next unless resources && resources.size > 0
+      joosy_namespace = namespace.to_s.camelize.split('::').join('.')
+      predefined[joosy_namespace] = resources
+    end
+    predefined
+  end
 end

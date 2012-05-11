@@ -170,7 +170,8 @@ class Joosy.Form extends Joosy.Module
           input.removeAttr 'checked'
 
     @__markMethod(options?.method || 'PUT') if resource.id()
-    url = options?.action || resource.memberPath()
+
+    url = options?.action || (if resource.id()? then resource.memberPath() else resource.collectionPath())
 
     @container.attr 'action', url
     @container.attr 'method', 'POST'

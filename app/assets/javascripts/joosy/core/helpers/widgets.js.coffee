@@ -5,7 +5,7 @@
 #
 Joosy.helpers 'Application', ->
 
-  @wiget = (element, widget) ->
+  @widget = (element, widget) ->
     uuid    = Joosy.uuid()
     element = document.createElement element
     temp    = document.createElement 'div'

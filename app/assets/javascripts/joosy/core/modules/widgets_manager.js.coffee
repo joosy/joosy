@@ -15,6 +15,9 @@ Joosy.Modules.WidgetsManager =
     if Joosy.Module.hasAncestor widget, Joosy.Widget
       widget = new widget()
 
+    if Object.isFunction(widget)
+      widget = widget()
+
     @__activeWidgets ||= []
     @__activeWidgets.push widget.__load(this, $(container))
 

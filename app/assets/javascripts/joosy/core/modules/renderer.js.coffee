@@ -122,29 +122,41 @@ Joosy.Modules.Renderer =
     if dynamic
       morph  = Metamorph result()
       update = =>
-        for child in stack.children
-          @__removeMetamorphs child
-        stack.children = []
-        morph.html result()
-        @refreshElements?()
+        if morph.isRemoved()
+          for [object, callback] in morph.__bindings
+            object.unbind callback
+        else
+          for child in stack.children
+            @__removeMetamorphs child
+          stack.children = []
+          morph.html result()
+          @refreshElements?()
 
       # This is here to break stack tree and save from
       # repeating DOM handling
       update = update.debounce 0
 
+      morph.__bindings = []
+
       if isCollection
         for resource in locals.data
+          binding = [resource, update]
           resource.bind 'changed', update
-          stack.metamorphBindings.push [resource, update]
+          stack.metamorphBindings.push binding
+          morph.__bindings.push binding
       if isResource || isCollection
+        binding = [locals, update]
         locals.bind 'changed', update
-        stack.metamorphBindings.push [locals, update]
+        stack.metamorphBindings.push binding
+        morph.__bindings.push binding
       else
         for key, object of locals
           if locals.hasOwnProperty key
             if object?.bind? && object?.unbind?
+              binding = [object, update]
               object.bind 'changed', update
-              stack.metamorphBindings.push [object, update]
+              stack.metamorphBindings.push binding
+              morph.__bindings.push binding
 
       morph.outerHTML()
     else

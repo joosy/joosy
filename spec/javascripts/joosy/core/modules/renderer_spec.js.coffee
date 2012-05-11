@@ -22,7 +22,7 @@ describe "Joosy.Modules.Renderer", ->
       @multiplier = (value) ->
         "#{value * 5}"
 
-  it "should update contents, but only while it is bound to DOM", ->
+  it "updates contents, but only while it is bound to DOM", ->
     @TestContainer.view (locals) ->
       template = (locals) ->
         "#{locals.object.value}"
@@ -53,7 +53,7 @@ describe "Joosy.Modules.Renderer", ->
     runs ->
       expect(elem.text()).toBe "new"
     
-  it "should render resources and keep html up2date", ->
+  it "renders resources and keep html up2date", ->
     data = Joosy.Resource.Generic.build zombie: 'rock'
 
     @TestContainer.view (locals) ->
@@ -80,7 +80,7 @@ describe "Joosy.Modules.Renderer", ->
     runs ->
       expect(elem.text()).toBe "suck"
 
-  it "should render collections and keep html up2date", ->
+  it "renders collections and keep html up2date", ->
     class Foo extends Joosy.Resource.Generic
       @entity 'foo'
 
@@ -116,7 +116,7 @@ describe "Joosy.Modules.Renderer", ->
       expect(elem.text()).toBe "suck"
 
 
-  it "should debounce morpher updates", ->
+  it "debounces morpher updates", ->
     @TestContainer.view (locals) ->
       template = (locals) ->
         "#{locals.object.value}"
@@ -151,7 +151,7 @@ describe "Joosy.Modules.Renderer", ->
       expect(elem.text()).toBe "me evil"
       expect(updater.callCount).toEqual 2
 
-  it "should include rendering helpers in locals", ->
+  it "includes rendering helpers in locals", ->
     @TestContainer.helpers "Hoge"
 
     @TestContainer.view (locals) ->
@@ -167,7 +167,7 @@ describe "Joosy.Modules.Renderer", ->
 
     expect(elem.text()).toBe "50"
 
-  it "should include global rendering helpers in locals", ->
+  it "includes global rendering helpers in locals", ->
     Joosy.Helpers.Application.globalMultiplier = (value) ->
       value * 6
 
@@ -183,3 +183,21 @@ describe "Joosy.Modules.Renderer", ->
     elem.html @dummyContainer.__renderer({ })
 
     expect(elem.text()).toBe "60"
+
+  it "proxies onRefresh for containers", ->
+    class Box extends Joosy.Module
+      @include Joosy.Modules.Renderer
+      @include Joosy.Modules.Container
+
+    callback = sinon.spy()
+
+    Box.view (locals) ->
+      template = (locals) -> locals.onRefresh -> callback()
+      @render(template, locals)
+
+    box = new Box
+
+    box.__renderer({ })
+    box.refreshElements()
+
+    expect(callback.callCount).toEqual 1

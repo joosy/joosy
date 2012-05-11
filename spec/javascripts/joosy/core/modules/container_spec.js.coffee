@@ -89,3 +89,11 @@ describe "Joosy.Modules.Container", ->
     expect(callback[0].callCount).toEqual 5
     expect(callback[1].callCount).toEqual 1
     expect(callback[2].callCount).toEqual 3
+
+  it "calls afterRefreshes", ->
+    callback = sinon.spy()
+    @box.onRefresh -> callback()
+
+    @box.refreshElements()
+    @box.refreshElements()
+    expect(callback.callCount).toEqual 1

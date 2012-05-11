@@ -11,6 +11,10 @@ Joosy.Modules.Container =
 
   eventSplitter: /^(\S+)\s*(.*)$/
 
+  onRefresh: (callback) ->
+    @__onRefreshes = [] unless @hasOwnProperty "__onRefreshes"
+    @__onRefreshes.push callback
+
   $: (selector) ->
     $(selector, @container)
 
@@ -26,6 +30,10 @@ Joosy.Modules.Container =
     @__collectElements().each (key, value) =>
       # TODO: Check for possible collisions?
       @[key] = @$(value)
+
+    if @hasOwnProperty "__onRefreshes"
+      @__onRefreshes.each (callback) => callback.apply @
+      @__onRefreshes = []
 
   #
   # Clears old HTML links, set the new HTML from the callback and refreshes elements

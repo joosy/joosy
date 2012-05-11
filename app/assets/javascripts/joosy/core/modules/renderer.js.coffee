@@ -49,18 +49,9 @@ Joosy.Modules.Renderer =
     unless @__helpersInstance
       @__helpersInstance = Object.extended Joosy.Helpers.Application
 
-      @__helpersInstance.widget = (element, widget) =>
-        @widgets ||= {}
-
-        uuid    = Joosy.uuid()
-        element = document.createElement element
-        temp    = document.createElement 'div'
-
-        element.id = uuid
-        @widgets['#'+uuid] = widget
-
-        temp.appendChild element
-        temp.innerHTML
+      if @onRefresh
+        @__helpersInstance.onRefresh = (callback) =>
+          @onRefresh callback
 
       if @__helpers
         for helper in @__helpers
@@ -126,13 +117,15 @@ Joosy.Modules.Renderer =
       Joosy.Module.merge data, renderers
       data
 
+    result = -> template(context())
+
     if dynamic
-      morph  = Metamorph template(context())
+      morph  = Metamorph result()
       update = =>
         for child in stack.children
           @__removeMetamorphs child
         stack.children = []
-        morph.html template(context())
+        morph.html result()
         @refreshElements?()
 
       # This is here to break stack tree and save from
@@ -155,7 +148,7 @@ Joosy.Modules.Renderer =
 
       morph.outerHTML()
     else
-      template context()
+      result()
 
   __renderingStackElement: (parent=null) ->
     metamorphBindings: []

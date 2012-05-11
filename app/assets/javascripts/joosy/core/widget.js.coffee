@@ -60,7 +60,7 @@ class Joosy.Widget extends Joosy.Module
   #
   __load: (@parent, @container, render=true) ->
     if render && @__renderer
-      @container.html @__renderer(@data || {})
+      @swapContainer @container, @__renderer(@data || {})
     @refreshElements()
     @__delegateEvents()
     @__runAfterLoads()

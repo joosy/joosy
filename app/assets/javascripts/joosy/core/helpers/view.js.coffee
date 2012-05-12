@@ -5,6 +5,18 @@
 #
 Joosy.helpers 'Application', ->
   
+  @tag = (name, options={}, content='') ->
+    content = content() if Object.isFunction(content)
+
+    element = document.createElement name
+    temp    = document.createElement 'div'
+
+    element.setAttribute name, value for [name, value] in options
+    element.innerHTML = content
+
+    temp.appendChild element
+    temp.innerHTML
+
   #
   # Converts \n into <br/> in your text
   #

@@ -9,14 +9,14 @@ Joosy.helpers 'Application', ->
     if resource instanceof Joosy.Resource.Generic
       id        = resource.id()
       resource  = resource.__entityName
-      resource += resource + "_#{id}" if id
+      resource += "_#{id}" if id
 
     name: resource + "[#{method}]"
     id:   resource + "_#{method}"
 
-  input = (type, resource, method, options={}) ->
-    description = description(resource, method)
-    @tag 'input', options.merge(type: type, name: name, id: description.id, name: description.name)
+  input = (type, resource, method, options={}) =>
+    d = description(resource, method)
+    @tag 'input', Joosy.Module.merge options, {type: type, name: name, id: d.id, name: d.name}
 
   class Form
     constructor: (@context, @resource, @options) ->
@@ -24,32 +24,31 @@ Joosy.helpers 'Application', ->
     textField: (method, options={}) -> @context.textField(@resource, method, options)
     fileField: (method, options={}) -> @context.fileField(@resource, method, options)
     hiddenField: (method, options={}) -> @context.hiddenField(@resource, method, options)
-    passwordField: (method, options={}) -> @context.textField(@resource, method, options)
+    passwordField: (method, options={}) -> @context.passwordField(@resource, method, options)
     radioButton: (method, tagValue, options={}) -> @context.radioButton(@resource, method, tagValue, options)
     textArea: (method, options={}) -> @context.textArea(@resource, method, options)
-    check_box: (method, options={}, checkedValue=1, uncheckedValue=0) ->
-      @context.check_box(@resource, method, options, checkedValue, uncheckedValue)
+    checkBox: (method, options={}, checkedValue=1, uncheckedValue=0) ->
+      @context.checkBox(@resource, method, options, checkedValue, uncheckedValue)
 
-  @formFor = (resource, options={}, block=false) ->
+  @formFor = (resource, options={}, block) ->
     if Object.isFunction(options)
       block   = options
       options = {}
 
     uuid = Joosy.uuid()
-    form = @tag 'form', {id: uuid}, block.call(this, new Form(this, resource, options))
+    form = @tag 'form', {id: uuid}, block?.call(this, new Form(this, resource, options))
 
-    @onRefresh ->
-      Joosy.Form.attach '#'+uuid, options.merge(resource: resource)
+    @onRefresh? -> Joosy.Form.attach '#'+uuid, options.merge(resource: resource)
 
     form
 
   @label = (resource, method, options={}, content='') ->
-    description = description(resource, method)
+    d = description(resource, method)
     if !Object.isObject(options)
       options = {}
       content = options
 
-    @tag 'label', options.merge(for: description.id), content
+    @tag 'label', Joosy.Module.merge(options, for: d.id), content
 
   @textField     = (resource, method, options={}) -> input 'text', resource, method, options
   @fileField     = (resource, method, options={}) -> input 'file', resource, method, options
@@ -57,18 +56,19 @@ Joosy.helpers 'Application', ->
   @passwordField = (resource, method, options={}) -> input 'password', resource, method, options
 
   @checkBox = (resource, method, options={}, checkedValue=1, uncheckedValue=0) ->
-    description = description(resource, method)
+    d = description(resource, method)
 
-    spy  = @tag 'input', type: 'hidden', name: description.name, id: description.id, value: uncheckedValue
-    box  = @tag 'input', options.merge(type: 'checkbox', name: description.name, id: description.id, value: checkedValue)
+    spy  = @tag 'input', type: 'hidden', name: d.name, id: d.id, value: uncheckedValue
+    box  = @tag 'input', Joosy.Module.merge(options, type: 'checkbox', name: d.name, id: d.id, value: checkedValue)
 
     spy+box
 
   @radioButton = (resource, method, tagValue, options={}) ->
-    @tag 'input', options.merge{type: 'radio', value: tagValue}.merge(description resource, method)
+    options = Joosy.Module.merge(options, type: 'radio', value: tagValue)
+    @tag 'input', Joosy.Module.merge(options, description resource, method)
 
   @textArea = (resource, method, options={}) ->
     value = options.value
     delete options.value
 
-    @tag 'textarea', options.merge(description resource, method), value
+    @tag 'textarea', Joosy.Module.merge(options, description resource, method), value

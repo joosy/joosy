@@ -11,7 +11,7 @@ Joosy.helpers 'Application', ->
     element = document.createElement name
     temp    = document.createElement 'div'
 
-    element.setAttribute name, value for [name, value] in options
+    Object.each options, (name, value) -> element.setAttribute name, value
     element.innerHTML = content
 
     temp.appendChild element

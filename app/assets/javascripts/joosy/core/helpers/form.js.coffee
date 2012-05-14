@@ -16,7 +16,7 @@ Joosy.helpers 'Application', ->
 
   input = (type, resource, method, options={}) =>
     d = description(resource, method)
-    @tag 'input', Joosy.Module.merge options, {type: type, name: name, id: d.id, name: d.name}
+    @tag 'input', Joosy.Module.merge options, {type: type, name: d.name, id: d.id}
 
   class Form
     constructor: (@context, @resource, @options) ->

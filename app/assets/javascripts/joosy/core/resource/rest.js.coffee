@@ -9,7 +9,8 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     if window[named] then window[named] else Joosy.Resource.RESTCollection
 
   @memberPath: (id, options={}) ->
-    path  = @__source || ("/" + @::__entityName.pluralize())
+    path  = ("/" + @::__entityName.pluralize())
+    path  = @__source if @__source? && !options.parent?
     path += "/#{id}"
 
     if options.parent instanceof Joosy.Resource.Generic
@@ -24,7 +25,8 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     @constructor.memberPath @id(), options
 
   @collectionPath: (options={}) ->
-    path  = @__source || ("/" + @::__entityName.pluralize())
+    path = ("/" + @::__entityName.pluralize())
+    path = @__source if @__source? && !options.parent?
 
     if options.parent instanceof Joosy.Resource.Generic
       path = options.parent.memberPath() + path
@@ -105,12 +107,18 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     result
 
   @__query: (path, method, params, callback) ->
-    $.ajax path,
+    options =
       data: params
       type: method
-      success: callback
       cache: false
       dataType: 'json'
+
+    if Object.isFunction(callback)
+      options.success = callback
+    else
+      Joosy.Module.merge options, callback
+
+    $.ajax path, options
 
   reload: (options={}, callback=false) ->
     if Object.isFunction(options)

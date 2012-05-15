@@ -7,11 +7,11 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
     @trigger 'changed' if notify
     this
 
-  reload: (options, callback=false) ->
+  reload: (options={}, callback=false) ->
     if Object.isFunction(options)
       callback = options
       options  = {}
 
     @model.__query @model.collectionPath(options), 'GET', options.params, (data) =>
       @load data
-      callback?(collection)
+      callback?(data)

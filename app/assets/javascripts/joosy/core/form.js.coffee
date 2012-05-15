@@ -151,6 +151,7 @@ class Joosy.Form extends Joosy.Module
   # @option options [String] action          Action URL for the form
   #
   fill: (resource, options) ->
+    resource = resource.build() if Object.isFunction(resource.build)
     @__resource = resource
 
     if options?.decorator?

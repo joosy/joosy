@@ -53,6 +53,18 @@ class Joosy.Module
       what = what.constructor?.__super__
 
     false
+
+  @alias: (method, feature, action) ->
+    chained = "#{method}Without#{feature.camelize()}"
+
+    @::[chained] = @::[method]
+    @::[method] = action
+
+  @aliasStatic: (method, feature, action) ->
+    chained = "#{method}Without#{feature.camelize()}"
+
+    @[chained] = @[method]
+    @[method] = action
     
   #
   # Simple and fast shallow merge implementation.

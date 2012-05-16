@@ -36,7 +36,7 @@ Joosy.helpers 'Application', ->
       options = {}
 
     uuid = Joosy.uuid()
-    form = @tag 'form', {id: uuid}, block?.call(this, new Form(this, resource, options))
+    form = @tag 'form', Object.merge(options.html || {}, id: uuid), block?.call(this, new Form(this, resource, options))
 
     @onRefresh? -> Joosy.Form.attach '#'+uuid, Object.merge(options, resource: resource)
 

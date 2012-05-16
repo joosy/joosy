@@ -232,8 +232,12 @@ class Joosy.Form extends Joosy.Module
       errors = @__stringifyErrors(errors)
       
       Object.each errors, (field, notifications) =>
-        input = @__findField(field).addClass @invalidationClass
+        input = @findField(field).addClass @invalidationClass
         @notification? input, notifications
+
+      return errors
+
+    return false
   
   #
   # Finds field by field name.
@@ -242,7 +246,7 @@ class Joosy.Form extends Joosy.Module
   #
   # @param [String] field         Name of field to find
   #
-  __findField: (field) ->
+  findField: (field) ->
     @fields.filter("[name='#{field}']")
 
   #

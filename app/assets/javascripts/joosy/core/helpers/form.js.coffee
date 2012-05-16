@@ -45,8 +45,8 @@ Joosy.helpers 'Application', ->
   @label = (resource, method, options={}, content='') ->
     d = description(resource, method)
     if !Object.isObject(options)
-      options = {}
       content = options
+      options = {}
 
     @tag 'label', Joosy.Module.merge(options, for: d.id), content
 

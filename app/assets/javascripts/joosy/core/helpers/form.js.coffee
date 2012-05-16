@@ -11,8 +11,8 @@ Joosy.helpers 'Application', ->
       resource  = resource.__entityName
       resource += "_#{id}" if id
 
-    name: resource + "[#{method}]"
-    id:   resource + "_#{method}"
+    name: resource + "#{if method.match(/^\[.*\]$/) then method else "[#{method}]"}"
+    id:   resource + "_#{method.parameterize().underscore()}"
 
   input = (type, resource, method, options={}) =>
     d = description(resource, method)

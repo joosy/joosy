@@ -13,6 +13,8 @@ describe "Joosy.Helpers.Form", ->
 
     it "renders textField", ->
       expect(h.textField 'a', 'b', {a: 'b'}).toEqual '<input a="b" type="text" name="a[b]" id="a_b">'
+      expect(h.textField 'a', '[b]', {a: 'b'}).toEqual '<input a="b" type="text" name="a[b]" id="a_b">'
+      expect(h.textField 'a', '[b][c]', {a: 'b'}).toEqual '<input a="b" type="text" name="a[b][c]" id="a_b_c">'
 
     it "renders fileField", ->
       expect(h.fileField 'a', 'b', {a: 'b'}).toEqual '<input a="b" type="file" name="a[b]" id="a_b">'

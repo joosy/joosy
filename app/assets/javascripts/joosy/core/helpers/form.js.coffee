@@ -21,14 +21,14 @@ Joosy.helpers 'Application', ->
   class Form
     constructor: (@context, @resource, @options) ->
     label: (method, options={}, content='') -> @context.label(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), content)
-    textField: (method, options={}) -> @context.textField(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
-    fileField: (method, options={}) -> @context.fileField(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
-    hiddenField: (method, options={}) -> @context.hiddenField(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
-    passwordField: (method, options={}) -> @context.passwordField(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
     radioButton: (method, tagValue, options={}) -> @context.radioButton(@resource, method, tagValue, Joosy.Module.merge(extendIds: @options.extendIds, options))
     textArea: (method, options={}) -> @context.textArea(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
     checkBox: (method, options={}, checkedValue=1, uncheckedValue=0) ->
       @context.checkBox(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), checkedValue, uncheckedValue)
+
+  ['text', 'file', 'hidden', 'password'].each (type) =>
+    Form.prototype[type+'Field'] = (method, options={}) ->
+      @context[type+'Field'] @resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options)
 
   @formFor = (resource, options={}, block) ->
     if Object.isFunction(options)
@@ -52,10 +52,9 @@ Joosy.helpers 'Application', ->
 
     @tag 'label', Joosy.Module.merge(options, for: d.id), content
 
-  @textField     = (resource, method, options={}) -> input 'text', resource, method, options
-  @fileField     = (resource, method, options={}) -> input 'file', resource, method, options
-  @hiddenField   = (resource, method, options={}) -> input 'hidden', resource, method, options
-  @passwordField = (resource, method, options={}) -> input 'password', resource, method, options
+  ['text', 'file', 'hidden', 'password'].each (type) =>
+    @[type+'Field'] = (resource, method, options={}) -> input type, resource, method, options
+
   @radioButton = (resource, method, tagValue, options={}) -> input 'radio', resource, method, Joosy.Module.merge(value: tagValue, options)
 
   @checkBox = (resource, method, options={}, checkedValue=1, uncheckedValue=0) ->

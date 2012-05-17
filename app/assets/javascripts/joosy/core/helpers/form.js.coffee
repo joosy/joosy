@@ -5,30 +5,30 @@
 #
 Joosy.helpers 'Application', ->
 
-  description = (resource, method) ->
+  description = (resource, method, extendIds) ->
     if resource instanceof Joosy.Resource.Generic
       id        = resource.id()
       resource  = resource.__entityName
-      resource += "_#{id}" if id
 
     name: resource + "#{if method.match(/^\[.*\]$/) then method else "[#{method}]"}"
-    id:   resource + "_#{method.parameterize().underscore()}"
+    id:   resource + (if id && extendIds then '_'+id else '') + "_#{method.parameterize().underscore()}"
 
   input = (type, resource, method, options={}) =>
-    d = description(resource, method)
-    @tag 'input', Joosy.Module.merge options, {type: type, name: d.name, id: d.id}
+    d = description(resource, method, options.extendIds)
+    delete options.extendIds
+    @tag 'input', Joosy.Module.merge {type: type, name: d.name, id: d.id}, options
 
   class Form
     constructor: (@context, @resource, @options) ->
-    label: (method, options={}, content='') -> @context.label(@resource, method, options, content)
-    textField: (method, options={}) -> @context.textField(@resource, method, options)
-    fileField: (method, options={}) -> @context.fileField(@resource, method, options)
-    hiddenField: (method, options={}) -> @context.hiddenField(@resource, method, options)
-    passwordField: (method, options={}) -> @context.passwordField(@resource, method, options)
-    radioButton: (method, tagValue, options={}) -> @context.radioButton(@resource, method, tagValue, options)
-    textArea: (method, options={}) -> @context.textArea(@resource, method, options)
+    label: (method, options={}, content='') -> @context.label(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), content)
+    textField: (method, options={}) -> @context.textField(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
+    fileField: (method, options={}) -> @context.fileField(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
+    hiddenField: (method, options={}) -> @context.hiddenField(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
+    passwordField: (method, options={}) -> @context.passwordField(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
+    radioButton: (method, tagValue, options={}) -> @context.radioButton(@resource, method, tagValue, Joosy.Module.merge(extendIds: @options.extendIds, options))
+    textArea: (method, options={}) -> @context.textArea(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
     checkBox: (method, options={}, checkedValue=1, uncheckedValue=0) ->
-      @context.checkBox(@resource, method, options, checkedValue, uncheckedValue)
+      @context.checkBox(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), checkedValue, uncheckedValue)
 
   @formFor = (resource, options={}, block) ->
     if Object.isFunction(options)
@@ -36,17 +36,19 @@ Joosy.helpers 'Application', ->
       options = {}
 
     uuid = Joosy.uuid()
-    form = @tag 'form', Object.merge(options.html || {}, id: uuid), block?.call(this, new Form(this, resource, options))
+    form = @tag 'form', Joosy.Module.merge(options.html || {}, id: uuid), block?.call(this, new Form(this, resource, options))
 
-    @onRefresh? -> Joosy.Form.attach '#'+uuid, Object.merge(options, resource: resource)
+    @onRefresh? -> Joosy.Form.attach '#'+uuid, Joosy.Module.merge(options, resource: resource)
 
     form
 
   @label = (resource, method, options={}, content='') ->
-    d = description(resource, method)
     if !Object.isObject(options)
       content = options
       options = {}
+
+    d = description(resource, method, options.extendIds)
+    delete options.extendIds
 
     @tag 'label', Joosy.Module.merge(options, for: d.id), content
 
@@ -54,21 +56,18 @@ Joosy.helpers 'Application', ->
   @fileField     = (resource, method, options={}) -> input 'file', resource, method, options
   @hiddenField   = (resource, method, options={}) -> input 'hidden', resource, method, options
   @passwordField = (resource, method, options={}) -> input 'password', resource, method, options
+  @radioButton = (resource, method, tagValue, options={}) -> input 'radio', resource, method, Joosy.Module.merge(value: tagValue, options)
 
   @checkBox = (resource, method, options={}, checkedValue=1, uncheckedValue=0) ->
-    d = description(resource, method)
-
-    spy  = @tag 'input', type: 'hidden', name: d.name, id: d.id, value: uncheckedValue
-    box  = @tag 'input', Joosy.Module.merge(options, type: 'checkbox', name: d.name, id: d.id, value: checkedValue)
+    spy = input 'hidden', resource, method, value: uncheckedValue, extendIds: options.extendIds
+    box = input 'checkbox', resource, method, Joosy.Module.merge(value: checkedValue, options)
 
     spy+box
 
-  @radioButton = (resource, method, tagValue, options={}) ->
-    options = Joosy.Module.merge(options, type: 'radio', value: tagValue)
-    @tag 'input', Joosy.Module.merge(options, description resource, method)
-
   @textArea = (resource, method, options={}) ->
-    value = options.value
+    value     = options.value
+    extendIds = options.extendIds
     delete options.value
+    delete options.extendIds
 
-    @tag 'textarea', Joosy.Module.merge(options, description resource, method), value
+    @tag 'textarea', Joosy.Module.merge(description(resource, method, extendIds), options), value

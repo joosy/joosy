@@ -71,8 +71,7 @@ class Joosy.Resource.Collection extends Joosy.Module
 
     @data = @modelize entities
     
-    if notify
-      @trigger 'changed'
+    @trigger 'changed' if notify
     this
   
   #

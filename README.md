@@ -10,7 +10,8 @@ Besides Rails, Joosy is based on top of [CoffeeScript](http://coffeescript.org/)
 
 Finally, Joosy boosts your development drastically. Just like the Rails do.
 
-* [Joosy basics](http://guides.joosy.ws/guides/basics/getting-started.html): introduction, backbone/ember comparison.
+* [Joosy basics](http://guides.joosy.ws/guides/basics/getting-started.html): introduction and architecture highlights
+* [Joosy vs X](http://guides.joosy.ws/guides/basics/joosy-vs-x.html): comparison to Backbone and Ember.js
 * [Joosy guides](http://guides.joosy.ws/): set of articles that will help you to learn the framework.
 * [Joosy API](http://api.joosy.ws/): Codo-documented API of Joosy.
 

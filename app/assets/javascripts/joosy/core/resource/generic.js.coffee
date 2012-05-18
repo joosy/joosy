@@ -29,6 +29,10 @@ class Joosy.Resource.Generic extends Joosy.Module
 
   __source: false
 
+  #
+  # Clears the identity map cache. Recomended to be called during layout switch to 
+  # ensure correct garbage collection.
+  #
   @resetIdentity: ->
     Joosy.Resource.Generic.identity = {}
 

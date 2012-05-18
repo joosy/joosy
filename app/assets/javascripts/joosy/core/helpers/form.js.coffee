@@ -18,6 +18,9 @@ Joosy.helpers 'Application', ->
     delete options.extendIds
     @tag 'input', Joosy.Module.merge {type: type, name: d.name, id: d.id}, options
 
+  #
+  # @private
+  #
   class Form
     constructor: (@context, @resource, @options) ->
     label: (method, options={}, content='') -> @context.label(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), content)

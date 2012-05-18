@@ -58,7 +58,7 @@ Joosy.helpers 'Application', ->
   @radioButton = (resource, method, tagValue, options={}) -> input 'radio', resource, method, Joosy.Module.merge(value: tagValue, options)
 
   @checkBox = (resource, method, options={}, checkedValue=1, uncheckedValue=0) ->
-    spy = input 'hidden', resource, method, value: uncheckedValue, extendIds: options.extendIds
+    spy = @tag 'input', Joosy.Module.merge(name: description(resource, method).name, value: uncheckedValue, type: 'hidden')
     box = input 'checkbox', resource, method, Joosy.Module.merge(value: checkedValue, options)
 
     spy+box

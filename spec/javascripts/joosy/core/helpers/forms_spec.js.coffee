@@ -39,7 +39,7 @@ describe "Joosy.Helpers.Form", ->
     it "renders checkBox", ->
       tags = h.checkBox('a', 'b', {a: 'b'}).match(/<[^>]+>/g)
 
-      expect(tags[0]).toBeTag 'input', '', value: '0', id: 'a_b', name: 'a[b]', type: 'hidden'
+      expect(tags[0]).toBeTag 'input', '', value: '0', name: 'a[b]', type: 'hidden'
       expect(tags[1]).toBeTag 'input', '', value: '1', id: 'a_b', name: 'a[b]', type: 'checkbox', a: 'b'
 
     it "renders radioButton", ->
@@ -69,7 +69,7 @@ describe "Joosy.Helpers.Form", ->
     it "renders checkBox", ->
       tags = form.checkBox('b', {a: 'b'}).match(/<[^>]+>/g)
 
-      expect(tags[0]).toBeTag 'input', '', value: '0', id: 'test_b', name: 'test[b]', type: 'hidden'
+      expect(tags[0]).toBeTag 'input', '', value: '0', name: 'test[b]', type: 'hidden'
       expect(tags[1]).toBeTag 'input', '', value: '1', id: 'test_b', name: 'test[b]', type: 'checkbox', a: 'b'
 
     it "renders radioButton", ->
@@ -93,7 +93,7 @@ describe "Joosy.Helpers.Form", ->
     it "renders checkBox", ->
       tags = form.checkBox('b', {a: 'b'}).match(/<[^>]+>/g)
 
-      expect(tags[0]).toBeTag 'input', '', value: '0', id: 'test_1_b', name: 'test[b]', type: 'hidden'
+      expect(tags[0]).toBeTag 'input', '', value: '0', name: 'test[b]', type: 'hidden'
       expect(tags[1]).toBeTag 'input', '', value: '1', id: 'test_1_b', name: 'test[b]', type: 'checkbox', a: 'b'
 
     it "renders radioButton", ->

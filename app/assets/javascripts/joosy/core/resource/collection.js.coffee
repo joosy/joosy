@@ -40,11 +40,6 @@ class Joosy.Resource.Collection extends Joosy.Module
   @model: (model) -> @::model = model
   
   #
-  # Modelized data storage
-  #
-  data: []
-  
-  #
   # If model param was empty it will fallback to `@model`
   # If both param and `@model` were empty it will throw an exception.
   #
@@ -52,6 +47,11 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   constructor: (model=false) ->
     @model = model if model
+
+    #
+    # Modelized data storage
+    #
+    @data = []
     
     if !@model
       throw new Error "#{Joosy.Module.__className @}> model can't be empty"

@@ -43,5 +43,5 @@ describe "Joosy.Module", ->
       expect(TestModule[callback].getCall(0).calledOn(Klass)).toBeTruthy()
 
   it "should have minimal set of properties", ->
-    expect(Object.extended(Joosy.Module).keys()).toEqual ['__namespace__', '__className', 'hasAncestor', 'merge', 'include', 'extend']
+    expect(Object.extended(Joosy.Module).keys()).toEqual ['__namespace__', '__className', 'hasAncestor', 'alias', 'aliasStatic', 'merge', 'include', 'extend']
     expect(Object.extended(Joosy.Module.prototype).keys()).toEqual []

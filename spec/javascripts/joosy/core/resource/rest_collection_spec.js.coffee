@@ -29,3 +29,11 @@ describe "Joosy.Resource.RESTCollection", ->
     expect(@collection.data.length).toEqual 3
     expect(@collection.data[0].constructor == Test).toBeTruthy()
     expect(@collection.data[0].data.name).toEqual 'test3'
+
+  it "should use own storage", ->
+    class TestsCollection extends Joosy.Resource.RESTCollection
+      @model Test
+    collection = new TestsCollection()
+    collection.add 'test'
+    expect(collection.data).toEqual ['test']
+    expect(collection.hasOwnProperty 'data').toBeTruthy()

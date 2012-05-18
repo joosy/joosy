@@ -112,93 +112,24 @@
 
 </p>
 <h2>What is Joosy</h2>
-<p>Joosy is a full-featured javascript MVC framework, which mostly follows Rails philosophy, particularly in preferring conventions over configuration. It helps you to avoid boilerplate and makes it easy to maintain and extend the app.
+<p>Joosy is a javascript framework. Being a harmonious extensions to Rails it introduces everything you like about this framework right to your browser. Ready conventions set, extensive CoffeeScript, HAML support, Helpers, seamless backend integration, automatic code generation and more.
 
 </p>
-<p>Joosy allows you to create web apps which work completely in the browser. So that, it helps you to relocate all your Rails Views to the client side. It also helps you with managing the growing quantity of JS code. On another hand, it makes your backend to have exactly one function --  to be a simple REST provider. That leads to easier development support and improves the scalability greatly.
+<p>Joosy allows you to create web apps which work completely in the browser. So that, it helps you to relocate all your Rails Views to the client side. It also helps you with managing the growing quantity of JS code. On another hand, it makes your backend to have exactly one function – to be a simple REST provider. That leads to easier development support and improves the scalability greatly.
 
 </p>
-<p>Joosy doesn&#39;t compete with jQuery. It is built on the top of <a href="http://jquery.com/">jQuery</a>, and utilizes <a href="http://coffeescript.org/">CoffeeScript</a>. It either includes <a href="http://sugarjs.com/">Sugar.js</a> in role of ActiveSupport to make your life even better.
+<p>Besides Rails, Joosy is based on top of <a href="http://coffeescript.org/">CoffeeScript</a>, <a href="http://jquery.com/">jQuery</a> and <a href="http://sugarjs.com/">Sugar.js</a> in role of ActiveSupport.
 
 </p>
-<p>Finally, Joosy boosts your development drastically.
-
-</p>
-<h3>How is Joosy different from X</h3>
-<p>We share quite different goals and totally differ in ways to achieve it. While existing MVC frameworks define basic entities for you and leave you alone with application basic patterns and solutions, Joosy tries to give convention for each of them.
-
-</p>
-<h4><a href="http://documentcloud.github.com/backbone/">Backbone</a></h4>
-<p>In Backbone or Spine you only have abstract Views, Models and &quot;Packs of …&quot; and you should even decide on your own what&#39;s Controller for you. Joosy gives you the ready plan on how to move on to the success. If you ever used Rails you know that feeling: you concentrate on <em>what</em> you create and not on <em>how</em> to structure it.
-
-</p>
-<h4><a href="http://emberjs.com/">Ember</a></h4>
-<p>Ember is the closest framework by spirit. But it still doesn&#39;t give you enough conventions and is even more abstract than Backbone in several parts. It either limits you to Handlebars. Joosy rendering system is built on top of same solution, Morpher. That said you can bind your variables dynamically just like in Ember. But it allows you to any templates syntax.
-
-</p>
-<h3>The Joosy MVC Interpretation</h3>
-<p>You probably are familiar with the concept of MVC. It&#39;s a pattern to keep code DRY, isolate business logic from the UI. However the concept of Model-View-Controller just doesn&#39;t work for browser applications. There are numerous reasons for that that can&#39;t be fit into this introduction. Instead we&#39;ll tell you what we propose.
-
-</p>
-<h4>Views</h4>
-<p>In Joosy views are just views. Set of files (in templates/ folder). They do not differ from Rails and give you quite the same abilities (including helpers!). Besides that Joosy has renderDynamic which allows you to bind your variables to HTML representation tightly. You change variable value, Joosy changes HTML.
-
-</p>
-<p>By default Joosy comes with Coffee-Haml (which looks and works pretty much like Ruby Haml). Combined with Sugar.js it will feel very similar to Ruby and server-side and will provide you the easiest migration.
-
-</p>
-<h4>Controllers</h4>
-<p>Unlike server-side, client-side has a state. At server-side you only have incoming data and you convert it to output data. At client-side you work with events. To handle correct bootstrap and help you organize your code well, we have 3 entities which play the role of controller. Their organizing functions are similar but they behavior dramatically different at bootstrap.
-
-</p>
-<p>They are:
-
-</p>
-<h6>Pages</h6>
-<p>Pages are the heart of the entire application. They are used to fetch data, bind events, setup widgets, trig visual effects, and pass the data to the templates.
-
-</p>
-<h6>Layouts</h6>
-<p>Layouts are mainly used to set a part of your page that won&#39;t be reloaded often. Pages are wrapped into Layouts. Just like pages Layouts can bind events and setup widgets. Consider layouts as a bit extended version of what you have in Rails.
-
-</p>
-<h6>Widgets</h6>
-<p>Widgets are needed to keep your code DRY. They help you organize it in reusable modules.
-
-</p>
-<h4>Models</h4>
-<p>There are some facts that should be noted to explain it how we understand browser-side models.
+<p>Finally, Joosy boosts your development drastically. Just like the Rails do.
 
 </p>
 <ul>
-<li>In most cases you will want to leave your logic on server-side. In a real models. </li>
-<li>You rarely want to make 5 HTTP requests instead of 1.</li>
-<li>In most cases you will have to give user a Form as a way to change anything.</li>
-<li>You&#39;ll get different possible set of fields depending on case you use your model at.</li>
+<li><a href="http://guides.joosy.ws/guides/basics/getting-started.html">Joosy basics</a>: introduction and architecture highlights</li>
+<li><a href="http://guides.joosy.ws/guides/basics/joosy-vs-x.html">Joosy vs X</a>: comparison to Backbone and Ember.js</li>
+<li><a href="http://guides.joosy.ws/">Joosy guides</a>: set of articles that will help you to learn the framework.</li>
+<li><a href="http://api.joosy.ws/">Joosy API</a>: Codo-documented API of Joosy.</li>
 </ul>
-<p>With all that in mind we came up to the fact: you can not reproduce real models in browser nor you should try to. What you need is a comfortable channel between browser and server-side to get structured data, work with that and send it back. That&#39;s mainly a transport and interface task while models are MUCH more than that. To solve this task Joosy offers you two things:
-
-</p>
-<h6>Resources</h6>
-<p>Resource is wrapper on top of JSON dump which will help you to get data from server, parse it and structure it. It will trigger &#39;changed&#39; if you change resource, will map inline hashes in other resources if possible and do all other magic stuff you expect from your model when you read data. Resources either define Collections. In most cases you can say Resources are fully-functional read part of what you get used to as model.
-
-</p>
-<h6>Forms</h6>
-<p>After you got your data as resources and used it to display something, you&#39;ll need to change it. While resource defines modification methods like <em>save</em> and <em>destroy</em> most of complex modifications should go through Joosy.Form. It turns your form into AJAX and binds the resource to it. It handles file uploads, it gives you upload progress callback and makes it a dream to handle. Joosy.Form will either understand standard Rails invalidation response and will mark invalidated fields with &quot;.field_with_errors&quot; out of box.
-
-
-</p>
-<h2>What is Joosy good for</h2>
-<p>Joosy is intended to ease building of modern medium and large-sized browser-based applications, minimize code base while providing more features and what&#39;s most important, giving you ready conventions for typical tasks.
-
-</p>
-<p>Compare Joosy to Backbone like Rails to Sinatra. While Rails engine is much more powerful, Sinatra still has a lot of cases to be used at. If all you need is to enable some RICHness on one of your pages, Joosy can handle that. But Backbone will do the trick with lesser dependencies. If you need to move complete web-resource to browser Joosy will do the task at its Best.
-
-</p>
-<h2>What&#39;s next?</h2>
-<p>We have a set of guidelines showing you, step-by-step, how to create a Joosy application. Follow them at our <a href="http://guides.joosy.ws/">Guides site</a>.
-
-</p>
 <h3>Hello world app</h3>
 <p>Add Joosy gem to your Gemfile:
 
@@ -242,10 +173,10 @@ rake jasmine</code></pre>
     </div>
     <div id='footer'>
   Generated on
-  Fri May 18 2012 05:26:26 GMT+0400 (MSK)
+  Fri May 18 2012 18:31:07 GMT+0400 (MSK)
   by
   <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
-  v0.7.0
+  v0.7.1
   (Node.js v0.6.8).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts

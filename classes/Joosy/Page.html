@@ -4,9 +4,11 @@
   <title>Joosy API</title>
   <link rel='stylesheet' href='../../assets/codo.css' type='text/css'>
   <script src='../../assets/codo.js'></script>
+  <script src='../../assets/search_data.js'></script>
 </head>
   <body>
-    <div id='header'>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
   <div id='menu'>
     <a href='../../class_index.html' title='Index'>Index</a>
     &raquo;
@@ -15,22 +17,86 @@
     <span class='title'>Page</span>
     <nav>
       <ul>
-        <li class='frames'>
-          (<a class='frames' href='../../frames.html'>frames</a>)
-        </li>
         <li class='noframes'>
           (<a class='noframes' href='#'>no frames</a>)
         </li>
       </ul>
     </nav>
     <div id='search'>
-      <a id='class_list_link' href='../../class_list.html'>Class List</a>
-      <a id='class_list_link' href='../../module_list.html'>Module List</a>
-      <a id='method_list_link' href='../../method_list.html'>Method List</a>
-      <a id='file_list_link' href='../../file_list.html'>File List</a>
+      <a id='class_list_link' href='../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../../file_list.html'>Files</a>
     </div>
   </div>
   <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
 </div>
     <div id='content'>
       <h1>
@@ -39,23 +105,31 @@
       </h1>
       <table class='box'>
         <tr>
+          <td>Defined in:</td>
+          <td>app/assets/javascripts/joosy/core/page.js.coffee</td>
+        </tr>
+        <tr>
           <td>Inherits:</td>
           <td>
             <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
           </td>
         </tr>
         <tr>
-          <td>Defined in:</td>
-          <td>app/assets/javascripts/joosy/core/page.js.coffee</td>
+          <td>Includes:</td>
+          <td>
+                        <a href="../../mixins/Joosy/Modules/Log.html">Joosy.Modules.Log</a>,
+                        <a href="../../mixins/Joosy/Modules/Events.html">Joosy.Modules.Events</a>,
+                        <a href="../../mixins/Joosy/Modules/Container.html">Joosy.Modules.Container</a>,
+                        <a href="../../mixins/Joosy/Modules/Renderer.html">Joosy.Modules.Renderer</a>,
+                        <a href="../../mixins/Joosy/Modules/TimeManager.html">Joosy.Modules.TimeManager</a>,
+                        <a href="../../mixins/Joosy/Modules/WidgetsManager.html">Joosy.Modules.WidgetsManager</a>,
+            <a href="../../mixins/Joosy/Modules/Filters.html">Joosy.Modules.Filters</a>
+          </td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Base class for all of your Joosy Pages.
-
-
-</p>
-
+  <p>Base class for all of your Joosy Pages. </p> 
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -73,14 +147,6 @@
     </li>
   </ul>
 </div>
-      <h2>Constant Summary</h2>
-      <h3 class='inherited'>
-        Constants inherited from
-        <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
-      </h3>
-      <p class='inherited'>
-        <a href="../../classes/Joosy/Module.html#__namespace__-constant">__namespace__</a>
-      </p>
       <h2>Class Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -178,6 +244,16 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
+      <a href='#__performScrolling-instance'>
+        - (void) <strong>__performScrolling</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Scrolls page to stored positions
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#constructor-instance'>
         - (void) <strong>constructor</strong>(params, previous)
       </a>
@@ -204,7 +280,7 @@
       </a>
     </span>
     <span class='desc'>
-      This is required by {Joosy.Modules.Renderer} Sets the base template dir to app_name/templates/pages
+      This is required by <a href='../../modules/Joosy/Modules/Renderer.html'>Joosy.Modules.Renderer</a> Sets the base template dir to app_name/templates/pages
     </span>
   </li>
   <li>
@@ -224,7 +300,7 @@
       </a>
     </span>
     <span class='desc'>
-      Undo {#__fixHeight}
+      Undo <a href='../../classes/Joosy/Page.html#__fixHeight-instance'>#__fixHeight</a>
     </span>
   </li>
   <li>
@@ -234,7 +310,7 @@
       </a>
     </span>
     <span class='desc'>
-      Page bootstrap proccess * {Joosy.Modules.Container#refreshElements} * {Joosy.Modules.Container#__delegateEvents} * {Joosy.Modules.WidgetsManager#__setupWidgets} * {Joosy.Modules.Filters#__runAfterLoads} * Scrolling
+      Page bootstrap proccess * <a href='../../modules/Joosy/Modules/Container.html#refreshElements-class'>Joosy.Modules.Container.refreshElements</a> * <a href='../../modules/Joosy/Modules/Container.html#__delegateEvents-class'>Joosy.Modules.Container.__delegateEvents</a> * <a href='../../modules/Joosy/Modules/WidgetsManager.html#__setupWidgets-class'>Joosy.Modules.WidgetsManager.__setupWidgets</a> * Scrolling
     </span>
   </li>
   <li>
@@ -278,16 +354,102 @@
     </span>
   </li>
 </ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+      </h2>
       <h3 class='inherited'>
         Methods inherited from
         <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
       </h3>
       <p class='inherited'>
-                <a href="undefinedclasses/Joosy/Module.html#__className-class">.__className</a>,
-                <a href="undefinedclasses/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>,
-                <a href="undefinedclasses/Joosy/Module.html#merge-class">.merge</a>,
-                <a href="undefinedclasses/Joosy/Module.html#include-class">.include</a>,
+                <a href="../../classes/Joosy/Module.html#__className-class">.__className</a>,
+                <a href="../../classes/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>,
+                <a href="../../classes/Joosy/Module.html#alias-class">.alias</a>,
+                <a href="../../classes/Joosy/Module.html#aliasStatic-class">.aliasStatic</a>,
+                <a href="../../classes/Joosy/Module.html#merge-class">.merge</a>,
+                <a href="../../classes/Joosy/Module.html#include-class">.include</a>,
         <a href="../../classes/Joosy/Module.html#extend-class">.extend</a>
+      </p>
+      <h2>
+        <small>Included Method Summary</small>
+      </h2>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/Log.html">Joosy.Modules.Log</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/Log.html#log-mixin">#log</a>,
+                <a href="../../mixins/Joosy/Modules/Log.html#debug-mixin">#debug</a>,
+        <a href="../../mixins/Joosy/Modules/Log.html#debugAs-mixin">#debugAs</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/Events.html">Joosy.Modules.Events</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/Events.html#wait-mixin">#wait</a>,
+                <a href="../../mixins/Joosy/Modules/Events.html#bind-mixin">#bind</a>,
+                <a href="../../mixins/Joosy/Modules/Events.html#unbind-mixin">#unbind</a>,
+                <a href="../../mixins/Joosy/Modules/Events.html#trigger-mixin">#trigger</a>,
+        <a href="../../mixins/Joosy/Modules/Events.html#synchronize-mixin">#synchronize</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/Container.html">Joosy.Modules.Container</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/Container.html#onRefresh-mixin">#onRefresh</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#$-mixin">#$</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#refreshElements-mixin">#refreshElements</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#reloadContainer-mixin">#reloadContainer</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#swapContainer-mixin">#swapContainer</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#__collectElements-mixin">#__collectElements</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#__collectEvents-mixin">#__collectEvents</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#__extractSelector-mixin">#__extractSelector</a>,
+        <a href="../../mixins/Joosy/Modules/Container.html#__delegateEvents-mixin">#__delegateEvents</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/Renderer.html">Joosy.Modules.Renderer</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__renderer-mixin">#__renderer</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#included-mixin">#included</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__instantiateHelpers-mixin">#__instantiateHelpers</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__proxifyHelpers-mixin">#__proxifyHelpers</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#render-mixin">#render</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#renderDynamic-mixin">#renderDynamic</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__render-mixin">#__render</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__renderingStackElement-mixin">#__renderingStackElement</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__renderingStackChildFor-mixin">#__renderingStackChildFor</a>,
+        <a href="../../mixins/Joosy/Modules/Renderer.html#__removeMetamorphs-mixin">#__removeMetamorphs</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/TimeManager.html">Joosy.Modules.TimeManager</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/TimeManager.html#setTimeout-mixin">#setTimeout</a>,
+                <a href="../../mixins/Joosy/Modules/TimeManager.html#setInterval-mixin">#setInterval</a>,
+        <a href="../../mixins/Joosy/Modules/TimeManager.html#__clearTime-mixin">#__clearTime</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/WidgetsManager.html">Joosy.Modules.WidgetsManager</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/WidgetsManager.html#registerWidget-mixin">#registerWidget</a>,
+                <a href="../../mixins/Joosy/Modules/WidgetsManager.html#unregisterWidget-mixin">#unregisterWidget</a>,
+                <a href="../../mixins/Joosy/Modules/WidgetsManager.html#__collectWidgets-mixin">#__collectWidgets</a>,
+                <a href="../../mixins/Joosy/Modules/WidgetsManager.html#__setupWidgets-mixin">#__setupWidgets</a>,
+        <a href="../../mixins/Joosy/Modules/WidgetsManager.html#__unloadWidgets-mixin">#__unloadWidgets</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/Filters.html">Joosy.Modules.Filters</a>
+      </h3>
+      <p class='included'>
+        <a href="../../mixins/Joosy/Modules/Filters.html#included-mixin">#included</a>
       </p>
       <h2>Class Method Details</h2>
       <div class='methods'>
@@ -296,11 +458,7 @@
       + (void) <strong>layout</strong>(layoutClass)
     </p>
     <div class='docstring'>
-  <p>Sets layout for current page
-
-
-</p>
-
+  <p>Sets layout for current page </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -325,16 +483,7 @@
     <strong>Note:</strong>
     Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
   </div>
-  <p>Sets the method which will controll the painting preparation proccess.
-
-</p>
-<p>This method will be called right ater previous page <a href='../../classes/Joosy/Page.html#erase-class'>Joosy.Page.erase</a> and in parallel with page data fetching so you can use it to initiate preloader.
-
-
-
-
-</p>
-
+  <p>Sets the method which will controll the painting preparation proccess. </p> <p>This method will be called right ater previous page <a href='../../classes/Joosy/Page.html#erase-class'>Joosy.Page.erase</a> and in parallel with page data fetching so you can use it to initiate preloader. </p> 
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -357,16 +506,7 @@
     <strong>Note:</strong>
     Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
   </div>
-  <p>Sets the method which will controll the painting proccess.
-
-</p>
-<p>This method will be called after fetching, erasing and beforePaint is complete.
-It should be used to setup appearance effects of page.
-
-
-
-</p>
-
+  <p>Sets the method which will controll the painting proccess. </p> <p>This method will be called after fetching, erasing and beforePaint is complete. It should be used to setup appearance effects of page. </p> 
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -406,16 +546,7 @@ It should be used to setup appearance effects of page.
     <strong>Note:</strong>
     This method will be caled _before_ unload routines so in theory you can access page data from that. Think twice if you are doing it right though.
   </div>
-  <p>Sets the method which will controll the erasing proccess.
-
-</p>
-<p>Use this method to setup hiding effect.
-
-
-
-
-</p>
-
+  <p>Sets the method which will controll the erasing proccess. </p> <p>Use this method to setup hiding effect. </p> 
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -437,12 +568,7 @@ It should be used to setup appearance effects of page.
     <strong>Note:</strong>
     Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
   </div>
-  <p>Sets the method which will controll the data fetching proccess.
-
-
-
-</p>
-
+  <p>Sets the method which will controll the data fetching proccess. </p> 
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -462,14 +588,9 @@ It should be used to setup appearance effects of page.
     <div class='docstring'>
   <div class='note'>
     <strong>Note:</strong>
-    This will work through <a href='../../modules/Joosy/Modules/Events.html#synchronize-instance'>Joosy.Modules.Events#synchronize</a>
+    This will work through <a href='../../modules/Joosy/Modules/Events.html#synchronize-class'>Joosy.Modules.Events.synchronize</a>
   </div>
-  <p>Sets the several separate methods that will fetch data in parallel.
-
-
-
-</p>
-
+  <p>Sets the several separate methods that will fetch data in parallel. </p> <pre><code>context.do (done) -&gt;   $.get &#39;/kutuzkas&#39;, (data) =&gt;     @data.kutuzkas = data     done()</code></pre> 
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -479,11 +600,6 @@ It should be used to setup appearance effects of page.
   context.do (done) -&gt;
     $.get &apos;/rumbas&apos;, (data) =&gt;
       @data.rumbas = data
-      done()
-  
-  context.do (done) -&gt;
-    $.get &apos;/kutuzkas&apos;, (data) =&gt;
-      @data.kutuzkas = data
       done()</code></pre>
   </div>
 </div>
@@ -497,15 +613,9 @@ It should be used to setup appearance effects of page.
     <div class='docstring'>
   <div class='note'>
     <strong>Note:</strong>
-    If you use animated scroll joosy will atempt to temporarily fix the  height of your document while scrolling to prevent jump effect.
+    If you use animated scroll joosy will atempt to temporarily fix the height of your document while scrolling to prevent jump effect.
   </div>
-  <p>Sets the position where page will be scrolled to after load.
-
-
-
-
-</p>
-
+  <p>Sets the position where page will be scrolled to after load. </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -558,12 +668,7 @@ It should be used to setup appearance effects of page.
     <strong>Note:</strong>
     Title will be reverted on unload.
   </div>
-  <p>Sets the page HTML title.
-
-
-
-</p>
-
+  <p>Sets the page HTML title. </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -587,14 +692,7 @@ It should be used to setup appearance effects of page.
       - (void) <strong>constructor</strong>(params, previous)
     </p>
     <div class='docstring'>
-  <p>Constructor is very destructive (c), it calls bootstrap directly so use with caution.
-
-</p>
-<p>@params [Hash] params             Route params
-@params [Joosy.Page] previous     Previous page to unload
-
-</p>
-
+  <p>Constructor is very destructive (c), it calls bootstrap directly so use with caution. </p> <p>@params [Hash] params             Route params @params [Joosy.Page] previous     Previous page to unload </p> 
 </div>
 <div class='tags'>
 </div>
@@ -603,6 +701,16 @@ It should be used to setup appearance effects of page.
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
+    <p class='signature' id='__performScrolling-instance'>
+      - (void) <strong>__performScrolling</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Scrolls page to stored positions </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='navigate-instance'>
       - (void) <strong>navigate</strong>(args...)
     </p>
@@ -610,7 +718,7 @@ It should be used to setup appearance effects of page.
   <h3>See also:</h3>
   <ul class='see'>
     <li>
-      <a href='../../modules/Joosy/Router.html#navigate-instance'>Joosy.Router#navigate</a>
+      <a href='../../modules/Joosy/Router.html#navigate-class'>Joosy.Router.navigate</a>
     </li>
   </ul>
 </div>
@@ -620,11 +728,7 @@ It should be used to setup appearance effects of page.
       - (void) <strong>__renderSection</strong>()
     </p>
     <div class='docstring'>
-  <p>This is required by <a href='../../modules/Joosy/Modules/Renderer.html'>Joosy.Modules.Renderer</a>
-Sets the base template dir to app_name/templates/pages
-
-</p>
-
+  <p>This is required by <a href='../../modules/Joosy/Modules/Renderer.html'>Joosy.Modules.Renderer</a> Sets the base template dir to app_name/templates/pages </p> 
 </div>
 <div class='tags'>
 </div>
@@ -634,13 +738,7 @@ Sets the base template dir to app_name/templates/pages
       - (void) <strong>__fixHeight</strong>()
     </p>
     <div class='docstring'>
-  <p>Freezes the page height through $(html).
-
-</p>
-<p>Required to implement better <a href='../../classes/Joosy/Page.html#scroll-class'>Joosy.Page.scroll</a> behavior.
-
-</p>
-
+  <p>Freezes the page height through $(html). </p> <p>Required to implement better <a href='../../classes/Joosy/Page.html#scroll-class'>Joosy.Page.scroll</a> behavior. </p> 
 </div>
 <div class='tags'>
 </div>
@@ -650,10 +748,7 @@ Sets the base template dir to app_name/templates/pages
       - (void) <strong>__releaseHeight</strong>()
     </p>
     <div class='docstring'>
-  <p>Undo <a href='../../classes/Joosy/Page.html#__fixHeight-instance'>#__fixHeight</a>
-
-</p>
-
+  <p>Undo <a href='../../classes/Joosy/Page.html#__fixHeight-instance'>#__fixHeight</a> </p> 
 </div>
 <div class='tags'>
 </div>
@@ -663,17 +758,7 @@ Sets the base template dir to app_name/templates/pages
       - (void) <strong>__load</strong>()
     </p>
     <div class='docstring'>
-  <p>Page bootstrap proccess
-
-</p>
-<ul>
-<li><a href='../../modules/Joosy/Modules/Container.html#refreshElements-instance'>Joosy.Modules.Container#refreshElements</a></li>
-<li><a href='../../modules/Joosy/Modules/Container.html#__delegateEvents-instance'>Joosy.Modules.Container#__delegateEvents</a></li>
-<li><a href='../../modules/Joosy/Modules/WidgetsManager.html#__setupWidgets-instance'>Joosy.Modules.WidgetsManager#__setupWidgets</a></li>
-<li><a href='../../modules/Joosy/Modules/Filters.html#__runAfterLoads-instance'>Joosy.Modules.Filters#__runAfterLoads</a></li>
-<li>Scrolling</li>
-</ul>
-
+  <p>Page bootstrap proccess </p> <ul> <li><a href='../../modules/Joosy/Modules/Container.html#refreshElements-class'>Joosy.Modules.Container.refreshElements</a></li> <li><a href='../../modules/Joosy/Modules/Container.html#__delegateEvents-class'>Joosy.Modules.Container.__delegateEvents</a></li> <li><a href='../../modules/Joosy/Modules/WidgetsManager.html#__setupWidgets-class'>Joosy.Modules.WidgetsManager.__setupWidgets</a></li> <li>Scrolling</li> </ul> 
 </div>
 <div class='tags'>
 </div>
@@ -683,16 +768,7 @@ Sets the base template dir to app_name/templates/pages
       - (void) <strong>__unload</strong>()
     </p>
     <div class='docstring'>
-  <p>Page destruction proccess.
-
-</p>
-<ul>
-<li><a href='../../modules/Joosy/Modules/TimeManager.html#__clearTime-instance'>Joosy.Modules.TimeManager#__clearTime</a></li>
-<li><a href='../../modules/Joosy/Modules/WidgetsManager.html#__unloadWidgets-instance'>Joosy.Modules.WidgetsManager#__unloadWidgets</a></li>
-<li><a href='../../modules/Joosy/Modules/Renderer.html#__removeMetamorphs-instance'>Joosy.Modules.Renderer#__removeMetamorphs</a></li>
-<li><a href='../../modules/Joosy/Modules/Filters.html#__runAfterUnloads-instance'>Joosy.Modules.Filters#__runAfterUnloads</a></li>
-</ul>
-
+  <p>Page destruction proccess. </p> <ul> <li><a href='../../modules/Joosy/Modules/TimeManager.html#__clearTime-class'>Joosy.Modules.TimeManager.__clearTime</a></li> <li><a href='../../modules/Joosy/Modules/WidgetsManager.html#__unloadWidgets-class'>Joosy.Modules.WidgetsManager.__unloadWidgets</a></li> <li><a href='../../modules/Joosy/Modules/Renderer.html#__removeMetamorphs-class'>Joosy.Modules.Renderer.__removeMetamorphs</a></li> </ul> 
 </div>
 <div class='tags'>
 </div>
@@ -706,16 +782,7 @@ Sets the base template dir to app_name/templates/pages
     <strong>Note:</strong>
     Magic People Voodoo People
   </div>
-  <p>Proxies callback through possible async wrapper.
-
-</p>
-<p>If wrapper is defined, it will be called with given callback as one of parameters.
-If wrapper is not defined callback will be called directly.
-
-
-
-</p>
-
+  <p>Proxies callback through possible async wrapper. </p> <p>If wrapper is defined, it will be called with given callback as one of parameters. If wrapper is not defined callback will be called directly. </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -742,7 +809,7 @@ If wrapper is not defined callback will be called directly.
         (<tt>Hash</tt>)
       </span>
       &mdash;
-      <span class='desc'>Params to send to wrapper, callback will be  attached as the last of them.</span>
+      <span class='desc'>Params to send to wrapper, callback will be attached as the last of them.</span>
     </li>
     <li>
       <span class='name'>callback</span>
@@ -760,11 +827,7 @@ If wrapper is not defined callback will be called directly.
       - (void) <strong>__bootstrap</strong>()
     </p>
     <div class='docstring'>
-  <p>The single page (without layout reloading) bootstrap logic
-
-
-</p>
-
+  <p>The single page (without layout reloading) bootstrap logic </p> 
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -785,11 +848,7 @@ fetch             /</code></pre>
       - (void) <strong>__bootstrapLayout</strong>()
     </p>
     <div class='docstring'>
-  <p>The page+layout bootstrap logic
-
-
-</p>
-
+  <p>The page+layout bootstrap logic </p> 
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
@@ -809,15 +868,17 @@ fetch             /</code></pre>
     </div>
     <div id='footer'>
   Generated on
-  Sun Mar 18 2012 21:33:03 GMT+0400 (MSK)
+  Fri May 18 2012 04:43:16 GMT+0400 (MSK)
   by
-  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
-  v0.5.0
+  <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v0.7.0
   (Node.js v0.6.8).
   &#10034;
-  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  Press Ctrl-h to see the keyboard shortcuts
   &#10034;
-  <a href='https://mksoft.ch'>mksoft.ch</a>
+  <a href='http=//twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https=//mksoft.ch'>mksoft.ch</a>
 </div>
   </body>
 </html>

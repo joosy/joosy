@@ -14,9 +14,9 @@
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
-    <span class='title'>Templaters</span>
+    <span class='title'>Modules</span>
     &raquo;
-    <span class='title'>RailsJST</span>
+    <span class='title'>Log</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -102,121 +102,112 @@
 </div>
     <div id='content'>
       <h1>
-        Class:
-        Joosy.Templaters.RailsJST
+        Mixin:
+        Joosy.Modules.Log
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>app/assets/javascripts/joosy/core/templaters/rails_jst.js.coffee</td>
+          <td>app/assets/javascripts/joosy/core/modules/log.js.coffee</td>
+        </tr>
+        <tr>
+          <td>Included in:</td>
+          <td>
+                        <a href="undefinedclasses/Joosy/Form.html">Joosy.Form</a>,
+                        <a href="undefinedclasses/Joosy/Layout.html">Joosy.Layout</a>,
+                        <a href="undefinedclasses/Joosy/Page.html">Joosy.Page</a>,
+                        <a href="undefinedclasses/Joosy/Widget.html">Joosy.Widget</a>,
+                        <a href="undefinedclasses/Joosy/Resource/Generic.html">Joosy.Resource.Generic</a>,
+            <a href="../../../classes/Joosy/Resource/RESTCollection.html">Joosy.Resource.RESTCollection</a>
+          </td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Rails JST template precompilation binding </p> 
+  <p>Wrappers for console.log </p> 
 </div>
 <div class='tags'>
 </div>
-      <h2>Instance Method Summary</h2>
+      <h2>Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(applicationName)
+      <a href='#log-mixin'>
+        ? (void) <strong>log</strong>(args...)
       </a>
     </span>
-    <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      
+      Checks if console is available and proxies given arguments directly to `console.log`
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#buildView-instance'>
-        - (void) <strong>buildView</strong>(name)
+      <a href='#debug-mixin'>
+        ? (void) <strong>debug</strong>(args...)
       </a>
     </span>
     <span class='desc'>
-      Gets template lambda by its full name
+      Runs `log` if debug is active
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#resolveTemplate-instance'>
-        - (void) <strong>resolveTemplate</strong>(section, template, entity)
+      <a href='#debugAs-mixin'>
+        ? (void) <strong>debugAs</strong>(context, string, args...)
       </a>
     </span>
     <span class='desc'>
-      Gets full name of template by several params
+      Logs given message wrapping it with description of given object (class name)
     </span>
   </li>
 </ul>
-      <h2>Constructor Details</h2>
+      <h2>Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(applicationName)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-</div>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='buildView-instance'>
-      - (void) <strong>buildView</strong>(name)
+    <p class='signature' id='log-mixin'>
+      ? (void) <strong>log</strong>(args...)
     </p>
     <div class='docstring'>
-  <p>Gets template lambda by its full name </p> 
+  <p>Checks if console is available and proxies given arguments directly to <code>console.log</code> </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='debug-mixin'>
+      ? (void) <strong>debug</strong>(args...)
+    </p>
+    <div class='docstring'>
+  <p>Runs <code>log</code> if debug is active </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='debugAs-mixin'>
+      ? (void) <strong>debugAs</strong>(context, string, args...)
+    </p>
+    <div class='docstring'>
+  <p>Logs given message wrapping it with description of given object (class name) </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>name</span>
+      <span class='name'>context</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Template name 'foo/bar'</span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='resolveTemplate-instance'>
-      - (void) <strong>resolveTemplate</strong>(section, template, entity)
-    </p>
-    <div class='docstring'>
-  <p>Gets full name of template by several params </p> 
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>section</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Section of templates like pages/layouts/...</span>
+      <span class='desc'>The class required to be described in log message</span>
     </li>
     <li>
-      <span class='name'>template</span>
+      <span class='name'>string</span>
       <span class='type'>
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Internal template path</span>
-    </li>
-    <li>
-      <span class='name'>entity</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Entity to lookup template path by its namespace</span>
+      <span class='desc'>Message to log</span>
     </li>
   </ul>
 </div>

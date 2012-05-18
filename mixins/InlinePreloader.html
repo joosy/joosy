@@ -2,21 +2,17 @@
 <html>
   <head>
   <title>Joosy API</title>
-  <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
-  <script src='../../../assets/codo.js'></script>
-  <script src='../../../assets/search_data.js'></script>
+  <link rel='stylesheet' href='../assets/codo.css' type='text/css'>
+  <script src='../assets/codo.js'></script>
+  <script src='../assets/search_data.js'></script>
 </head>
   <body>
-    <div id='base' data-path='../../../'></div>
+    <div id='base' data-path='../'></div>
 <div id='header'>
   <div id='menu'>
-    <a href='../../../class_index.html' title='Index'>Index</a>
+    <a href='../class_index.html' title='Index'>Index</a>
     &raquo;
-    <span class='title'>Joosy</span>
-    &raquo;
-    <span class='title'>Templaters</span>
-    &raquo;
-    <span class='title'>RailsJST</span>
+    <span class='title'>InlinePreloader</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -25,10 +21,10 @@
       </ul>
     </nav>
     <div id='search'>
-      <a id='class_list_link' href='../../../class_list.html'>Classes</a>
-      <a id='mixin_list_link' href='../../../mixin_list.html'>Mixins</a>
-      <a id='method_list_link' href='../../../method_list.html'>Methods</a>
-      <a id='file_list_link' href='../../../file_list.html'>Files</a>
+      <a id='class_list_link' href='../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../file_list.html'>Files</a>
     </div>
   </div>
   <iframe id='search_frame'></iframe>
@@ -102,121 +98,111 @@
 </div>
     <div id='content'>
       <h1>
-        Class:
-        Joosy.Templaters.RailsJST
+        Mixin:
+        InlinePreloader
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>app/assets/javascripts/joosy/core/templaters/rails_jst.js.coffee</td>
+          <td>app/assets/javascripts/joosy/preloaders/inline.js.coffee</td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Rails JST template precompilation binding </p> 
+  <p>Preloader for libraries using <code>script src</code> without any caching magic </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>libraries = [[&apos;/test1.js&apos;], [&apos;/test2.js&apos;]]
+
+InlinePreloader.load libraries,
+  start:    -&gt; console.log &apos;preloading started&apos;
+  complete: -&gt; console.log &apos;preloading finished&apos;</code></pre>
+  </div>
 </div>
 <div class='tags'>
 </div>
-      <h2>Instance Method Summary</h2>
+      <h2>Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(applicationName)
+      <a href='#load-mixin'>
+        ? (void) <strong>load</strong>(libraries, options)
       </a>
     </span>
-    <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      
+      Loads set of libraries by adding `script src` to DOM head See class description for example of usage * start: `() -> null` to call before load starts: * complete: `() -> null` to call after load completes
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#buildView-instance'>
-        - (void) <strong>buildView</strong>(name)
+      <a href='#receive-mixin'>
+        ? (void) <strong>receive</strong>(url, callback)
       </a>
     </span>
     <span class='desc'>
-      Gets template lambda by its full name
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#resolveTemplate-instance'>
-        - (void) <strong>resolveTemplate</strong>(section, template, entity)
-      </a>
-    </span>
-    <span class='desc'>
-      Gets full name of template by several params
+      Loads one script by adding `script src` to DOM head
     </span>
   </li>
 </ul>
-      <h2>Constructor Details</h2>
+      <h2>Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(applicationName)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-</div>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='buildView-instance'>
-      - (void) <strong>buildView</strong>(name)
+    <p class='signature' id='load-mixin'>
+      ? (void) <strong>load</strong>(libraries, options)
     </p>
     <div class='docstring'>
-  <p>Gets template lambda by its full name </p> 
+  <p>Loads set of libraries by adding <code>script src</code> to DOM head  See class description for example of usage </p> <ul> <li>start: <code>() -&gt; null</code> to call before load starts: </li> <li>complete: <code>() -&gt; null</code> to call after load completes</li> </ul> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>name</span>
+      <span class='name'>2-levels</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Array</tt>)
       </span>
       &mdash;
-      <span class='desc'>Template name 'foo/bar'</span>
+      <span class='desc'>array of libraries URLs i.e. [['/test1.js'],['/test2.js']]</span>
+    </li>
+    <li>
+      <span class='name'>Available</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>options:</span>
     </li>
   </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='resolveTemplate-instance'>
-      - (void) <strong>resolveTemplate</strong>(section, template, entity)
+    <p class='signature' id='receive-mixin'>
+      ? (void) <strong>receive</strong>(url, callback)
     </p>
     <div class='docstring'>
-  <p>Gets full name of template by several params </p> 
+  <p>Loads one script by adding <code>script src</code> to DOM head </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>section</span>
+      <span class='name'>url</span>
       <span class='type'>
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Section of templates like pages/layouts/...</span>
+      <span class='desc'>to load script from</span>
     </li>
     <li>
-      <span class='name'>template</span>
+      <span class='name'>`()</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Internal template path</span>
-    </li>
-    <li>
-      <span class='name'>entity</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Entity to lookup template path by its namespace</span>
+      <span class='desc'>-> null` to call after script was loaded and executed</span>
     </li>
   </ul>
 </div>

@@ -14,9 +14,9 @@
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
-    <span class='title'>Templaters</span>
+    <span class='title'>Modules</span>
     &raquo;
-    <span class='title'>RailsJST</span>
+    <span class='title'>TimeManager</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -102,123 +102,130 @@
 </div>
     <div id='content'>
       <h1>
-        Class:
-        Joosy.Templaters.RailsJST
+        Mixin:
+        Joosy.Modules.TimeManager
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>app/assets/javascripts/joosy/core/templaters/rails_jst.js.coffee</td>
+          <td>app/assets/javascripts/joosy/core/modules/time_manager.js.coffee</td>
+        </tr>
+        <tr>
+          <td>Included in:</td>
+          <td>
+                        <a href="undefinedclasses/Joosy/Layout.html">Joosy.Layout</a>,
+                        <a href="undefinedclasses/Joosy/Page.html">Joosy.Page</a>,
+            <a href="../../../classes/Joosy/Widget.html">Joosy.Widget</a>
+          </td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Rails JST template precompilation binding </p> 
+  <p>Comfortable and clever wrappers for timeouts management </p> 
 </div>
 <div class='tags'>
 </div>
-      <h2>Instance Method Summary</h2>
+      <h2>Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(applicationName)
+      <a href='#setTimeout-mixin'>
+        ? (void) <strong>setTimeout</strong>(timeout, action)
       </a>
     </span>
-    <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      
+      Registeres timeout for current object
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#buildView-instance'>
-        - (void) <strong>buildView</strong>(name)
+      <a href='#setInterval-mixin'>
+        ? (void) <strong>setInterval</strong>(delay, action)
       </a>
     </span>
     <span class='desc'>
-      Gets template lambda by its full name
+      Registeres interval for current object
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#resolveTemplate-instance'>
-        - (void) <strong>resolveTemplate</strong>(section, template, entity)
+      <a href='#__clearTime-mixin'>
+        ? (void) <strong>__clearTime</strong>()
       </a>
     </span>
     <span class='desc'>
-      Gets full name of template by several params
+      Drops all registered timeouts and intervals for this object
     </span>
   </li>
 </ul>
-      <h2>Constructor Details</h2>
+      <h2>Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(applicationName)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-</div>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='buildView-instance'>
-      - (void) <strong>buildView</strong>(name)
+    <p class='signature' id='setTimeout-mixin'>
+      ? (void) <strong>setTimeout</strong>(timeout, action)
     </p>
     <div class='docstring'>
-  <p>Gets template lambda by its full name </p> 
+  <p>Registeres timeout for current object </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>name</span>
+      <span class='name'>timeout</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Integer</tt>)
       </span>
       &mdash;
-      <span class='desc'>Template name 'foo/bar'</span>
+      <span class='desc'>Miliseconds to wait</span>
+    </li>
+    <li>
+      <span class='name'>action</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Action to run on timeout</span>
     </li>
   </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='resolveTemplate-instance'>
-      - (void) <strong>resolveTemplate</strong>(section, template, entity)
+    <p class='signature' id='setInterval-mixin'>
+      ? (void) <strong>setInterval</strong>(delay, action)
     </p>
     <div class='docstring'>
-  <p>Gets full name of template by several params </p> 
+  <p>Registeres interval for current object </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>section</span>
+      <span class='name'>delay</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Integer</tt>)
       </span>
       &mdash;
-      <span class='desc'>Section of templates like pages/layouts/...</span>
+      <span class='desc'>Miliseconds between runs</span>
     </li>
     <li>
-      <span class='name'>template</span>
+      <span class='name'>action</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Internal template path</span>
-    </li>
-    <li>
-      <span class='name'>entity</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Entity to lookup template path by its namespace</span>
+      <span class='desc'>Action to run</span>
     </li>
   </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__clearTime-mixin'>
+      ? (void) <strong>__clearTime</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Drops all registered timeouts and intervals for this object </p> 
+</div>
+<div class='tags'>
 </div>
   </div>
 </div>

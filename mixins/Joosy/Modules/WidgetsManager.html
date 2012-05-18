@@ -14,9 +14,9 @@
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
-    <span class='title'>Templaters</span>
+    <span class='title'>Modules</span>
     &raquo;
-    <span class='title'>RailsJST</span>
+    <span class='title'>WidgetsManager</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -102,123 +102,161 @@
 </div>
     <div id='content'>
       <h1>
-        Class:
-        Joosy.Templaters.RailsJST
+        Mixin:
+        Joosy.Modules.WidgetsManager
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>app/assets/javascripts/joosy/core/templaters/rails_jst.js.coffee</td>
+          <td>app/assets/javascripts/joosy/core/modules/widgets_manager.js.coffee</td>
+        </tr>
+        <tr>
+          <td>Included in:</td>
+          <td>
+                        <a href="undefinedclasses/Joosy/Layout.html">Joosy.Layout</a>,
+            <a href="../../../classes/Joosy/Page.html">Joosy.Page</a>
+          </td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Rails JST template precompilation binding </p> 
+  <p>Widgets management routines </p> 
 </div>
 <div class='tags'>
 </div>
-      <h2>Instance Method Summary</h2>
+      <h2>Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(applicationName)
+      <a href='#registerWidget-mixin'>
+        ? (void) <strong>registerWidget</strong>(container, widget)
       </a>
     </span>
-    <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      
+      Registeres and runs widget inside specified container
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#buildView-instance'>
-        - (void) <strong>buildView</strong>(name)
+      <a href='#unregisterWidget-mixin'>
+        ? (void) <strong>unregisterWidget</strong>(widget)
       </a>
     </span>
     <span class='desc'>
-      Gets template lambda by its full name
+      Unregisteres and destroys widget
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#resolveTemplate-instance'>
-        - (void) <strong>resolveTemplate</strong>(section, template, entity)
+      <a href='#__collectWidgets-mixin'>
+        ? (void) <strong>__collectWidgets</strong>()
       </a>
     </span>
     <span class='desc'>
-      Gets full name of template by several params
+      Gathers widgets definitions from current and super classes
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__setupWidgets-mixin'>
+        ? (void) <strong>__setupWidgets</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Intialize all widgets for current object
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__unloadWidgets-mixin'>
+        ? (void) <strong>__unloadWidgets</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Unregister all widgets for current object
     </span>
   </li>
 </ul>
-      <h2>Constructor Details</h2>
+      <h2>Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(applicationName)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-</div>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='buildView-instance'>
-      - (void) <strong>buildView</strong>(name)
+    <p class='signature' id='registerWidget-mixin'>
+      ? (void) <strong>registerWidget</strong>(container, widget)
     </p>
     <div class='docstring'>
-  <p>Gets template lambda by its full name </p> 
+  <p>Registeres and runs widget inside specified container </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>name</span>
+      <span class='name'>container</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>DOM</tt>)
       </span>
       &mdash;
-      <span class='desc'>Template name 'foo/bar'</span>
+      <span class='desc'>jQuery or direct dom node object</span>
+    </li>
+    <li>
+      <span class='name'>widget</span>
+      <span class='type'>
+        (<tt><a href='../../../classes/Joosy/Widget.html'>Joosy.Widget</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Class or object of Joosy.Widget to register</span>
     </li>
   </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='resolveTemplate-instance'>
-      - (void) <strong>resolveTemplate</strong>(section, template, entity)
+    <p class='signature' id='unregisterWidget-mixin'>
+      ? (void) <strong>unregisterWidget</strong>(widget)
     </p>
     <div class='docstring'>
-  <p>Gets full name of template by several params </p> 
+  <p>Unregisteres and destroys widget </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>section</span>
+      <span class='name'>widget</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt><a href='../../../classes/Joosy/Widget.html'>Joosy.Widget</a></tt>)
       </span>
       &mdash;
-      <span class='desc'>Section of templates like pages/layouts/...</span>
-    </li>
-    <li>
-      <span class='name'>template</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Internal template path</span>
-    </li>
-    <li>
-      <span class='name'>entity</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Entity to lookup template path by its namespace</span>
+      <span class='desc'>Object of Joosy.Widget to unregister</span>
     </li>
   </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__collectWidgets-mixin'>
+      ? (void) <strong>__collectWidgets</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Gathers widgets definitions from current and super classes </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__setupWidgets-mixin'>
+      ? (void) <strong>__setupWidgets</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Intialize all widgets for current object </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__unloadWidgets-mixin'>
+      ? (void) <strong>__unloadWidgets</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Unregister all widgets for current object </p> 
+</div>
+<div class='tags'>
 </div>
   </div>
 </div>

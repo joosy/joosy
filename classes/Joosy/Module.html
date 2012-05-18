@@ -4,9 +4,11 @@
   <title>Joosy API</title>
   <link rel='stylesheet' href='../../assets/codo.css' type='text/css'>
   <script src='../../assets/codo.js'></script>
+  <script src='../../assets/search_data.js'></script>
 </head>
   <body>
-    <div id='header'>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
   <div id='menu'>
     <a href='../../class_index.html' title='Index'>Index</a>
     &raquo;
@@ -15,22 +17,86 @@
     <span class='title'>Module</span>
     <nav>
       <ul>
-        <li class='frames'>
-          (<a class='frames' href='../../frames.html'>frames</a>)
-        </li>
         <li class='noframes'>
           (<a class='noframes' href='#'>no frames</a>)
         </li>
       </ul>
     </nav>
     <div id='search'>
-      <a id='class_list_link' href='../../class_list.html'>Class List</a>
-      <a id='class_list_link' href='../../module_list.html'>Module List</a>
-      <a id='method_list_link' href='../../method_list.html'>Method List</a>
-      <a id='file_list_link' href='../../file_list.html'>File List</a>
+      <a id='class_list_link' href='../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../../file_list.html'>Files</a>
     </div>
   </div>
   <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
 </div>
     <div id='content'>
       <h1>
@@ -45,34 +111,19 @@
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Base Joosy class extending Coffee class with module-like injections  and other tiny stuff.
-
-</p>
-
+  <p>Base Joosy class extending Coffee class with module-like injections  and other tiny stuff. </p> 
 </div>
 <div class='tags'>
 </div>
       <h2>Direct Known Subclasses</h2>
       <p class='children'>
-                <a href="undefinedclasses/Joosy/Form.html">Joosy.Form</a>,
-                <a href="undefinedclasses/Joosy/Layout.html">Joosy.Layout</a>,
-                <a href="undefinedclasses/Joosy/Page.html">Joosy.Page</a>,
-                <a href="undefinedclasses/Joosy/Widget.html">Joosy.Widget</a>,
-                <a href="undefinedclasses/Joosy/Resource/Collection.html">Joosy.Resource.Collection</a>,
+                <a href="../../classes/Joosy/Form.html">Joosy.Form</a>,
+                <a href="../../classes/Joosy/Layout.html">Joosy.Layout</a>,
+                <a href="../../classes/Joosy/Page.html">Joosy.Page</a>,
+                <a href="../../classes/Joosy/Widget.html">Joosy.Widget</a>,
+                <a href="../../classes/Joosy/Resource/Collection.html">Joosy.Resource.Collection</a>,
         <a href="../../classes/Joosy/Resource/Generic.html">Joosy.Resource.Generic</a>
       </p>
-      <h2>Constant Summary</h2>
-      <dl class='constants'>
-        <dt id='__namespace__-constant'>
-          __namespace__
-          =
-          <div class='tags'>
-</div>
-        </dt>
-        <dd>
-          <pre><code class='coffee'>[]</code></pre>
-        </dd>
-      </dl>
       <h2>Class Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -93,6 +144,26 @@
     </span>
     <span class='desc'>
       Determines if class A has class B in its ancestors.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#alias-class'>
+        + (void) <strong>alias</strong>(method, feature, action)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#aliasStatic-class'>
+        + (void) <strong>aliasStatic</strong>(method, feature, action)
+      </a>
+    </span>
+    <span class='desc'>
+      
     </span>
   </li>
   <li>
@@ -141,13 +212,7 @@
     <strong>Note:</strong>
     Go @jashkenas Go! Give us https://github.com/jashkenas/coffee-script/issues/2052. Please go vote for this feature if you are reading this. It will give us ability to eleminate a lot of boilerplate for you.
   </div>
-  <p>Gets Object/Class class name.
-
-
-
-
-</p>
-
+  <p>Gets Object/Class class name. </p> 
 </div>
 <div class='tags'>
   <h3>Returns:</h3>
@@ -167,12 +232,7 @@
       + (Boolean) <strong>hasAncestor</strong>(what, klass)
     </p>
     <div class='docstring'>
-  <p>Determines if class A has class B in its ancestors.
-
-
-
-</p>
-
+  <p>Determines if class A has class B in its ancestors. </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -207,21 +267,25 @@
 </div>
   </div>
   <div class='method_details'>
+    <p class='signature' id='alias-class'>
+      + (void) <strong>alias</strong>(method, feature, action)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='aliasStatic-class'>
+      + (void) <strong>aliasStatic</strong>(method, feature, action)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='merge-class'>
       + (Object) <strong>merge</strong>(destination, source, unsafe = true)
     </p>
     <div class='docstring'>
-  <p>Simple and fast shallow merge implementation.
-
-</p>
-<p>This is here due to: <a href="https://github.com/andrewplummer/Sugar/issues/100">https://github.com/andrewplummer/Sugar/issues/100</a>.
-This bug was closed and we got some performance but this implementation is
-still like 10x fater for basic tasks.
-
-
-
-</p>
-
+  <p>Simple and fast shallow merge implementation. </p> <p>This is here due to: <a href="https://github.com/andrewplummer/Sugar/issues/100">https://github.com/andrewplummer/Sugar/issues/100</a>. This bug was closed and we got some performance but this implementation is still like 10x fater for basic tasks. </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -268,11 +332,7 @@ still like 10x fater for basic tasks.
       + (void) <strong>include</strong>(object)
     </p>
     <div class='docstring'>
-  <p>Mixes given object as dynamic methods
-
-
-</p>
-
+  <p>Mixes given object as dynamic methods </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -293,11 +353,7 @@ still like 10x fater for basic tasks.
       + (void) <strong>extend</strong>(object)
     </p>
     <div class='docstring'>
-  <p>Mixes given object as static methods
-
-
-</p>
-
+  <p>Mixes given object as static methods </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -317,15 +373,17 @@ still like 10x fater for basic tasks.
     </div>
     <div id='footer'>
   Generated on
-  Sun Mar 18 2012 21:33:03 GMT+0400 (MSK)
+  Fri May 18 2012 04:43:16 GMT+0400 (MSK)
   by
-  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
-  v0.5.0
+  <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v0.7.0
   (Node.js v0.6.8).
   &#10034;
-  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  Press Ctrl-h to see the keyboard shortcuts
   &#10034;
-  <a href='https://mksoft.ch'>mksoft.ch</a>
+  <a href='http=//twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https=//mksoft.ch'>mksoft.ch</a>
 </div>
   </body>
 </html>

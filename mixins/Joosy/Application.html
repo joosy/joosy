@@ -2,21 +2,19 @@
 <html>
   <head>
   <title>Joosy API</title>
-  <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
-  <script src='../../../assets/codo.js'></script>
-  <script src='../../../assets/search_data.js'></script>
+  <link rel='stylesheet' href='../../assets/codo.css' type='text/css'>
+  <script src='../../assets/codo.js'></script>
+  <script src='../../assets/search_data.js'></script>
 </head>
   <body>
-    <div id='base' data-path='../../../'></div>
+    <div id='base' data-path='../../'></div>
 <div id='header'>
   <div id='menu'>
-    <a href='../../../class_index.html' title='Index'>Index</a>
+    <a href='../../class_index.html' title='Index'>Index</a>
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
-    <span class='title'>Templaters</span>
-    &raquo;
-    <span class='title'>RailsJST</span>
+    <span class='title'>Application</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -25,10 +23,10 @@
       </ul>
     </nav>
     <div id='search'>
-      <a id='class_list_link' href='../../../class_list.html'>Classes</a>
-      <a id='mixin_list_link' href='../../../mixin_list.html'>Mixins</a>
-      <a id='method_list_link' href='../../../method_list.html'>Methods</a>
-      <a id='file_list_link' href='../../../file_list.html'>Files</a>
+      <a id='class_list_link' href='../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../../file_list.html'>Files</a>
     </div>
   </div>
   <iframe id='search_frame'></iframe>
@@ -102,73 +100,72 @@
 </div>
     <div id='content'>
       <h1>
-        Class:
-        Joosy.Templaters.RailsJST
+        Mixin:
+        Joosy.Application
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>app/assets/javascripts/joosy/core/templaters/rails_jst.js.coffee</td>
+          <td>app/assets/javascripts/joosy/core/application.js.coffee</td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Rails JST template precompilation binding </p> 
+  <p>Joosy Application container </p> 
 </div>
 <div class='tags'>
 </div>
-      <h2>Instance Method Summary</h2>
+      <h2>Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(applicationName)
+      <a href='#initialize-mixin'>
+        ? (void) <strong>initialize</strong>(name, selector, options = {})
       </a>
     </span>
-    <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      
+      Starts Joosy application by binding to element and bootstraping routes
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#buildView-instance'>
-        - (void) <strong>buildView</strong>(name)
+      <a href='#content-mixin'>
+        ? (void) <strong>content</strong>()
       </a>
     </span>
     <span class='desc'>
-      Gets template lambda by its full name
+      Gets current application root node
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#resolveTemplate-instance'>
-        - (void) <strong>resolveTemplate</strong>(section, template, entity)
+      <a href='#sandbox-mixin'>
+        ? (void) <strong>sandbox</strong>()
       </a>
     </span>
     <span class='desc'>
-      Gets full name of template by several params
+      Gets current application sandbox node
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#setCurrentPage-mixin'>
+        ? (void) <strong>setCurrentPage</strong>(page, params)
+      </a>
+    </span>
+    <span class='desc'>
+      Switches to given page
     </span>
   </li>
 </ul>
-      <h2>Constructor Details</h2>
+      <h2>Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(applicationName)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-</div>
-      <h2>Instance Method Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='buildView-instance'>
-      - (void) <strong>buildView</strong>(name)
+    <p class='signature' id='initialize-mixin'>
+      ? (void) <strong>initialize</strong>(name, selector, options = {})
     </p>
     <div class='docstring'>
-  <p>Gets template lambda by its full name </p> 
+  <p>Starts Joosy application by binding to element and bootstraping routes </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -179,44 +176,70 @@
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Template name 'foo/bar'</span>
+      <span class='desc'>Name of app (the dir its located in)</span>
+    </li>
+    <li>
+      <span class='name'>selector</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>jQuery-compatible selector of root application element</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
     </li>
   </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='resolveTemplate-instance'>
-      - (void) <strong>resolveTemplate</strong>(section, template, entity)
+    <p class='signature' id='content-mixin'>
+      ? (void) <strong>content</strong>()
     </p>
     <div class='docstring'>
-  <p>Gets full name of template by several params </p> 
+  <p>Gets current application root node </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='sandbox-mixin'>
+      ? (void) <strong>sandbox</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Gets current application sandbox node </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='setCurrentPage-mixin'>
+      ? (void) <strong>setCurrentPage</strong>(page, params)
+    </p>
+    <div class='docstring'>
+  <p>Switches to given page </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>section</span>
+      <span class='name'>page</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt><a href='../../classes/Joosy/Page.html'>Joosy.Page</a></tt>)
       </span>
       &mdash;
-      <span class='desc'>Section of templates like pages/layouts/...</span>
+      <span class='desc'>The class (not object) of page to load</span>
     </li>
     <li>
-      <span class='name'>template</span>
+      <span class='name'>params</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Internal template path</span>
-    </li>
-    <li>
-      <span class='name'>entity</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Entity to lookup template path by its namespace</span>
+      <span class='desc'>Hash of page params</span>
     </li>
   </ul>
 </div>

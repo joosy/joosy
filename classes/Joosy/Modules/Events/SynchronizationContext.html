@@ -4,9 +4,11 @@
   <title>Joosy API</title>
   <link rel='stylesheet' href='../../../../assets/codo.css' type='text/css'>
   <script src='../../../../assets/codo.js'></script>
+  <script src='../../../../assets/search_data.js'></script>
 </head>
   <body>
-    <div id='header'>
+    <div id='base' data-path='../../../../'></div>
+<div id='header'>
   <div id='menu'>
     <a href='../../../../class_index.html' title='Index'>Index</a>
     &raquo;
@@ -19,22 +21,86 @@
     <span class='title'>SynchronizationContext</span>
     <nav>
       <ul>
-        <li class='frames'>
-          (<a class='frames' href='../../../../frames.html'>frames</a>)
-        </li>
         <li class='noframes'>
           (<a class='noframes' href='#'>no frames</a>)
         </li>
       </ul>
     </nav>
     <div id='search'>
-      <a id='class_list_link' href='../../../../class_list.html'>Class List</a>
-      <a id='class_list_link' href='../../../../module_list.html'>Module List</a>
-      <a id='method_list_link' href='../../../../method_list.html'>Method List</a>
-      <a id='file_list_link' href='../../../../file_list.html'>File List</a>
+      <a id='class_list_link' href='../../../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../../../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../../../../file_list.html'>Files</a>
     </div>
   </div>
   <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
 </div>
     <div id='content'>
       <h1>
@@ -49,17 +115,13 @@
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Internal representation of <a href='../../../../modules/Joosy/Modules/Events.html#synchronize-instance'>Joosy.Modules.Events#synchronize</a> context
-
-
-</p>
-
+  <p>Internal representation of <a href='../../../../modules/Joosy/Modules/Events.html#synchronize-class'>Joosy.Modules.Events.synchronize</a> context </p> 
 </div>
 <div class='tags'>
   <h3>See also:</h3>
   <ul class='see'>
     <li>
-      <a href='../../../../modules/Joosy/Modules/Events.html#synchronize-instance'>Joosy.Modules.Events#synchronize</a>
+      <a href='../../../../modules/Joosy/Modules/Events.html#synchronize-class'>Joosy.Modules.Events.synchronize</a>
     </li>
   </ul>
 </div>
@@ -124,10 +186,7 @@
       - (void) <strong>uid</strong>()
     </p>
     <div class='docstring'>
-  <p>Internal simple counter to separate given synchronization actions
-
-</p>
-
+  <p>Internal simple counter to separate given synchronization actions </p> 
 </div>
 <div class='tags'>
 </div>
@@ -137,11 +196,7 @@
       - (void) <strong>do</strong>(action)
     </p>
     <div class='docstring'>
-  <p>Registeres another async function that should be synchronized
-
-
-</p>
-
+  <p>Registeres another async function that should be synchronized </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -162,11 +217,7 @@
       - (void) <strong>after</strong>(after)
     </p>
     <div class='docstring'>
-  <p>Registers finalizer: the action that will be called when all do-functions  marked themselves as complete.
-
-
-</p>
-
+  <p>Registers finalizer: the action that will be called when all do-functions  marked themselves as complete. </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -186,15 +237,17 @@
     </div>
     <div id='footer'>
   Generated on
-  Sun Mar 18 2012 21:33:03 GMT+0400 (MSK)
+  Fri May 18 2012 04:43:16 GMT+0400 (MSK)
   by
-  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
-  v0.5.0
+  <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v0.7.0
   (Node.js v0.6.8).
   &#10034;
-  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  Press Ctrl-h to see the keyboard shortcuts
   &#10034;
-  <a href='https://mksoft.ch'>mksoft.ch</a>
+  <a href='http=//twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https=//mksoft.ch'>mksoft.ch</a>
 </div>
   </body>
 </html>

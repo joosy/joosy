@@ -4,9 +4,11 @@
   <title>Joosy API</title>
   <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
   <script src='../../../assets/codo.js'></script>
+  <script src='../../../assets/search_data.js'></script>
 </head>
   <body>
-    <div id='header'>
+    <div id='base' data-path='../../../'></div>
+<div id='header'>
   <div id='menu'>
     <a href='../../../class_index.html' title='Index'>Index</a>
     &raquo;
@@ -17,22 +19,86 @@
     <span class='title'>REST</span>
     <nav>
       <ul>
-        <li class='frames'>
-          (<a class='frames' href='../../../frames.html'>frames</a>)
-        </li>
         <li class='noframes'>
           (<a class='noframes' href='#'>no frames</a>)
         </li>
       </ul>
     </nav>
     <div id='search'>
-      <a id='class_list_link' href='../../../class_list.html'>Class List</a>
-      <a id='class_list_link' href='../../../module_list.html'>Module List</a>
-      <a id='method_list_link' href='../../../method_list.html'>Method List</a>
-      <a id='file_list_link' href='../../../file_list.html'>File List</a>
+      <a id='class_list_link' href='../../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../../../file_list.html'>Files</a>
     </div>
   </div>
   <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
 </div>
     <div id='content'>
       <h1>
@@ -41,113 +107,103 @@
       </h1>
       <table class='box'>
         <tr>
+          <td>Defined in:</td>
+          <td>app/assets/javascripts/joosy/core/resource/rest.js.coffee</td>
+        </tr>
+        <tr>
           <td>Inherits:</td>
           <td>
             <a href="../../../classes/Joosy/Resource/Generic.html">Joosy.Resource.Generic</a>
           </td>
         </tr>
         <tr>
-          <td>Defined in:</td>
-          <td>app/assets/javascripts/joosy/core/resource/rest.js.coffee</td>
+          <td>Includes:</td>
+          <td>
+                        <a href="../../../mixins/Joosy/Modules/Log.html">Joosy.Modules.Log</a>,
+            <a href="../../../mixins/Joosy/Modules/Events.html">Joosy.Modules.Events</a>
+          </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Resource with the HTTP REST as the backend.
-
-
-</p>
-
-  <div class='examples'>
-    <h3>Examples:</h3>
-    <h4>
-      Basic usage
-    </h4>
-    <pre><code class='coffee'>class Rocket extends Joosy.Resource.REST
-  @entity &apos;rocket&apos;
-
-r = Rocket.find {speed: &apos;fast&apos;}   # queries /rockets/?speed=fast to get RESTCollection
-r = Rocket.find 1                 # queries /rockets/1 to get Rocket instance
-
-class Engine extends Joosy.Resource.REST
-  @entity &apos;engine&apos;
-  @source -&gt; 
-    (rocket) &quot;/rockets/#{rocket &apos;id&apos;}/engines&quot;
-
-e = Engine.at(r).find {oil: true} # queries /rockets/1/engies?oil=true</code></pre>
-  </div>
-</div>
-<div class='tags'>
-</div>
-      <h2>Constant Summary</h2>
-      <dl class='constants'>
-        <dt id='__primaryKey-constant'>
-          __primaryKey
-          =
-          <div class='tags'>
-</div>
-        </dt>
-        <dd>
-          <pre><code class='coffee'>'id'</code></pre>
-        </dd>
-      </dl>
-      <h3 class='inherited'>
-        Constants inherited from
-        <a href="../../../classes/Joosy/Module.html">Joosy.Module</a>
-      </h3>
-      <p class='inherited'>
-        <a href="../../../classes/Joosy/Module.html#__namespace__-constant">__namespace__</a>
-      </p>
       <h2>Class Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#primary-class'>
-        + (void) <strong>primary</strong>(primary)
+      <a href='#memberPath-class'>
+        + (void) <strong>memberPath</strong>(id, options = {})
       </a>
     </span>
     <span class='desc'>
-      Sets the field containing primary key.
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#collectionPath-class'>
+        + (void) <strong>collectionPath</strong>(options = {})
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#get-class'>
+        + (void) <strong>get</strong>(options, callback)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#post-class'>
+        + (void) <strong>post</strong>(options, callback)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#put-class'>
+        + (void) <strong>put</strong>(options, callback)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#delete-class'>
+        + (void) <strong>delete</strong>(options, callback)
+      </a>
+    </span>
+    <span class='desc'>
+      
     </span>
   </li>
   <li>
     <span class='signature'>
       <a href='#find-class'>
-        + (Joosy.Resource.REST, Joosy.Resource.RESTCollection) <strong>find</strong>(description, options)
+        + (void) <strong>find</strong>(where, options = {}, callback = false)
       </a>
     </span>
     <span class='desc'>
-      Queries for REST data and creates resources instances.
+      
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#__isId-class'>
-        + (Boolean) <strong>__isId</strong>(something)
+      <a href='#__query-class'>
+        + (void) <strong>__query</strong>(path, method, params, callback)
       </a>
     </span>
     <span class='desc'>
-      Checks if given description can be considered as ID
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#__ajax-class'>
-        + (void) <strong>__ajax</strong>(method, url, options = {}, callback)
-      </a>
-    </span>
-    <span class='desc'>
-      jQuery AJAX wrapper.
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#__buildSource-class'>
-        + (void) <strong>__buildSource</strong>(options = {})
-      </a>
-    </span>
-    <span class='desc'>
-      Builds URL for current resource location.
+      
     </span>
   </li>
 </ul>
@@ -165,29 +221,8 @@ e = Engine.at(r).find {oil: true} # queries /rockets/1/engies?oil=true</code></p
   </li>
   <li>
     <span class='signature'>
-      <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(description = {})
-      </a>
-    </span>
-    <span class='constructor note title'>Constructor</span>
-    <span class='desc'>
-      Should NOT be called directly, use {Joosy.Resource.Generic.create} instead
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#fetch-instance'>
-        - (Joosy.Resource.REST) <strong>fetch</strong>(options)
-      </a>
-    </span>
-    <span class='desc'>
-      Queries the resource url and reloads the data from server
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#save-instance'>
-        - (void) <strong>save</strong>()
+      <a href='#memberPath-instance'>
+        - (void) <strong>memberPath</strong>(options = {})
       </a>
     </span>
     <span class='desc'>
@@ -196,314 +231,186 @@ e = Engine.at(r).find {oil: true} # queries /rockets/1/engies?oil=true</code></p
   </li>
   <li>
     <span class='signature'>
-      <a href='#destroy-instance'>
-        - (Joosy.Resource.REST) <strong>destroy</strong>(options)
+      <a href='#collectionPath-instance'>
+        - (void) <strong>collectionPath</strong>()
       </a>
     </span>
     <span class='desc'>
-      Destroys the resource by DELETE query
+      
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#request-instance'>
-        - (void) <strong>request</strong>(ending, options)
+      <a href='#get-instance'>
+        - (void) <strong>get</strong>(options, callback)
       </a>
     </span>
     <span class='desc'>
-      Requests the REST member URL with POST or any method given in options.type.
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#post-instance'>
+        - (void) <strong>post</strong>(options, callback)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#put-instance'>
+        - (void) <strong>put</strong>(options, callback)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#delete-instance'>
+        - (void) <strong>delete</strong>(options, callback)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#reload-instance'>
+        - (void) <strong>reload</strong>(options = {}, callback = false)
+      </a>
+    </span>
+    <span class='desc'>
+      
     </span>
   </li>
 </ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+      </h2>
       <h3 class='inherited'>
         Methods inherited from
         <a href="../../../classes/Joosy/Resource/Generic.html">Joosy.Resource.Generic</a>
       </h3>
       <p class='inherited'>
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#source-class">.source</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#at-class">.at</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#entity-class">.entity</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#collection-class">.collection</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#__collection-instance">#__collection</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#beforeLoad-class">.beforeLoad</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#map-class">.map</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#create-class">.create</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#reset-instance">#reset</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#get-instance">#get</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#set-instance">#set</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#__callTarget-instance">#__callTarget</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#__call-instance">#__call</a>,
-                <a href="undefinedclasses/Joosy/Resource/Generic.html#__fillData-instance">#__fillData</a>,
-        <a href="../../../classes/Joosy/Resource/Generic.html#__prepareData-instance">#__prepareData</a>
+                <a href="../../../classes/Joosy/Resource/Generic.html#resetIdentity-class">.resetIdentity</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#beforeLoad-class">.beforeLoad</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#primaryKey-class">.primaryKey</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#source-class">.source</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#at-class">.at</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#entity-class">.entity</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#collection-class">.collection</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#__collection-instance">#__collection</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#map-class">.map</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#build-class">.build</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#id-instance">#id</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#knownAttributes-instance">#knownAttributes</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#load-instance">#load</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#__get-instance">#__get</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#__set-instance">#__set</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#__callTarget-instance">#__callTarget</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#__call-instance">#__call</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#__fillData-instance">#__fillData</a>,
+                <a href="../../../classes/Joosy/Resource/Generic.html#__prepareData-instance">#__prepareData</a>,
+        <a href="../../../classes/Joosy/Resource/Generic.html#__map-instance">#__map</a>
       </p>
       <h3 class='inherited'>
         Methods inherited from
         <a href="../../../classes/Joosy/Module.html">Joosy.Module</a>
       </h3>
       <p class='inherited'>
-                <a href="undefinedclasses/Joosy/Module.html#__className-class">.__className</a>,
-                <a href="undefinedclasses/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>,
-                <a href="undefinedclasses/Joosy/Module.html#merge-class">.merge</a>,
-                <a href="undefinedclasses/Joosy/Module.html#include-class">.include</a>,
+                <a href="../../../classes/Joosy/Module.html#__className-class">.__className</a>,
+                <a href="../../../classes/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>,
+                <a href="../../../classes/Joosy/Module.html#alias-class">.alias</a>,
+                <a href="../../../classes/Joosy/Module.html#aliasStatic-class">.aliasStatic</a>,
+                <a href="../../../classes/Joosy/Module.html#merge-class">.merge</a>,
+                <a href="../../../classes/Joosy/Module.html#include-class">.include</a>,
         <a href="../../../classes/Joosy/Module.html#extend-class">.extend</a>
+      </p>
+      <h2>
+        <small>Included Method Summary</small>
+      </h2>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../../mixins/Joosy/Modules/Log.html">Joosy.Modules.Log</a>
+      </h3>
+      <p class='included'>
+                <a href="../../../mixins/Joosy/Modules/Log.html#log-mixin">#log</a>,
+                <a href="../../../mixins/Joosy/Modules/Log.html#debug-mixin">#debug</a>,
+        <a href="../../../mixins/Joosy/Modules/Log.html#debugAs-mixin">#debugAs</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../../mixins/Joosy/Modules/Events.html">Joosy.Modules.Events</a>
+      </h3>
+      <p class='included'>
+                <a href="../../../mixins/Joosy/Modules/Events.html#wait-mixin">#wait</a>,
+                <a href="../../../mixins/Joosy/Modules/Events.html#bind-mixin">#bind</a>,
+                <a href="../../../mixins/Joosy/Modules/Events.html#unbind-mixin">#unbind</a>,
+                <a href="../../../mixins/Joosy/Modules/Events.html#trigger-mixin">#trigger</a>,
+        <a href="../../../mixins/Joosy/Modules/Events.html#synchronize-mixin">#synchronize</a>
       </p>
       <h2>Class Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='primary-class'>
-      + (void) <strong>primary</strong>(primary)
+    <p class='signature' id='memberPath-class'>
+      + (void) <strong>memberPath</strong>(id, options = {})
     </p>
-    <div class='docstring'>
-  <div class='note'>
-    <strong>Note:</strong>
-    It has no direct use inside the REST resource itself and can be omited. But it usually should not since we have plans on adding some kind of Identity Map to Joosy.
-  </div>
-  <p>Sets the field containing primary key.
-
-
-
-</p>
-
+    <div class='tags'>
 </div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>primary</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Name of the field</span>
-    </li>
-  </ul>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='collectionPath-class'>
+      + (void) <strong>collectionPath</strong>(options = {})
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='get-class'>
+      + (void) <strong>get</strong>(options, callback)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='post-class'>
+      + (void) <strong>post</strong>(options, callback)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='put-class'>
+      + (void) <strong>put</strong>(options, callback)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='delete-class'>
+      + (void) <strong>delete</strong>(options, callback)
+    </p>
+    <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='find-class'>
-      + (Joosy.Resource.REST, Joosy.Resource.RESTCollection) <strong>find</strong>(description, options)
+      + (void) <strong>find</strong>(where, options = {}, callback = false)
     </p>
-    <div class='docstring'>
-  <p>Queries for REST data and creates resources instances.
-
-</p>
-<p>Returns single entity if integer or string given.
-Returns collection if no value or Object (with parameters) given.
-
-</p>
-<p>If first parameter is a Function it&#39;s considered as a result callback, in this case parameters will be considered equal to <code><a href=' '>undefined</a></code>
-
-
-
-
-</p>
-
-  <div class='examples'>
-    <h3>Examples:</h3>
-    <h4>
-      Different find
-    </h4>
-    <pre><code class='coffee'>class Rocket extends Joosy.Resource.REST
-  @entity &apos;rocket&apos;
-
-Rocket.find 1
-Rocket.find {type: &apos;nuclear&apos;}, (data) -&gt; data
-Rocket.find (data) -&gt; data
-Rocket.find 1, 
-  success: (data) -&gt; data)
-  cache: true</code></pre>
-  </div>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>description</span>
-      <span class='type'>
-        (<tt>Integer, String, Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>ID of entity or full data to store</span>
-    </li>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash, Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>AJAX options. Will be considered as a success callback if function is given.</span>
-    </li>
-  </ul>
-  <h3>Returns:</h3>
-  <ul class='return'>
-    <li>
-      <span class='type'>
-        (<tt>Joosy.Resource.REST, Joosy.Resource.RESTCollection</tt>)
-      </span>
-      &mdash;
-      <span class='desc'></span>
-    </li>
-  </ul>
+    <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='__isId-class'>
-      + (Boolean) <strong>__isId</strong>(something)
+    <p class='signature' id='__query-class'>
+      + (void) <strong>__query</strong>(path, method, params, callback)
     </p>
-    <div class='docstring'>
-  <p>Checks if given description can be considered as ID
-
-
-</p>
-
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>something</span>
-      <span class='type'>
-        (<tt>Integer, String, Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Value to test</span>
-    </li>
-  </ul>
-  <h3>Returns:</h3>
-  <ul class='return'>
-    <li>
-      <span class='type'>
-        (<tt>Boolean</tt>)
-      </span>
-      &mdash;
-      <span class='desc'></span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='__ajax-class'>
-      + (void) <strong>__ajax</strong>(method, url, options = {}, callback)
-    </p>
-    <div class='docstring'>
-  <p>jQuery AJAX wrapper.
-
-
-</p>
-
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>method</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>HTTP Method (GET/POST/PUT/DELETE)</span>
-    </li>
-    <li>
-      <span class='name'>url</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>URL to query</span>
-    </li>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>AJAX options to pass with request</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>XHR callback</span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='__buildSource-class'>
-      + (void) <strong>__buildSource</strong>(options = {})
-    </p>
-    <div class='docstring'>
-  <p>Builds URL for current resource location.
-
-
-
-</p>
-
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Handling options</span>
-    </li>
-  </ul>
-  <h3>
-    Options Hash:
-    (options):
-  </h3>
-  <ul class='options'>
-    <li>
-      <span class='name'>extension</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>String to add to resource base url</span>
-    </li>
-    <li>
-      <span class='name'>params</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>GET-params to add to resulting url</span>
-    </li>
-  </ul>
-</div>
-  </div>
-</div>
-      <h2>Constructor Details</h2>
-      <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(description = {})
-    </p>
-    <div class='docstring'>
-  <p>Should NOT be called directly, use <a href='../../../classes/Joosy/Resource/Generic.html#create-class'>Joosy.Resource.Generic.create</a> instead
-
-
-</p>
-
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>description</span>
-      <span class='type'>
-        (<tt>Integer, String, Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>ID of entity or full data to store</span>
-    </li>
-  </ul>
+    <div class='tags'>
 </div>
   </div>
 </div>
@@ -514,138 +421,75 @@ Rocket.find 1,
       - (void) <strong>__collection</strong>()
     </p>
     <div class='docstring'>
-  <p>Implements <code>@collection</code> default behavior.
-Changes the default fallback to Joosy.Resource.RESTCollection.
-
-</p>
-
+  <p>Implements <code>@collection</code> default behavior. Changes the default fallback to Joosy.Resource.RESTCollection. </p> 
 </div>
 <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='fetch-instance'>
-      - (Joosy.Resource.REST) <strong>fetch</strong>(options)
-    </p>
-    <div class='docstring'>
-  <p>Queries the resource url and reloads the data from server
-
-
-</p>
-
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash, Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>AJAX options. Will be considered as a success callback if function is given.</span>
-    </li>
-  </ul>
-  <h3>Returns:</h3>
-  <ul class='return'>
-    <li>
-      <span class='type'>
-        (<tt><a href='../../../classes/Joosy/Resource/REST.html'>Joosy.Resource.REST</a></tt>)
-      </span>
-      &mdash;
-      <span class='desc'></span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='save-instance'>
-      - (void) <strong>save</strong>()
+    <p class='signature' id='memberPath-instance'>
+      - (void) <strong>memberPath</strong>(options = {})
     </p>
     <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='destroy-instance'>
-      - (Joosy.Resource.REST) <strong>destroy</strong>(options)
+    <p class='signature' id='collectionPath-instance'>
+      - (void) <strong>collectionPath</strong>()
     </p>
-    <div class='docstring'>
-  <p>Destroys the resource by DELETE query
-
-
-</p>
-
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash, Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>AJAX options. Will be considered as a success callback if function is given.</span>
-    </li>
-  </ul>
-  <h3>Returns:</h3>
-  <ul class='return'>
-    <li>
-      <span class='type'>
-        (<tt><a href='../../../classes/Joosy/Resource/REST.html'>Joosy.Resource.REST</a></tt>)
-      </span>
-      &mdash;
-      <span class='desc'></span>
-    </li>
-  </ul>
+    <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='request-instance'>
-      - (void) <strong>request</strong>(ending, options)
+    <p class='signature' id='get-instance'>
+      - (void) <strong>get</strong>(options, callback)
     </p>
-    <div class='docstring'>
-  <p>Requests the REST member URL with POST or any method given in options.type.
-
-
-</p>
-
+    <div class='tags'>
 </div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>ending</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Member url (like 'foo' or 'foo/bar')</span>
-    </li>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash, Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>AJAX options. Will be considered as a success callback if function is given.</span>
-    </li>
-  </ul>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='post-instance'>
+      - (void) <strong>post</strong>(options, callback)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='put-instance'>
+      - (void) <strong>put</strong>(options, callback)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='delete-instance'>
+      - (void) <strong>delete</strong>(options, callback)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='reload-instance'>
+      - (void) <strong>reload</strong>(options = {}, callback = false)
+    </p>
+    <div class='tags'>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Sun Mar 18 2012 21:33:03 GMT+0400 (MSK)
+  Fri May 18 2012 04:43:16 GMT+0400 (MSK)
   by
-  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
-  v0.5.0
+  <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v0.7.0
   (Node.js v0.6.8).
   &#10034;
-  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  Press Ctrl-h to see the keyboard shortcuts
   &#10034;
-  <a href='https://mksoft.ch'>mksoft.ch</a>
+  <a href='http=//twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https=//mksoft.ch'>mksoft.ch</a>
 </div>
   </body>
 </html>

@@ -2,21 +2,17 @@
 <html>
   <head>
   <title>Joosy API</title>
-  <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
-  <script src='../../../assets/codo.js'></script>
-  <script src='../../../assets/search_data.js'></script>
+  <link rel='stylesheet' href='../assets/codo.css' type='text/css'>
+  <script src='../assets/codo.js'></script>
+  <script src='../assets/search_data.js'></script>
 </head>
   <body>
-    <div id='base' data-path='../../../'></div>
+    <div id='base' data-path='../'></div>
 <div id='header'>
   <div id='menu'>
-    <a href='../../../class_index.html' title='Index'>Index</a>
+    <a href='../class_index.html' title='Index'>Index</a>
     &raquo;
-    <span class='title'>Joosy</span>
-    &raquo;
-    <span class='title'>Templaters</span>
-    &raquo;
-    <span class='title'>RailsJST</span>
+    <span class='title'>Form</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -25,10 +21,10 @@
       </ul>
     </nav>
     <div id='search'>
-      <a id='class_list_link' href='../../../class_list.html'>Classes</a>
-      <a id='mixin_list_link' href='../../../mixin_list.html'>Mixins</a>
-      <a id='method_list_link' href='../../../method_list.html'>Methods</a>
-      <a id='file_list_link' href='../../../file_list.html'>Files</a>
+      <a id='class_list_link' href='../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../file_list.html'>Files</a>
     </div>
   </div>
   <iframe id='search_frame'></iframe>
@@ -103,26 +99,20 @@
     <div id='content'>
       <h1>
         Class:
-        Joosy.Templaters.RailsJST
+        Form
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>app/assets/javascripts/joosy/core/templaters/rails_jst.js.coffee</td>
+          <td>app/assets/javascripts/joosy/core/helpers/form.js.coffee</td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Rails JST template precompilation binding </p> 
-</div>
-<div class='tags'>
-</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(applicationName)
+        - (void) <strong>constructor</strong>(context, resource, options)
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
@@ -132,22 +122,42 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#buildView-instance'>
-        - (void) <strong>buildView</strong>(name)
+      <a href='#label-instance'>
+        - (void) <strong>label</strong>(method, options = {}, content = '')
       </a>
     </span>
     <span class='desc'>
-      Gets template lambda by its full name
+      
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#resolveTemplate-instance'>
-        - (void) <strong>resolveTemplate</strong>(section, template, entity)
+      <a href='#radioButton-instance'>
+        - (void) <strong>radioButton</strong>(method, tagValue, options = {})
       </a>
     </span>
     <span class='desc'>
-      Gets full name of template by several params
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#textArea-instance'>
+        - (void) <strong>textArea</strong>(method, options = {})
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#checkBox-instance'>
+        - (void) <strong>checkBox</strong>(method, options = {}, checkedValue = 1, uncheckedValue = 0)
+      </a>
+    </span>
+    <span class='desc'>
+      
     </span>
   </li>
 </ul>
@@ -155,7 +165,7 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(applicationName)
+      - (void) <strong>constructor</strong>(context, resource, options)
     </p>
     <div class='tags'>
 </div>
@@ -164,61 +174,31 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='buildView-instance'>
-      - (void) <strong>buildView</strong>(name)
+    <p class='signature' id='label-instance'>
+      - (void) <strong>label</strong>(method, options = {}, content = '')
     </p>
-    <div class='docstring'>
-  <p>Gets template lambda by its full name </p> 
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>name</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Template name 'foo/bar'</span>
-    </li>
-  </ul>
+    <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='resolveTemplate-instance'>
-      - (void) <strong>resolveTemplate</strong>(section, template, entity)
+    <p class='signature' id='radioButton-instance'>
+      - (void) <strong>radioButton</strong>(method, tagValue, options = {})
     </p>
-    <div class='docstring'>
-  <p>Gets full name of template by several params </p> 
+    <div class='tags'>
 </div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>section</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Section of templates like pages/layouts/...</span>
-    </li>
-    <li>
-      <span class='name'>template</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Internal template path</span>
-    </li>
-    <li>
-      <span class='name'>entity</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Entity to lookup template path by its namespace</span>
-    </li>
-  </ul>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='textArea-instance'>
+      - (void) <strong>textArea</strong>(method, options = {})
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='checkBox-instance'>
+      - (void) <strong>checkBox</strong>(method, options = {}, checkedValue = 1, uncheckedValue = 0)
+    </p>
+    <div class='tags'>
 </div>
   </div>
 </div>

@@ -4,9 +4,11 @@
   <title>Joosy API</title>
   <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
   <script src='../../../assets/codo.js'></script>
+  <script src='../../../assets/search_data.js'></script>
 </head>
   <body>
-    <div id='header'>
+    <div id='base' data-path='../../../'></div>
+<div id='header'>
   <div id='menu'>
     <a href='../../../class_index.html' title='Index'>Index</a>
     &raquo;
@@ -17,39 +19,113 @@
     <span class='title'>Events</span>
     <nav>
       <ul>
-        <li class='frames'>
-          (<a class='frames' href='../../../frames.html'>frames</a>)
-        </li>
         <li class='noframes'>
           (<a class='noframes' href='#'>no frames</a>)
         </li>
       </ul>
     </nav>
     <div id='search'>
-      <a id='class_list_link' href='../../../class_list.html'>Class List</a>
-      <a id='class_list_link' href='../../../module_list.html'>Module List</a>
-      <a id='method_list_link' href='../../../method_list.html'>Method List</a>
-      <a id='file_list_link' href='../../../file_list.html'>File List</a>
+      <a id='class_list_link' href='../../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../../../file_list.html'>Files</a>
     </div>
   </div>
   <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
 </div>
     <div id='content'>
       <h1>
-        Module:
+        Mixin:
         Joosy.Modules.Events
       </h1>
-      <dl class='box'>
-        <dt>Defined in:</dt>
-        <dd>app/assets/javascripts/joosy/core/modules/events.js.coffee</dd>
-      </dl>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>app/assets/javascripts/joosy/core/modules/events.js.coffee</td>
+        </tr>
+        <tr>
+          <td>Included in:</td>
+          <td>
+                        <a href="undefinedclasses/Joosy/Form.html">Joosy.Form</a>,
+                        <a href="undefinedclasses/Joosy/Layout.html">Joosy.Layout</a>,
+                        <a href="undefinedclasses/Joosy/Page.html">Joosy.Page</a>,
+                        <a href="undefinedclasses/Joosy/Widget.html">Joosy.Widget</a>,
+                        <a href="undefinedclasses/Joosy/Resource/Collection.html">Joosy.Resource.Collection</a>,
+                        <a href="undefinedclasses/Joosy/Resource/Generic.html">Joosy.Resource.Generic</a>,
+            <a href="../../../classes/Joosy/Resource/RESTCollection.html">Joosy.Resource.RESTCollection</a>
+          </td>
+        </tr>
+      </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Basic events implementation
-
-
-</p>
-
+  <p>Basic events implementation </p> 
 </div>
 <div class='tags'>
 </div>
@@ -57,8 +133,8 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#wait-instance'>
-        - (void) <strong>wait</strong>(events, callback)
+      <a href='#wait-mixin'>
+        ? (void) <strong>wait</strong>(events, callback)
       </a>
     </span>
     <span class='desc'>
@@ -67,8 +143,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#bind-instance'>
-        - (void) <strong>bind</strong>(events, callback)
+      <a href='#bind-mixin'>
+        ? (void) <strong>bind</strong>(events, callback)
       </a>
     </span>
     <span class='desc'>
@@ -77,8 +153,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#unbind-instance'>
-        - (void) <strong>unbind</strong>(target)
+      <a href='#unbind-mixin'>
+        ? (void) <strong>unbind</strong>(target)
       </a>
     </span>
     <span class='desc'>
@@ -87,8 +163,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#trigger-instance'>
-        - (void) <strong>trigger</strong>(event)
+      <a href='#trigger-mixin'>
+        ? (void) <strong>trigger</strong>(event, data...)
       </a>
     </span>
     <span class='desc'>
@@ -97,8 +173,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#synchronize-instance'>
-        - (void) <strong>synchronize</strong>(block)
+      <a href='#synchronize-mixin'>
+        ? (void) <strong>synchronize</strong>(block)
       </a>
     </span>
     <span class='desc'>
@@ -106,18 +182,14 @@
     </span>
   </li>
 </ul>
-      <h2>Instance Method Details</h2>
+      <h2>Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='wait-instance'>
-      - (void) <strong>wait</strong>(events, callback)
+    <p class='signature' id='wait-mixin'>
+      ? (void) <strong>wait</strong>(events, callback)
     </p>
     <div class='docstring'>
-  <p>Waits for the list of given events to happen at least once. Then runs callback.
-
-
-</p>
-
+  <p>Waits for the list of given events to happen at least once. Then runs callback. </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -142,15 +214,11 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='bind-instance'>
-      - (void) <strong>bind</strong>(events, callback)
+    <p class='signature' id='bind-mixin'>
+      ? (void) <strong>bind</strong>(events, callback)
     </p>
     <div class='docstring'>
-  <p>Binds action to run each time any of given even was triggered
-
-
-</p>
-
+  <p>Binds action to run each time any of given even was triggered </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -175,15 +243,11 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='unbind-instance'>
-      - (void) <strong>unbind</strong>(target)
+    <p class='signature' id='unbind-mixin'>
+      ? (void) <strong>unbind</strong>(target)
     </p>
     <div class='docstring'>
-  <p>Unbinds action from runing on trigger
-
-
-</p>
-
+  <p>Unbinds action from runing on trigger </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -200,15 +264,11 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='trigger-instance'>
-      - (void) <strong>trigger</strong>(event)
+    <p class='signature' id='trigger-mixin'>
+      ? (void) <strong>trigger</strong>(event, data...)
     </p>
     <div class='docstring'>
-  <p>Triggers event for {bind} and {wait}
-
-
-</p>
-
+  <p>Triggers event for {bind} and {wait} </p> 
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -225,22 +285,17 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='synchronize-instance'>
-      - (void) <strong>synchronize</strong>(block)
+    <p class='signature' id='synchronize-mixin'>
+      ? (void) <strong>synchronize</strong>(block)
     </p>
     <div class='docstring'>
-  <p>Runs set of callbacks finializing with result callback
-
-
-
-</p>
-
+  <p>Runs set of callbacks finializing with result callback </p> 
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
       Basic usage
     </h4>
-    <pre><code class='coffee'>Joosy.Events.synchronize (context) -&gt;
+    <pre><code class='coffee'>Joosy.synchronize (context) -&gt;
   contet.do (done) -&gt; done()
   contet.do (done) -&gt; done()
   content.after -&gt;
@@ -265,15 +320,17 @@
     </div>
     <div id='footer'>
   Generated on
-  Sun Mar 18 2012 21:33:03 GMT+0400 (MSK)
+  Fri May 18 2012 04:43:16 GMT+0400 (MSK)
   by
-  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>codo</a>
-  v0.5.0
+  <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v0.7.0
   (Node.js v0.6.8).
   &#10034;
-  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  Press Ctrl-h to see the keyboard shortcuts
   &#10034;
-  <a href='https://mksoft.ch'>mksoft.ch</a>
+  <a href='http=//twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https=//mksoft.ch'>mksoft.ch</a>
 </div>
   </body>
 </html>

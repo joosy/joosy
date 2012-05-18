@@ -1,7 +1,7 @@
 #
 # Basic events implementation
 #
-# @module
+# @mixin
 #
 Joosy.Modules.Events =
 
@@ -85,9 +85,9 @@ Joosy.Modules.Events =
         @trigger data[1]
         
 #
-# Internal representation of {Joosy.Modules.Events#synchronize} context
+# Internal representation of {Joosy.Modules.Events.synchronize} context
 #
-# @see Joosy.Modules.Events#synchronize
+# @see Joosy.Modules.Events.synchronize
 #
 class Joosy.Modules.Events.SynchronizationContext
   @uid = 0

@@ -16,6 +16,8 @@
 #   collection.each (resource) ->
 #     resource('foo')
 #
+# @include Joosy.Modules.Events
+#
 class Joosy.Resource.Collection extends Joosy.Module
   @include Joosy.Modules.Events
   
@@ -69,8 +71,7 @@ class Joosy.Resource.Collection extends Joosy.Module
 
     @data = @modelize entities
     
-    if notify
-      @trigger 'changed'
+    @trigger 'changed' if notify
     this
   
   #

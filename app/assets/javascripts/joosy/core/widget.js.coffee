@@ -15,6 +15,13 @@
 #   class @FooWidget extends Joosy.Widget
 #     @view 'foo'
 #
+# @include Joosy.Modules.Log
+# @include Joosy.Modules.Events
+# @include Joosy.Modules.Container
+# @include Joosy.Modules.Renderer
+# @include Joosy.Modules.Filters
+# @include Joosy.Modules.TimeManager
+#
 class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
@@ -35,7 +42,7 @@ class Joosy.Widget extends Joosy.Module
   data: false
 
   #
-  # Proxy to Joosy.Router#navigate
+  # Proxy to Joosy.Router.navigate
   #
   navigate: (args...) ->
     Joosy.Router.navigate args...
@@ -51,9 +58,8 @@ class Joosy.Widget extends Joosy.Module
   # Widget bootstrap proccess
   #
   #   * Rendering (if required)
-  #   * {Joosy.Modules.Container#refreshElements}
-  #   * {Joosy.Modules.Container#__delegateEvents}
-  #   * {Joosy.Modules.Filters#__runAfterLoads}
+  #   * {Joosy.Modules.Container.refreshElements}
+  #   * {Joosy.Modules.Container.__delegateEvents}
   #
   # @param [Joosy.Page, Joosy.Layout]     Page or Layout to attach to
   # @param [jQuery] container             Container to attach to
@@ -70,9 +76,8 @@ class Joosy.Widget extends Joosy.Module
   #
   # Layout destruction proccess.
   #
-  #   * {Joosy.Modules.TimeManager#__clearTime}
-  #   * {Joosy.Modules.Renderer#__removeMetamorphs}
-  #   * {Joosy.Modules.Filters#__runAfterUnloads}
+  #   * {Joosy.Modules.TimeManager.__clearTime}
+  #   * {Joosy.Modules.Renderer.__removeMetamorphs}
   #
   __unload: ->
     @__clearTime()

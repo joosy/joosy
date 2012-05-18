@@ -8,7 +8,7 @@
 #     start:    -> console.log 'preloading started'
 #     complete: -> console.log 'preloading finished'
 #
-# @module
+# @mixin
 #
 @InlinePreloader =
   #

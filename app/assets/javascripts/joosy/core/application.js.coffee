@@ -3,6 +3,8 @@
 #
 # Joosy Application container
 #
+# @mixin
+#
 Joosy.Application =
   Pages: {}
   Layouts: {}

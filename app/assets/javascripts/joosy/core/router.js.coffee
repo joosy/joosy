@@ -13,7 +13,7 @@
 #     '/:id/edit'   : Resource.EditPage
 #     '/new'        : Resource.EditPage
 #
-# @module
+# @mixin
 #
 Joosy.Router =
   #

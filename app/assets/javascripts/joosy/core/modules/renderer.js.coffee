@@ -4,7 +4,7 @@
 #
 # Core DOM rendering mechanics
 #
-# @module
+# @mixin
 # @todo           Describe this scary thing o_O
 #
 Joosy.Modules.Renderer =

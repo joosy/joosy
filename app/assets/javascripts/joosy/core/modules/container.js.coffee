@@ -3,7 +3,7 @@
 #
 # @note Requires implementor to contain DOM node at @container propert
 #
-# @module
+# @mixin
 #
 Joosy.Modules.Container =
   events: false

@@ -124,6 +124,12 @@
           </td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Resource with REST/JSON backend </p> 
+</div>
+<div class='tags'>
+</div>
       <h2>Class Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -133,7 +139,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Builds member path based on the given id.
     </span>
   </li>
   <li>
@@ -143,7 +149,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Builds collection path
     </span>
   </li>
   <li>
@@ -153,7 +159,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Sends the GET query using collectionPath.
     </span>
   </li>
   <li>
@@ -163,7 +169,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Sends the POST query using collectionPath.
     </span>
   </li>
   <li>
@@ -173,7 +179,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Sends the PUT query using collectionPath.
     </span>
   </li>
   <li>
@@ -183,7 +189,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Sends the DELETE query using collectionPath.
     </span>
   </li>
   <li>
@@ -193,7 +199,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Requests the required resources from backend 'all' will query for collection from collectionPath.
     </span>
   </li>
   <li>
@@ -226,7 +232,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Builds member path
     </span>
   </li>
   <li>
@@ -236,7 +242,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Builds collection path
     </span>
   </li>
   <li>
@@ -246,7 +252,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Sends the GET query using memberPath.
     </span>
   </li>
   <li>
@@ -256,7 +262,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Sends the POST query using memberPath.
     </span>
   </li>
   <li>
@@ -266,7 +272,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Sends the PUT query using memberPath.
     </span>
   </li>
   <li>
@@ -276,7 +282,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Sends the DELETE query using memberPath.
     </span>
   </li>
   <li>
@@ -286,7 +292,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Refetches the data from backend and triggers `changed`
     </span>
   </li>
 </ul>
@@ -361,49 +367,255 @@
     <p class='signature' id='memberPath-class'>
       + (void) <strong>memberPath</strong>(id, options = {})
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Builds member path based on the given id. </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>Resource.memberPath(1, from: &apos;foo&apos;) # /resources/1/foo</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>id</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>ID of entity to build member path for</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>See <a href='../../../classes/Joosy/Resource/REST.html#find-class'>Joosy.Resource.REST.find</a> for possible options</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='collectionPath-class'>
       + (void) <strong>collectionPath</strong>(options = {})
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Builds collection path </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>Resource.collectionPath() # /resources/</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>See <a href='../../../classes/Joosy/Resource/REST.html#find-class'>Joosy.Resource.REST.find</a> for possible options</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='get-class'>
       + (void) <strong>get</strong>(options, callback)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Sends the GET query using collectionPath. Callback will get parsed JSON object as a parameter. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options to proxy to collectionPath</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='post-class'>
       + (void) <strong>post</strong>(options, callback)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Sends the POST query using collectionPath. Callback will get parsed JSON object as a parameter. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options to proxy to collectionPath</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='put-class'>
       + (void) <strong>put</strong>(options, callback)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Sends the PUT query using collectionPath. Callback will get parsed JSON object as a parameter. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options to proxy to collectionPath</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='delete-class'>
       + (void) <strong>delete</strong>(options, callback)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Sends the DELETE query using collectionPath. Callback will get parsed JSON object as a parameter. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options to proxy to collectionPath</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='find-class'>
       + (void) <strong>find</strong>(where, options = {}, callback = false)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Requests the required resources from backend </p> <p>  &#39;all&#39; will query for collection from collectionPath. Everything else will be considered as an id string and will make resource  query for single instance from memberPath.   (will receive retrieved Collection/Resource) </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>where</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Possible values: 'all', id.</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Path modification options</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>parent</span>
+      <span class='type'>
+        (<tt><a href='../../../classes/Joosy/Resource/REST.html'>Joosy.Resource.REST</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Sets the given resource as a base path i.e. /parents/1/resources</span>
+    </li>
+    <li>
+      <span class='name'>parent</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Sets the given staring as a base path i.e. /trololo/resources</span>
+    </li>
+    <li>
+      <span class='name'>from</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Adds the given string as a last path element i.e. /resources/trololo</span>
+    </li>
+    <li>
+      <span class='name'>params</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Passes the given params to the query</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -430,56 +642,196 @@
     <p class='signature' id='memberPath-instance'>
       - (void) <strong>memberPath</strong>(options = {})
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Builds member path </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>resource.memberPath(from: &apos;foo&apos;) # /resources/1/foo</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>See <a href='../../../classes/Joosy/Resource/REST.html#find-class'>Joosy.Resource.REST.find</a> for possible options</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='collectionPath-instance'>
       - (void) <strong>collectionPath</strong>()
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Builds collection path </p> 
+</div>
+<div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='../../../classes/Joosy/Resource/REST.html#collectionPath-class'>Joosy.Resource.REST.collectionPath</a>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='get-instance'>
       - (void) <strong>get</strong>(options, callback)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Sends the GET query using memberPath. Callback will get parsed JSON object as a parameter. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options to proxy to memberPath</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='post-instance'>
       - (void) <strong>post</strong>(options, callback)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Sends the POST query using memberPath. Callback will get parsed JSON object as a parameter. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options to proxy to memberPath</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='put-instance'>
       - (void) <strong>put</strong>(options, callback)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Sends the PUT query using memberPath. Callback will get parsed JSON object as a parameter. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options to proxy to memberPath</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='delete-instance'>
       - (void) <strong>delete</strong>(options, callback)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Sends the DELETE query using memberPath. Callback will get parsed JSON object as a parameter. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options to proxy to memberPath</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='reload-instance'>
       - (void) <strong>reload</strong>(options = {}, callback = false)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Refetches the data from backend and triggers <code>changed</code> </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>See <a href='../../../classes/Joosy/Resource/REST.html#find-class'>Joosy.Resource.REST.find</a> for possible options</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback </span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Fri May 18 2012 04:43:16 GMT+0400 (MSK)
+  Fri May 18 2012 05:15:24 GMT+0400 (MSK)
   by
   <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v0.7.0

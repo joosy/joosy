@@ -124,18 +124,14 @@
           </td>
         </tr>
       </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Collection of REST Resources </p> 
+</div>
+<div class='tags'>
+</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
-  <li>
-    <span class='signature'>
-      <a href='#load-instance'>
-        - (void) <strong>load</strong>(entities, notify = true)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
   <li>
     <span class='signature'>
       <a href='#reload-instance'>
@@ -143,7 +139,7 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Refetches the data from backend and triggers `changed`
     </span>
   </li>
 </ul>
@@ -207,24 +203,39 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='load-instance'>
-      - (void) <strong>load</strong>(entities, notify = true)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
     <p class='signature' id='reload-instance'>
       - (void) <strong>reload</strong>(options = {}, callback = false)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Refetches the data from backend and triggers <code>changed</code> </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>See <a href='../../../classes/Joosy/Resource/REST.html#find-class'>Joosy.Resource.REST.find</a> for possible options</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback </span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Fri May 18 2012 04:43:16 GMT+0400 (MSK)
+  Fri May 18 2012 05:15:24 GMT+0400 (MSK)
   by
   <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v0.7.0

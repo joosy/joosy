@@ -12,7 +12,7 @@
 #     progress: (percent) -> console.log "#{percent}% loaded"
 #     complete: -> console.log 'preloading finished'
 #
-# @module
+# @mixin
 #
 @CachingPreloader =
   #

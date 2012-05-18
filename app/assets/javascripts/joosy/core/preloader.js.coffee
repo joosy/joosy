@@ -1,7 +1,7 @@
 #
 # Preloader stub
 #
-# @module
+# @mixin
 #
 @Preloader =
 

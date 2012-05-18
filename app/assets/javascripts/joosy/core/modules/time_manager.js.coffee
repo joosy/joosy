@@ -1,7 +1,7 @@
 #
 # Comfortable and clever wrappers for timeouts management
 #
-# @module
+# @mixin
 #
 Joosy.Modules.TimeManager =
   

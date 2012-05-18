@@ -1,7 +1,7 @@
 #
 # Widgets management routines
 #
-# @module
+# @mixin
 #
 Joosy.Modules.WidgetsManager =
 

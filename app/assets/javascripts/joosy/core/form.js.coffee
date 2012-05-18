@@ -21,6 +21,10 @@
 #   form.progress = (percent) -> console.log "Uploaded by #{percent}%"
 #   form.fill @resource
 #
+# @include Joosy.Modules.Log
+# @include Joosy.Modules.Events
+# @include Joosy.Modules.Container
+#
 class Joosy.Form extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events

@@ -1,7 +1,7 @@
 #
 # Wrappers for console.log
 #
-# @module
+# @mixin
 #
 Joosy.Modules.Log =
   

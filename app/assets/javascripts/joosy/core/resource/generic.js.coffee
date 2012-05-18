@@ -15,6 +15,9 @@
 #   r('foo.bar')              # baz
 #   r('foo.bar', 'fluffy')    # triggers 'changed'
 #
+# @include Joosy.Modules.Log
+# @include Joosy.Modules.Events
+#
 class Joosy.Resource.Generic extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events

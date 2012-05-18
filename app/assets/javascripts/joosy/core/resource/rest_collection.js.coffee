@@ -1,3 +1,7 @@
+#
+# @include Joosy.Modules.Log
+# @include Joosy.Modules.Events
+#
 class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events

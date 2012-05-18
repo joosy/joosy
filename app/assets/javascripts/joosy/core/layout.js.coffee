@@ -16,6 +16,14 @@
 #   class @ApplicationLayout extends Joosy.Layout
 #     @view 'application'
 #
+# @include Joosy.Modules.Log
+# @include Joosy.Modules.Events
+# @include Joosy.Modules.Container
+# @include Joosy.Modules.Renderer
+# @include Joosy.Modules.TimeManager
+# @include Joosy.Modules.WidgetsManager
+# @include Joosy.Modules.Filters
+#
 class Joosy.Layout extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
@@ -106,7 +114,7 @@ class Joosy.Layout extends Joosy.Module
   constructor: (@params) ->
 
   #
-  # @see Joosy.Router#navigate
+  # @see Joosy.Router.navigate
   #
   navigate: (args...) ->
     Joosy.Router.navigate(args...)
@@ -121,10 +129,9 @@ class Joosy.Layout extends Joosy.Module
   #
   # Layout bootstrap proccess.
   #
-  #   * {Joosy.Modules.Container#refreshElements}
-  #   * {Joosy.Modules.Container#__delegateEvents}
-  #   * {Joosy.Modules.WidgetsManager#__setupWidgets}
-  #   * {Joosy.Modules.Filters#__runAfterLoads}
+  #   * {Joosy.Modules.Container.refreshElements}
+  #   * {Joosy.Modules.Container.__delegateEvents}
+  #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
   #
   __load: (@container) ->
     @refreshElements()
@@ -135,10 +142,9 @@ class Joosy.Layout extends Joosy.Module
   #
   # Layout destruction proccess.
   #
-  #   * {Joosy.Modules.TimeManager#__clearTime}
-  #   * {Joosy.Modules.WidgetsManager#__unloadWidgets}
-  #   * {Joosy.Modules.Renderer#__removeMetamorphs}
-  #   * {Joosy.Modules.Filters#__runAfterUnloads}
+  #   * {Joosy.Modules.TimeManager.__clearTime}
+  #   * {Joosy.Modules.WidgetsManager.__unloadWidgets}
+  #   * {Joosy.Modules.Renderer.__removeMetamorphs}
   #
   __unload: ->
     @__clearTime()

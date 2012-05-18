@@ -16,6 +16,14 @@
 #   class @RumbaPage extends Joosy.Layout
 #     @view 'rumba'
 #
+# @include Joosy.Modules.Log
+# @include Joosy.Modules.Events
+# @include Joosy.Modules.Container
+# @include Joosy.Modules.Renderer
+# @include Joosy.Modules.TimeManager
+# @include Joosy.Modules.WidgetsManager
+# @include Joosy.Modules.Filters
+#
 class Joosy.Page extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
@@ -128,7 +136,7 @@ class Joosy.Page extends Joosy.Module
   #
   # Sets the several separate methods that will fetch data in parallel.
   #
-  # @note This will work through {Joosy.Modules.Events#synchronize}
+  # @note This will work through {Joosy.Modules.Events.synchronize}
   #
   # @example Basic usage
   #   @fetchSynchronized (context) ->
@@ -211,7 +219,7 @@ class Joosy.Page extends Joosy.Module
         @__bootstrap()
 
   #
-  # @see Joosy.Router#navigate
+  # @see Joosy.Router.navigate
   #
   navigate: (args...) ->
     Joosy.Router.navigate(args...)
@@ -240,10 +248,9 @@ class Joosy.Page extends Joosy.Module
   #
   # Page bootstrap proccess
   #
-  #   * {Joosy.Modules.Container#refreshElements}
-  #   * {Joosy.Modules.Container#__delegateEvents}
-  #   * {Joosy.Modules.WidgetsManager#__setupWidgets}
-  #   * {Joosy.Modules.Filters#__runAfterLoads}
+  #   * {Joosy.Modules.Container.refreshElements}
+  #   * {Joosy.Modules.Container.__delegateEvents}
+  #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
   #   * Scrolling
   #
   __load: ->
@@ -261,10 +268,9 @@ class Joosy.Page extends Joosy.Module
   #
   # Page destruction proccess.
   #
-  #   * {Joosy.Modules.TimeManager#__clearTime}
-  #   * {Joosy.Modules.WidgetsManager#__unloadWidgets}
-  #   * {Joosy.Modules.Renderer#__removeMetamorphs}
-  #   * {Joosy.Modules.Filters#__runAfterUnloads}
+  #   * {Joosy.Modules.TimeManager.__clearTime}
+  #   * {Joosy.Modules.WidgetsManager.__unloadWidgets}
+  #   * {Joosy.Modules.Renderer.__removeMetamorphs}
   #
   __unload: ->
     @__clearTime()

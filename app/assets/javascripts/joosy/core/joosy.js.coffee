@@ -1,7 +1,7 @@
 #
 # All the tiny core stuff
 #
-# @module
+# @mixin
 #
 @Joosy =
   #
@@ -162,7 +162,6 @@
             Joosy.defineResource resource, path, @
 
   #
-  # Creates class and collection class for the given resource
   #
   # @param [String] resource      Entity name in singular form
   # @param [String] path          Entity REST end-point

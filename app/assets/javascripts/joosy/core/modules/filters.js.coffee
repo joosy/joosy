@@ -1,7 +1,7 @@
 #
 # Filters registration routines
 #
-# @module
+# @mixin
 #
 Joosy.Modules.Filters =
 

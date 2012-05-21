@@ -300,12 +300,12 @@ class Joosy.Form extends Joosy.Module
         if field.indexOf(".") != -1
           splited = field.split '.'
           field   = splited.shift()
-          if @__resource
+          if @resourceName || @__resource
             name    = @resourceName || @__resource.__entityName
             field   = name + "[#{field}]"
           field  += "[#{f}]" for f in splited
       
-        else if @__resource
+        else if @resourceName || @__resource
           name  = @resourceName || @__resource.__entityName
           field = name + "[#{field}]"
 

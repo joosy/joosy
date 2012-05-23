@@ -10,7 +10,7 @@ module Joosy
 
         template "app.js.coffee", "#{file_path}.js.coffee"
 
-        template "app_resources_predefiner.js.coffee.erb", "#{file_path}_resources_predefiner.js.coffee.erb"
+        template "app_railties.js.coffee.erb", "#{file_path}_railties.js.coffee.erb"
 
         empty_directory file_path
 

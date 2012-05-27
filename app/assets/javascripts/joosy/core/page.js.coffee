@@ -131,7 +131,9 @@ class Joosy.Page extends Joosy.Module
   #     $.get '/rumbas', (@data) => complete()
   #
   @fetch: (callback) ->
-    @::__fetch = callback
+    @::__fetch = (complete) -> 
+      @data = {}
+      callback(complete)
 
   #
   # Sets the several separate methods that will fetch data in parallel.

@@ -17,7 +17,7 @@ describe "Joosy.Page", ->
 
 
     it "should have appropriate accessors", ->
-      callback_names = ['fetch', 'beforePaint', 'paint', 'afterPaint', 'erase']
+      callback_names = ['beforePaint', 'paint', 'afterPaint', 'erase']
       callback_names.each (func) =>
         @TestPage[func] 'callback'
         expect(@TestPage::['__' + func]).toEqual 'callback'

@@ -163,16 +163,26 @@ class Joosy.Form extends Joosy.Module
     else
       data = resource.data
 
-    Object.each data, (key, val) =>
-      key = resource.__entityName + "[#{key}]"
-      input = @fields.filter("[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
-      unless input.is ':checkbox'
-        input.val val
-      else
-        if val
-          input.attr 'checked', 'checked'
-        else
-          input.removeAttr 'checked'
+    filler = (data, scope) =>
+      Object.each data, (key, val) =>
+        key = @concatFieldName scope, key
+        input = @fields.filter("[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
+        if input.length > 0
+          unless input.is ':checkbox'
+            input.val val
+          else
+            if val
+              input.attr 'checked', 'checked'
+            else
+              input.removeAttr 'checked'
+        if Object.isObject val
+          filler val, key
+# TODO: decide how to make these cases compatible with Rails
+#        else if val instanceof Joosy.Resource.REST
+#          #filler val.data, key
+#        else if val instanceof Joosy.Resource.RESTCollection
+
+    filler data, resource.__entityName
 
     @__markMethod(options?.method || 'PUT') if resource.id()
 
@@ -336,3 +346,18 @@ class Joosy.Form extends Joosy.Module
         result["#{scope}[#{key}]"] = value
 
     result
+
+  concatFieldName: (wrapper, name) ->
+    items = @splitFieldName(wrapper).concat @splitFieldName(name)
+    "#{items[0]}[#{items.slice(1).join('][')}]"
+
+  splitFieldName: (name) ->
+    items = name.split('][')
+    first = items[0].split('[')
+    if first.length == 2
+      if first[0].isBlank()
+        items.splice 0, 1, first[1]
+      else
+        items.splice 0, 1, first[0], first[1]
+      items[items.length - 1] = items[items.length - 1].split(']')[0]
+    items

@@ -6,6 +6,7 @@ describe "Joosy.Form", ->
     @nudeForm = "<form id='nude'><input name='test[foo]'/><input name='test[bar]'/><input name='test[bool]' type='checkbox' value='1'/></form>"
     @putForm  = "<form id='put' method='put'><input name='test[camel_baz]'/></form>"
     @moreForm = "<form id='more' method='put'><input name='test[ololo]'/></form>"
+    @nestedForm = "<form id='nested'><input name='test[zee][capped][test]'/></form>"
 
     @ground.find('#sidebar').after(@nudeForm).after(@putForm).after(@moreForm)
 
@@ -23,6 +24,9 @@ describe "Joosy.Form", ->
       bar: 'bar'
       camelBaz: 'baz'
       bool: true
+      zee:
+        capped:
+          test: 'test'
 
   afterEach ->
     @server.restore()
@@ -65,6 +69,7 @@ describe "Joosy.Form", ->
       @nudeForm   = new Joosy.Form @nudeForm
       @putForm    = new Joosy.Form @putForm
       @moreForm   = new Joosy.Form @moreForm
+      @nestedForm   = new Joosy.Form @nestedForm
 
     it "should fill form, set proper action and method and store resource", ->
       @nudeForm.fill @resource
@@ -101,6 +106,25 @@ describe "Joosy.Form", ->
       @nudeForm.fill resource, 
         action: resource.memberPath(from: 'calculate')
       expect(@nudeForm.container.attr 'action').toEqual '/tests/someId/calculate'
+
+    it "should handle field name properly", ->
+      expect(@nudeForm.concatFieldName 'resource', 'key').toEqual 'resource[key]'
+      expect(@nudeForm.concatFieldName 'resource', 'key[key1]').toEqual 'resource[key][key1]'
+      expect(@nudeForm.concatFieldName 'resource[key]', 'key1').toEqual 'resource[key][key1]'
+      expect(@nudeForm.concatFieldName 'resource[key]', 'key1[key2]').toEqual 'resource[key][key1][key2]'
+      expect(@nudeForm.concatFieldName 'resource[key]', '[key1][key2]').toEqual 'resource[key][key1][key2]'
+      expect(@nudeForm.concatFieldName 'resource', 'key[]').toEqual 'resource[key][]'
+      expect(@nudeForm.concatFieldName 'resource[]', 'key1').toEqual 'resource[][key1]'
+      expect(@nudeForm.concatFieldName 'resource[]', 'key1[]').toEqual 'resource[][key1][]'
+      expect(@nudeForm.concatFieldName 'resource[]', '[][]').toEqual 'resource[][][]'
+      expect(@nudeForm.concatFieldName '[resource]', '[]').toEqual 'resource[]'
+      expect(@nudeForm.concatFieldName '[resource]', '[key]').toEqual 'resource[key]'
+      expect(@nudeForm.concatFieldName '[resource][key]', '[key1][key2]').toEqual 'resource[key][key1][key2]'
+      expect(@nudeForm.concatFieldName '[][]', '[][]').toEqual '[][][]' # oops
+
+    it "should fill nested attributes", ->
+      @nestedForm.fill @resource
+      expect(@nestedForm.fields[0].value).toEqual 'test'
 
   describe "Callbacks", ->
 

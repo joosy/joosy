@@ -20,11 +20,6 @@
   Templaters: {}
 
   #
-  # If enabled Joosy will log to console a lot of 'in progress' stuff
-  #
-  debug: false
-
-  #
   # Registeres anything inside specified namespace (objects chain starting from `window`)
   #
   # @example Basic usage

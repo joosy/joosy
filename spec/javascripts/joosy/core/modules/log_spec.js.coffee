@@ -9,7 +9,7 @@ describe "Joosy.Modules.Log", ->
     @box.log 'message', 'appendix'
 
   it "should log debug messages into console", ->
-    Joosy.debug = true
+    Joosy.Application.debug = true
     @box.debug 'debug message'
-    Joosy.debug = false
+    Joosy.Application.debug = false
     @box.debug 'unseen debug message'

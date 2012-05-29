@@ -1,4 +1,4 @@
 Joosy.helpers 'Application', ->
   
-  # helloWorld = (name) ->
+  # @helloWorld = (name) ->
   #   "Hello World, #{name}"

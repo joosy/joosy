@@ -166,7 +166,7 @@ class Joosy.Form extends Joosy.Module
     filler = (data, scope) =>
       Object.each data, (key, val) =>
         key = @concatFieldName scope, key
-        input = @fields.filter("[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
+        input = @fields.filter("[name='#{key}']:not(:file),[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
         if input.length > 0
           unless input.is ':checkbox'
             input.val val

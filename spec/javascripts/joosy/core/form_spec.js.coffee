@@ -7,6 +7,7 @@ describe "Joosy.Form", ->
     @putForm  = "<form id='put' method='put'><input name='test[camel_baz]'/></form>"
     @moreForm = "<form id='more' method='put'><input name='test[ololo]'/></form>"
     @nestedForm = "<form id='nested'><input name='test[zee][capped][test]'/></form>"
+    @exactForm = "<form id='nested'><input name='test[EXact][MATCH]'/></form>"
 
     @ground.find('#sidebar').after(@nudeForm).after(@putForm).after(@moreForm)
 
@@ -27,6 +28,8 @@ describe "Joosy.Form", ->
       zee:
         capped:
           test: 'test'
+      EXact:
+        MATCH: 'works'
 
   afterEach ->
     @server.restore()
@@ -69,7 +72,8 @@ describe "Joosy.Form", ->
       @nudeForm   = new Joosy.Form @nudeForm
       @putForm    = new Joosy.Form @putForm
       @moreForm   = new Joosy.Form @moreForm
-      @nestedForm   = new Joosy.Form @nestedForm
+      @nestedForm = new Joosy.Form @nestedForm
+      @exactForm  = new Joosy.Form @exactForm
 
     it "should fill form, set proper action and method and store resource", ->
       @nudeForm.fill @resource
@@ -86,6 +90,10 @@ describe "Joosy.Form", ->
       expect(@putForm.fields[0].value).toEqual 'baz'
       expect(@putForm.container.attr('method').toLowerCase()).toEqual 'post'
       expect(@putForm.container.attr 'action').toEqual '/tests/1'
+
+    it "should fill form with any properties", ->
+      @exactForm.fill @resource
+      expect(@exactForm.fields[0].value).toEqual 'works'
 
     it "should fill form with decorator", ->
       @moreForm.fill @resource, 

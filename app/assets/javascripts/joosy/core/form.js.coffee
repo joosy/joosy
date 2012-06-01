@@ -164,8 +164,10 @@ class Joosy.Form extends Joosy.Module
       data = resource.data
 
     filler = (data, scope) =>
-      Object.each data, (key, val) =>
-        key = @concatFieldName scope, key
+      return if data.__joosy_form_filler_lock
+      data.__joosy_form_filler_lock = true
+      Object.each data, (property, val) =>
+        key = @concatFieldName scope, property
         input = @fields.filter("[name='#{key}']:not(:file),[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
         if input.length > 0
           unless input.is ':checkbox'
@@ -177,10 +179,12 @@ class Joosy.Form extends Joosy.Module
               input.removeAttr 'checked'
         if Object.isObject val
           filler val, key
-# TODO: decide how to make these cases compatible with Rails
-#        else if val instanceof Joosy.Resource.REST
-#          #filler val.data, key
-#        else if val instanceof Joosy.Resource.RESTCollection
+        else if val instanceof Joosy.Resource.REST
+          filler val.data, @concatFieldName(scope, "[#{property}_attributes][0]")
+        else if val instanceof Joosy.Resource.RESTCollection
+          for entity, i in val.data
+            filler entity.data, @concatFieldName(scope, "[#{property}_attributes][#{i}]")
+      delete data.__joosy_form_filler_lock
 
     filler data, resource.__entityName
 

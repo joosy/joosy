@@ -6,14 +6,16 @@ describe "Joosy.Form", ->
     @nudeForm = "<form id='nude'><input name='test[foo]'/><input name='test[bar]'/><input name='test[bool]' type='checkbox' value='1'/></form>"
     @putForm  = "<form id='put' method='put'><input name='test[camel_baz]'/></form>"
     @moreForm = "<form id='more' method='put'><input name='test[ololo]'/></form>"
-    @nestedForm = "<form id='nested'><input name='test[zee][capped][test]'/></form>"
-    @exactForm = "<form id='nested'><input name='test[EXact][MATCH]'/></form>"
+    @nestedForm = "<form id='nested'><input name='test[zee][capped][test]'/><input name='test[items_attributes][0][attr]'/><input name='test[items_attributes][1][attr]'/><input name='test[single_attributes][0][attr]'/></form>"
+    @exactForm = "<form id='exact'><input name='test[EXact][MATCH]'/></form>"
 
-    @ground.find('#sidebar').after(@nudeForm).after(@putForm).after(@moreForm)
+    @ground.find('#sidebar').after(@nudeForm).after(@putForm).after(@moreForm).after(@nestedForm).after(@exactForm)
 
     @nudeForm = $('#nude')
     @putForm  = $('#put')
     @moreForm = $('#more')
+    @nestedForm = $('#nested')
+    @exactForm = $('#exact')
 
     class Test extends Joosy.Resource.REST
       @entity 'test'
@@ -30,6 +32,8 @@ describe "Joosy.Form", ->
           test: 'test'
       EXact:
         MATCH: 'works'
+      items: (new Joosy.Resource.RESTCollection(Test)).load([{attr: 'one'}, {attr: 'two'}])
+      single: Test.build(attr: 'sin')
 
   afterEach ->
     @server.restore()
@@ -130,9 +134,17 @@ describe "Joosy.Form", ->
       expect(@nudeForm.concatFieldName '[resource][key]', '[key1][key2]').toEqual 'resource[key][key1][key2]'
       expect(@nudeForm.concatFieldName '[][]', '[][]').toEqual '[][][]' # oops
 
-    it "should fill nested attributes", ->
+    it "should fill nested attributes and resources", ->
       @nestedForm.fill @resource
       expect(@nestedForm.fields[0].value).toEqual 'test'
+      expect(@nestedForm.fields[1].value).toEqual 'one'
+      expect(@nestedForm.fields[2].value).toEqual 'two'
+      expect(@nestedForm.fields[3].value).toEqual 'sin'
+
+    it "should break cross-references", ->
+      @resource('single')('trololo', @resource)
+      @nestedForm.fill @resource
+      # expect(you).toBeAlive(), lol
 
   describe "Callbacks", ->
 

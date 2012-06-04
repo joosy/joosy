@@ -10,7 +10,7 @@
 
 #
 # Base class for all of your Joosy Pages.
-# @see http://guides.joosy.ws/guides/layouts-pages-and-routing.html
+# @see http://guides.joosy.ws/guides/blog/layouts-pages-and-routing.html
 #
 # @example Sample application page
 #   class @RumbaPage extends Joosy.Layout

@@ -3,8 +3,8 @@
   %head
     %title> <%= file_path %>
 
-    javascript:
-      window.preload = {
+    :javascript
+      window.joosy = {
         libraries: #{extract_sources_and_sizes_from_include_tag('<%= file_path %>')}
       };
 

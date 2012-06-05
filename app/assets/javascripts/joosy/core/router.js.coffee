@@ -85,10 +85,12 @@ Joosy.Router =
   # during system startup
   #
   __setupRoutes: ->
+    $(window).hashchange =>
+      unless @__ignoreRequest && location.hash.match(@__ignoreRequest)
+        @__respondRoute location.hash 
+
     @__prepareRoutes @rawRoutes
     @__respondRoute location.hash
-    $(window).hashchange =>
-      @__respondRoute location.hash unless @__ignoreRequest && location.hash.match(@__ignoreRequest)
 
   #
   # Compiles routes to map object

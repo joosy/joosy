@@ -69,8 +69,8 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @see Joosy.Resource.REST.collectionPath
   #
-  collectionPath: ->
-    @constructor.collectionPath()
+  collectionPath: (options={}) ->
+    @constructor.collectionPath options
 
   #
   # Sends the GET query using collectionPath.

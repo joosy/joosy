@@ -45,10 +45,16 @@ describe "Joosy.Resource.Generic", ->
     
   it "handles @at", ->
     class Fluffy extends Joosy.Resource.Generic
+      @entity 'fluffy'
 
     clone = Fluffy.at('rumbas!')
     
     expect(clone.__source).toEqual 'rumbas!'
+    expect(Joosy.Module.hasAncestor clone, Fluffy).toBeTruthy()
+
+    clone = Fluffy.at Test.build(1)
+    
+    expect(clone.__source).toEqual '/tests/1/fluffies'
     expect(Joosy.Module.hasAncestor clone, Fluffy).toBeTruthy()
     # clone won't be instanceof Fluffy in IE
     #expect(clone.build({}) instanceof Fluffy).toBeTruthy()

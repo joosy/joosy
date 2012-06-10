@@ -72,7 +72,8 @@ class Joosy.Resource.Generic extends Joosy.Module
     class clone extends this
 
     if entity instanceof Joosy.Resource.Generic
-      clone.__source = entity.memberPath()
+      clone.__source  = entity.memberPath() 
+      clone.__source += '/' + @::__entityName.pluralize() if @::__entityName
     else
       clone.__source = entity
 

@@ -18,10 +18,8 @@ HELP
 
         template "app_preloader.js.coffee.erb", "app/assets/javascripts/#{file_name}_preloader.js.coffee.erb"
 
-        empty_directory "app/controllers"
         template "app_controller.rb", "app/controllers/#{file_name}_controller.rb"
 
-        empty_directory "app/views/layouts"
         template "preload.html.#{options[:template_engine]}",
                  "app/views/layouts/#{file_name}.html.#{options[:template_engine]}"
 

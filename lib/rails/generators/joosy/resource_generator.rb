@@ -8,7 +8,6 @@ module Joosy
       def create_files
         super
 
-        empty_directory "#{app_path}/resources"
         template "app/resources/template.js.coffee", "#{app_path}/resources/#{file_name}.js.coffee"
       end
 

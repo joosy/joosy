@@ -8,10 +8,10 @@ module Joosy
       def create_files
         super
 
-        empty_directory "#{app_path}/pages/#{namespace_path}"
+        ::FileUtils.mkdir_p "#{app_path}/pages/#{namespace_path}" if behavior != :revoke
         template "app/pages/template.js.coffee", "#{app_path}/pages/#{namespace_path}/#{file_name}.js.coffee"
 
-        empty_directory "#{app_path}/templates/pages/#{namespace_path}"
+        ::FileUtils.mkdir_p "#{app_path}/templates/pages/#{namespace_path}" if behavior != :revoke
         create_file "#{app_path}/templates/pages/#{namespace_path}/#{file_name}.jst.#{options[:template_kind]}"
       end
 

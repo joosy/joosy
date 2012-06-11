@@ -8,10 +8,8 @@ module Joosy
       def create_files
         super
 
-        empty_directory "#{app_path}/widgets"
         template "app/widgets/template.js.coffee", "#{app_path}/widgets/#{file_name}.js.coffee"
 
-        empty_directory "#{app_path}/templates/widgets"
         create_file "#{app_path}/templates/widgets/#{file_name}.jst.#{options[:template_kind]}"
       end
 

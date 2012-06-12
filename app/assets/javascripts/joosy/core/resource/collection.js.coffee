@@ -114,6 +114,9 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   find: (description) ->
     @data.find description
+
+  sortBy: (arguments...) ->
+    @data.sortBy arguments...
   
   #
   # Gets resource by id

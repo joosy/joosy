@@ -101,7 +101,10 @@ class Joosy.Layout extends Joosy.Module
   #     $.get '/rumbas', (@data) => complete()
   #
   @fetch: (callback) ->
-    @::__fetch = callback
+    @::__fetch = (complete) -> 
+      callback.call this, =>
+        @data = {}
+        complete()
 
   #
   # Defaults to `false` to ease beforePaint state check.

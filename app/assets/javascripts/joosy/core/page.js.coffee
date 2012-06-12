@@ -132,8 +132,9 @@ class Joosy.Page extends Joosy.Module
   #
   @fetch: (callback) ->
     @::__fetch = (complete) -> 
-      @data = {}
-      callback.call(this, complete)
+      callback.call this, =>
+        @data = {}
+        complete()
 
   #
   # Sets the several separate methods that will fetch data in parallel.

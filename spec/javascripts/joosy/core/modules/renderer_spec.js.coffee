@@ -24,8 +24,7 @@ describe "Joosy.Modules.Renderer", ->
 
   it "updates contents, but only while it is bound to DOM", ->
     @TestContainer.view (locals) ->
-      template = (locals) ->
-        "#{locals.object.value}"
+      template = -> @object.value
 
       @renderDynamic(template, locals)
 
@@ -57,8 +56,7 @@ describe "Joosy.Modules.Renderer", ->
     data = Joosy.Resource.Generic.build zombie: 'rock'
 
     @TestContainer.view (locals) ->
-      template = (locals) -> 
-        "#{locals.zombie}"
+      template = -> @zombie
 
       @renderDynamic(template, locals)
 
@@ -92,8 +90,7 @@ describe "Joosy.Modules.Renderer", ->
       ]
 
     @TestContainer.view (locals) ->
-      template = (locals) ->
-        "#{locals.data[1] 'zombie'}"
+      template = -> @data[1] 'zombie'
 
       @renderDynamic(template, locals)
 
@@ -118,8 +115,7 @@ describe "Joosy.Modules.Renderer", ->
 
   it "debounces morpher updates", ->
     @TestContainer.view (locals) ->
-      template = (locals) ->
-        "#{locals.object.value}"
+      template = -> @object.value
   
       @renderDynamic(template, locals)
   
@@ -155,8 +151,7 @@ describe "Joosy.Modules.Renderer", ->
     @TestContainer.helpers "Hoge"
 
     @TestContainer.view (locals) ->
-      template = (locals) ->
-        "#{locals.multiplier(10)}"
+      template = (locals) -> @multiplier(10)
 
       @render(template, locals)
 
@@ -172,8 +167,7 @@ describe "Joosy.Modules.Renderer", ->
       value * 6
 
     @TestContainer.view (locals) ->
-      template = (locals) ->
-        "#{locals.globalMultiplier(10)}"
+      template = (locals) -> @globalMultiplier(10)
 
       @render(template, locals)
 
@@ -192,7 +186,7 @@ describe "Joosy.Modules.Renderer", ->
     callback = sinon.spy()
 
     Box.view (locals) ->
-      template = (locals) -> locals.onRefresh -> callback()
+      template = -> @onRefresh -> callback()
       @render(template, locals)
 
     box = new Box

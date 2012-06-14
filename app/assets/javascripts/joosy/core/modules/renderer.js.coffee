@@ -85,14 +85,20 @@ Joosy.Modules.Renderer =
     stack.template = template
     stack.locals   = locals
 
-    isResource   = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Generic
-    isCollection = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Collection
+    # If template was given as a lambda, parameters should
+    # be passed as a context, not as a argument
+    assignContext = false
+
+    isResource    = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Generic
+    isCollection  = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Collection
 
     if Object.isString template
       if @__renderSection?
         template = Joosy.Application.templater.resolveTemplate @__renderSection(), template, this
 
       template = Joosy.Application.templater.buildView template
+    else if Object.isFunction template
+      assignContext = true
     else if !Object.isFunction template
       throw new Error "#{Joosy.Module.__className @}> template (maybe @view) does not look like a string or lambda"
 
@@ -103,6 +109,7 @@ Joosy.Modules.Renderer =
       render: (template, locals={}) =>
         @render template, locals, stack
       renderDynamic: (template, locals={}) =>
+        [template, locals] = [locals, template] if locals.isFunction()
         @renderDynamic template, locals, stack
 
     context = =>
@@ -117,7 +124,11 @@ Joosy.Modules.Renderer =
       Joosy.Module.merge data, renderers
       data
 
-    result = -> template(context())
+    result = ->
+      if assignContext
+        template.call(context())
+      else
+        template(context())
 
     if dynamic
       morph  = Metamorph result()

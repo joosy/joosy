@@ -109,7 +109,8 @@ Joosy.Modules.Renderer =
       render: (template, locals={}) =>
         @render template, locals, stack
       renderDynamic: (template, locals={}) =>
-        [template, locals] = [locals, template] if locals.isFunction()
+        @renderDynamic template, locals, stack
+      renderInline: (locals={}, template) =>
         @renderDynamic template, locals, stack
 
     context = =>

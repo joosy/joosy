@@ -102,14 +102,16 @@ class Joosy.Layout extends Joosy.Module
   #
   @fetch: (callback) ->
     @::__fetch = (complete) -> 
+      @data = {}
       callback.call this, =>
-        @data = {}
+        @dataFetched = true
         complete()
 
   #
-  # Defaults to `false` to ease beforePaint state check.
+  # Prefetched page data.
   #
   data: false
+  dataFetched: false
   
   #
   # @param [Hash] params              List of route params

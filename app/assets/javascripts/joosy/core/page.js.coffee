@@ -52,6 +52,7 @@ class Joosy.Page extends Joosy.Module
   # Prefetched page data.
   #
   data: false
+  dataFetched: false
 
   #
   # Sets layout for current page
@@ -132,8 +133,9 @@ class Joosy.Page extends Joosy.Module
   #
   @fetch: (callback) ->
     @::__fetch = (complete) -> 
+      @data = {}
       callback.call this, =>
-        @data = {}
+        @dataFetched = true
         complete()
 
   #

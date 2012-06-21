@@ -134,6 +134,8 @@ class Joosy.Resource.Generic extends Joosy.Module
       throw new Error "#{Joosy.Module.__className @}> class can not be detected for '#{name}' mapping"
 
     @beforeLoad (data) ->
+      klass = klass() unless Joosy.Module.hasAncestor(klass, Joosy.Resource.Generic)
+        
       @__map(data, name, klass)
 
   #

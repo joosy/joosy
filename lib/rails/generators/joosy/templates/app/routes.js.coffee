@@ -3,6 +3,6 @@ Joosy.Router.map
   '/'             : Welcome.IndexPage
 # '/resources'    :
 #   '/'           : Resource.IndexPage
+#   '/new'        : Resource.NewPage
 #   '/:id'        : Resource.ShowPage
 #   '/:id/edit'   : Resource.EditPage
-#   '/new'        : Resource.EditPage

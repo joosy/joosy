@@ -97,6 +97,7 @@ class Joosy.Form extends Joosy.Module
   # @option options [Joosy.Resource.Generic] resource      The resource to fill the form with
   # @option options [String] resourceName                  The string to use as a resource name prefix for fields to match invalidation
   # @option options [String] action                        Action URL for the form
+  # @option options [String] method                        HTTP method, for example PUT, that will passed in _method param
   #
   constructor: (form, options={}) ->
     if Object.isFunction options
@@ -135,6 +136,13 @@ class Joosy.Form extends Joosy.Module
     if options.resource?
       @fill(options.resource, options)
       delete @resource
+
+    if options.action?
+      @container.attr 'action', options.action
+      @container.attr 'method', 'POST'
+
+    if options.method?
+      @__markMethod options.method
 
   #
   # Resets form submit behavior to default
@@ -186,7 +194,7 @@ class Joosy.Form extends Joosy.Module
             filler entity.data, @concatFieldName(scope, "[#{property}_attributes][#{i}]")
       delete data.__joosy_form_filler_lock
 
-    filler data, resource.__entityName
+    filler data, resource.__entityName || options.resourceName
 
     @__markMethod(options?.method || 'PUT') if resource.id()
 

@@ -45,7 +45,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # @param [Class] model    Resource class which this collection will handle
   #
-  constructor: (model=false) ->
+  constructor: (model=false, @findOptions) ->
     @model = model if model
 
     #

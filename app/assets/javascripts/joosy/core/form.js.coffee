@@ -185,7 +185,7 @@ class Joosy.Form extends Joosy.Module
               input.attr 'checked', 'checked'
             else
               input.removeAttr 'checked'
-        if Object.isObject val
+        if Object.isObject(val) || Object.isArray(val)
           filler val, key
         else if val instanceof Joosy.Resource.REST
           filler val.data, @concatFieldName(scope, "[#{property}_attributes][0]")

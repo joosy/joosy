@@ -8,20 +8,23 @@ describe "Joosy.Form", ->
     @moreForm = "<form id='more' method='put'><input name='test[ololo]'/></form>"
     @nestedForm = "<form id='nested'><input name='test[zee][capped][test]'/><input name='test[items_attributes][0][attr]'/><input name='test[items_attributes][1][attr]'/><input name='test[single_attributes][0][attr]'/></form>"
     @exactForm = "<form id='exact'><input name='test[EXact][MATCH]'/></form>"
+    @arrayForm = "<form id='array'><input name='test[arr][1][0][1]'/></form>"
 
-    @ground.find('#sidebar').after(@nudeForm).after(@putForm).after(@moreForm).after(@nestedForm).after(@exactForm)
+    @ground.find('#sidebar').after(@nudeForm).after(@putForm).after(@moreForm).after(@nestedForm).after(@exactForm).after(@arrayForm)
 
     @nudeForm = $('#nude')
     @putForm  = $('#put')
     @moreForm = $('#more')
     @nestedForm = $('#nested')
     @exactForm = $('#exact')
+    @arrayForm = $('#array')
 
     class Test extends Joosy.Resource.REST
       @entity 'test'
     @Test = Test
 
     @resource = Test.build
+      arr: [null, [[null, 'here']]]
       id: 1,
       foo: 'foo',
       bar: 'bar'
@@ -78,6 +81,7 @@ describe "Joosy.Form", ->
       @moreForm   = new Joosy.Form @moreForm
       @nestedForm = new Joosy.Form @nestedForm
       @exactForm  = new Joosy.Form @exactForm
+      @arrayForm  = new Joosy.Form @arrayForm
 
     it "should fill form, set proper action and method and store resource", ->
       @nudeForm.fill @resource
@@ -140,6 +144,10 @@ describe "Joosy.Form", ->
       expect(@nestedForm.fields[1].value).toEqual 'one'
       expect(@nestedForm.fields[2].value).toEqual 'two'
       expect(@nestedForm.fields[3].value).toEqual 'sin'
+
+    it 'should fill array-like attributes', ->
+      @arrayForm.fill @resource
+      expect(@arrayForm.fields[0].value).toEqual 'here'
 
     it "should break cross-references", ->
       @resource('single')('trololo', @resource)

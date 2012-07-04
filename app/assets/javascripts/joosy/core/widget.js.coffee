@@ -29,6 +29,7 @@ class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Renderer
   @include Joosy.Modules.Filters
   @include Joosy.Modules.TimeManager
+  @include Joosy.Modules.WidgetsManager
 
   #
   # By default widget will not render on load
@@ -69,6 +70,7 @@ class Joosy.Widget extends Joosy.Module
       @swapContainer @container, @__renderer(@data || {})
     @refreshElements()
     @__delegateEvents()
+    @__setupWidgets()
     @__runAfterLoads()
 
     this
@@ -81,5 +83,6 @@ class Joosy.Widget extends Joosy.Module
   #
   __unload: ->
     @__clearTime()
+    @__unloadWidgets()
     @__removeMetamorphs()
     @__runAfterUnloads()

@@ -315,7 +315,7 @@ class Joosy.Form extends Joosy.Module
       if @substitutions[field]?
         field = @substitutions[field]
 
-      if Object.isObject notifications
+      if Object.isObject(notifications) || @isArrayOfObjects(notifications)
         Object.each @__foldInlineEntities(notifications), (key, value) ->
           result[field+key] = value
       else
@@ -352,7 +352,7 @@ class Joosy.Form extends Joosy.Module
   #
   __foldInlineEntities: (hash, scope="", result={}) ->
     Object.each hash, (key, value) =>
-      if Object.isObject(value)
+      if Object.isObject(value) || @isArrayOfObjects(value)
         @__foldInlineEntities(value, "#{scope}[#{key}]", result)
       else
         result["#{scope}[#{key}]"] = value
@@ -373,3 +373,6 @@ class Joosy.Form extends Joosy.Module
         items.splice 0, 1, first[0], first[1]
       items[items.length - 1] = items[items.length - 1].split(']')[0]
     items
+
+  isArrayOfObjects: (array) ->
+    Object.isArray(array) && array.every((elem) -> Object.isObject(elem))

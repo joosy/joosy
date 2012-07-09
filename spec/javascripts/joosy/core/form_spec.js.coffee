@@ -250,3 +250,10 @@ describe "Joosy.Form", ->
       result = @nudeForm.__stringifyErrors(errors)
 
       expect(result).toEqual { "fluffies[zombie][mumbas]": ['ololo'] }
+
+    it "should prepare nested response", ->
+      @nestedForm = new Joosy.Form @nestedForm
+      @nestedForm.fill @resource
+      errors = {test: {items_attributes: [{attr: ['first']}, {attr: ['second']}]}}
+      result = @nestedForm.__stringifyErrors(errors)
+      expect(result).toEqual { "test[items_attributes][0][attr]": ['first'], "test[items_attributes][1][attr]": ['second'] }

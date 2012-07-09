@@ -84,12 +84,12 @@ class Joosy.Form extends Joosy.Module
   #   by returning false from your own before callback. Both of callbacks will run if
   #   you return true.
   #
-  # @option options [Function] success       `(Object) -> null` triggers on 200 HTTP code from server. 
+  # @option options [Function] success       `(Object) -> null` triggers on 2xx HTTP code from server.
   #   Pases in the parsed JSON.
   #
   # @option options [Function] progress      `(Float) -> null` runs periodically while form is uploading
   #
-  # @option options [Function] error         `(Object) -> Boolean` triggers if server responded with anything but 200.
+  # @option options [Function] error         `(Object) -> Boolean` triggers if server responded with anything but 2xx.
   #   By default will run form invalidation routine. This behavior can be canceled
   #   by returning false from your own error callback. Both of callbacks will run if
   #   you return true.
@@ -228,7 +228,7 @@ class Joosy.Form extends Joosy.Module
   __success: (response, status, xhr) ->
     if xhr
       @success? response
-    else if response.status == 200
+    else if 200 <= response.status < 300
       @success response.json
     else
       @__error response.json

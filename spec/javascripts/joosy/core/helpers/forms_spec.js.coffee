@@ -9,7 +9,8 @@ describe "Joosy.Helpers.Form", ->
 
       flag = flag && tag.length == 1
       flag = flag && tag[0].nodeName == tagName.toUpperCase()
-      flag = flag && tag.html() == content
+      if content != false
+        flag = flag && tag.html() == content
 
       for name, val of attrs
         flag = flag && tag.attr(name) == val
@@ -48,6 +49,21 @@ describe "Joosy.Helpers.Form", ->
     it "renders textArea", ->
       expect(h.textArea 'a', 'b', {a: 'b', value: 'foo'}).toBeTag 'textarea', 'foo', id: 'a_b', name: 'a[b]', a: 'b'
 
+    it "renders select with options object", ->
+      expect(tag = h.select 'a', 'b', {a: 'b', c: 'd'}, {a: 'b', value: 'c', includeBlank: true}).toBeTag 'select', false, id: 'a_b', name: 'a[b]', a: 'b'
+      opts = $ $(tag).html()
+      expect(opts.length).toEqual 3
+      expect(opts[0]).toBeTag 'option', '', value: ''
+      expect(opts[1]).toBeTag 'option', 'b', value: 'a'
+      expect(opts[2]).toBeTag 'option', 'd', value: 'c', selected: 'selected'
+
+    it "renders select with options array", ->
+      expect(tag = h.select 'a', 'b', [['b', 'a'], ['d', 'c']], {a: 'b'}).toBeTag 'select', false, id: 'a_b', name: 'a[b]', a: 'b'
+      opts = $ $(tag).html()
+      expect(opts.length).toEqual 2
+      expect(opts[0]).toBeTag 'option', 'b', value: 'a'
+      expect(opts[1]).toBeTag 'option', 'd', value: 'c'
+
     it "renders formFor", ->
       callback = sinon.spy()
       expect(h.formFor resource, callback).toMatch /<form id=".*"><\/form>/
@@ -78,6 +94,9 @@ describe "Joosy.Helpers.Form", ->
     it "renders textArea", ->
       expect(form.textArea 'b', {a: 'b', value: 'foo'}).toBeTag 'textarea', 'foo', id: 'test_b', name: 'test[b]', a: 'b'
 
+    it "renders select", ->
+      expect(form.select 'b', {a: 'b', c: 'd'}, {a: 'b'}).toBeTag 'select', false, id: 'test_b', name: 'test[b]', a: 'b'
+
   describe "resource with extendIds", ->
     callback = sinon.spy()
     h.formFor(resource, extendIds: true, callback)
@@ -101,3 +120,6 @@ describe "Joosy.Helpers.Form", ->
 
     it "renders textArea", ->
       expect(form.textArea 'b', {a: 'b', value: 'foo'}).toBeTag 'textarea', 'foo', id: 'test_1_b', name: 'test[b]', a: 'b'
+
+    it "renders select", ->
+      expect(form.select 'b', {a: 'b', c: 'd'}, {a: 'b'}).toBeTag 'select', false, id: 'test_1_b', name: 'test[b]', a: 'b'

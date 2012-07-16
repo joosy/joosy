@@ -26,8 +26,8 @@ Joosy.helpers 'Application', ->
     label: (method, options={}, content='') -> @context.label(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), content)
     radioButton: (method, tagValue, options={}) -> @context.radioButton(@resource, method, tagValue, Joosy.Module.merge(extendIds: @options.extendIds, options))
     textArea: (method, options={}) -> @context.textArea(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
-    checkBox: (method, options={}, checkedValue=1, uncheckedValue=0) ->
-      @context.checkBox(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), checkedValue, uncheckedValue)
+    checkBox: (method, options={}, checkedValue=1, uncheckedValue=0) -> @context.checkBox(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), checkedValue, uncheckedValue)
+    select: (method, options={}, htmlOptions={}) -> @context.select @resource, method, options, Joosy.Module.merge(extendIds: @options.extendIds, htmlOptions)
 
   ['text', 'file', 'hidden', 'password'].each (type) =>
     Form.prototype[type+'Field'] = (method, options={}) ->
@@ -65,6 +65,27 @@ Joosy.helpers 'Application', ->
     box = input 'checkbox', resource, method, Joosy.Module.merge(value: checkedValue, options)
 
     spy+box
+
+  @select = (resource, method, options, htmlOptions) ->
+    if Object.isObject options
+      opts = []
+      for key, val of options
+        opts.push [val, key]
+    else
+      opts = options
+    if htmlOptions.includeBlank
+      delete htmlOptions.includeBlank
+      opts.unshift ['', '']
+    opts = opts.reduce (str, vals) =>
+      params = if Object.isArray vals then ['option', { value: vals[1] }, vals[0]] else ['option', {}, vals]
+      if htmlOptions.value == (if Object.isArray(vals) then vals[1] else vals)
+        params[1].selected = 'selected'
+      str += @.tag.apply @, params
+    , ''
+    extendIds = htmlOptions.extendIds
+    delete htmlOptions.value
+    delete htmlOptions.extendIds
+    @tag 'select', Joosy.Module.merge(description(resource, method, extendIds), htmlOptions), opts
 
   @textArea = (resource, method, options={}) ->
     value     = options.value

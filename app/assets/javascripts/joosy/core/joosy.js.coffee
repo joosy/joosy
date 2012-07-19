@@ -173,6 +173,8 @@
       space[className] = class extends Joosy.Resource.REST
         @entity resource
         @source path
+        __collection: ->
+          space[collectionName]
     unless space[collectionName]
       Joosy.Modules.Log.debugAs space, "Define #{collectionName}"
       space[collectionName] = class extends Joosy.Resource.RESTCollection

@@ -76,9 +76,11 @@ describe "Joosy", ->
     Joosy.defineResource 'foo', '', container
     expect(Object.isFunction container.Foo).toBeTruthy()
     expect(Object.isFunction container.FoosCollection).toBeTruthy()
+    expect(container.Foo::__collection()).toEqual container.FoosCollection
     Joosy.defineResource 'boo'
     expect(Object.isFunction Boo).toBeTruthy()
     expect(Object.isFunction BoosCollection).toBeTruthy()
+    expect(Boo::__collection()).toEqual BoosCollection
 
   it "should define resource", ->
     window.Defined = 'this'

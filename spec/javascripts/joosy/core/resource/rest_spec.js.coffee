@@ -41,10 +41,11 @@ describe "Joosy.Resource.REST", ->
   describe "finds resource", ->
     rawData = '{"fluffy": {"id": 1, "name": "test1"}}'
 
-    callback = sinon.spy (target) ->
+    callback = sinon.spy (target, data) ->
       expect(target instanceof Fluffy).toEqual true
       expect(target.id()).toEqual 1
       expect(target 'name').toEqual 'test1'
+      expect(data).toEqual $.parseJSON(rawData)
 
     it "without params", ->
       resource = Fluffy.find 1, callback
@@ -81,7 +82,7 @@ describe "Joosy.Resource.REST", ->
       expect(target instanceof Joosy.Resource.RESTCollection).toEqual true
       expect(target.size()).toEqual 2
       expect(target.at(0) instanceof Fluffy).toEqual true
-      expect(data).toEqual JSon.parse(rawData)
+      expect(data).toEqual $.parseJSON(rawData)
 
     it "without params", ->
       resource = Fluffy.find 'all', callback

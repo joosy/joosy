@@ -75,12 +75,13 @@ describe "Joosy.Resource.REST", ->
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/1\?_=\d+/, rawData
 
   describe "finds collection", ->
-    rawData = '{"fluffies": [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]}'
+    rawData = '{"page": 42, "fluffies": [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]}'
 
-    callback = sinon.spy (target) ->
+    callback = sinon.spy (target, data) ->
       expect(target instanceof Joosy.Resource.RESTCollection).toEqual true
       expect(target.size()).toEqual 2
       expect(target.at(0) instanceof Fluffy).toEqual true
+      expect(data).toEqual JSon.parse(rawData)
 
     it "without params", ->
       resource = Fluffy.find 'all', callback

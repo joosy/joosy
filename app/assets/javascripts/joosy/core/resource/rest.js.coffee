@@ -25,10 +25,11 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     path  = @__source if @__source? && !options.parent?
     path += "/#{id}"
 
-    if options.parent instanceof Joosy.Resource.Generic
-      path = options.parent.memberPath() + path
-    else if options.parent?
-      path = options.parent + path
+    if options.parent?
+      if Joosy.Module.hasAncestor options.parent.constructor, Joosy.Resource.REST
+        path = options.parent.memberPath() + path
+      else
+        path = options.parent + path
 
     path += "/#{options.from}" if options.from?
     path
@@ -56,10 +57,11 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     path = ("/" + @::__entityName.pluralize())
     path = @__source if @__source? && !options.parent?
 
-    if options.parent instanceof Joosy.Resource.Generic
-      path = options.parent.memberPath() + path
-    else if options.parent?
-      path = options.parent + path
+    if options.parent?
+      if Joosy.Module.hasAncestor options.parent.constructor, Joosy.Resource.REST
+        path = options.parent.memberPath() + path
+      else
+        path = options.parent + path
 
     path += "/#{options.from}" if options.from?
     path

@@ -76,6 +76,11 @@ describe "Joosy.Resource.Collection", ->
     expect(@collection.data.length).toEqual 4
     expect(@collection.at(0).data).toEqual {'happy': 'stubbing'}
     expect(@collection.at(3).data).toEqual {'rocking': 'mocking'}
+    @collection.add new Test({'nerdy': 'coding'}), 1
+    expect(@collection.data.length).toEqual 5
+    expect(@collection.at(0).data).toEqual {'happy': 'stubbing'}
+    expect(@collection.at(1).data).toEqual {'nerdy': 'coding'}
+    expect(@collection.at(4).data).toEqual {'rocking': 'mocking'}
     
   it "should find items by id", ->
     @collection.load $.parseJSON(data)

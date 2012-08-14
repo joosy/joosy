@@ -168,7 +168,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   # @return [Joosy.Resource.Generic]    Added element
   #
   add: (element, index=false, notify=true) ->
-    if index
+    if typeof index is 'number'
       @data.splice index, 0, element
     else
       @data.push element

@@ -35,6 +35,7 @@ describe "Joosy.Helpers.Form", ->
       expect(h.textField 'a', '[b][c]', {a: 'b'}).toBeTag 'input', '', id: 'a_b_c', name: 'a[b][c]', a: 'b', type: 'text'
 
     it "renders label", ->
+      expect(h.label 'a', 'b', 'test').toBeTag 'label', 'test', for: 'a_b'
       expect(h.label 'a', 'b', {a: 'b'}, 'test').toBeTag 'label', 'test', for: 'a_b', a: 'b'
 
     it "renders checkBox", ->
@@ -44,7 +45,7 @@ describe "Joosy.Helpers.Form", ->
       expect(tags[1]).toBeTag 'input', '', value: '1', id: 'a_b', name: 'a[b]', type: 'checkbox', a: 'b'
 
     it "renders radioButton", ->
-      expect(h.radioButton 'a', 'b', 'test', {a: 'b'}).toBeTag 'input', '', value: 'test', id: 'a_b', name: 'a[b]', type: 'radio', a: 'b'
+      expect(h.radioButton 'a', 'b', 'test', {a: 'b'}).toBeTag 'input', '', value: 'test', id: 'a_b_test', name: 'a[b]', type: 'radio', a: 'b'
 
     it "renders textArea", ->
       expect(h.textArea 'a', 'b', {a: 'b', value: 'foo'}).toBeTag 'textarea', 'foo', id: 'a_b', name: 'a[b]', a: 'b'
@@ -80,6 +81,7 @@ describe "Joosy.Helpers.Form", ->
         expect(form["#{type}Field"] 'b', {a: 'b'}).toBeTag 'input', '', id: 'test_b', name: 'test[b]', a: 'b', type: type
 
     it "renders label", ->
+      expect(form.label 'b', 'test').toBeTag 'label', 'test', for: 'test_b'
       expect(form.label 'b', {a: 'b'}, 'test').toBeTag 'label', 'test', for: 'test_b', a: 'b'
 
     it "renders checkBox", ->
@@ -89,7 +91,7 @@ describe "Joosy.Helpers.Form", ->
       expect(tags[1]).toBeTag 'input', '', value: '1', id: 'test_b', name: 'test[b]', type: 'checkbox', a: 'b'
 
     it "renders radioButton", ->
-      expect(form.radioButton 'b', 'test', {a: 'b'}).toBeTag 'input', '', value: 'test', id: 'test_b', name: 'test[b]', type: 'radio', a: 'b'
+      expect(form.radioButton 'b', 'test', {a: 'b'}).toBeTag 'input', '', value: 'test', id: 'test_b_test', name: 'test[b]', type: 'radio', a: 'b'
 
     it "renders textArea", ->
       expect(form.textArea 'b', {a: 'b', value: 'foo'}).toBeTag 'textarea', 'foo', id: 'test_b', name: 'test[b]', a: 'b'
@@ -107,6 +109,7 @@ describe "Joosy.Helpers.Form", ->
         expect(form["#{type}Field"] 'b', {a: 'b'}).toBeTag 'input', '', id: 'test_1_b', name: 'test[b]', a: 'b', type: type
 
     it "renders label", ->
+      expect(form.label 'b', 'test').toBeTag 'label', 'test', for: 'test_1_b'
       expect(form.label 'b', {a: 'b'}, 'test').toBeTag 'label', 'test', for: 'test_1_b', a: 'b'
 
     it "renders checkBox", ->
@@ -116,7 +119,7 @@ describe "Joosy.Helpers.Form", ->
       expect(tags[1]).toBeTag 'input', '', value: '1', id: 'test_1_b', name: 'test[b]', type: 'checkbox', a: 'b'
 
     it "renders radioButton", ->
-      expect(form.radioButton 'b', 'test', {a: 'b'}).toBeTag 'input', '', value: 'test', id: 'test_1_b', name: 'test[b]', type: 'radio', a: 'b'
+      expect(form.radioButton 'b', 'test', {a: 'b'}).toBeTag 'input', '', value: 'test', id: 'test_1_b_test', name: 'test[b]', type: 'radio', a: 'b'
 
     it "renders textArea", ->
       expect(form.textArea 'b', {a: 'b', value: 'foo'}).toBeTag 'textarea', 'foo', id: 'test_1_b', name: 'test[b]', a: 'b'

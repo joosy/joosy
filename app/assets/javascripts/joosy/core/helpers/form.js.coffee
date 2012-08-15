@@ -24,7 +24,14 @@ Joosy.helpers 'Application', ->
   #
   class Form
     constructor: (@context, @resource, @options) ->
-    label: (method, options={}, content='') -> @context.label(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), content)
+
+    label: (method, options={}, content='') ->
+      if !Object.isObject(options)
+        content = options
+        options = {}
+
+      @context.label(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), content)
+
     radioButton: (method, tagValue, options={}) -> @context.radioButton(@resource, method, tagValue, Joosy.Module.merge(extendIds: @options.extendIds, options))
     textArea: (method, options={}) -> @context.textArea(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
     checkBox: (method, options={}, checkedValue=1, uncheckedValue=0) -> @context.checkBox(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), checkedValue, uncheckedValue)

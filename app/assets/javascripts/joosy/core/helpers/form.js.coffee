@@ -5,17 +5,18 @@
 #
 Joosy.helpers 'Application', ->
 
-  description = (resource, method, extendIds) ->
+  description = (resource, method, extendIds, idSuffix) ->
     if resource instanceof Joosy.Resource.Generic
       id        = resource.id()
       resource  = resource.__entityName
 
     name: resource + "#{if method.match(/^\[.*\]$/) then method else "[#{method}]"}"
-    id:   resource + (if id && extendIds then '_'+id else '') + "_#{method.parameterize().underscore()}"
+    id:   resource + (if id && extendIds then '_'+id else '') + "_#{method.parameterize().underscore()}" + (if idSuffix then '_'+idSuffix else '')
 
   input = (type, resource, method, options={}) =>
-    d = description(resource, method, options.extendIds)
+    d = description(resource, method, options.extendIds, options.idSuffix)
     delete options.extendIds
+    delete options.idSuffix
     @tag 'input', Joosy.Module.merge {type: type, name: d.name, id: d.id}, options
 
   #
@@ -58,7 +59,7 @@ Joosy.helpers 'Application', ->
   ['text', 'file', 'hidden', 'password'].each (type) =>
     @[type+'Field'] = (resource, method, options={}) -> input type, resource, method, options
 
-  @radioButton = (resource, method, tagValue, options={}) -> input 'radio', resource, method, Joosy.Module.merge(value: tagValue, options)
+  @radioButton = (resource, method, tagValue, options={}) -> input 'radio', resource, method, Joosy.Module.merge(value: tagValue, idSuffix: tagValue, options)
 
   @checkBox = (resource, method, options={}, checkedValue=1, uncheckedValue=0) ->
     spy = @tag 'input', Joosy.Module.merge(name: description(resource, method).name, value: uncheckedValue, type: 'hidden')

@@ -6,7 +6,7 @@
 Joosy.helpers 'Application', ->
 
   description = (resource, method, extendIds) ->
-    if resource instanceof Joosy.Resource.Generic
+    if Joosy.Module.hasAncestor resource.constructor, Joosy.Resource.Generic
       id        = resource.id()
       resource  = resource.__entityName
 

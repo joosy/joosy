@@ -3,7 +3,7 @@ describe "Joosy.Form", ->
   beforeEach ->
     @server = sinon.fakeServer.create()
     @seedGround()
-    @nudeForm = "<form id='nude'><input name='test[foo]'/><input name='test[bar]'/><input name='test[bool]' type='checkbox' value='1'/></form>"
+    @nudeForm = "<form id='nude'><input name='test[foo]'/><input name='test[bar]'/><input name='test[bool]' type='checkbox' value='1'/><input name='test[set]' type='radio' value='qwe' /><input name='test[set]' type='radio' value='zxc' /></form>"
     @putForm  = "<form id='put' method='put'><input name='test[camel_baz]'/></form>"
     @moreForm = "<form id='more' method='put'><input name='test[ololo]'/></form>"
     @nestedForm = "<form id='nested'><input name='test[zee][capped][test]'/><input name='test[items_attributes][0][attr]'/><input name='test[items_attributes][1][attr]'/><input name='test[single_attributes][0][attr]'/></form>"
@@ -30,6 +30,7 @@ describe "Joosy.Form", ->
       bar: 'bar'
       camelBaz: 'baz'
       bool: true
+      set: 'zxc'
       zee:
         capped:
           test: 'test'
@@ -53,7 +54,7 @@ describe "Joosy.Form", ->
       formWithProperties = new Joosy.Form @nudeForm, invalidationClass: 'fluffy'
       expect(formWithProperties.container).toEqual @nudeForm
       expect(formWithProperties.invalidationClass).toEqual 'fluffy'
-      expect(formWithProperties.fields.length).toEqual 3
+      expect(formWithProperties.fields.length).toEqual 5
 
       expect(@spy.callCount).toEqual 1
 
@@ -89,6 +90,10 @@ describe "Joosy.Form", ->
       expect(@nudeForm.fields[1].value).toEqual 'bar'
       expect(@nudeForm.fields[2].checked).toEqual true
       expect(@nudeForm.fields[2].value).toEqual '1'
+      expect(@nudeForm.fields[3].value).toEqual 'qwe'
+      expect(@nudeForm.fields[3].checked).toEqual false
+      expect(@nudeForm.fields[4].value).toEqual 'zxc'
+      expect(@nudeForm.fields[4].checked).toEqual true
       expect(@nudeForm.container.attr('method').toLowerCase()).toEqual 'post'
       expect(@nudeForm.container.attr 'action').toEqual '/tests/1'
       expect(@nudeForm.__resource).toEqual @resource
@@ -104,14 +109,14 @@ describe "Joosy.Form", ->
       expect(@exactForm.fields[0].value).toEqual 'works'
 
     it "should fill form with decorator", ->
-      @moreForm.fill @resource, 
+      @moreForm.fill @resource,
         decorator: (e) ->
           e.ololo = e.camelBaz
           e
       expect(@moreForm.fields[0].value).toEqual 'baz'
 
     it "should fill form with extended action", ->
-      @nudeForm.fill @resource, 
+      @nudeForm.fill @resource,
         action: @resource.memberPath(from: 'calculate')
       expect(@nudeForm.fields[0].value).toEqual 'foo'
       expect(@nudeForm.fields[1].value).toEqual 'bar'
@@ -119,7 +124,7 @@ describe "Joosy.Form", ->
 
       resource = @Test.build 'someId'
 
-      @nudeForm.fill resource, 
+      @nudeForm.fill resource,
         action: resource.memberPath(from: 'calculate')
       expect(@nudeForm.container.attr 'action').toEqual '/tests/someId/calculate'
 
@@ -212,38 +217,38 @@ describe "Joosy.Form", ->
       @nudeForm.container.submit()
       expect($(@nudeForm.fields[0]).attr 'class').toEqual 'field_with_errors'
       expect(@nudeForm.before.callCount).toEqual 1
-      
+
   describe "Error response handling", ->
-    
+
     beforeEach ->
       @nudeForm = new Joosy.Form @nudeForm, @spy=sinon.spy()
-    
+
     it "should prepare simple response", ->
       errors = {zombie: ['suck'], puppies: ['rock']}
       result = @nudeForm.__stringifyErrors(errors)
-      
+
       expect(result).toEqual zombie: ['suck'], puppies: ['rock']
-      
+
     it "should prepare inline response", ->
       errors = {"zombie.in1.subin1": ['suck'], "zombie.in2": ['rock']}
       result = @nudeForm.__stringifyErrors(errors)
-      
+
       expect(result).toEqual {"zombie[in1][subin1]": ['suck'], "zombie[in2]": ['rock']}
-      
+
     it "should prepare inline response with resource attached", ->
       @nudeForm.fill @resource
       errors = {"zombie.in1.subin1": ['suck'], "zombie.in2": ['rock']}
       result = @nudeForm.__stringifyErrors(errors)
 
       expect(result).toEqual {"test[zombie][in1][subin1]": ['suck'], "test[zombie][in2]": ['rock']}
-      
+
     it "should prepare simple response with resource attached", ->
       @nudeForm.fill @resource
       errors = {zombie: ['suck'], puppies: ['rock']}
       result = @nudeForm.__stringifyErrors(errors)
 
       expect(result).toEqual { "test[zombie]": ['suck'], "test[puppies]": ['rock'] }
-      
+
     it "should prepare complexe response", ->
       @nudeForm.fill @resource
       errors = {fluffies: {zombie: {mumbas: ['ololo']}}}

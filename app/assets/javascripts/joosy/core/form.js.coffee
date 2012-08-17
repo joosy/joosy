@@ -8,7 +8,7 @@
 # AJAXifies form including file uploads and stuff. Built on top of jQuery.Form.
 #
 # Joosy.Form automatically cares of form validation highlights. It can
-# read common server error responses and add .field_with_errors class to proper 
+# read common server error responses and add .field_with_errors class to proper
 # field.
 #
 # If you don't have resource associated with form (#fill), it will try to find fields
@@ -17,7 +17,7 @@
 # @example Joosy.Form usage
 #   form = new Joosy.Form, -> (response)
 #     console.log "Saved and got some: #{response}"
-#   
+#
 #   form.progress = (percent) -> console.log "Uploaded by #{percent}%"
 #   form.fill @resource
 #
@@ -34,7 +34,7 @@ class Joosy.Form extends Joosy.Module
   # Marks the CSS class to use to mark invalidated fields
   #
   invalidationClass: 'field_with_errors'
-  
+
   #
   # List of mappings for fields of invalidated data which comes from server
   #
@@ -178,13 +178,15 @@ class Joosy.Form extends Joosy.Module
         key = @concatFieldName scope, property
         input = @fields.filter("[name='#{key}']:not(:file),[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
         if input.length > 0
-          unless input.is ':checkbox'
-            input.val val
-          else
+          if input.is ':checkbox'
             if val
               input.attr 'checked', 'checked'
             else
               input.removeAttr 'checked'
+          else if input.is ':radio'
+            input.filter("[value='#{val}']").attr 'checked', 'checked'
+          else
+            input.val val
         if Object.isObject(val) || Object.isArray(val)
           filler val, key
         else if val instanceof Joosy.Resource.REST
@@ -208,7 +210,7 @@ class Joosy.Form extends Joosy.Module
   #
   submit: ->
     @container.submit()
-  
+
   #
   # Serializes form into query string.
   #
@@ -219,7 +221,7 @@ class Joosy.Form extends Joosy.Module
   serialize: (skipMethod=true) ->
     data = @container.serialize()
     data = data.replace /\&?\_method\=put/i, '' if skipMethod
-    
+
     data
 
   #
@@ -256,7 +258,7 @@ class Joosy.Form extends Joosy.Module
 
     if !@error? || @error(errors) is true
       errors = @__stringifyErrors(errors)
-      
+
       Object.each errors, (field, notifications) =>
         input = @findField(field).addClass @invalidationClass
         @notification? input, notifications
@@ -264,7 +266,7 @@ class Joosy.Form extends Joosy.Module
       return errors
 
     return false
-  
+
   #
   # Finds field by field name.
   # This is not inlined since we want to override
@@ -288,7 +290,7 @@ class Joosy.Form extends Joosy.Module
       value: method
     )
     @container.append method
-    
+
   #
   # Prepares server response for default error handler
   # Turns all possible response notations into form notation (foo[bar])
@@ -305,12 +307,12 @@ class Joosy.Form extends Joosy.Module
   #
   # @param [Object] errors        Data to prepare
   #
-  # @return [Hash<String, Array>]          Flat hash with field names in keys and arrays 
+  # @return [Hash<String, Array>]          Flat hash with field names in keys and arrays
   #   of errors in values
   #
   __stringifyErrors: (errors) ->
     result = {}
-    
+
     Object.each errors, (field, notifications) =>
       if @substitutions[field]?
         field = @substitutions[field]
@@ -326,7 +328,7 @@ class Joosy.Form extends Joosy.Module
             name    = @resourceName || @__resource.__entityName
             field   = name + "[#{field}]"
           field  += "[#{f}]" for f in splited
-      
+
         else if @resourceName || @__resource
           name  = @resourceName || @__resource.__entityName
           field = name + "[#{field}]"
@@ -341,7 +343,7 @@ class Joosy.Form extends Joosy.Module
   # @example Basic flattening
   #   data  = foo: { bar: { baz: [] } }
   #   inner = @__foldInlineEntities(data.foo, 'foo')
-  #   
+  #
   #   inner # { "foo[bar][baz]": [] }
   #
   # @param [Object] hash      Structure to fold

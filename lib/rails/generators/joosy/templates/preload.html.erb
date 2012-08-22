@@ -1,26 +1,21 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title><%= file_path %></title>
 
-    <script type="text/javascript">
-      window.joosy = {
-        libraries: <%= "<%= extract_sources_and_sizes_from_include_tag('#{file_path}') %"+">" %>,
-        environment: '<%= "<%= Rails.env.to_s %"+">" %>'
-      };
-    </script>
+<title><%= file_path %></title>
 
-    <%= "<%= stylesheet_link_tag 'application' %"+">" %>
-    <%= "<%= csrf_meta_tags %"+">" %>
-  </head>
+<script type="text/javascript">
+  window.joosy = {
+    libraries: <%= "<%= extract_sources_and_sizes_from_include_tag('#{file_path}') %"+">" %>,
+    environment: '<%= "<%= Rails.env.to_s %"+">" %>'
+  };
+</script>
 
-  <body>
-    <%= "<%= javascript_include_tag '#{file_path}_preloader' %"+">" %>
-    <div id="application">
-      <div id="preloader">
-        Loading application...
-        <span id="percents">0%</span>
-      </div>
-    </div>
-  </body>
-</html>
+<%= "<%= stylesheet_link_tag 'application' %"+">" %>
+<%= "<%= csrf_meta_tags %"+">" %>
+<%= "<%= javascript_include_tag '#{file_path}_preloader' %"+">" %>
+
+<div id="application">
+  <div id="preloader">
+    Loading application...
+    <span id="percents">0%</span>
+  </div>
+</div>

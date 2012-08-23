@@ -23,19 +23,23 @@ describe "Joosy.Resource.REST", ->
 
   it "builds member path", ->
     parent = FluffyParent.build 1
+    subParent = Fluffy.memberPath 1, parent: parent
 
     expect(Fluffy.memberPath 1).toEqual '/fluffies/1'
     expect(Fluffy.memberPath 1, parent: parent).toEqual '/fluffy_parents/1/fluffies/1'
     expect(Fluffy.memberPath 1, parent: parent, from: 'test').toEqual '/fluffy_parents/1/fluffies/1/test'
     expect(Fluffy.memberPath 1, parent: parent, from: 'test', params: {foo: 'bar'}).toEqual '/fluffy_parents/1/fluffies/1/test'
+    extect(FluffyInline.memberPath 1, parent: subParent, from: 'test').toEqual '/fluffy_parents/1/fluffies/1/fluffy_inlines/1/test'
 
   it "builds collection path", ->
     parent = FluffyParent.build 1
+    subParent = Fluffy.memberPath 1, parent: parent
 
     expect(Fluffy.collectionPath()).toEqual '/fluffies'
     expect(Fluffy.collectionPath parent: parent).toEqual '/fluffy_parents/1/fluffies'
     expect(Fluffy.collectionPath parent: parent, from: 'test').toEqual '/fluffy_parents/1/fluffies/test'
     expect(Fluffy.collectionPath parent: parent, from: 'test', params: {foo: 'bar'}).toEqual '/fluffy_parents/1/fluffies/test'
+    extect(FluffyInline.collectionPath, parent: subParent, from: 'test').toEqual '/fluffy_parents/1/fluffies/1/fluffy_inlines/test'
 
 
   describe "finds resource", ->

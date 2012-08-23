@@ -43,6 +43,9 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #   resource.memberPath(from: 'foo') # /resources/1/foo
   #
   memberPath: (options={}) ->
+    if @__parent && !options.parent?
+      options.parent = @__parent
+
     @constructor.memberPath @id(), options
 
   #
@@ -72,6 +75,9 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   # @see Joosy.Resource.REST.collectionPath
   #
   collectionPath: (options={}) ->
+    if @__parent && !options.parent?
+      options.parent = @__parent
+
     @constructor.collectionPath options
 
   #
@@ -207,11 +213,20 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
 
       @__query @collectionPath(options), 'GET', options.params, (data) =>
         result.load data
+
+        if options.parent?
+          result.each (resource) ->
+            resource.__parent = options.parent
+
         callback?(result, data)
     else
       result = @build where
       @__query @memberPath(where, options), 'GET', options.params, (data) =>
         result.load data
+
+        if options.parent?
+          result.__parent = options.parent
+
         callback?(result, data)
 
     result

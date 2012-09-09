@@ -12,7 +12,13 @@ Joosy.helpers 'Application', ->
     temp    = document.createElement 'div'
 
     Object.each options, (name, value) -> element.setAttribute name, value
-    element.innerHTML = content
+
+    try
+      element.innerHTML = content
+    catch e
+      # setting innerHTML fails in the IE for elements, which cann't have children (INPUT, for ex.)
+      # suppress this error unless content looks valuable
+      throw e if content
 
     temp.appendChild element
     temp.innerHTML

@@ -1,24 +1,4 @@
 describe "Joosy.Helpers.Form", ->
-  beforeEach ->
-    @addMatchers toBeTag: (tagName, content, attrs) ->
-      @message = =>
-        "Expected #{@actual} to be a tag #{tagName} with attributes #{JSON.stringify attrs} and content #{content}"
-
-      tag = $ @actual
-      flag = true
-
-      flag = flag && tag.length == 1
-      flag = flag && tag[0].nodeName == tagName.toUpperCase()
-      if content != false
-        flag = flag && tag.html() == content
-
-      for name, val of attrs
-        flag = flag && tag.attr(name) == val
-
-      flag = flag && tag[0].attributes.length == Object.keys(attrs).length
-
-      flag
-
   class Test extends Joosy.Resource.Generic
     @entity 'test'
 

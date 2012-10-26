@@ -12,6 +12,22 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     if window[named] then window[named] else Joosy.Resource.RESTCollection
 
   #
+  # Builds parents part of member path based on parents array
+  #
+  # @param [Array] parents      Array of parents
+  #
+  # @example Basic usage
+  #   Resource.__parentsPath([otherResource, '/bars/1']) # /other_resources/1/bars/1
+  #
+  @__parentsPath: (parents) ->
+    parents.reduce (path, parent) ->
+      path += if Joosy.Module.hasAncestor parent.constructor, Joosy.Resource.REST
+        parent.memberPath()
+      else
+        parent
+    , ''
+
+  #
   # Builds member path based on the given id.
   #
   # @param [String] id          ID of entity to build member path for
@@ -26,10 +42,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     path += "/#{id}"
 
     if options.parent?
-      if Joosy.Module.hasAncestor options.parent.constructor, Joosy.Resource.REST
-        path = options.parent.memberPath() + path
-      else
-        path = options.parent + path
+      path = @__parentsPath(if Object.isArray(options.parent) then options.parent else [options.parent]) + path
 
     path += "/#{options.from}" if options.from?
     path
@@ -58,10 +71,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     path = @__source if @__source? && !options.parent?
 
     if options.parent?
-      if Joosy.Module.hasAncestor options.parent.constructor, Joosy.Resource.REST
-        path = options.parent.memberPath() + path
-      else
-        path = options.parent + path
+      path = @__parentsPath(if Object.isArray(options.parent) then options.parent else [options.parent]) + path
 
     path += "/#{options.from}" if options.from?
     path
@@ -183,10 +193,10 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @param [String] where         Possible values: 'all', id.
   #   'all' will query for collection from collectionPath.
-  #   Everything else will be considered as an id string and will make resource 
+  #   Everything else will be considered as an id string and will make resource
   #   query for single instance from memberPath.
   # @param [Hash] options         Path modification options
-  # @param [Function] callback    Resulting callback 
+  # @param [Function] callback    Resulting callback
   #   (will receive retrieved Collection/Resource)
   #
   # @option options [Joosy.Resource.REST] parent            Sets the given resource as a base path
@@ -234,7 +244,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   # Refetches the data from backend and triggers `changed`
   #
   # @param [Hash] options         See {Joosy.Resource.REST.find} for possible options
-  # @param [Function] callback    Resulting callback 
+  # @param [Function] callback    Resulting callback
   #
   reload: (options={}, callback=false) ->
     if Object.isFunction(options)

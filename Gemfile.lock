@@ -1,12 +1,4 @@
 GIT
-  remote: git://github.com/guard/guard-sprockets.git
-  revision: c363edc78f98d7ce382086c9daf43f9b8f546bbe
-  specs:
-    guard-sprockets (0.4.0)
-      guard (>= 1.1.0)
-      sprockets (~> 2.0)
-
-GIT
   remote: git://github.com/pivotal/jasmine-gem.git
   revision: 54b37cf9a51df49a77d15640e3e0caa46a508c1d
   specs:
@@ -86,6 +78,9 @@ GEM
     guard-coffeescript (1.2.1)
       coffee-script (>= 2.2.0)
       guard (>= 1.1.0)
+    guard-sprockets (0.4.1)
+      guard (>= 1.1.0)
+      sprockets (~> 2.0)
     haml_coffee_assets (1.7.2)
       coffee-script (>= 1.0.0)
       sprockets (>= 2.0.3)
@@ -186,7 +181,7 @@ PLATFORMS
 DEPENDENCIES
   guard
   guard-coffeescript
-  guard-sprockets!
+  guard-sprockets
   jasmine!
   joosy!
   thin

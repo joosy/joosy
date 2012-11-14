@@ -5,7 +5,7 @@ gemspec
 
 group :development do
   gem 'jasmine',         :git => 'git://github.com/pivotal/jasmine-gem.git'
-  gem 'guard-sprockets', :git => 'git://github.com/guard/guard-sprockets.git'
+  gem 'guard-sprockets'
   gem 'thin'
 end
 

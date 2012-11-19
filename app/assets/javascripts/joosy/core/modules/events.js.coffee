@@ -12,7 +12,8 @@ Joosy.Modules.Events =
   # @param [Function] callback          Action to run when all events were triggered at least once
   #
   wait: (events, callback) ->
-    events = events.split /\s+/ if Object.isString events
+    events = @__splitEvents events
+    @__validateEvents events
 
     @__oneShotEvents ||= []
     @__oneShotEvents.push [events, callback]
@@ -24,7 +25,8 @@ Joosy.Modules.Events =
   # @param [Function] callback          Action to run on trigger
   #
   bind: (events, callback) ->
-    events = events.split /\s+/
+    events = @__splitEvents events
+    @__validateEvents events
 
     @__boundEvents ||= []
     @__boundEvents.push [events, callback]
@@ -78,12 +80,28 @@ Joosy.Modules.Events =
     context = new Joosy.Modules.Events.SynchronizationContext(this)
     block.call(this, context)
     
-    @wait context.expectations, => context.after.call(this)
+    if context.expectations.length == 0
+      context.after.call(this)
+    else
+      @wait context.expectations, => context.after.call(this)
+      context.actions.each (data) =>
+        data[0].call this, =>
+          @trigger data[1]
 
-    context.actions.each (data) =>
-      data[0].call this, =>
-        @trigger data[1]
-        
+  __splitEvents: (events) ->
+    if Object.isString events
+      if events.isBlank()
+        []
+      else
+        events.trim().split /\s+/
+    else
+      events
+
+  __validateEvents: (events) ->
+    unless Object.isArray(events) && events.length > 0
+      throw new Error "#{Joosy.Module.__className @}> bind invalid events: #{events}"
+
+
 #
 # Internal representation of {Joosy.Modules.Events.synchronize} context
 #

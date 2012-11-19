@@ -11,7 +11,7 @@ describe "Joosy.Modules.Events", ->
   it "should run callback once when the all listed events have occurred", ->
     callback = sinon.spy()
 
-    @box.wait 'events   list', callback
+    @box.wait '  events   list ', callback
 
     @box.trigger 'events'
     expect(callback.callCount).toEqual 0
@@ -21,6 +21,15 @@ describe "Joosy.Modules.Events", ->
     @box.trigger 'events'
     expect(callback.callCount).toEqual 1
     @box.trigger 'list'
+    expect(callback.callCount).toEqual 1
+
+    expect(=> @box.wait '', callback).toThrow()
+    expect(callback.callCount).toEqual 1
+
+    expect(=> @box.wait '    ', callback).toThrow()
+    expect(callback.callCount).toEqual 1
+
+    expect(=> @box.wait [], callback).toThrow()
     expect(callback.callCount).toEqual 1
 
   it "should allow for binding and unbinding to events", ->
@@ -64,3 +73,28 @@ describe "Joosy.Modules.Events", ->
           expect(-> done()).not.toThrow()
         , 2
     waits 3
+
+  it "should call finalizer", ->
+    callback = sinon.spy()
+
+    Joosy.synchronize (context) ->
+      context.do (done) ->
+        callback()
+        done()
+      context.after ->
+        expect(callback.callCount).toEqual 1
+        callback()
+
+    waits 1
+    expect(callback.callCount).toEqual 2
+
+  it "should call finalizer even if context.do hasn't been called", ->
+    callback = sinon.spy()
+
+    Joosy.synchronize (context) ->
+      context.after ->
+        expect(callback.callCount).toEqual 0
+        callback()
+
+    waits 1
+    expect(callback.callCount).toEqual 1

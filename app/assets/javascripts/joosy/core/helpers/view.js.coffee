@@ -4,7 +4,7 @@
 # Rendering and string representation helpers
 #
 Joosy.helpers 'Application', ->
-  
+
   @tag = (name, options={}, content='') ->
     content = content() if Object.isFunction(content)
 
@@ -34,7 +34,7 @@ Joosy.helpers 'Application', ->
   #
   # Wraps the inline block into given template
   # Request template will receive the inline block as @yield parameter
-  # 
+  #
   # Example
   #   -# foo/baz template
   #   != @renderWrapped 'foo/bar', ->

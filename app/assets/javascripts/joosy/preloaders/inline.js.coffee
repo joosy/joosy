@@ -3,7 +3,7 @@
 #
 # @example Basic usage
 #   libraries = [['/test1.js'], ['/test2.js']]
-#   
+#
 #   InlinePreloader.load libraries,
 #     start:    -> console.log 'preloading started'
 #     complete: -> console.log 'preloading finished'
@@ -12,15 +12,15 @@
 #
 @InlinePreloader =
   #
-  # Loads set of libraries by adding `script src` to DOM head 
+  # Loads set of libraries by adding `script src` to DOM head
   # See class description for example of usage
   #
   # @param [Array] 2-levels array of libraries URLs i.e. [['/test1.js'],['/test2.js']]
   # @param [Hash] Available options:
-  #   * start: `() -> null` to call before load starts: 
+  #   * start: `() -> null` to call before load starts:
   #   * complete: `() -> null` to call after load completes
   #
-  load: (libraries, options) ->    
+  load: (libraries, options) ->
     @[key] = val for key, val of options
     @start?()
 

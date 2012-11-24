@@ -4,12 +4,12 @@
 # @example Basic usage
 #   class R extends Joosy.Resource.Generic
 #     @entity 'r'
-#   
+#
 #     @beforeLoad (data) ->
 #       data.real = true
-#   
+#
 #   r = R.build {r: {foo: {bar: 'baz'}}}
-#   
+#
 #   r('foo')                  # {baz: 'baz'}
 #   r('real')                 # true
 #   r('foo.bar')              # baz
@@ -30,7 +30,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   __source: false
 
   #
-  # Clears the identity map cache. Recomended to be called during layout switch to 
+  # Clears the identity map cache. Recomended to be called during layout switch to
   # ensure correct garbage collection.
   #
   @resetIdentity: ->
@@ -72,7 +72,7 @@ class Joosy.Resource.Generic extends Joosy.Module
     class clone extends this
 
     if entity instanceof Joosy.Resource.Generic
-      clone.__source  = entity.memberPath() 
+      clone.__source  = entity.memberPath()
       clone.__source += '/' + @::__entityName.pluralize() if @::__entityName
     else
       clone.__source = entity
@@ -86,7 +86,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @param [String] name    Singular name of resource
   #
   @entity: (name) -> @::__entityName = name
-  
+
   #
   # Sets the collection to use
   #
@@ -96,7 +96,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @param [Class] klass       Class to assign as collection
   #
   @collection: (klass) -> @::__collection = -> klass
-  
+
   #
   # Implements {Joosy.Resource.Generic.collection} default behavior.
   #
@@ -116,9 +116,9 @@ class Joosy.Resource.Generic extends Joosy.Module
   #   class Puppy extends Joosy.Resource.Generic
   #     @entity 'puppy'
   #     @map 'zombies'
-  #   
+  #
   #   p = Puppy.build {zombies: [{foo: 'bar'}]}
-  #   
+  #
   #   p('zombies')            # Direct access: [{foo: 'bar'}]
   #   p.zombies               # Wrapped Collection of Zombie instances
   #   p.zombies.at(0)('foo')  # bar
@@ -129,13 +129,13 @@ class Joosy.Resource.Generic extends Joosy.Module
   @map: (name, klass=false) ->
     unless klass
       klass = window[name.singularize().camelize()]
-      
+
     if !klass
       throw new Error "#{Joosy.Module.__className @}> class can not be detected for '#{name}' mapping"
 
     @beforeLoad (data) ->
       klass = klass() unless Joosy.Module.hasAncestor(klass, Joosy.Resource.Generic)
-        
+
       @__map(data, name, klass)
 
   #
@@ -158,14 +158,14 @@ class Joosy.Resource.Generic extends Joosy.Module
     else
       for key, value of @prototype
         shim[key] = value
-        
+
     shim.constructor = @
 
     if Object.isNumber(data) || Object.isString(data)
       id   = data
       data = {}
       data[shim.__primaryKey] = id
-    
+
     if Joosy.Application.identity
       id = data[shim.__primaryKey]
 
@@ -205,7 +205,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   load: (data) ->
     @__fillData data
     return this
-  
+
   #
   # Getter for wrapped data
   #
@@ -233,7 +233,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       target[0](target[1], value)
     else
       target[0][target[1]] = value
-    
+
     @trigger 'changed'
     null
 
@@ -248,7 +248,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       path    = path.split '.'
       keyword = path.pop()
       target  = @data
-      
+
       for part in path
         target[part] ||= {}
         if target instanceof Joosy.Resource.Generic
@@ -279,7 +279,7 @@ class Joosy.Resource.Generic extends Joosy.Module
     @data = {} unless @hasOwnProperty 'data'
 
     Joosy.Module.merge @data, @__prepareData(data)
-    
+
     @trigger 'changed' if notify
 
     null
@@ -290,14 +290,14 @@ class Joosy.Resource.Generic extends Joosy.Module
   # @param [Hash] data    Raw data to prepare
   # @return [Hash]
   #
-  __prepareData: (data) ->    
+  __prepareData: (data) ->
     if Object.isObject(data) && Object.keys(data).length == 1 && @__entityName
       name = @__entityName.camelize(false)
       data = data[name] if data[name]
 
     if @__beforeLoads?
       data = bl.call(this, data) for bl in @__beforeLoads
-      
+
     data
 
   __map: (data, name, klass) ->

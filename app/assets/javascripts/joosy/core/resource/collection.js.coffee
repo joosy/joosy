@@ -3,15 +3,15 @@
 # Turns JSON array into array of Resources and manages them.
 #
 # @note You should not use Collection directly. It will be
-#   automatically created by things like {Joosy.Resource.Generic.map} 
+#   automatically created by things like {Joosy.Resource.Generic.map}
 #   or {Joosy.Resource.REST.find}.
 #
 # @example Basic sample
 #   class R extends Joosy.Resource.Generic
 #     @entity 'r'
-#     
+#
 #   collection = new Joosy.Resource.Collection(R)
-#     
+#
 #   collection.load [{foo: 'bar'}, {foo: 'baz'}]
 #   collection.each (resource) ->
 #     resource('foo')
@@ -20,7 +20,7 @@
 #
 class Joosy.Resource.Collection extends Joosy.Module
   @include Joosy.Modules.Events
-  
+
   #
   # Allows to modify data before it gets stored
   #
@@ -29,7 +29,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   # @param [Function] action    `(Object) -> Object` to call
   #
   @beforeLoad: (action) -> @::__beforeLoad = action
-  
+
   #
   # Sets the default model for collection
   #
@@ -38,7 +38,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   # @param [Class] model     Model class
   #
   @model: (model) -> @::model = model
-  
+
   #
   # If model param was empty it will fallback to `@model`
   # If both param and `@model` were empty it will throw an exception.
@@ -52,10 +52,10 @@ class Joosy.Resource.Collection extends Joosy.Module
     # Modelized data storage
     #
     @data = []
-    
+
     if !@model
       throw new Error "#{Joosy.Module.__className @}> model can't be empty"
-  
+
   #
   # Clears the storage and attempts to import given array
   #
@@ -70,10 +70,10 @@ class Joosy.Resource.Collection extends Joosy.Module
       entities = @__beforeLoad entities
 
     @data = @modelize entities
-    
+
     @trigger 'changed' if notify
     this
-  
+
   #
   # Turns Objects array into array of Resources
   #
@@ -86,11 +86,11 @@ class Joosy.Resource.Collection extends Joosy.Module
       collection = collection?[root.camelize(false)]
 
       if collection not instanceof Array
-        throw new Error "Can not read incoming JSON" 
+        throw new Error "Can not read incoming JSON"
 
     collection.map (x) =>
       @model.build x
-      
+
   #
   # Calls callback for each Resource inside Collection
   #
@@ -117,7 +117,7 @@ class Joosy.Resource.Collection extends Joosy.Module
 
   sortBy: (params...) ->
     @data.sortBy params...
-  
+
   #
   # Gets resource by id
   #
@@ -127,7 +127,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   findById: (id) ->
     @data.find (x) -> x.id().toString() == id.toString()
-  
+
   #
   # Gets resource by its index inside collection
   #
@@ -172,7 +172,7 @@ class Joosy.Resource.Collection extends Joosy.Module
       @data.splice index, 0, element
     else
       @data.push element
-      
+
     if notify
       @trigger 'changed'
     element

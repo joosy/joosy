@@ -4,7 +4,7 @@
 # @mixin
 #
 Joosy.Modules.Log =
-  
+
   #
   # Checks if console is available and proxies given arguments directly to `console.log`
   #

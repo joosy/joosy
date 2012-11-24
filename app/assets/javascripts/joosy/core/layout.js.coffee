@@ -48,11 +48,11 @@ class Joosy.Layout extends Joosy.Module
   #   @beforePaint (complete) ->
   #     if !@data # checks if parallel fetching finished
   #       $('preloader').slideDown -> complete()
-  # 
+  #
   #
   @beforePaint: (callback) ->
     @::__beforePaint = callback
-    
+
   #
   # Sets the method which will controll the painting proccess.
   #
@@ -86,7 +86,7 @@ class Joosy.Layout extends Joosy.Module
   #
   @erase: (callback) ->
     @::__erase = callback
-  
+
   #
   # Sets the method which will controll the data fetching proccess.
   #
@@ -101,7 +101,7 @@ class Joosy.Layout extends Joosy.Module
   #     $.get '/rumbas', (@data) => complete()
   #
   @fetch: (callback) ->
-    @::__fetch = (complete) -> 
+    @::__fetch = (complete) ->
       @data = {}
       callback.call this, =>
         @dataFetched = true
@@ -112,7 +112,7 @@ class Joosy.Layout extends Joosy.Module
   #
   data: false
   dataFetched: false
-  
+
   #
   # @param [Hash] params              List of route params
   #

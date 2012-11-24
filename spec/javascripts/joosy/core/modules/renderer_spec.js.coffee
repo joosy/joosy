@@ -37,21 +37,21 @@ describe "Joosy.Modules.Renderer", ->
     @dummyObject.update "new"
 
     waits 0
-      
+
     runs ->
       expect(elem.text()).toBe "new"
-    
+
     waits 0
-    
+
     runs ->
       @dummyContainer.__removeMetamorphs()
       @dummyObject.update "afterwards"
-    
+
     waits 0
-    
+
     runs ->
       expect(elem.text()).toBe "new"
-    
+
   it "renders resources and keep html up2date", ->
     data = Joosy.Resource.Generic.build zombie: 'rock'
 
@@ -62,18 +62,18 @@ describe "Joosy.Modules.Renderer", ->
 
     elem = $("<div></div>")
     @ground.append elem
-  
+
     elem.html @dummyContainer.__renderer(data)
-    
+
     waits 0
 
-    runs -> 
+    runs ->
       expect(elem.text()).toBe "rock"
-    
+
     runs ->
       data 'zombie', 'suck'
-    
-    waits 0 
+
+    waits 0
 
     runs ->
       expect(elem.text()).toBe "suck"
@@ -83,7 +83,7 @@ describe "Joosy.Modules.Renderer", ->
       @entity 'foo'
 
     data = new Joosy.Resource.Collection(Foo)
-    
+
     data.load [
         { zombie: 'rock' },
         { zombie: 'never sleep' }
@@ -101,14 +101,14 @@ describe "Joosy.Modules.Renderer", ->
 
     waits 0
 
-    runs -> 
+    runs ->
       expect(elem.text()).toBe "never sleep"
 
     runs ->
       data.data[1] 'zombie', 'suck'
-    
-    waits 0 
-    
+
+    waits 0
+
     runs ->
       expect(elem.text()).toBe "suck"
 
@@ -116,33 +116,33 @@ describe "Joosy.Modules.Renderer", ->
   it "debounces morpher updates", ->
     @TestContainer.view (locals) ->
       template = -> @object.value
-  
+
       @renderDynamic(template, locals)
-  
+
     elem = $("<div></div>")
     @ground.append elem
-    
+
     sinon.spy window, 'Metamorph'
-  
+
     elem.html @dummyContainer.__renderer({ object: @dummyObject })
     expect(elem.text()).toBe "initial"
-    
+
     updater = sinon.spy window.Metamorph.returnValues[0], 'html'
-  
+
     @dummyObject.update "new"
-    
+
     waits 0
-    
+
     runs ->
       expect(elem.text()).toBe "new"
       expect(updater.callCount).toEqual 1
-      
+
     runs ->
       @dummyObject.update "don't make"
       @dummyObject.update "me evil"
-    
+
     waits 0
-    
+
     runs ->
       expect(elem.text()).toBe "me evil"
       expect(updater.callCount).toEqual 2

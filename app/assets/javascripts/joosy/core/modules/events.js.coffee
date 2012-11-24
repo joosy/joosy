@@ -63,7 +63,7 @@ Joosy.Modules.Events =
       for [events, callback] in @__boundEvents
         if events.has event
           callback data...
-  
+
   #
   # Runs set of callbacks finializing with result callback
   #
@@ -79,7 +79,7 @@ Joosy.Modules.Events =
   synchronize: (block) ->
     context = new Joosy.Modules.Events.SynchronizationContext(this)
     block.call(this, context)
-    
+
     if context.expectations.length == 0
       context.after.call(this)
     else
@@ -132,7 +132,7 @@ class Joosy.Modules.Events.SynchronizationContext
     @actions.push [action, event]
 
   #
-  # Registers finalizer: the action that will be called when all do-functions 
+  # Registers finalizer: the action that will be called when all do-functions
   #   marked themselves as complete.
   #
   # @param [Function] after       Function to call.

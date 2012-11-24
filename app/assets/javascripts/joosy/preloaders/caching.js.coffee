@@ -1,12 +1,12 @@
 #
 # Preloader for libraries with localStorage cache
 #
-# @note The `start` callback will only be called if loading required. 
+# @note The `start` callback will only be called if loading required.
 #   While working with cache, `complete` is the only callback that will be triggered.
 #
 # @example Basic usage
 #   libraries = [['/test1.js', 100], ['/test2.js', 500]] #100, 500 - size in bytes
-#   
+#
 #   CachingPreloader.load libraries,
 #     start:    -> console.log 'preloading started'
 #     progress: (percent) -> console.log "#{percent}% loaded"
@@ -19,17 +19,17 @@
   # If set to true, localStorage cache will be avoided
   #
   force: false
-  
+
   #
   # Prefix for localStorage keys
   #
   prefix: "cache:"
-  
+
   #
   # Number of libraries have been loaded (increases after lib was loaded)
   #
   counter: 0
-  
+
   #
   # Loads (or takes from cache) set of libraries using xhr and caches them in localStorage
   # See class description for example of usage
@@ -142,7 +142,7 @@
   #
   clean: ->
     i = 0
-    
+
     find = (arr, obj) ->
       (return i if obj == x) for x in arr
       return -1

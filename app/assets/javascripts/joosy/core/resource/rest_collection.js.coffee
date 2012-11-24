@@ -12,7 +12,7 @@ class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
   # Refetches the data from backend and triggers `changed`
   #
   # @param [Hash] options         See {Joosy.Resource.REST.find} for possible options
-  # @param [Function] callback    Resulting callback 
+  # @param [Function] callback    Resulting callback
   #
   reload: (options={}, callback=false) ->
     if Object.isFunction(options)

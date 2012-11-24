@@ -8,12 +8,12 @@
   # Core modules container
   #
   Modules: {}
-  
+
   #
   # Resources container
   #
   Resource: {}
-  
+
   #
   # Templaters container
   #
@@ -25,7 +25,7 @@
   # @example Basic usage
   #   Joosy.namespace 'foobar', ->
   #     class @RealThing
-  # 
+  #
   #   foo = new foobar.RealThing
   #
   # @param [String] name            Namespace keyword

@@ -87,7 +87,7 @@ Joosy.Router =
   __setupRoutes: ->
     $(window).hashchange =>
       unless @__ignoreRequest && location.hash.match(@__ignoreRequest)
-        @__respondRoute location.hash 
+        @__respondRoute location.hash
 
     @__prepareRoutes @rawRoutes
     @__respondRoute location.hash

@@ -163,7 +163,7 @@ describe "Joosy.Page", ->
 
       it "should render layout and page", ->
         spies = []
-        
+
         @box.params = {tested: true}
 
         spies.push @box.__layoutClass.prototype.__renderer

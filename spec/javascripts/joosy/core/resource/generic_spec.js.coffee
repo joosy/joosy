@@ -21,16 +21,16 @@ describe "Joosy.Resource.Generic", ->
   it "remembers where it belongs", ->
     resource = new Joosy.Resource.Generic foo: 'bar'
     expect(resource.data).toEqual foo: 'bar'
-    
+
   it "produces magic function", ->
     expect(Object.isFunction @resource).toBeTruthy()
     expect(@resource.data).toEqual @data
-    
+
   it "gets values", ->
     expect(@resource 'foo').toEqual 'bar'
     expect(@resource 'very.deep').toEqual value: 'boo!'
     expect(@resource 'very.deep.value').toEqual 'boo!'
-    
+
   it "sets values", ->
     expect(@resource 'foo').toEqual 'bar'
     @resource 'foo', 'baz'
@@ -39,49 +39,49 @@ describe "Joosy.Resource.Generic", ->
     expect(@resource 'very.deep').toEqual value: 'boo!'
     @resource 'very.deep', 'banana!'
     expect(@resource 'very.deep').toEqual 'banana!'
-    
+
     @resource 'another.deep.value', 'banana strikes back'
     expect(@resource 'another.deep').toEqual value: 'banana strikes back'
-    
+
   it "handles @at", ->
     class Fluffy extends Joosy.Resource.Generic
       @entity 'fluffy'
 
     clone = Fluffy.at('rumbas!')
-    
+
     expect(clone.__source).toEqual 'rumbas!'
     expect(Joosy.Module.hasAncestor clone, Fluffy).toBeTruthy()
 
     clone = Fluffy.at Test.build(1)
-    
+
     expect(clone.__source).toEqual '/tests/1/fluffies'
     expect(Joosy.Module.hasAncestor clone, Fluffy).toBeTruthy()
     # clone won't be instanceof Fluffy in IE
     #expect(clone.build({}) instanceof Fluffy).toBeTruthy()
-    
+
   it "triggers 'changed' right", ->
     callback = sinon.spy()
     @resource.bind 'changed', callback
     @resource 'foo', 'baz'
     @resource 'foo', 'baz2'
-    
+
     expect(callback.callCount).toEqual(2)
-    
+
   it "handles the before filter", ->
     class R extends Joosy.Resource.Generic
       @beforeLoad (data) ->
         data ||= {}
         data.tested = true
         data
-        
+
       resource = R.build()
-      
+
       expect(resource 'tested').toBeTruthy()
-      
+
   it "should map inlines", ->
-    class RumbaMumba extends Joosy.Resource.Generic   
+    class RumbaMumba extends Joosy.Resource.Generic
       @entity 'rumba_mumba'
- 
+
     class R extends Joosy.Resource.Generic
       @map 'rumbaMumbas', RumbaMumba
 
@@ -103,7 +103,7 @@ describe "Joosy.Resource.Generic", ->
 
   it "should use magic collections", ->
     class window.RumbaMumbasCollection extends Joosy.Resource.Collection
-      
+
     class RumbaMumba extends Joosy.Resource.Generic
       @entity 'rumba_mumba'
     class R extends Joosy.Resource.Generic
@@ -116,9 +116,9 @@ describe "Joosy.Resource.Generic", ->
       ]
     expect(resource('rumbaMumbas') instanceof RumbaMumbasCollection).toBeTruthy()
     expect(resource('rumbaMumbas').at(0)('foo')).toEqual 'bar'
-    
+
     window.RumbaMumbasCollection = undefined
-    
+
   it "should use manually set collections", ->
     class OloCollection extends Joosy.Resource.Collection
 

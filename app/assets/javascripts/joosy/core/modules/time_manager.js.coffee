@@ -4,7 +4,7 @@
 # @mixin
 #
 Joosy.Modules.TimeManager =
-  
+
   #
   # Registeres timeout for current object
   #

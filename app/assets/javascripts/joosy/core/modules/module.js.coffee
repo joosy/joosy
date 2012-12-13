@@ -1,7 +1,7 @@
 moduleKeywords = ['included', 'extended']
 
 #
-# Base Joosy class extending Coffee class with module-like injections 
+# Base Joosy class extending Coffee class with module-like injections
 #   and other tiny stuff.
 #
 class Joosy.Module
@@ -65,7 +65,7 @@ class Joosy.Module
 
     @[chained] = @[method]
     @[method] = action
-    
+
   #
   # Simple and fast shallow merge implementation.
   #

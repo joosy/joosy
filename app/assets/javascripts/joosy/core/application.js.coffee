@@ -9,7 +9,7 @@ Joosy.Application =
   Pages: {}
   Layouts: {}
   Controls: {}
-  
+
   loading: true
   identity: true
   debug: false

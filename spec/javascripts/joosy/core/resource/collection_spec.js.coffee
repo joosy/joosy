@@ -25,7 +25,7 @@ describe "Joosy.Resource.Collection", ->
   it "should load", ->
     @collection.load $.parseJSON(data)
     checkData @collection
-  
+
   it "should trigger changes", ->
     @collection.bind 'changed', callback = sinon.spy()
     @collection.load $.parseJSON(data)
@@ -42,7 +42,7 @@ describe "Joosy.Resource.Collection", ->
         data.each (entry, i) ->
           data[i].tested = true
         data
-      
+
     collection = new RC(Test)
     collection.load $.parseJSON(data)
 
@@ -65,7 +65,7 @@ describe "Joosy.Resource.Collection", ->
     @collection.remove 0, false
     expect(@collection.data.length).toEqual 0
     expect(callback.callCount).toEqual 0
-    
+
   it "should add item to collection", ->
     @collection.load $.parseJSON(data)
     @collection.bind 'changed', callback = sinon.spy()
@@ -81,9 +81,9 @@ describe "Joosy.Resource.Collection", ->
     expect(@collection.at(0).data).toEqual {'happy': 'stubbing'}
     expect(@collection.at(1).data).toEqual {'nerdy': 'coding'}
     expect(@collection.at(4).data).toEqual {'rocking': 'mocking'}
-    
+
   it "should find items by id", ->
     @collection.load $.parseJSON(data)
-    
+
     expect(@collection.findById 1).toEqual @collection.data[0]
     expect(@collection.findById 2).toEqual @collection.data[1]

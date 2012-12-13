@@ -132,7 +132,7 @@ class Joosy.Page extends Joosy.Module
   #     $.get '/rumbas', (@data) => complete()
   #
   @fetch: (callback) ->
-    @::__fetch = (complete) -> 
+    @::__fetch = (complete) ->
       @data = {}
       callback.call this, =>
         @dataFetched = true

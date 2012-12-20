@@ -244,9 +244,10 @@ class Joosy.Form extends Joosy.Module
   # By default will clean invalidation.
   #
   __before: (xhr, settings) ->
-    if @debounce && @__pending_request
-      xhr.abort()
-      return
+    if @__pending_request && @debounce != false
+      if @debounce || Joosy.Application.debounceForms
+        xhr.abort()
+        return
     if !@before? || @before(arguments...) is true
       @fields.removeClass @invalidationClass
 

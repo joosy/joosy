@@ -13,6 +13,7 @@ Joosy.Application =
   loading: true
   identity: true
   debug: false
+  debounceForms: false
 
   #
   # Starts Joosy application by binding to element and bootstraping routes

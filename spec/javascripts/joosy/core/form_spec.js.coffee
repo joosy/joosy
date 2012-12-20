@@ -171,21 +171,43 @@ describe "Joosy.Form", ->
       @xhr.restore()
       delete @requests
 
-    it 'should allow multiple submit', ->
-      @nudeForm = new Joosy.Form @nudeForm
-      3.times =>
-        @nudeForm.container.submit()
-      expect(@requests.length).toEqual 3
+    describe 'Global debouncing disabled', ->
 
-    it 'should optionally prevent multiple submit', ->
-      @nudeForm = new Joosy.Form @nudeForm, debounce: true
-      [200, 404, 500].each (code) =>
+      it 'should allow multiple submit', ->
+        @nudeForm = new Joosy.Form @nudeForm
+        3.times =>
+          @nudeForm.container.submit()
+        expect(@requests.length).toEqual 3
+
+      it 'should optionally prevent multiple submit', ->
+        @nudeForm = new Joosy.Form @nudeForm, debounce: true
+        [200, 404, 500].each (code) =>
+          3.times =>
+            @nudeForm.container.submit()
+          expect(@requests.length).toEqual 1
+          @requests[0].respond(code, {}, '{}')
+          expect(@requests.length).toEqual 1
+          @requests = []
+
+    describe 'Global debouncing enabled', ->
+
+      beforeEach ->
+        Joosy.Application.debounceForms = true
+
+      afterEach ->
+        Joosy.Application.debounceForms = false
+
+      it 'should optionally allow multiple submit', ->
+        @nudeForm = new Joosy.Form @nudeForm, debounce: false
+        3.times =>
+          @nudeForm.container.submit()
+        expect(@requests.length).toEqual 3
+
+      it 'should prevent multiple submit', ->
+        @nudeForm = new Joosy.Form @nudeForm
         3.times =>
           @nudeForm.container.submit()
         expect(@requests.length).toEqual 1
-        @requests[0].respond(code, {}, '{}')
-        expect(@requests.length).toEqual 1
-        @requests = []
 
   describe "Callbacks", ->
 

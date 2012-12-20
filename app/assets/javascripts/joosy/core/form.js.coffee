@@ -98,6 +98,7 @@ class Joosy.Form extends Joosy.Module
   # @option options [String] resourceName                  The string to use as a resource name prefix for fields to match invalidation
   # @option options [String] action                        Action URL for the form
   # @option options [String] method                        HTTP method, for example PUT, that will passed in _method param
+  # @option options [Boolean] debounce                     Drop submit events while there is a pending submit request
   #
   constructor: (form, options={}) ->
     if Object.isFunction options
@@ -121,9 +122,12 @@ class Joosy.Form extends Joosy.Module
       dataType: 'json'
       beforeSend: =>
         @__before arguments...
+        @__pending_request = true
       success: =>
+        @__pending_request = false
         @__success arguments...
       error: =>
+        @__pending_request = false
         @__error arguments...
       xhr: =>
         xhr = $.ajaxSettings.xhr()
@@ -133,16 +137,16 @@ class Joosy.Form extends Joosy.Module
               @progress (event.position / event.total * 100).round 2
         xhr
 
-    if options.resource?
-      @fill(options.resource, options)
+    if @resource?
+      @fill(@resource, options)
       delete @resource
 
-    if options.action?
-      @container.attr 'action', options.action
+    if @action?
+      @container.attr 'action', @action
       @container.attr 'method', 'POST'
 
-    if options.method?
-      @__markMethod options.method
+    if @method?
+      @__markMethod @method
 
   #
   # Resets form submit behavior to default
@@ -240,6 +244,9 @@ class Joosy.Form extends Joosy.Module
   # By default will clean invalidation.
   #
   __before: (xhr, settings) ->
+    if @debounce && @__pending_request
+      xhr.abort()
+      return
     if !@before? || @before(arguments...) is true
       @fields.removeClass @invalidationClass
 

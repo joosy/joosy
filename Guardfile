@@ -1,3 +1,11 @@
+begin
+  if RUBY_PLATFORM.include?('linux')
+    require 'rb-notify'
+    require 'libnotify'
+  end
+rescue LoadError
+end
+
 require 'coffee_script'
 
 guard 'coffeescript', :output => 'tmp/spec/javascripts', :all_on_start => true do

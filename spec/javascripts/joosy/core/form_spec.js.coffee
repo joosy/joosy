@@ -159,6 +159,34 @@ describe "Joosy.Form", ->
       @nestedForm.fill @resource
       # expect(you).toBeAlive(), lol
 
+  describe 'Submit', ->
+
+    beforeEach ->
+      @xhr = sinon.useFakeXMLHttpRequest()
+      @requests = []
+      @xhr.onCreate = (xhr) =>
+        @requests.push xhr
+
+    afterEach ->
+      @xhr.restore()
+      delete @requests
+
+    it 'should allow multiple submit', ->
+      @nudeForm = new Joosy.Form @nudeForm
+      3.times =>
+        @nudeForm.container.submit()
+      expect(@requests.length).toEqual 3
+
+    it 'should optionally prevent multiple submit', ->
+      @nudeForm = new Joosy.Form @nudeForm, debounce: true
+      [200, 404, 500].each (code) =>
+        3.times =>
+          @nudeForm.container.submit()
+        expect(@requests.length).toEqual 1
+        @requests[0].respond(code, {}, '{}')
+        expect(@requests.length).toEqual 1
+        @requests = []
+
   describe "Callbacks", ->
 
     beforeEach ->

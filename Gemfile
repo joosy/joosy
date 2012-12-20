@@ -10,8 +10,6 @@ group :development do
 end
 
 group :test do
-  if RUBY_PLATFORM =~ /linux/
-    gem 'rb-inotify'
-    gem 'libnotify'
-  end
+  gem 'rb-inotify', :require => false
+  gem 'libnotify', :require => false
 end

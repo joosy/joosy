@@ -69,10 +69,17 @@ describe "Joosy.Form", ->
 
     it "should hijack form method if it differs from POST/GET", ->
       form   = new Joosy.Form @putForm, callback=sinon.spy()
-      marker = @putForm.find "input[type=hidden]"
+      marker = @putForm.find "input[name=_method]"
       expect(@putForm.attr('method')?.toLowerCase()).toEqual 'post'
-      expect(marker.attr 'name').toEqual '_method'
+      expect(marker.attr 'type').toEqual 'hidden'
       expect(marker.attr 'value').toEqual 'put'
+
+    it "should not stack _method inputs", ->
+      form   = new Joosy.Form @putForm
+      3.times =>
+        form.fill @resource
+      marker = @putForm.find "input[name=_method]"
+      expect(marker.length).toEqual 1
 
   describe "Filling", ->
 

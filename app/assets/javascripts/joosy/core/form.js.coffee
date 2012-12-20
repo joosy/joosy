@@ -292,6 +292,7 @@ class Joosy.Form extends Joosy.Module
   # @param [String] method      Real method to simulate
   #
   __markMethod: (method='PUT') ->
+    $('input[name=_method]', @container).remove()
     method = $('<input/>',
       type: 'hidden'
       name: '_method'

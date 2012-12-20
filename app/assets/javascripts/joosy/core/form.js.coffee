@@ -202,6 +202,7 @@ class Joosy.Form extends Joosy.Module
 
     filler data, resource.__entityName || options.resourceName
 
+    $('input[name=_method]', @container).remove()
     @__markMethod(options?.method || 'PUT') if resource.id()
 
     url = options?.action || (if resource.id()? then resource.memberPath() else resource.collectionPath())
@@ -292,7 +293,6 @@ class Joosy.Form extends Joosy.Module
   # @param [String] method      Real method to simulate
   #
   __markMethod: (method='PUT') ->
-    $('input[name=_method]', @container).remove()
     method = $('<input/>',
       type: 'hidden'
       name: '_method'

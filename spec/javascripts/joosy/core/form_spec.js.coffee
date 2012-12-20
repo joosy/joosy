@@ -80,6 +80,10 @@ describe "Joosy.Form", ->
         form.fill @resource
       marker = @putForm.find "input[name=_method]"
       expect(marker.length).toEqual 1
+      expect(marker.attr 'value').toEqual 'PUT'
+      form.fill Test
+      marker = @putForm.find "input[name=_method]"
+      expect(marker.length).toEqual 0
 
   describe "Filling", ->
 

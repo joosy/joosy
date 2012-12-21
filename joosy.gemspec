@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.summary     = "Joosy Framework support for Ruby on Rails"
   s.email       = "boris@roundlake.ru"
-  s.homepage    = "http://github.com/roundlake/joosy"
+  s.homepage    = "http://github.com/joosy/joosy"
   s.description = "A gem wrapper to include Joosy via the asset pipeline."
   s.authors     = ['Boris Staal', 'Andrew Shaydurov', 'Peter Zotov', 'Alexander Pavlenko']
 

@@ -7,6 +7,11 @@ describe "Joosy.Resource.Generic", ->
     @entity 'test'
     @map 'test_inlines', TestInline
 
+  class TestNode extends Joosy.Resource.Generic
+    @entity 'test_node'
+    @map 'children', TestNode
+    @map 'parent', TestNode
+
   beforeEach ->
     @resource = Joosy.Resource.Generic.build @data =
       foo: 'bar'
@@ -153,3 +158,10 @@ describe "Joosy.Resource.Generic", ->
       inline('foo', 'bar')
 
       expect(root('test_inlines').at(0)('foo')).toEqual 'bar'
+
+    it "handles nested bi-directional reference", ->
+      biDirectionTestNode = TestNode.build
+        id: 1
+        children: [{id: 2, parent: {id: 1}}]
+
+      expect(biDirectionTestNode).toEqual(biDirectionTestNode('children').at(0)('parent'))

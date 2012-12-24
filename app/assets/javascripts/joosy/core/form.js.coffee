@@ -121,13 +121,18 @@ class Joosy.Form extends Joosy.Module
     @container.ajaxForm
       dataType: 'json'
       beforeSend: =>
+        return false if @__debounce arguments...
         @__before arguments...
         @__pending_request = true
+        @debugAs this, 'beforeSend: pending_request = true'
+        true
       success: =>
         @__pending_request = false
+        @debugAs this, 'success: pending_request = false'
         @__success arguments...
       error: =>
         @__pending_request = false
+        @debugAs this, 'error: pending_request = false'
         @__error arguments...
       xhr: =>
         xhr = $.ajaxSettings.xhr()
@@ -245,10 +250,6 @@ class Joosy.Form extends Joosy.Module
   # By default will clean invalidation.
   #
   __before: (xhr, settings) ->
-    if @__pending_request && @debounce != false
-      if @debounce || Joosy.Application.debounceForms
-        xhr.abort()
-        return
     if !@before? || @before(arguments...) is true
       @fields.removeClass @invalidationClass
 
@@ -275,6 +276,18 @@ class Joosy.Form extends Joosy.Module
       return errors
 
     return false
+
+  #
+  # Aborts form submit if there is already another one pending XHR
+  #
+  __debounce: (xhr) ->
+    @debugAs this, "debounce: pending_request == #{@__pending_request}"
+    if @__pending_request && @debounce != false
+      if @debounce || Joosy.Application.debounceForms
+        xhr.abort()
+        @debugAs this, "debounce: xhr aborted"
+        return true
+    false
 
   #
   # Finds field by field name.

@@ -173,8 +173,8 @@ class Joosy.Resource.Generic extends Joosy.Module
         shim = Joosy.Resource.Generic.identity[klass][id]
         shim.load data
       else
-        @apply shim, [data]
         Joosy.Resource.Generic.identity[klass][id] = shim
+        @apply shim, [data]
     else
       @apply shim, [data]
 

@@ -133,6 +133,8 @@ Joosy.Modules.Renderer =
 
     if dynamic
       morph  = Metamorph result()
+      morph.__bindings = []
+
       update = =>
         if morph.isRemoved()
           for [object, callback] in morph.__bindings
@@ -148,27 +150,27 @@ Joosy.Modules.Renderer =
       # repeating DOM handling
       update = update.debounce 0
 
-      morph.__bindings = []
+      updateCollection = (data) ->
+        if item = data?.added
+          bindUpdate item
+        update()
+
+      bindUpdate = (object, isCollection=false) ->
+        binding = [object, update]
+        object.bind 'changed', isCollection && updateCollection || update, true
+        stack.metamorphBindings.push binding
+        morph.__bindings.push binding
 
       if isCollection
         for resource in locals.data
-          binding = [resource, update]
-          resource.bind 'changed', update
-          stack.metamorphBindings.push binding
-          morph.__bindings.push binding
-      if isResource || isCollection
-        binding = [locals, update]
-        locals.bind 'changed', update
-        stack.metamorphBindings.push binding
-        morph.__bindings.push binding
+          bindUpdate resource
+        bindUpdate locals, true
+      if isResource
+        bindUpdate locals
       else
         for key, object of locals
-          if locals.hasOwnProperty key
-            if object?.bind? && object?.unbind?
-              binding = [object, update]
-              object.bind 'changed', update
-              stack.metamorphBindings.push binding
-              morph.__bindings.push binding
+          if locals.hasOwnProperty(key) && object?.bind? && object?.unbind?
+            bindUpdate object
 
       morph.outerHTML()
     else

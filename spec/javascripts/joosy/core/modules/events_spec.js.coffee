@@ -54,6 +54,30 @@ describe "Joosy.Modules.Events", ->
     @box.trigger 'event'
     expect(callback.callCount).toEqual 3
 
+  it "should allow multiple binding", ->
+    callback = ->
+
+    3.times =>
+      @box.bind 'event', callback
+    expect(@box.__boundEvents).toEqual [[['event'], callback], [['event'], callback], [['event'], callback]]
+
+    3.times =>
+      @box.wait 'event', callback
+    expect(@box.__oneShotEvents).toEqual [[['event'], callback], [['event'], callback], [['event'], callback]]
+
+  it "should ignore multiple binding", ->
+    callback = ->
+
+    @box.bind 'event', callback
+    3.times =>
+      @box.bind 'event', callback, true
+    expect(@box.__boundEvents).toEqual [[['event'], callback]]
+
+    @box.wait 'event', callback
+    3.times =>
+      @box.wait 'event', callback, true
+    expect(@box.__oneShotEvents).toEqual [[['event'], callback]]
+
   it "should handle inheritance well", ->
     callback = sinon.spy()
     @sub.wait 'foo', callback

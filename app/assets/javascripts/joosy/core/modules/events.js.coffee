@@ -8,12 +8,16 @@ Joosy.Modules.Events =
   #
   # Waits for the list of given events to happen at least once. Then runs callback.
   #
-  # @param [String] events              List of events to wait for separated by space
+  # @param [String|Array] events        List of events to wait for separated by space
   # @param [Function] callback          Action to run when all events were triggered at least once
+  # @param [Boolean] strict             Call has no effect if true and the given pair
+  #                                     of events and callback is already set up
   #
-  wait: (events, callback) ->
+  wait: (events, callback, strict = false) ->
     events = @__splitEvents events
     @__validateEvents events
+
+    return if strict && @__isBound(events, callback, true)
 
     @__oneShotEvents ||= []
     @__oneShotEvents.push [events, callback]
@@ -21,12 +25,16 @@ Joosy.Modules.Events =
   #
   # Binds action to run each time any of given even was triggered
   #
-  # @param [String] events              List of events separated by space
+  # @param [String|Array] events        List of events separated by space
   # @param [Function] callback          Action to run on trigger
+  # @param [Boolean] strict             Call has no effect if true and the given pair
+  #                                     of events and callback is already set up
   #
-  bind: (events, callback) ->
+  bind: (events, callback, strict = false) ->
     events = @__splitEvents events
     @__validateEvents events
+
+    return if strict && @__isBound(events, callback)
 
     @__boundEvents ||= []
     @__boundEvents.push [events, callback]
@@ -101,6 +109,20 @@ Joosy.Modules.Events =
     unless Object.isArray(events) && events.length > 0
       throw new Error "#{Joosy.Module.__className @}> bind invalid events: #{events}"
 
+  __isBound: (events, callback, oneShot = false) ->
+    haystack = if oneShot
+      @__oneShotEvents
+    else
+      @__boundEvents
+
+    return false unless haystack
+
+    result = haystack.find (item) ->
+      item[0].length == events.length &&
+        item[0].subtract(events).isEmpty() &&
+        item[1] == callback
+
+    !!result
 
 #
 # Internal representation of {Joosy.Modules.Events.synchronize} context

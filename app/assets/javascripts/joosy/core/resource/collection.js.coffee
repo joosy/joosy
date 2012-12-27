@@ -174,5 +174,5 @@ class Joosy.Resource.Collection extends Joosy.Module
       @data.push element
 
     if notify
-      @trigger 'changed'
+      @trigger 'changed', added: element
     element

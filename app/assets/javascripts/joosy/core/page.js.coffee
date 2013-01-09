@@ -96,10 +96,6 @@ class Joosy.Page extends Joosy.Module
   @paint: (callback) ->
     @::__paint = callback
 
-  #
-  # @todo Does anybody have idea why we could need this method?
-  #   Looks like something should be removed from here and bootstrap proccess.
-  #
   @afterPaint: (callback) ->
     @::__afterPaint = callback
 
@@ -324,6 +320,7 @@ class Joosy.Page extends Joosy.Module
       @__fixHeight()
 
     @wait "stageClear dataReceived", =>
+      @previous?.__afterPaint?(callbacksParams)
       @__callSyncedThrough this, '__paint', callbacksParams, =>
         # Page HTML
         @swapContainer @layout.content(), @__renderer(@data || {})

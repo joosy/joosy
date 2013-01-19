@@ -74,7 +74,7 @@ class Joosy.Page extends Joosy.Module
   #   preparations are done you should call that function.
   #
   # @example Sample before painter
-  #   @beforePaint (complete) ->
+  #   @beforePaint (container, complete) ->
   #     if !@data # checks if parallel fetching finished
   #       $('preloader').slideDown -> complete()
   #
@@ -92,7 +92,7 @@ class Joosy.Page extends Joosy.Module
   #   preparations are done you should call that function.
   #
   # @example Sample painter
-  #   @paint (complete) ->
+  #   @paint (container, complete) ->
   #     @container.fadeIn -> complete()
   #
   @paint: (callback) ->
@@ -113,7 +113,7 @@ class Joosy.Page extends Joosy.Module
   #   access page data from that. Think twice if you are doing it right though.
   #
   # @example Sample eraser
-  #   @erase (complete) ->
+  #   @erase (container, complete) ->
   #     @container.fadeOut -> complete()
   #
   @erase: (callback) ->

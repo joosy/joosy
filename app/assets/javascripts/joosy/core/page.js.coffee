@@ -33,6 +33,8 @@ class Joosy.Page extends Joosy.Module
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
 
+  halted: false
+
   #
   # Default layout is no layout.
   #
@@ -209,11 +211,11 @@ class Joosy.Page extends Joosy.Module
   # @params [Joosy.Page] previous     Previous page to unload
   #
   constructor: (@params, @previous) ->
-    Joosy.Application.loading = true
-
     @__layoutClass ||= ApplicationLayout
 
-    if @__runBeforeLoads @params, @previous
+    unless @halted = !@__runBeforeLoads(@params, @previous)
+      Joosy.Application.loading = true
+
       if !@previous?.layout?.uuid? || @previous?.__layoutClass != @__layoutClass
         @__bootstrapLayout()
       else

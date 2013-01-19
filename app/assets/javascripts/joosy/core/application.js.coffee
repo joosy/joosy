@@ -51,5 +51,5 @@ Joosy.Application =
   # @param [Object] params        Hash of page params
   #
   setCurrentPage: (page, params) ->
-    #if @page not instanceof page
-    @page = new page params, @page
+    attempt = new page(params, @page)
+    @page = attempt unless attempt.halted

@@ -141,3 +141,81 @@ describe "Joosy.Router", ->
 
     Joosy.Application.setCurrentPage.restore()
     Joosy.Router.restrict false
+    
+  it "should DRAW simple routes, only using match and root", ->
+    Joosy.Router.map
+      '/': spies.root
+      '/page': TestPage
+      404: spies.wildcard
+    raw_routes_for_map = Joosy.Router.rawRoutes
+
+    Joosy.Router.reset()
+    
+    Joosy.Router.draw ->
+      @root to: spies.root
+      @match '/page', to: TestPage
+      @not_found to: spies.wildcard
+      
+    expect(Joosy.Router.rawRoutes).toEqual(raw_routes_for_map)
+    
+  it "should DRAW namespaced routes", ->
+    Joosy.Router.map
+      '/': spies.root
+      '/page': TestPage
+      '/section':
+        '/page/:id': spies.section
+        '/page2/:more': TestPage
+      404: spies.wildcard
+    raw_routes_for_map = Joosy.Router.rawRoutes
+
+    Joosy.Router.reset()
+    
+    Joosy.Router.draw ->
+      @root to: spies.root
+      @match '/page', to: TestPage
+      @namespace '/section', ->
+        @match '/page/:id', to: spies.section
+        @match '/page2/:more', to: TestPage
+      @not_found to: spies.wildcard
+      
+    expect(Joosy.Router.rawRoutes).toEqual(raw_routes_for_map)
+    
+  it "should DRAW simple route reverses, only using match and root", ->
+    Joosy.Router.draw ->
+      @root to: spies.root
+      @match '/page', to: TestPage, as: "page"
+      @match '/page/:id', to: TestPage, as: "page_for"
+      @not_found to: spies.wildcard
+      
+    expect(root_url).not.toEqual undefined
+    expect(root_path).not.toEqual undefined
+    
+    expect(root_url()).toEqual "/"
+    expect(page_url()).toEqual "/page"
+    expect(page_for_url(id: 3)).toEqual "/page/3"
+    
+  it "should DRAW more complex reverses using namespaces", ->
+    Joosy.Router.draw ->
+      @namespace '/projects', as: "projects", ->
+        @match "/", to: TestPage, as: "index"
+        @namespace "/:id", ->
+          @match "/", to: TestPage, as: "show"
+          @match "/edit", to: TestPage, as: "edit"
+          @match "/delete", to: TestPage, as: "delete"
+          
+      @namespace '/tickets', ->
+        @match "/", to: TestPage, as: "tasks_index"
+        
+      @namespace '/activities', ->
+        @root to: TestPage, as: "activities"
+
+    expect(projects_index_path).not.toEqual undefined
+    expect(projects_index_path()).not.toEqual "/projects"
+    expect(projects_index_path()).toEqual "/projects/"
+    
+    expect(projects_show_path(id: 3)).toEqual "/projects/3/"
+    expect(projects_edit_path(id: 3)).toEqual "/projects/3/edit"
+    expect(projects_delete_path(id: 3)).toEqual "/projects/3/delete"
+    
+    expect(tasks_index_path()).toEqual "/tickets/"
+    expect(activities_path()).toEqual "/activities/"

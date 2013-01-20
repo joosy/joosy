@@ -289,9 +289,13 @@ Joosy.Router =
       url = route
       (route.match(/\/:[^\/]+/g) || []).each (str) ->
         url = url.replace(str.substr(1), options[str.substr(2)])
-      url
+      "#!#{url}"
 
-    window["#{as}_path"] = fnc
-    window["#{as}_url"] = fnc
+    window["#{as}_path"] = (options) ->
+      fnc(options)
+      
+    window["#{as}_url"] = (options) ->
+      url = 'http://' + window.location.host + window.location.pathname
+      "#{url}#{fnc(options)}"
 
 Joosy.Module.merge Joosy.Router, Joosy.Modules.Events

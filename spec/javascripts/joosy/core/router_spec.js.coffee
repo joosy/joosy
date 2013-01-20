@@ -190,9 +190,9 @@ describe "Joosy.Router", ->
     expect(root_url).not.toEqual undefined
     expect(root_path).not.toEqual undefined
     
-    expect(root_url()).toEqual "/"
-    expect(page_url()).toEqual "/page"
-    expect(page_for_url(id: 3)).toEqual "/page/3"
+    expect(root_path()).toEqual "#!/"
+    expect(page_path()).toEqual "#!/page"
+    expect(page_for_path(id: 3)).toEqual "#!/page/3"
     
   it "should DRAW more complex reverses using namespaces", ->
     Joosy.Router.draw ->
@@ -210,12 +210,19 @@ describe "Joosy.Router", ->
         @root to: TestPage, as: "activities"
 
     expect(projects_index_path).not.toEqual undefined
-    expect(projects_index_path()).not.toEqual "/projects"
-    expect(projects_index_path()).toEqual "/projects/"
+    expect(projects_index_path()).not.toEqual "#!/projects"
+    expect(projects_index_path()).toEqual "#!/projects/"
     
-    expect(projects_show_path(id: 3)).toEqual "/projects/3/"
-    expect(projects_edit_path(id: 3)).toEqual "/projects/3/edit"
-    expect(projects_delete_path(id: 3)).toEqual "/projects/3/delete"
+    expect(projects_show_path(id: 3)).toEqual "#!/projects/3/"
+    expect(projects_edit_path(id: 3)).toEqual "#!/projects/3/edit"
+    expect(projects_delete_path(id: 3)).toEqual "#!/projects/3/delete"
     
-    expect(tasks_index_path()).toEqual "/tickets/"
-    expect(activities_path()).toEqual "/activities/"
+    expect(tasks_index_path()).toEqual "#!/tickets/"
+    expect(activities_path()).toEqual "#!/activities/"
+    
+  it "should return reverse url with hostname and pathname", ->
+    Joosy.Router.draw ->
+      @match "/projects/", to: TestPage, as: "projects_index"
+        
+    expect(projects_index_path()).toEqual "#!/projects/"
+    expect(projects_index_url()).toEqual "http://localhost:8888/#!/projects/"

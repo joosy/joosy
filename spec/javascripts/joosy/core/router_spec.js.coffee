@@ -141,3 +141,94 @@ describe "Joosy.Router", ->
 
     Joosy.Application.setCurrentPage.restore()
     Joosy.Router.restrict false
+    
+  it "should DRAW simple routes, only using match and root", ->
+    Joosy.Router.map
+      '/': spies.root
+      '/page': TestPage
+      404: spies.wildcard
+    raw_routes_for_map = Joosy.Router.rawRoutes
+
+    Joosy.Router.reset()
+    
+    Joosy.Router.draw ->
+      @root to: spies.root
+      @match '/page', to: TestPage
+      @notFound to: spies.wildcard
+      
+    expect(Joosy.Router.rawRoutes).toEqual(raw_routes_for_map)
+    
+  it "should DRAW namespaced routes", ->
+    Joosy.Router.map
+      '/': spies.root
+      '/page': TestPage
+      '/section':
+        '/page/:id': spies.section
+        '/page2/:more': TestPage
+      404: spies.wildcard
+    rawRoutesForMap = Joosy.Router.rawRoutes
+
+    Joosy.Router.reset()
+    
+    Joosy.Router.draw ->
+      @root to: spies.root
+      @match '/page', to: TestPage
+      @namespace '/section', ->
+        @match '/page/:id', to: spies.section
+        @match '/page2/:more', to: TestPage
+      @notFound to: spies.wildcard
+      
+    expect(Joosy.Router.rawRoutes).toEqual(rawRoutesForMap)
+    
+  it "should DRAW simple route reverses, only using match and root", ->
+    Joosy.Router.draw ->
+      @root to: spies.root
+      @match '/page', to: TestPage, as: "page"
+      @match '/page/:id', to: TestPage, as: "pageFor"
+      @notFound to: spies.wildcard
+      
+    validate = ->
+      expect(@rootUrl).not.toEqual undefined
+      expect(@rootPath).not.toEqual undefined
+    
+      expect(@rootPath()).toEqual "#!/"
+      expect(@pagePath()).toEqual "#!/page"
+      expect(@pageForPath(id: 3)).toEqual "#!/page/3"
+    validate.call(Joosy.Helpers.Application)
+    
+  it "should DRAW more complex reverses using namespaces", ->
+    Joosy.Router.draw ->
+      @namespace '/projects', as: "projects", ->
+        @match "/", to: TestPage, as: "index"
+        @namespace "/:id", ->
+          @match "/", to: TestPage, as: "show"
+          @match "/edit", to: TestPage, as: "edit"
+          @match "/delete", to: TestPage, as: "delete"
+          
+      @namespace '/tickets', ->
+        @match "/", to: TestPage, as: "tasksIndex"
+        
+      @namespace '/activities', ->
+        @root to: TestPage, as: "activities"
+
+    validate = ->
+      expect(@projectsIndexPath).not.toEqual undefined
+      expect(@projectsIndexPath()).not.toEqual "#!/projects"
+      expect(@projectsIndexPath()).toEqual "#!/projects/"
+    
+      expect(@projectsShowPath(id: 3)).toEqual "#!/projects/3/"
+      expect(@projectsEditPath(id: 3)).toEqual "#!/projects/3/edit"
+      expect(@projectsDeletePath(id: 3)).toEqual "#!/projects/3/delete"
+    
+      expect(@tasksIndexPath()).toEqual "#!/tickets/"
+      expect(@activitiesPath()).toEqual "#!/activities/"
+    validate.call(Joosy.Helpers.Application)
+    
+  it "should return reverse url with hostname and pathname", ->
+    Joosy.Router.draw ->
+      @match "/projects/", to: TestPage, as: "projectsIndex"
+        
+    validate = ->
+      expect(@projectsIndexPath()).toEqual "#!/projects/"
+      expect(@projectsIndexUrl()).toEqual "http://localhost:8888/#!/projects/"
+    validate.call(Joosy.Helpers.Application)

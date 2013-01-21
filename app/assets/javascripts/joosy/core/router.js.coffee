@@ -37,7 +37,7 @@ Joosy.Router =
   # TODO: Write readme
   #
   __namespace: ""
-  __as_namespace: ""
+  __asNamespace: ""
   
   #
   # Set the restriction pattern. If the requested url does not match this it
@@ -51,6 +51,8 @@ Joosy.Router =
   reset: ->
     @rawRoutes = Object.extended()
     @routes = Object.extended()
+    @__namespace = ""
+    @__asNamespace = ""
     
     
   #
@@ -103,15 +105,19 @@ Joosy.Router =
   # @option options [String] as  name of the route, used for reverse routing
   #
   match: (route, options={}) ->
-    as = @__as_namespace + options["as"]
-    route_name = @__namespace + route
+    if @__asNamespace
+      as = @__asNamespace + options["as"].capitalize()
+    else
+      as = options["as"]
+    
+    routeName = @__namespace + route
 
     map = {}
     map[route] = options["to"]
     
     Joosy.Module.merge @rawRoutes, map
     
-    @__inject_reverse_url(as, route_name)
+    @__injectReverseUrl(as, routeName)
   
   #
   # Shortcut to match "/"
@@ -129,7 +135,7 @@ Joosy.Router =
   #
   # @param options [String] to  function to which the route routes
   #
-  not_found: (options={}) ->
+  notFound: (options={}) ->
     @match(404, to: options["to"])
  
   #
@@ -144,12 +150,12 @@ Joosy.Router =
       block = options
       options = {}
       
-    new_scope = $.extend({}, this)
-    new_scope.rawRoutes = {}
-    new_scope.__namespace += name
-    new_scope.__as_namespace += "#{options["as"]}_" if options["as"]
-    block.call(new_scope) if Object.isFunction(block)
-    @rawRoutes[name] = new_scope.rawRoutes
+    newScope = $.extend({}, this)
+    newScope.rawRoutes = {}
+    newScope.__namespace += name
+    newScope.__asNamespace += "#{options["as"]}" if options["as"]
+    block.call(newScope) if Object.isFunction(block)
+    @rawRoutes[name] = newScope.rawRoutes
     
   #
   # Inits the routing system and loads the current route
@@ -282,7 +288,7 @@ Joosy.Router =
   #                               "/edit": TestPage
   #                        joins to "/projects/:id/edit"
   #
-  __inject_reverse_url: (as, route) ->
+  __injectReverseUrl: (as, route) ->
     return if as == undefined
     
     fnc = (options) ->
@@ -291,10 +297,10 @@ Joosy.Router =
         url = url.replace(str.substr(1), options[str.substr(2)])
       "#!#{url}"
 
-    window["#{as}_path"] = (options) ->
+    Joosy.Helpers.Application["#{as}Path"] = (options) ->
       fnc(options)
       
-    window["#{as}_url"] = (options) ->
+    Joosy.Helpers.Application["#{as}Url"] = (options) ->
       url = 'http://' + window.location.host + window.location.pathname
       "#{url}#{fnc(options)}"
 

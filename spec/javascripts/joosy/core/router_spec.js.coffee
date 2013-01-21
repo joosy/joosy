@@ -154,7 +154,7 @@ describe "Joosy.Router", ->
     Joosy.Router.draw ->
       @root to: spies.root
       @match '/page', to: TestPage
-      @not_found to: spies.wildcard
+      @notFound to: spies.wildcard
       
     expect(Joosy.Router.rawRoutes).toEqual(raw_routes_for_map)
     
@@ -166,7 +166,7 @@ describe "Joosy.Router", ->
         '/page/:id': spies.section
         '/page2/:more': TestPage
       404: spies.wildcard
-    raw_routes_for_map = Joosy.Router.rawRoutes
+    rawRoutesForMap = Joosy.Router.rawRoutes
 
     Joosy.Router.reset()
     
@@ -176,23 +176,25 @@ describe "Joosy.Router", ->
       @namespace '/section', ->
         @match '/page/:id', to: spies.section
         @match '/page2/:more', to: TestPage
-      @not_found to: spies.wildcard
+      @notFound to: spies.wildcard
       
-    expect(Joosy.Router.rawRoutes).toEqual(raw_routes_for_map)
+    expect(Joosy.Router.rawRoutes).toEqual(rawRoutesForMap)
     
   it "should DRAW simple route reverses, only using match and root", ->
     Joosy.Router.draw ->
       @root to: spies.root
       @match '/page', to: TestPage, as: "page"
-      @match '/page/:id', to: TestPage, as: "page_for"
-      @not_found to: spies.wildcard
+      @match '/page/:id', to: TestPage, as: "pageFor"
+      @notFound to: spies.wildcard
       
-    expect(root_url).not.toEqual undefined
-    expect(root_path).not.toEqual undefined
+    validate = ->
+      expect(@rootUrl).not.toEqual undefined
+      expect(@rootPath).not.toEqual undefined
     
-    expect(root_path()).toEqual "#!/"
-    expect(page_path()).toEqual "#!/page"
-    expect(page_for_path(id: 3)).toEqual "#!/page/3"
+      expect(@rootPath()).toEqual "#!/"
+      expect(@pagePath()).toEqual "#!/page"
+      expect(@pageForPath(id: 3)).toEqual "#!/page/3"
+    validate.call(Joosy.Helpers.Application)
     
   it "should DRAW more complex reverses using namespaces", ->
     Joosy.Router.draw ->
@@ -204,25 +206,29 @@ describe "Joosy.Router", ->
           @match "/delete", to: TestPage, as: "delete"
           
       @namespace '/tickets', ->
-        @match "/", to: TestPage, as: "tasks_index"
+        @match "/", to: TestPage, as: "tasksIndex"
         
       @namespace '/activities', ->
         @root to: TestPage, as: "activities"
 
-    expect(projects_index_path).not.toEqual undefined
-    expect(projects_index_path()).not.toEqual "#!/projects"
-    expect(projects_index_path()).toEqual "#!/projects/"
+    validate = ->
+      expect(@projectsIndexPath).not.toEqual undefined
+      expect(@projectsIndexPath()).not.toEqual "#!/projects"
+      expect(@projectsIndexPath()).toEqual "#!/projects/"
     
-    expect(projects_show_path(id: 3)).toEqual "#!/projects/3/"
-    expect(projects_edit_path(id: 3)).toEqual "#!/projects/3/edit"
-    expect(projects_delete_path(id: 3)).toEqual "#!/projects/3/delete"
+      expect(@projectsShowPath(id: 3)).toEqual "#!/projects/3/"
+      expect(@projectsEditPath(id: 3)).toEqual "#!/projects/3/edit"
+      expect(@projectsDeletePath(id: 3)).toEqual "#!/projects/3/delete"
     
-    expect(tasks_index_path()).toEqual "#!/tickets/"
-    expect(activities_path()).toEqual "#!/activities/"
+      expect(@tasksIndexPath()).toEqual "#!/tickets/"
+      expect(@activitiesPath()).toEqual "#!/activities/"
+    validate.call(Joosy.Helpers.Application)
     
   it "should return reverse url with hostname and pathname", ->
     Joosy.Router.draw ->
-      @match "/projects/", to: TestPage, as: "projects_index"
+      @match "/projects/", to: TestPage, as: "projectsIndex"
         
-    expect(projects_index_path()).toEqual "#!/projects/"
-    expect(projects_index_url()).toEqual "http://localhost:8888/#!/projects/"
+    validate = ->
+      expect(@projectsIndexPath()).toEqual "#!/projects/"
+      expect(@projectsIndexUrl()).toEqual "http://localhost:8888/#!/projects/"
+    validate.call(Joosy.Helpers.Application)

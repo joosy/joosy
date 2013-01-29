@@ -15,7 +15,6 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'sprockets'
   s.add_dependency 'haml_coffee_assets'
-  s.add_dependency 'i18n-js'
 
   s.add_development_dependency 'jquery-rails'
   s.add_development_dependency 'guard'

@@ -1,7 +1,4 @@
 require 'haml_coffee_assets'
-require 'jquery-rails'
-require 'coffee-rails'
-
 require 'joosy/version'
 
 if defined?(Rails)
@@ -9,10 +6,8 @@ if defined?(Rails)
   require 'rails/resources_with_joosy'
 end
 
-require 'i18n-js'
-
 module Joosy
-  def self.resources(namespaces=nil)
-    Joosy::SprocketsHelper.joosy_resources(namespaces).to_json
+  def self.assets_paths
+    [File.expand_path('../../app/assets/javascripts', __FILE__)]
   end
 end

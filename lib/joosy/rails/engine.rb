@@ -1,6 +1,10 @@
 require 'rails/engine'
 
 module Joosy
+  def self.resources(namespaces=nil)
+    Joosy::SprocketsHelper.joosy_resources(namespaces).to_json
+  end
+
   module Rails
     class Engine < ::Rails::Engine
 

@@ -10,7 +10,8 @@ module Joosy
   def self.assets_paths
     [
         File.expand_path('../../app/assets/javascripts', __FILE__),
-        File.expand_path('../../vendor/assets/javascripts', __FILE__)
+        File.expand_path('../../vendor/assets/javascripts', __FILE__),
+        File.dirname(HamlCoffeeAssets.helpers_path)
     ]
   end
 end

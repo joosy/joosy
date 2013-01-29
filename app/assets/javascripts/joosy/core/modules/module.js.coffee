@@ -1,5 +1,3 @@
-moduleKeywords = ['included', 'extended']
-
 #
 # Base Joosy class extending Coffee class with module-like injections
 #   and other tiny stuff.
@@ -95,8 +93,8 @@ class Joosy.Module
     unless object
       throw new Error 'include(object) requires obj'
 
-    Object.each object, (key, value) =>
-      if key not in moduleKeywords
+    for key, value of object
+      if key != 'included' && key != 'extended'
         this::[key] = value
 
     object.included?.apply this

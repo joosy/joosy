@@ -26,9 +26,9 @@
 # @include Joosy.Modules.Container
 #
 class Joosy.Form extends Joosy.Module
+  @include Joosy.Modules.Container
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
-  @include Joosy.Modules.Container
 
   #
   # Marks the CSS class to use to mark invalidated fields
@@ -114,7 +114,7 @@ class Joosy.Form extends Joosy.Module
     @__delegateEvents()
 
     method = @container.get(0).getAttribute('method')?.toLowerCase()
-    if method && !['get', 'post'].has method
+    if method && !['get', 'post'].any method
       @__markMethod method
       @container.attr 'method', 'POST'
 
@@ -196,13 +196,14 @@ class Joosy.Form extends Joosy.Module
             input.filter("[value='#{val}']").attr 'checked', 'checked'
           else
             input.val val
-        if Object.isObject(val) || Object.isArray(val)
-          filler val, key
-        else if val instanceof Joosy.Resource.REST
-          filler val.data, @concatFieldName(scope, "[#{property}_attributes][0]")
-        else if val instanceof Joosy.Resource.RESTCollection
+        if val instanceof Joosy.Resource.RESTCollection
           for entity, i in val.data
             filler entity.data, @concatFieldName(scope, "[#{property}_attributes][#{i}]")
+        else if val instanceof Joosy.Resource.REST
+          filler val.data, @concatFieldName(scope, "[#{property}_attributes][0]")
+        else if Object.isObject(val) || Object.isArray(val)
+          filler val, key
+        else 
       delete data.__joosy_form_filler_lock
 
     filler data, resource.__entityName || options.resourceName

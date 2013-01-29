@@ -73,7 +73,7 @@ Joosy.Modules.Events =
         callback data...
     if @__boundEvents
       for [events, callback] in @__boundEvents
-        if events.has event
+        if events.any event
           callback data...
 
   #

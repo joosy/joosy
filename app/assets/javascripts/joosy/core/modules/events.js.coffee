@@ -12,36 +12,46 @@ Joosy.Modules.Events =
   # @param [Function] callback          Action to run when all events were triggered at least once
   # @param [Hash] options               Options
   #
-  # @option options [Boolean] unique    Call has no effect if true and the given pair
-  #                                     of events and callback is already set up
-  #
-  wait: (events, callback, options = {}) ->
+  wait: (name, events, callback) ->
+    @__oneShotEvents ||= Object.extended()
+
+    # support deprecated 1.0 syntax
+    if Object.isFunction(events)
+      console.log "Bind called without direct name specification. " +
+        "This is deprecated and will be removed in Joosy 1.1 stable"
+
+      callback = events
+      events   = name
+      name     = @__oneShotEvents.keys().length.toString()
+
     events = @__splitEvents events
     @__validateEvents events
 
-    return if options.unique && @__isBound(events, callback, true)
-
-    @__oneShotEvents ||= []
-    @__oneShotEvents.push [events, callback]
+    @__oneShotEvents[name] = [events, callback]
 
   #
-  # Binds action to run each time any of given even was triggered
+  # Binds action to run each time any of given event was triggered
   #
   # @param [String|Array] events        List of events separated by space
   # @param [Function] callback          Action to run on trigger
   # @param [Hash] options               Options
   #
-  # @option options [Boolean] unique    Call has no effect if true and the given pair
-  #                                     of events and callback is already set up
-  #
-  bind: (events, callback, options = {}) ->
+  bind: (name, events, callback) ->
+    @__boundEvents ||= Object.extended()
+
+    # support deprecated 1.0 syntax
+    if Object.isFunction(events)
+      console.log "Bind called without direct name specification. " +
+        "This is deprecated and will be removed in Joosy 1.1 stable"
+
+      callback = events
+      events   = name
+      name     = @__boundEvents.keys().length.toString()
+
     events = @__splitEvents events
     @__validateEvents events
 
-    return if options.unique && @__isBound(events, callback)
-
-    @__boundEvents ||= []
-    @__boundEvents.push [events, callback]
+    @__boundEvents[name] = [events, callback]
 
   #
   # Unbinds action from runing on trigger
@@ -49,10 +59,14 @@ Joosy.Modules.Events =
   # @param [Function] target            Action to unbind
   #
   unbind: (target) ->
-    for [events, callback], index in @__boundEvents
-      if callback == target
-        @__boundEvents.splice index, 1
-        return
+    needle = undefined
+
+    for name, [events, callback] of @__boundEvents
+      if (Object.isFunction(target) && callback == target) || name == target
+        needle = name
+        break
+
+    delete @__boundEvents[needle] if needle?
 
   #
   # Triggers event for {bind} and {wait}
@@ -63,16 +77,16 @@ Joosy.Modules.Events =
     Joosy.Modules.Log.debugAs @, "Event #{event} triggered"
     if @__oneShotEvents
       fire = []
-      for [events, callback], index in @__oneShotEvents
+      for name, [events, callback] of @__oneShotEvents
         events.remove event
         if events.length == 0
-          fire.push index
-      fire.each (index) =>
-        callback = @__oneShotEvents[index][1]
-        @__oneShotEvents.removeAt index
+          fire.push name
+      fire.each (name) =>
+        callback = @__oneShotEvents[name][1]
+        delete @__oneShotEvents[name]
         callback data...
     if @__boundEvents
-      for [events, callback] in @__boundEvents
+      for name, [events, callback] of @__boundEvents
         if events.any event
           callback data...
 
@@ -112,21 +126,6 @@ Joosy.Modules.Events =
   __validateEvents: (events) ->
     unless Object.isArray(events) && events.length > 0
       throw new Error "#{Joosy.Module.__className @}> bind invalid events: #{events}"
-
-  __isBound: (events, callback, oneShot = false) ->
-    haystack = if oneShot
-      @__oneShotEvents
-    else
-      @__boundEvents
-
-    return false unless haystack
-
-    result = haystack.find (item) ->
-      item[0].length == events.length &&
-        item[0].subtract(events).isEmpty() &&
-        item[1] == callback
-
-    !!result
 
 #
 # Internal representation of {Joosy.Modules.Events.synchronize} context

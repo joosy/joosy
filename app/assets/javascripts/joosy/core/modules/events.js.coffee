@@ -28,6 +28,7 @@ Joosy.Modules.Events =
     @__validateEvents events
 
     @__oneShotEvents[name] = [events, callback]
+    name
 
   #
   # Binds action to run each time any of given event was triggered
@@ -52,6 +53,7 @@ Joosy.Modules.Events =
     @__validateEvents events
 
     @__boundEvents[name] = [events, callback]
+    name
 
   #
   # Unbinds action from runing on trigger

@@ -11,7 +11,7 @@ GIT
 PATH
   remote: .
   specs:
-    joosy (1.1.0.alpha.1)
+    joosy (1.1.0.alpha.2)
       haml_coffee_assets
       sprockets
 

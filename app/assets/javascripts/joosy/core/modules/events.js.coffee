@@ -55,17 +55,14 @@ Joosy.Modules.Events =
   # @param [Function] target            Action to unbind
   #
   unbind: (target) ->
-    target = [target] unless Object.isArray(target)
+    needle = undefined
 
-    for t in target
-      needle = undefined
+    for name, [events, callback] of @__boundEvents
+      if (Object.isFunction(target) && callback == target) || name == target
+        needle = name
+        break
 
-      for name, [events, callback] of @__boundEvents
-        if (Object.isFunction(t) && callback == t) || name == t
-          needle = name
-          break
-
-      delete @__boundEvents[needle] if needle?
+    delete @__boundEvents[needle] if needle?
 
   #
   # Triggers event for {bind} and {wait}
@@ -102,7 +99,7 @@ Joosy.Modules.Events =
   # @param [Function] block           Configuration block (see example)
   #
   synchronize: (block) ->
-    context = new Joosy.Modules.Events.SynchronizationContext(this)
+    context = new Joosy.Events.SynchronizationContext(this)
     block.call(this, context)
 
     if context.expectations.length == 0
@@ -126,12 +123,25 @@ Joosy.Modules.Events =
     unless Object.isArray(events) && events.length > 0
       throw new Error "#{Joosy.Module.__className @}> bind invalid events: #{events}"
 
+
+Joosy.Events = {}
+
+class Joosy.Events.Namespace
+  constructor: (@parent) ->
+
+  bindings: []
+
+  bind: (args...) -> @bindings.push @parent.bind(args...)
+  unbind: ->
+    @parent.unbind b for b in @bindings
+    @bindings = []
+
 #
 # Internal representation of {Joosy.Modules.Events.synchronize} context
 #
 # @see Joosy.Modules.Events.synchronize
 #
-class Joosy.Modules.Events.SynchronizationContext
+class Joosy.Events.SynchronizationContext
   @uid = 0
 
   constructor: (@parent) ->

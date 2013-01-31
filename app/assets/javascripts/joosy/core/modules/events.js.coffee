@@ -15,11 +15,8 @@ Joosy.Modules.Events =
   wait: (name, events, callback) ->
     @__oneShotEvents ||= Object.extended()
 
-    # support deprecated 1.0 syntax
+    # unnamed binding
     if Object.isFunction(events)
-      console.log "Bind called without direct name specification. " +
-        "This is deprecated and will be removed in Joosy 1.1 stable"
-
       callback = events
       events   = name
       name     = @__oneShotEvents.keys().length.toString()
@@ -40,11 +37,8 @@ Joosy.Modules.Events =
   bind: (name, events, callback) ->
     @__boundEvents ||= Object.extended()
 
-    # support deprecated 1.0 syntax
+    # unnamed binding
     if Object.isFunction(events)
-      console.log "Bind called without direct name specification. " +
-        "This is deprecated and will be removed in Joosy 1.1 stable"
-
       callback = events
       events   = name
       name     = @__boundEvents.keys().length.toString()
@@ -61,14 +55,17 @@ Joosy.Modules.Events =
   # @param [Function] target            Action to unbind
   #
   unbind: (target) ->
-    needle = undefined
+    target = [target] unless Object.isArray(target)
 
-    for name, [events, callback] of @__boundEvents
-      if (Object.isFunction(target) && callback == target) || name == target
-        needle = name
-        break
+    for t in target
+      needle = undefined
 
-    delete @__boundEvents[needle] if needle?
+      for name, [events, callback] of @__boundEvents
+        if (Object.isFunction(t) && callback == t) || name == t
+          needle = name
+          break
+
+      delete @__boundEvents[needle] if needle?
 
   #
   # Triggers event for {bind} and {wait}

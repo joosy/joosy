@@ -28,6 +28,31 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     , ''
 
   #
+  # Builds base path
+  #
+  # @param [Hash] options       See {Joosy.Resource.REST.find} for possible options
+  #
+  # @example Basic usage
+  #   Resource.basePath() # /resources
+  #
+  @basePath: (options={}) ->
+    if @__source? && !options.parent?
+      path = @__source
+    else
+      path = @__namespace__.map((s)-> s.toLowerCase()).join('/') + '/' if @__namespace__
+      path += @::__entityName.pluralize()
+
+    path
+
+  #
+  # Builds base path
+  #
+  # @see Joosy.Resource.REST.basePath
+  #
+  basePath: (options={}) ->
+    @constructor.basePath options
+
+  #
   # Builds member path based on the given id.
   #
   # @param [String] id          ID of entity to build member path for
@@ -37,9 +62,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #   Resource.memberPath(1, from: 'foo') # /resources/1/foo
   #
   @memberPath: (id, options={}) ->
-    path  = ("/" + @::__entityName.pluralize())
-    path  = @__source if @__source? && !options.parent?
-    path += "/#{id}"
+    path  = @basePath() + "/#{id}"
 
     if options.parent?
       path = @__parentsPath(if Object.isArray(options.parent) then options.parent else [options.parent]) + path
@@ -67,8 +90,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #   Resource.collectionPath() # /resources/
   #
   @collectionPath: (options={}) ->
-    path = ("/" + @::__entityName.pluralize())
-    path = @__source if @__source? && !options.parent?
+    path = @basePath()
 
     if options.parent?
       path = @__parentsPath(if Object.isArray(options.parent) then options.parent else [options.parent]) + path

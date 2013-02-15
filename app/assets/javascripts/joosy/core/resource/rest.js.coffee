@@ -39,8 +39,12 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
     if @__source? && !options.parent?
       path = @__source
     else
-      path = @__namespace__.map((s)-> s.toLowerCase()).join('/') + '/' if @__namespace__
+      path = '/'
+      path += @__namespace__.map((s)-> s.toLowerCase()).join('/') + '/' if @__namespace__.length > 0
       path += @::__entityName.pluralize()
+
+    if options.parent?
+      path = @__parentsPath(if Object.isArray(options.parent) then options.parent else [options.parent]) + path
 
     path
 
@@ -62,11 +66,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #   Resource.memberPath(1, from: 'foo') # /resources/1/foo
   #
   @memberPath: (id, options={}) ->
-    path  = @basePath() + "/#{id}"
-
-    if options.parent?
-      path = @__parentsPath(if Object.isArray(options.parent) then options.parent else [options.parent]) + path
-
+    path  = @basePath(options) + "/#{id}"
     path += "/#{options.from}" if options.from?
     path
 
@@ -90,11 +90,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #   Resource.collectionPath() # /resources/
   #
   @collectionPath: (options={}) ->
-    path = @basePath()
-
-    if options.parent?
-      path = @__parentsPath(if Object.isArray(options.parent) then options.parent else [options.parent]) + path
-
+    path = @basePath(options)
     path += "/#{options.from}" if options.from?
     path
 

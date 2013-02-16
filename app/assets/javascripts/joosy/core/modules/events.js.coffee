@@ -128,8 +128,7 @@ Joosy.Events = {}
 
 class Joosy.Events.Namespace
   constructor: (@parent) ->
-
-  bindings: []
+    @bindings = []
 
   bind: (args...) -> @bindings.push @parent.bind(args...)
   unbind: ->

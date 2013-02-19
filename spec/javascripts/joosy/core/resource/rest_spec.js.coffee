@@ -10,6 +10,10 @@ describe "Joosy.Resource.REST", ->
     @entity 'fluffy'
     @map 'fluffy_inlines', FluffyInline
 
+  Joosy.namespace 'Animal', ->
+    class @Cat extends Joosy.Resource.REST
+      @entity 'cat'
+
   beforeEach ->
     @server = sinon.fakeServer.create()
 
@@ -20,6 +24,14 @@ describe "Joosy.Resource.REST", ->
     expect(target.method).toEqual method
     expect(target.url).toMatch url
     target.respond 200, 'Content-Type': 'application/json', data
+
+  it "build base path", ->
+    parent = FluffyParent.build 1
+    grandParent = FluffyParent.build 666
+
+    expect(Animal.Cat.basePath()).toEqual '/animal/cats'
+    expect(Animal.Cat.basePath parent: parent).toEqual '/fluffy_parents/1/animal/cats'
+    expect(Animal.Cat.basePath parent: [grandParent, parent]).toEqual '/fluffy_parents/666/fluffy_parents/1/animal/cats'
 
   it "builds member path", ->
     parent = FluffyParent.build 1
@@ -40,7 +52,6 @@ describe "Joosy.Resource.REST", ->
     expect(Fluffy.collectionPath parent: [grandParent, parent]).toEqual '/fluffy_parents/666/fluffy_parents/1/fluffies'
     expect(Fluffy.collectionPath parent: parent, from: 'test').toEqual '/fluffy_parents/1/fluffies/test'
     expect(Fluffy.collectionPath parent: parent, from: 'test', params: {foo: 'bar'}).toEqual '/fluffy_parents/1/fluffies/test'
-
 
   describe "finds resource", ->
     rawData = '{"fluffy": {"id": 1, "name": "test1"}}'

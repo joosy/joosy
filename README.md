@@ -47,7 +47,7 @@ Credits
 
 <img src="http://roundlake.ru/assets/logo.png" align="right" />
 
-* Boris Staal ([@_inossidabile](http://twitter.com/#!/_inossidabile))
+* Boris Staal ([@_inossidabile](http://twitter.com/#!/_inossidabile)) [![endorse](http://api.coderwall.com/inossidabile/endorsecount.png)](http://coderwall.com/inossidabile)
 * Andrew Shaydurov ([@ImGearHead](http://twitter.com/#!/ImGearHead))
 * Alexander Pavlenko ([@alerticus](http://twitter.com/#!/alerticus))
 * Peter Zotov ([@whitequark](http://twitter.com/#!/whitequark))

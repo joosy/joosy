@@ -153,7 +153,9 @@ Joosy.Router =
     newScope = $.extend({}, this)
     newScope.rawRoutes = {}
     newScope.__namespace += name
-    newScope.__asNamespace += "#{options.as}" if options.as
+    if options.as
+      options.as = options.as.capitalize() if newScope.__asNamespace.length > 0
+      newScope.__asNamespace += options.as
     block.call(newScope) if Object.isFunction(block)
     @rawRoutes[name] = newScope.rawRoutes
 
@@ -301,7 +303,7 @@ Joosy.Router =
       fnc(options)
 
     Joosy.Helpers.Application["#{as}Url"] = (options) ->
-      url = location.protocol + '//' + window.location.host + window.location.pathname
+      url = window.location.protocol + '//' + window.location.host + window.location.pathname
       "#{url}#{fnc(options)}"
 
 Joosy.Module.merge Joosy.Router, Joosy.Modules.Events

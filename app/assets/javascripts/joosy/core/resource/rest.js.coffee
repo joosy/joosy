@@ -36,11 +36,11 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #   Resource.basePath() # /resources
   #
   @basePath: (options={}) ->
-    if @__source? && !options.parent?
+    if @__source
       path = @__source
     else
       path = '/'
-      path += @__namespace__.map((s)-> s.toLowerCase()).join('/') + '/' if @__namespace__.length > 0
+      path += @__namespace__.map((s)-> s.underscore()).join('/') + '/' if @__namespace__.length > 0
       path += @::__entityName.pluralize()
 
     if options.parent?

@@ -14,6 +14,10 @@ describe "Joosy.Resource.REST", ->
     class @Cat extends Joosy.Resource.REST
       @entity 'cat'
 
+    class @Dog extends Joosy.Resource.REST
+      @entity 'dog'
+      @source '/cuties'
+
   beforeEach ->
     @server = sinon.fakeServer.create()
 
@@ -32,6 +36,10 @@ describe "Joosy.Resource.REST", ->
     expect(Animal.Cat.basePath()).toEqual '/animal/cats'
     expect(Animal.Cat.basePath parent: parent).toEqual '/fluffy_parents/1/animal/cats'
     expect(Animal.Cat.basePath parent: [grandParent, parent]).toEqual '/fluffy_parents/666/fluffy_parents/1/animal/cats'
+
+    expect(Animal.Dog.basePath()).toEqual '/cuties'
+    expect(Animal.Dog.basePath parent: parent).toEqual '/fluffy_parents/1/cuties'
+    expect(Animal.Dog.basePath parent: [grandParent, parent]).toEqual '/fluffy_parents/666/fluffy_parents/1/cuties'
 
   it "builds member path", ->
     parent = FluffyParent.build 1

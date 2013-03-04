@@ -53,7 +53,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @see Joosy.Resource.REST.basePath
   #
-  basePath: (options={}) ->
+  basePath: (options) ->
     @constructor.basePath options
 
   #
@@ -78,7 +78,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   # @example Basic usage
   #   resource.memberPath(from: 'foo') # /resources/1/foo
   #
-  memberPath: (options={}) ->
+  memberPath: (options) ->
     @constructor.memberPath @id(), options
 
   #
@@ -99,7 +99,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @see Joosy.Resource.REST.collectionPath
   #
-  collectionPath: (options={}) ->
+  collectionPath: (options) ->
     @constructor.collectionPath options
 
   #

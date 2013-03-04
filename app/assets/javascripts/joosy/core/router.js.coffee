@@ -26,19 +26,19 @@ Joosy.Router =
   # need) and actual executors
   #
   routes: Object.extended()
-  
+
   #
   # The regexp to restrict the next loading url. By default set to false and
   # therefore no restrictions apply.
   #
   restrictPattern: false
-  
+
   #
   # TODO: Write readme
   #
   __namespace: ""
   __asNamespace: ""
-  
+
   #
   # Set the restriction pattern. If the requested url does not match this it
   # will not load. Set `false` to avoid check.
@@ -53,8 +53,8 @@ Joosy.Router =
     @routes = Object.extended()
     @__namespace = ""
     @__asNamespace = ""
-    
-    
+
+
   #
   # Draws the routes similar to Ruby on Rails
   #
@@ -95,30 +95,30 @@ Joosy.Router =
         , 2 # jQuery.hashchange checks hash changing every 1ms
       else
         history[if options.replaceState then 'replaceState' else 'pushState'] {}, '', '#'+path
-        
+
   #
-  # Match route (ads it to @rawRoutes)
+  # Match route (adds it to @rawRoutes)
   #
   # @param [String] route       similar to ones sent in map hash
-  # 
+  #
   # @param  options [String] to  function to which the route routes
   # @option options [String] as  name of the route, used for reverse routing
   #
   match: (route, options={}) ->
     if @__asNamespace
-      as = @__asNamespace + options["as"].capitalize()
+      as = @__asNamespace + options.as.capitalize()
     else
-      as = options["as"]
-    
+      as = options.as
+
     routeName = @__namespace + route
 
     map = {}
-    map[route] = options["to"]
-    
+    map[route] = options.to
+
     Joosy.Module.merge @rawRoutes, map
-    
+
     @__injectReverseUrl(as, routeName)
-  
+
   #
   # Shortcut to match "/"
   #
@@ -127,17 +127,17 @@ Joosy.Router =
   #                              default it is "root"
   #
   root: (options={}) ->
-    as = options["as"] || "root"
-    @match("/", to: options["to"], as: as)
-    
+    as = options.as || "root"
+    @match("/", to: options.to, as: as)
+
   #
   # Routes the 404
   #
   # @param options [String] to  function to which the route routes
   #
   notFound: (options={}) ->
-    @match(404, to: options["to"])
- 
+    @match(404, to: options.to)
+
   #
   # Namespaces a match route
   #
@@ -149,14 +149,14 @@ Joosy.Router =
     if Object.isFunction(options)
       block = options
       options = {}
-      
+
     newScope = $.extend({}, this)
     newScope.rawRoutes = {}
     newScope.__namespace += name
-    newScope.__asNamespace += "#{options["as"]}" if options["as"]
+    newScope.__asNamespace += "#{options.as}" if options.as
     block.call(newScope) if Object.isFunction(block)
     @rawRoutes[name] = newScope.rawRoutes
-    
+
   #
   # Inits the routing system and loads the current route
   # Binds the window hashchange event and therefore should only be called once
@@ -277,11 +277,11 @@ Joosy.Router =
           params[pair[0]] = pair[1]
 
     params
-    
+
   #
   # Injects reverse routing function into global namespace
-  # @param [String] as     The name for the route, ex: for "projects" 
-  #                        builds "projects_url" and "projects_path" functions
+  # @param [String] as     The name for the route, ex: for "projects"
+  #                        builds "projectsUrl" and "projectsPath" functions
   # @param [String] route  Entire route, joined by namespaces, ex:
   #                        "/projects/":
   #                             "/:id" :
@@ -290,7 +290,7 @@ Joosy.Router =
   #
   __injectReverseUrl: (as, route) ->
     return if as == undefined
-    
+
     fnc = (options) ->
       url = route
       (route.match(/\/:[^\/]+/g) || []).each (str) ->
@@ -299,9 +299,9 @@ Joosy.Router =
 
     Joosy.Helpers.Application["#{as}Path"] = (options) ->
       fnc(options)
-      
+
     Joosy.Helpers.Application["#{as}Url"] = (options) ->
-      url = 'http://' + window.location.host + window.location.pathname
+      url = location.protocol + '//' + window.location.host + window.location.pathname
       "#{url}#{fnc(options)}"
 
 Joosy.Module.merge Joosy.Router, Joosy.Modules.Events

@@ -155,6 +155,7 @@ class Joosy.Page extends Joosy.Module
   #
   @fetchSynchronized: (callback) ->
     @::__fetch = (complete) ->
+      @data = {}
       @synchronize (context) ->
         context.after -> complete()
         callback.call(this, context)

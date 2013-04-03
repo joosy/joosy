@@ -23,7 +23,7 @@ HELP
         template "preload.html.#{options[:template_engine]}",
                  "app/views/layouts/#{file_name}.html.#{options[:template_engine]}"
 
-        route "match '#{file_name}' => '#{file_name}#index'"
+        route "get '#{file_name}' => '#{file_name}#index'"
       end
     end
   end

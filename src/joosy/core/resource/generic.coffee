@@ -69,15 +69,15 @@ class Joosy.Resource.Generic extends Joosy.Module
     #
     # @private
     #
-    class clone extends this
+    class Clone extends this
 
     if entity instanceof Joosy.Resource.Generic
-      clone.__source  = entity.memberPath()
-      clone.__source += '/' + @::__entityName.pluralize() if @::__entityName
+      Clone.__source  = entity.memberPath()
+      Clone.__source += '/' + @::__entityName.pluralize() if @::__entityName
     else
-      clone.__source = entity
+      Clone.__source = entity
 
-    clone
+    Clone
 
   #
   # Sets the entity text name:

@@ -157,7 +157,7 @@ class Joosy.Form extends Joosy.Module
   # Resets form submit behavior to default
   #
   unbind: ->
-    @container.unbind('submit').find('input:submit,input:image,button:submit').unbind('click');
+    @container.unbind('submit').find('input:submit,input:image,button:submit').unbind('click')
 
   #
   # Links current form with given resource and sets values of form inputs from with it.
@@ -203,7 +203,7 @@ class Joosy.Form extends Joosy.Module
           filler val.data, @concatFieldName(scope, "[#{property}_attributes][0]")
         else if Object.isObject(val) || Object.isArray(val)
           filler val, key
-        else 
+        else
       delete data.__joosy_form_filler_lock
 
     filler data, resource.__entityName || options.resourceName

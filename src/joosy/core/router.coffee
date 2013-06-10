@@ -100,7 +100,7 @@ Joosy.Router =
   # Match route (ads it to @rawRoutes)
   #
   # @param [String] route       similar to ones sent in map hash
-  # 
+  #
   # @param  options [String] to  function to which the route routes
   # @option options [String] as  name of the route, used for reverse routing
   #
@@ -280,7 +280,7 @@ Joosy.Router =
     
   #
   # Injects reverse routing function into global namespace
-  # @param [String] as     The name for the route, ex: for "projects" 
+  # @param [String] as     The name for the route, ex: for "projects"
   #                        builds "projects_url" and "projects_path" functions
   # @param [String] route  Entire route, joined by namespaces, ex:
   #                        "/projects/":

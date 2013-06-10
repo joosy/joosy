@@ -24,6 +24,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
   grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadNpmTasks 'grunt-coffeelint'
 
   grunt.initConfig
     connect:
@@ -53,6 +54,14 @@ module.exports = (grunt) ->
         include: [locations.source.path]
         src: locations.source.root
         dest: locations.source.build
+
+    coffeelint:
+      source:
+        files:
+          src: [locations.source.path + '/joosy/**/*.coffee']
+        options:
+          'max_line_length':
+            level: 'ignore'
 
     jasmine:
       joosy:

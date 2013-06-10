@@ -9,12 +9,13 @@ module.exports = (grunt) ->
   #
   locations =
     source:
-      root: 'joosy.coffee'
+      root: 'joosy/joosy.coffee'
       path: 'src'
-      build: 'build/joosy.js'
+      build: 'lib/joosy.js'
     specs:
       units: 'spec/**/*_spec.*'
       helpers: 'spec/helpers/**/*.*'
+      build: '.grunt'
 
   #
   # Grunt extensions
@@ -39,14 +40,14 @@ module.exports = (grunt) ->
       specs:
         options:
           nospawn: true
-        files: [Object.values locations.specs]
+        files: [locations.specs.units, locations.specs.helpers]
         tasks: ['coffee', 'jasmine']
 
     coffee:
       specs:
         expand: true
-        src: [Object.values locations.specs]
-        dest: 'build'
+        src: [locations.specs.units, locations.specs.helpers]
+        dest: locations.specs.build
         ext: '.js'
 
     mince:
@@ -69,15 +70,15 @@ module.exports = (grunt) ->
         options:
           host: 'http://localhost:8888/'
           keepRunner: true
-          outfile: 'build/spec.html'
+          outfile: 'index.html'
           vendor: [
             'components/sinonjs/sinon.js',
             'components/jquery/jquery.js',
             'components/jquery-form/jquery.form.js',
             'components/sugar/release/sugar-full.min.js'
           ],
-          specs: 'build/'+locations.specs.units
-          helpers: 'build/'+locations.specs.helpers
+          specs: locations.specs.build + '/' + locations.specs.units
+          helpers: locations.specs.build + '/' + locations.specs.helpers
 
   grunt.event.on 'watch', (action, filepath) ->
     grunt.config ['coffee', 'specs', 'src'], filepath
@@ -90,18 +91,3 @@ module.exports = (grunt) ->
   grunt.registerTask 'build', ['mince', 'coffee', 'jasmine:joosy:build']
 
   grunt.registerTask 'test', ['connect', 'mince', 'coffee', 'jasmine']
-
-  grunt.registerTask 'join', ->
-    done = @async()
-
-    mincer = new Mincer.Environment(process.cwd())
-    mincer.appendPath(locations.source.path)
-
-    result = ""
-
-    mincer.precompile [locations.source.root], (err) ->
-      mincer.findAsset(locations.source.root).toArray().each (dependency) ->
-        result += "\n\n#----- #{dependency.logicalPath} -----#\n\n"
-        result += FS.readFileSync(dependency.pathname).toString()
-
-      FS.writeFile 'build/joosy.coffee', result, -> done()

@@ -16,7 +16,7 @@ Feather brings a total project restructuring:
   * Run `bower install` to get require JS components
   * Run `grunt build` to build Joosy and specs
   * Run `grunt test` to run specs once
-  * Run `grunt` to watch sources (automatic changes compilations) and run test-server (get your browser to http://localhost:8888/build/spec.html)
+  * Run `grunt` to watch sources (automatic changes compilations) and run test-server (get your browser to http://localhost:8888/)
 
 ## Incompatible changes
 

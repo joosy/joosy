@@ -1,0 +1,12 @@
+{
+  "name": "joosy",
+  "version": "1.1.0",
+  "dependencies": {
+    "jquery": "~2.0.2",
+    "sugar": "~1.3.9",
+    "jquery-form": "~3.32.0-2013.04.09"
+  },
+  "devDependencies": {
+    "sinonjs": "~1.7.1"
+  }
+}

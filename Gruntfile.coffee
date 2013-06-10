@@ -76,7 +76,9 @@ module.exports = (grunt) ->
   #
   # Tasks
   #
-  grunt.registerTask 'default', ['connect', 'mince', 'coffee', 'jasmine:joosy:build', 'watch']
+  grunt.registerTask 'default', ['connect', 'build', 'watch']
+
+  grunt.registerTask 'build', ['mince', 'coffee', 'jasmine:joosy:build']
 
   grunt.registerTask 'test', ['connect', 'mince', 'coffee', 'jasmine']
 

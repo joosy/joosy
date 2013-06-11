@@ -34,6 +34,7 @@ module.exports = (grunt) ->
         bump: false
         add: false
         commit: false
+        push: false
 
     connect:
       specs:
@@ -95,8 +96,15 @@ module.exports = (grunt) ->
   #
   grunt.registerTask 'default', ['connect', 'build', 'watch']
 
-  grunt.registerTask 'build', ['mince', 'coffee', 'jasmine:joosy:build']
+  grunt.registerTask 'build', ['mince', 'coffee', 'jasmine:joosy:build', 'bowerize']
 
-  grunt.registerTask 'test', ['connect', 'mince', 'coffee', 'jasmine']
+  grunt.registerTask 'test', ['connect', 'mince', 'coffee', 'bowerize', 'jasmine']
+
+  grunt.registerTask 'bowerize', ->
+    bower = require './bower.json'
+    meta  = require './package.json'
+
+    bower.version = meta.version
+    FS.writeFileSync 'bower.json', JSON.stringify(bower, null, 2)
 
   grunt.registerTask 'publish', ['test', 'release']

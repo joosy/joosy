@@ -12,8 +12,18 @@ class Joosy.Templaters.RailsJST
   # @param [String] name      Template name 'foo/bar'
   #
   buildView: (name) ->
-    unless template = JST[location = "#{@applicationName}/templates/#{name}-#{I18n?.locale}"]
-      template = JST[location = "#{@applicationName}/templates/#{name}"]
+    template = false
+    haystack = [
+      "#{@applicationName}/templates/#{name}-#{I18n?.locale}",
+      "#{@applicationName}/templates/#{name}",
+      "templates/#{name}-#{I18n?.locale}",
+      "templates/#{name}"
+    ]
+
+    haystack.each (path) ->
+      if JST[path]
+        location = path
+        template = JST[path]
 
     unless template
       throw new Error "Template '#{name}' not found. Checked at: #{location}"

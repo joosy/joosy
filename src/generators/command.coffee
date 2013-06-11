@@ -1,7 +1,7 @@
 module.exports = ->
-  Sugar   = require 'sugar'
-  cli     = require 'command-router'
-  version = require '../joosy/joosy'
+  Sugar = require 'sugar'
+  cli   = require 'command-router'
+  meta  = require '../../package.json'
 
   cli.command /new\s?(.*)?/, ->
     name = cli.params.splats[0]
@@ -33,6 +33,6 @@ module.exports = ->
     if action.length > 0
       console.error "'#{action}' is an unknown action :("
     else
-      console.log "Joosy #{version}. Run `help` to list possible commands."
+      console.log "Joosy #{meta.version}. Run `help` to list possible commands."
 
   cli.parse process.argv

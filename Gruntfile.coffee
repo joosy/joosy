@@ -26,8 +26,15 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
   grunt.loadNpmTasks 'grunt-contrib-watch'
   grunt.loadNpmTasks 'grunt-coffeelint'
+  grunt.loadNpmTasks 'grunt-release'
 
   grunt.initConfig
+    release:
+      options:
+        bump: false
+        add: false
+        commit: false
+
     connect:
       specs:
         options:
@@ -91,3 +98,5 @@ module.exports = (grunt) ->
   grunt.registerTask 'build', ['mince', 'coffee', 'jasmine:joosy:build']
 
   grunt.registerTask 'test', ['connect', 'mince', 'coffee', 'jasmine']
+
+  grunt.registerTask 'publish', ['test', 'release']

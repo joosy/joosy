@@ -1,5 +1,6 @@
 module.exports = (grunt) ->
 
+  grunt.loadNpmTasks 'grunt-haml'
   grunt.loadNpmTasks 'grunt-mincer'
   grunt.loadNpmTasks 'grunt-contrib-connect'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
@@ -7,48 +8,14 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-cssmin'
   grunt.loadNpmTasks 'grunt-bower-task'
 
-  grunt.initConfig
-    bower:
-      install:
-        options:
-          copy: false
-          verbose: true
+  grunt.registerTask 'joosy:compile', ['joosy:compile:code', 'joosy:compile:styles', 'joosy:compile:playground']
+  grunt.registerTask 'joosy:compile:code', ['mince:application', 'uglify:application']
+  grunt.registerTask 'joosy:compile:styles', ['stylus:application', 'cssmin:application']
+  grunt.registerTask 'joosy:compile:playground', ['haml:application']
 
-    connect:
-      server:
-        options:
-          port: 4000
-          base: 'public'
+  grunt.registerTask 'joosy:server', ['joosy:compile:playground', 'joosy:server:start']
 
-    mince:
-      application:
-        include: ['source', 'components', 'vendor', 'node_modules/joosy/lib']
-        src: 'application.coffee'
-        dest: 'public/assets/application.js'
-
-    stylus:
-      application:
-        options:
-          paths: ['stylesheets']
-        files: 'public/assets/application.css': 'stylesheets/application.styl'
-
-    uglify:
-      application:
-        options:
-          sourceMap: 'public/assets/application.js.map'
-        files:
-          'public/assets/application.min.js': 'public/assets/application.js'
-
-    cssmin:
-      application:
-        files:
-          'public/assets/application.min.css': 'public/assets/application.css'
-
-  grunt.registerTask 'joosy:compile', ['joosy:compile:code', 'joosy:compile:styles']
-  grunt.registerTask 'joosy:compile:code', ['mince', 'uglify']
-  grunt.registerTask 'joosy:compile:styles', ['stylus', 'cssmin']
-
-  grunt.registerTask 'joosy:server', ->
+  grunt.registerTask 'joosy:server:start', ->
     @async()
     connect = require('connect')
     mincer  = require('mincer')

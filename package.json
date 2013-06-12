@@ -2,7 +2,7 @@
   "name": "joosy",
   "description": "Joosy JS framework.",
   "keywords": ["mvc", "coffeescript"],
-  "version": "1.1.0-alpha.3",
+  "version": "1.1.0-alpha.4",
   "author" : "Boris Staal <boris@staal.io>",
   "keywords": [],
   "engines": {
@@ -19,7 +19,6 @@
     "grunt": "~0.4.1",
     "grunt-mincer": "~0.3.1",
     "grunt-contrib-jasmine": "git://github.com/inossidabile/grunt-contrib-jasmine.git#deep-outfile",
-    "grunt-contrib-watch": "~0.4.4",
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-connect": "~0.3.0",
     "grunt-coffeelint": "0.0.6",

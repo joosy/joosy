@@ -2,7 +2,7 @@
   "name": "joosy",
   "description": "Joosy JS framework.",
   "keywords": ["mvc", "coffeescript"],
-  "version": "1.1.0-alpha.5",
+  "version": "1.1.0-alpha.6",
   "author" : "Boris Staal <boris@staal.io>",
   "keywords": [],
   "engines": {

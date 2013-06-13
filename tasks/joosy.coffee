@@ -46,7 +46,7 @@ module.exports = (grunt) ->
     @async()
     connect = require('connect')
     server = connect()
-    server.use connect.static('public')
+    server.use require('gzippo').staticGzip('public')
     server.listen process.env['PORT'] ? 4000
 
   grunt.registerTask 'joosy:postinstall', ->

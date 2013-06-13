@@ -1,5 +1,7 @@
 module.exports = (grunt) ->
 
+  Path = require('path')
+
   grunt.loadNpmTasks 'grunt-mincer'
   grunt.loadNpmTasks 'grunt-contrib-connect'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
@@ -21,7 +23,9 @@ module.exports = (grunt) ->
     mincer  = require('mincer')
     hamlc   = require('haml-coffee')
 
-    mincer.StylusEngine.registerConfigurator (stylus) -> stylus.use require('nib')()
+    mincer.StylusEngine.registerConfigurator (stylus) ->
+      stylus.options.paths.push Path.join(process.cwd(), 'public')
+      stylus.use require('nib')()
 
     server = connect()
     assets = new mincer.Environment(process.cwd())

@@ -27,7 +27,9 @@ module.exports = ->
       console.error "Don't know how to generate '#{entity}'. Possible values: #{generators.join(', ')}."
       process.exit 1
 
-    require("./#{entity}").generate name
+    unless require("./#{entity}").generate name
+      console.error "Generation failed. Are you in the root of project?"
+      process.exit 1
 
   cli.on 'notfound', (action) ->
     if action.length > 0

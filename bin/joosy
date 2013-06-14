@@ -2,15 +2,20 @@
 
 'use strict';
 
-var resolve = require('resolve').sync
-var path    = require('path')
-var base    = ''
+var resolve  = require('resolve').sync
+var path     = require('path')
+var base     = ''
+var location = path.join('src', 'generators', 'command')
 
 try {
-  base = resolve('joosy', {basedir: process.cwd()});
+  base = resolve('joosy', {
+    basedir: process.cwd(),
+    extensions: ['.coffee'],
+    packageFilter: function(pkg) { pkg.main = location; return pkg; }
+  });
 } catch (ex) {
-  base = '..'
+  base = path.join('..', location);
 }
 
 require('coffee-script');
-require(path.join(base, 'src/generators/command'))();
+require(base)();

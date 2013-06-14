@@ -3,10 +3,11 @@
 Feather brings a total project restructuring:
 
   * Core assets separated from Ruby and switched to Node builders and environment (done)
-  * Node-based static project generators and builders including Jasmine test-suite (in progress)
+  * Node-based static project generators and builders (done)
+  * Bower-based dependency management (done)
   * Preloaders separated from core (in progress)
-  * Bower-based dependency management (in progress)
   * AMD support and basic integration (in progress)
+  * Jasmine-based test-suite (in progress)
 
 ## Jumping in
 

@@ -32,6 +32,12 @@ module.exports = class
 
     @actions.push ['file', destination, content]
 
+  copy: (source, destination) ->
+    source = @join(@templates, source...) if source instanceof Array
+    destination = @join(destination...) if destination instanceof Array
+
+    @actions.push ['copy', destination, source]
+
   #
   # Required but Node-only methods
   #
@@ -58,10 +64,23 @@ module.exports = class
 
     @[method] next, action...
 
+  performCopyAction: (callback, destination, source) ->
+    write = =>
+      File.copy source, @join(@destination, destination)
+      console.log "#{destination} copied...".green
+
+    if File.exists(@destination, destination)
+      Commander.confirm "#{destination} exists. Overwrite? ", (y) ->
+        write() if y
+        callback()
+    else
+      write()
+      callback()
+
   performFileAction: (callback, destination, content) ->
     write = =>
       File.write(@join(@destination, destination), content)
-      console.log "#{destination} created...".green
+      console.log "#{destination} generated...".green
 
     if File.exists(@destination, destination)
       Commander.confirm "#{destination} exists. Overwrite? ", (y) ->

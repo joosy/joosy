@@ -13,8 +13,8 @@ module.exports = ->
 
     require('./project').generate name
 
-  cli.command /generate\s?(.*)/, ->
-    params = cli.params.splats[0].split(' ')
+  cli.command /g(enerate)?\s?(.*)/, ->
+    params = cli.params.splats[1].split(' ')
     entity = params[0]
     name   = params[1]
 

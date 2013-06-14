@@ -1,4 +1,16 @@
 #!/usr/bin/env node
 
+'use strict';
+
+var resolve = require('resolve').sync
+var path    = require('path')
+var base    = ''
+
+try {
+  base = resolve('joosy', {basedir: process.cwd()});
+} catch (ex) {
+  base = '..'
+}
+
 require('coffee-script');
-require('../src/generators/command')();
+require(path.join(base, 'src/generators/command'))();

@@ -1,0 +1,2 @@
+#page{:style => 'text-align: center'}
+  .content{:id => @yield()}

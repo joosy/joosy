@@ -1,0 +1,7 @@
+#wrapper
+  #content
+    %h1 Welcome aboard
+    %h2{:style => 'margin-bottom: 30px'} You’re still riding Ruby on Rails.
+    .joosy{:style => 'background: #F71; border-radius: 10px; width: 250px; display: inline-block'}
+      %div{:style => 'color: #FFF; padding: 10px;'}
+        But it's so joosy this time!

@@ -11,17 +11,20 @@ module.exports = class extends Generator
     basename  = @getBasename @name
 
     [
-      @join @destination, 'pages', @join(namespace...), "#{basename}.coffee"
-      @join @destination, 'templates', 'pages', @join(namespace...), "#{basename}.jst.hamlc"
+      @join @destination, 'widgets', @join(namespace...), "#{basename}.coffee"
+      @join @destination, 'templates', 'layouts', @join(namespace...), "#{basename}.jst.hamlc"
     ]
 
   generate: (skip) ->
     return false unless @exists(@destination)
 
-    files = @files()
+    namespace = @getNamespace(@name)
 
-    @template ['page', 'basic.coffee'], files[0],
-      namespace_name: @getNamespace(@name).map (x) -> x.camelize()
+    files    = @files()
+    template = if namespace.length > 0 then 'namespaced' else 'basic'
+
+    @template ['widget', "#{template}.coffee"], files[0],
+      namespace_name: namespace.map (x) -> x.camelize()
       class_name: @getBasename(@name).camelize()
       view_name: @name
 

@@ -35,7 +35,7 @@
     name  = name.split '.'
     space = window
     for part in name
-      space = space[part] ?= {}
+      space = space[part] ?= {} if part.length > 0
 
     if generator
       generator = generator.apply space

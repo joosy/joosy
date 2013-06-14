@@ -1,11 +1,13 @@
-File = require('grunt').file
-Path = require('path')
-EJS  = require('ejs')
+File      = require('grunt').file
+Path      = require('path')
+EJS       = require('ejs')
+Commander = require('commander')
+colors    = require('colors')
 
 module.exports = class
   constructor: (destination, templates) ->
-    @templates   = templates || Path.join(__dirname, '..', '..', 'templates')
-    @destination = Path.join (destination || process.cwd()), 'source'
+    @templates   = templates || @join(__dirname, '..', '..', 'templates')
+    @destination = @join (destination || process.cwd()), 'source'
     @actions     = []
 
   getNamespace: (name) ->
@@ -17,26 +19,56 @@ module.exports = class
     name = name.split('/')
     name.pop()
 
+  template: (source, destination, data) ->
+    source = @join(@templates, source...) if source instanceof Array
+    destination = @join(destination...) if destination instanceof Array
+
+    result = @compileTemplate source, data
+
+    @actions.push ['template', destination, result]
+
+  file: (destination, content='') ->
+    destination = @join(destination...) if destination instanceof Array
+
+    @actions.push ['file', destination, content]
+
+  #
+  # Required but Node-only methods
+  #
   join: ->
     Path.join arguments...
 
-  exists: ->
-    File.exists arguments...
+  compileTemplate: (source, data) ->
+    EJS.render File.read(source), data
 
-  template: (source, destination, data) ->
-    source = Path.join(@templates, source...) if source instanceof Array
-    destination = Path.join(@destination, destination...) if destination instanceof Array
+  #
+  # Node-base performer
+  #
+  perform: (callback) ->
+    actions = @actions.clone()
+    @performAction actions.pop(), actions, callback
 
-    result = EJS.render File.read(source), data
-    File.write destination, result
+  performAction: (action, actions, callback) ->
+    method = "perform#{action.shift().camelize()}Action"
+    next   = =>
+      if actions.length > 0
+        @performAction(actions.pop(), actions, callback) 
+      else
+        callback()
 
-    @actions.push ['template', destination]
+    @[method] next, action...
 
-  file: (destination) ->
-    destination = Path.join(@destination, destination...) if destination instanceof Array
-    File.write(destination, '')
+  performFileAction: (callback, destination, content) ->
+    write = =>
+      File.write(@join(@destination, destination), content)
+      console.log "#{destination} created...".green
 
-    @actions.push ['file', destination]
-
-  mkdir: ->
-    File.mkdir Path.join(arguments...)
+    if File.exists(@destination, destination)
+      Commander.confirm "#{destination} exists. Overwrite? ", (y) ->
+        write() if y
+        callback()
+    else
+      write()
+      callback()
+      
+  performTemplateAction: -> @performFileAction arguments...

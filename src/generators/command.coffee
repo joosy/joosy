@@ -2,6 +2,7 @@ module.exports = ->
   Sugar = require 'sugar'
   cli   = require 'command-router'
   meta  = require '../../package.json'
+  grunt = require 'grunt'
 
   cli.command /new\s?(.*)?/, ->
     name = cli.params.splats[0]
@@ -27,9 +28,14 @@ module.exports = ->
       console.error "Don't know how to generate '#{entity}'. Possible values: #{generators.join(', ')}."
       process.exit 1
 
-    unless require("./#{entity}").generate name
-      console.error "Generation failed. Are you in the root of project?"
+    unless grunt.file.exists(process.cwd(), 'source')
+      console.error "Failed: `source' directory not found. Are you in the root of project?"
       process.exit 1
+
+    generator = require("./#{entity}")
+    generator = new generator(name)
+    generator.generate()
+    generator.perform -> process.exit 0
 
   cli.on 'notfound', (action) ->
     if action.length > 0

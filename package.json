@@ -2,7 +2,7 @@
   "name": "joosy",
   "description": "Joosy JS framework.",
   "keywords": [],
-  "version": "1.1.0-alpha.14",
+  "version": "1.1.0-alpha.15",
   "author": "Boris Staal <boris@staal.io>",
   "bin": {
     "joosy": "bin/joosy"
@@ -15,7 +15,10 @@
     "coffee-script": "~1.6.3",
     "command-router": "0.0.5",
     "resolve": "~0.4.0",
-    "ejs": "~0.8.4"
+    "ejs": "~0.8.4",
+    "prompt": "~0.2.9",
+    "commander": "~1.2.0",
+    "colors": "~0.6.0-1"
   },
   "devDependencies": {
     "bower": "~0.9.2",

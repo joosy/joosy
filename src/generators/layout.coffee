@@ -1,33 +1,19 @@
 Generator = require './generator'
 
 module.exports = class extends Generator
-  @generate: (name) -> (new @(name)).generate()
-
   constructor: (@name, destination, templates) ->
     super(destination, templates)
 
-  files: ->
+  generate: (skip) ->
     namespace = @getNamespace @name
     basename  = @getBasename @name
+    template  = if namespace.length > 0 then 'namespaced' else 'basic'
 
-    [
-      @join @destination, 'layouts', @join(namespace...), "#{basename}.coffee"
-      @join @destination, 'templates', 'layouts', @join(namespace...), "#{basename}.jst.hamlc"
-    ]
-
-  generate: (skip) ->
-    return false unless @exists(@destination)
-
-    namespace = @getNamespace(@name)
-
-    files    = @files()
-    template = if namespace.length > 0 then 'namespaced' else 'basic'
-
-    @template ['layout', "#{template}.coffee"], files[0],
+    @template ['layout', "#{template}.coffee"], ['layouts', @join(namespace...), "#{basename}.coffee"],
       namespace_name: namespace.map (x) -> x.camelize()
-      class_name: @getBasename(@name).camelize()
+      class_name: basename.camelize()
       view_name: @name
 
-    @file files[1]
+    @file ['templates', 'layouts', @join(namespace...), "#{basename}.jst.hamlc"]
 
     @actions

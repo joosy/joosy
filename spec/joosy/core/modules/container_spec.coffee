@@ -15,7 +15,7 @@ describe "Joosy.Modules.Container", ->
   it "should have property named per declared element in container", ->
     @ground.prepend('<div class="footer" />')  # out of container
     @box.refreshElements()
-    target = @box.footer.get 0
+    target = @box.$footer.get 0
     expect(target).toBeTruthy()
     expect(target).toBe $('.footer', @box.container).get 0
     expect(target).toBe @box.$('.footer').get 0

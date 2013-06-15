@@ -29,7 +29,7 @@ Joosy.Modules.Container =
   refreshElements: ->
     @__collectElements().each (key, value) =>
       # TODO: Check for possible collisions?
-      @[key] = @$(value)
+      @['$'+key] = @$(value)
 
     if @hasOwnProperty "__onRefreshes"
       @__onRefreshes.each (callback) => callback.apply @

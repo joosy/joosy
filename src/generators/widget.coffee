@@ -12,8 +12,8 @@ module.exports = class extends Generator
     @template ['widget', "#{template}.coffee"], ['widgets', @join(namespace...), "#{basename}.coffee"],
       namespace_name: namespace.map (x) -> x.camelize()
       class_name: basename.camelize()
-      view_name: @name
+      view_name: basename
 
-    @file ['templates', 'layouts', @join(namespace...), "#{basename}.jst.hamlc"]
+    @file ['templates', 'widgets', @join(namespace...), "#{basename}.jst.hamlc"]
 
     @actions

@@ -12,7 +12,7 @@ module.exports = class extends Generator
     @template ['layout', "#{template}.coffee"], ['layouts', @join(namespace...), "#{basename}.coffee"],
       namespace_name: namespace.map (x) -> x.camelize()
       class_name: basename.camelize()
-      view_name: @name
+      view_name: basename
 
     @file ['templates', 'layouts', @join(namespace...), "#{basename}.jst.hamlc"]
 

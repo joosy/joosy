@@ -21,4 +21,4 @@ Feather brings a total project restructuring:
 
 ## Incompatible changes
 
-  * ...
+  * Elements now get assigned as `$name' instead of just `name`.

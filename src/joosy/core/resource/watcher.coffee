@@ -27,7 +27,7 @@ class Joosy.Resource.Watcher extends Joosy.Module
 
   clone: ->
     copy = new @constructor(@__cacheKey, @__fetcher)
-    copy.data = Object.clone(data, true)
+    copy.data = Object.clone(@data, true)
     copy
 
   refresh: (callback) ->

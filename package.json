@@ -2,7 +2,7 @@
   "name": "joosy",
   "description": "Joosy JS framework.",
   "keywords": [],
-  "version": "1.1.0-alpha.16",
+  "version": "1.1.0-alpha.17",
   "author": "Boris Staal <boris@staal.io>",
   "bin": {
     "joosy": "bin/joosy"

@@ -4,6 +4,11 @@ class Joosy.Resource.Watcher extends Joosy.Module
   @cache: (cacheKey) -> @::__cacheKey = cacheKey
   @fetcher: (fetcher) -> @::__fetcher = fetcher
 
+  @beforeLoad: (action) ->
+    unless @::hasOwnProperty '__beforeLoads'
+      @::__beforeLoads = [].concat @.__super__.__beforeLoads || []
+    @::__beforeLoads.push action
+
   constructor: (cacheKey=false, fetcher=false) ->
     if Object.isFunction(cacheKey)
       fetcher  = cacheKey
@@ -14,14 +19,14 @@ class Joosy.Resource.Watcher extends Joosy.Module
 
   load: (callback) ->
     if @__cacheKey && localStorage[@__cacheKey]
-      @data = JSON.parse localStorage[@__cacheKey]
+      @data = @prepare(JSON.parse localStorage[@__cacheKey])
       @trigger 'changed'
       @refresh()
       callback? @
     else
       @__fetcher (result) =>
         localStorage[@__cacheKey] = JSON.stringify(result) if @__cacheKey
-        @data = result
+        @data = @prepare result
         @trigger 'changed'
         callback? @
 
@@ -34,6 +39,12 @@ class Joosy.Resource.Watcher extends Joosy.Module
   refresh: (callback) ->
     @__fetcher (result) =>
       localStorage[@__cacheKey] = JSON.stringify(result) if @__cacheKey
-      @data = result
+      @data = @prepare result
       @trigger 'changed'
       callback? @
+
+  prepare: (data) ->
+    if @__beforeLoads?
+      data = bl.call(this, data) for bl in @__beforeLoads
+
+    data

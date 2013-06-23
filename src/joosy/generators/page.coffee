@@ -3,8 +3,9 @@ Generator = require './generator'
 module.exports = class extends Generator
   constructor: (@name, destination, templates) ->
     super(destination, templates)
+    @destination = @join @destination, 'source'
 
-  generate: (skip) ->
+  generate: ->
     namespace = @getNamespace @name
     basename  = @getBasename @name
     template  = if namespace.length > 0 then 'namespaced' else 'basic'

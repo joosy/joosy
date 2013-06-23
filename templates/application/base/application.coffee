@@ -1,4 +1,6 @@
-<%= dependencies %>
+#= require jquery/jquery.js
+#= require jquery-form/jquery.form.js
+#= require sugar/release/sugar-full.min.js
 #
 #= require joosy
 #

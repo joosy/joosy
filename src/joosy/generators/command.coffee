@@ -11,7 +11,10 @@ module.exports = ->
       console.error "Usage: `new :name`. Run `help` for details."
       process.exit(1)
 
-    require('./project').generate name
+    generator = require('./project')
+    generator = new generator(name)
+    generator.generate()
+    generator.perform -> process.exit 0
 
   cli.command /g(enerate)?\s?(.*)/, ->
     params = cli.params.splats[1].split(' ')

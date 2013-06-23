@@ -1,13 +1,13 @@
 File      = require('grunt').file
+Log       = require('grunt').log
 Path      = require('path')
 EJS       = require('ejs')
 Commander = require('commander')
-colors    = require('colors')
 
 module.exports = class
   constructor: (destination, templates) ->
-    @templates   = templates || @join(__dirname, '..', '..', 'templates')
-    @destination = @join (destination || process.cwd()), 'source'
+    @destination = destination || process.cwd()
+    @templates   = templates || @join(__dirname, '..', '..', '..', 'templates')
     @actions     = []
 
   getNamespace: (name) ->
@@ -67,7 +67,7 @@ module.exports = class
   performCopyAction: (callback, destination, source) ->
     write = =>
       File.copy source, @join(@destination, destination)
-      console.log "#{destination} copied...".green
+      Log.ok "#{destination} copied..."
 
     if File.exists(@destination, destination)
       Commander.confirm "#{destination} exists. Overwrite? ", (y) ->
@@ -80,7 +80,7 @@ module.exports = class
   performFileAction: (callback, destination, content) ->
     write = =>
       File.write(@join(@destination, destination), content)
-      console.log "#{destination} generated...".green
+      Log.ok "#{destination} generated..."
 
     if File.exists(@destination, destination)
       Commander.confirm "#{destination} exists. Overwrite? ", (y) ->

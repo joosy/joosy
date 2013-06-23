@@ -44,7 +44,7 @@ Finally, Joosy boosts your development drastically. Just like the Rails framewor
 Add Joosy gem to your Gemfile:
 
 ```ruby
-  gem 'joosy-rails', '~> 1.2.0'
+  gem 'joosy-rails', '~> 1.0.0'
 ```
 
 Using built-in generators you can quickly generate small app inside your Rails app to see Joosy application from inside a bit.

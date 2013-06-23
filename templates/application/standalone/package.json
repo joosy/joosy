@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "joosy": "~1.1.0-alpha.14",
+    "joosy": "~<%= joosy_version %>",
     "connect": "~2.7.11",
     "gzippo": "~0.2.0",
     "mincer": "~0.4.6",

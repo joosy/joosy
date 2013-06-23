@@ -17,7 +17,7 @@ module.exports = (grunt) ->
 
     mince:
       application:
-        include: ['source', 'components', 'vendor', 'node_modules/joosy/lib']
+        include: ['source', 'components', 'vendor', 'node_modules/joosy/src']
         src: 'application.coffee'
         dest: 'public/assets/application.js'
 

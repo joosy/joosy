@@ -4,7 +4,7 @@
   "keywords": [
     "joosy"
   ],
-  "version": "1.2.0-alpha.2",
+  "version": "1.2.0-alpha.3",
   "author": "Boris Staal <boris@staal.io>",
   "bin": {
     "joosy": "bin/joosy"
@@ -20,12 +20,12 @@
     "ejs": "~0.8.4",
     "prompt": "~0.2.9",
     "commander": "~1.2.0",
-    "colors": "~0.6.0-1"
+    "colors": "~0.6.0-1",
+    "grunt": "~0.4.1"
   },
   "devDependencies": {
     "bower": "~0.9.2",
     "mincer": "~0.4.6",
-    "grunt": "~0.4.1",
     "grunt-mincer": "~0.3.1",
     "grunt-contrib-jasmine": "git://github.com/inossidabile/grunt-contrib-jasmine.git#deep-outfile",
     "grunt-contrib-watch": "~0.4.4",

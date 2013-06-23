@@ -126,8 +126,13 @@ module.exports = (grunt) ->
     grunt.util.spawn {cmd: "gem", args: ["build", "joosy.gemspec"]}, (error, result) ->
       return complete false if error
 
-      grunt.util.spawn {cmd: "gem", args: ["push", "joosy-#{meta.version.replace('-', '.')}.gem"]}, (error, result) ->
+      gem = "joosy-#{meta.version.replace('-', '.')}.gem"
+      grunt.log.ok "Built #{gem}"
+
+      grunt.util.spawn {cmd: "gem", args: ["push", gem]}, (error, result) ->
         return complete false if error
+        grunt.log.ok "Published #{gem}"
+        grunt.file.delete gem
         complete(true)
 
   grunt.registerTask 'publish', ['test', 'publish:ensureCommits', 'release', 'publish:gem']

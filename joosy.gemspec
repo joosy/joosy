@@ -14,5 +14,5 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency 'sprockets'
-  s.add_dependency 'haml_coffee_assets'
+  s.add_dependency 'haml_coffee_assets', '>= 1.12.0'
 end

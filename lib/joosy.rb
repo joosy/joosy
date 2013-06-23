@@ -9,8 +9,7 @@ module Joosy
 
   def self.assets_paths
     [
-      File.expand_path('../../src', __FILE__),
-      File.dirname(HamlCoffeeAssets.helpers_path)
+      File.expand_path('../../src', __FILE__)
     ]
   end
 

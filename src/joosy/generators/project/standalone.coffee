@@ -1,9 +1,14 @@
 @Base = require '../base' if module?
 
+#
+# Possible options:
+#
+#   name: name of project
+#
 class ProjectStandalone extends @Base
-  constructor: (@name, destination, templates) ->
-    destination = @join process.cwd(), @name  if !destination? && process?
-    super(destination, templates)
+  constructor: (@options, destination, templates) ->
+    destination = @join process.cwd(), @options.name  if !destination? && process?
+    super(@options, destination, templates)
 
   generate: ->
     @file ['public', '.gitkeep']

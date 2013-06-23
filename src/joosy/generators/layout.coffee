@@ -1,12 +1,14 @@
 @Base = require './base' if module?
 
+#
+# Possible options:
+#
+#   name: name of layout including namespace (i.e. 'foo/bar/baz')
+#
 class Layout extends @Base
-  constructor: (@name, destination, templates) ->
-    super(destination, templates)
-
   generate: ->
-    namespace = @getNamespace @name
-    basename  = @getBasename @name
+    namespace = @getNamespace @options.name
+    basename  = @getBasename @options.name
     template  = if namespace.length > 0 then 'namespaced' else 'basic'
 
     @template ['layout', "#{template}.coffee"], ['layouts', @join(namespace...), "#{basename}.coffee"],

@@ -1,12 +1,14 @@
 @Base = require './base' if module?
 
+#
+# Possible options:
+#
+#   name: name of widget including namespace (i.e. 'foo/bar/baz')
+#
 class Widget extends @Base
-  constructor: (@name, destination, templates) ->
-    super(destination, templates)
-
   generate: ->
-    namespace = @getNamespace @name
-    basename  = @getBasename @name
+    namespace = @getNamespace @options.name
+    basename  = @getBasename @options.name
     template  = if namespace.length > 0 then 'namespaced' else 'basic'
 
     @template ['widget', "#{template}.coffee"], ['widgets', @join(namespace...), "#{basename}.coffee"],

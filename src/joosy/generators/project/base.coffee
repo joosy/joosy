@@ -1,9 +1,14 @@
 @Base = require '../base' if module?
 
+#
+# Possible options:
+#
+#   name: name of project
+#
 class ProjectBase extends @Base
-  constructor: (name, destination, templates) ->
-    super(destination, templates)
-    @name = name.split('/').pop()
+  constructor: (@options, destination, templates) ->
+    super(@options, destination, templates)
+    @options.name = @options.name.split('/').pop()
 
   generate: ->
     @file ['resources', '.gitkeep']
@@ -23,7 +28,7 @@ class ProjectBase extends @Base
 
 
     @template ['application', 'base', 'application.coffee'], ['application.coffee'],
-      application: @name
+      application: @options.name
 
     @actions
 

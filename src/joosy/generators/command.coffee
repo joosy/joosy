@@ -13,7 +13,7 @@ module.exports = ->
       process.exit(1)
 
     generator = require('./project')
-    generator = new generator(name)
+    generator = new generator(name: name)
     generator.generate()
     generator.perform -> process.exit 0
 
@@ -37,7 +37,7 @@ module.exports = ->
       process.exit 1
 
     generator = require("./#{entity}")
-    generator = new generator(name, path.join(process.cwd(), 'source'))
+    generator = new generator({name: name}, path.join(process.cwd(), 'source'))
     generator.generate()
     generator.perform -> process.exit 0
 

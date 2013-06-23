@@ -1,12 +1,14 @@
 @Base = require './base' if module?
 
+#
+# Possible options:
+#
+#   name: name of page including namespace (i.e. 'foo/bar/baz')
+#
 class Page extends @Base
-  constructor: (@name, destination, templates) ->
-    super(destination, templates)
-
   generate: ->
-    namespace = @getNamespace @name
-    basename  = @getBasename @name
+    namespace = @getNamespace @options.name
+    basename  = @getBasename @options.name
     template  = if namespace.length > 0 then 'namespaced' else 'basic'
 
     @template ['page', "#{template}.coffee"], ['pages', @join(namespace...), "#{basename}.coffee"],

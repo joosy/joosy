@@ -6,7 +6,7 @@ if module?
   Commander = require('commander')
 
 class Base
-  constructor: (@destination, @templates) ->
+  constructor: (@options, @destination, @templates) ->
     @destination ||= process?.cwd()
     @templates   ||= @join(__dirname, '..', '..', '..', 'templates') if __dirname?
     @actions       = []

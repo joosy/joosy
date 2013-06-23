@@ -4,7 +4,7 @@
   "keywords": [
     "joosy"
   ],
-  "version": "1.2.0-alpha.5",
+  "version": "1.2.0-alpha.6",
   "author": "Boris Staal <boris@staal.io>",
   "bin": {
     "joosy": "bin/joosy"

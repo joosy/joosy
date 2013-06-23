@@ -3,7 +3,6 @@
 class Widget extends @Base
   constructor: (@name, destination, templates) ->
     super(destination, templates)
-    @destination = @join @destination, 'source'
 
   generate: ->
     namespace = @getNamespace @name

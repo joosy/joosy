@@ -4,7 +4,6 @@ class ProjectBase extends @Base
   constructor: (name, destination, templates) ->
     super(destination, templates)
     @name = name.split('/').pop()
-    @destination = @join @destination, 'source'
 
   generate: ->
     @file ['resources', '.gitkeep']

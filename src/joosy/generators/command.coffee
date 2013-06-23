@@ -3,6 +3,7 @@ module.exports = ->
   cli   = require 'command-router'
   meta  = require '../../../package.json'
   grunt = require 'grunt'
+  path  = require 'path'
 
   cli.command /new\s?(.*)?/, ->
     name = cli.params.splats[0]
@@ -36,7 +37,7 @@ module.exports = ->
       process.exit 1
 
     generator = require("./#{entity}")
-    generator = new generator(name)
+    generator = new generator(name, path.join(process.cwd(), 'source'))
     generator.generate()
     generator.perform -> process.exit 0
 

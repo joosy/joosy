@@ -1,10 +1,11 @@
 Standalone = require './project/standalone'
 Base       = require './project/base'
+Path       = require 'path'
 
 module.exports = class
   constructor: (@name) ->
     @standalone = new Standalone(@name)
-    @base       = new Base(@name, @standalone.destination)
+    @base       = new Base(@name, Path.join(@standalone.destination, 'source'))
 
   generate: ->
     @standalone.generate()

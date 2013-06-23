@@ -21,7 +21,7 @@ class Base
     name.pop()
 
   template: (source, destination, data) ->
-    source = @join(@templates, source...) if source instanceof Array
+    source = @join(source...) if source instanceof Array
     destination = @join(destination...) if destination instanceof Array
 
     @actions.push ['template', destination, source, data]
@@ -32,7 +32,7 @@ class Base
     @actions.push ['file', destination, content]
 
   copy: (source, destination) ->
-    source = @join(@templates, source...) if source instanceof Array
+    source = @join(source...) if source instanceof Array
     destination = @join(destination...) if destination instanceof Array
 
     @actions.push ['copy', destination, source]
@@ -75,7 +75,7 @@ class Base
 
   performCopyAction: (callback, destination, source) ->
     write = =>
-      File.copy source, @join(@destination, destination)
+      File.copy @join(@templates, source), @join(@destination, destination)
       Log.ok "#{destination} copied..."
 
     if File.exists(@destination, destination)
@@ -100,7 +100,7 @@ class Base
       callback()
       
   performTemplateAction: (callback, destination, source, data) ->
-    @performFileAction callback, destination, @compileTemplate(source, data)
+    @performFileAction callback, destination, @compileTemplate(@join(@templates, source), data)
 
 if module?
   module.exports = Base

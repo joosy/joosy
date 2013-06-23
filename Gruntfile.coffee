@@ -116,5 +116,18 @@ module.exports = (grunt) ->
         console.log "Uncommited changes found. Please commit prior to release or use `--force`.".bold
         console.log ""
         complete false
+      else
+        complete true
 
-  grunt.registerTask 'publish', ['test', 'publish:ensureCommits', 'release']
+  grunt.registerTask 'publish:gem', ->
+    meta     = require './package.json'
+    complete = @async()
+
+    grunt.util.spawn {cmd: "gem", args: ["build", "joosy.gemspec"]}, (error, result) ->
+      return complete false if error
+
+      grunt.util.spawn {cmd: "gem", args: ["push", "joosy-#{meta.version.replace('-', '.')}.gem"]}, (error, result) ->
+        return complete false if error
+        complete(true)
+
+  grunt.registerTask 'publish', ['test', 'publish:ensureCommits', 'release', 'publish:gem']

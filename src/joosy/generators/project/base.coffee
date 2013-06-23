@@ -8,7 +8,9 @@
 class ProjectBase extends @Base
   constructor: (@options, destination, templates) ->
     super(@options, destination, templates)
-    @options.name = @options.name.split('/').pop()
+
+    @options.name ||= 'application'
+    @options.name   = @options.name.split('/').pop()
 
   generate: ->
     @file ['resources', '.gitkeep']

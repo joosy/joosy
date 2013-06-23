@@ -31,6 +31,7 @@ class ProjectBase extends @Base
 
     @template ['application', 'base', 'application.coffee'], ['application.coffee'],
       application: @options.name
+      dependencies: @options.dependencies.replace /^\s+|\s+$/g, ''
 
     @actions
 

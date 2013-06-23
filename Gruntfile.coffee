@@ -9,7 +9,7 @@ module.exports = (grunt) ->
   #
   locations =
     source:
-      root: 'joosy/joosy.coffee'
+      root: 'joosy.coffee'
       path: 'src'
       build: 'lib/joosy.js'
     specs:

@@ -1,8 +1,10 @@
 {
   "name": "joosy",
   "description": "Joosy Framework",
-  "keywords": ["joosy"],
-  "version": "1.2.0-alpha.1",
+  "keywords": [
+    "joosy"
+  ],
+  "version": "1.2.0-alpha.2",
   "author": "Boris Staal <boris@staal.io>",
   "bin": {
     "joosy": "bin/joosy"
@@ -26,6 +28,7 @@
     "grunt": "~0.4.1",
     "grunt-mincer": "~0.3.1",
     "grunt-contrib-jasmine": "git://github.com/inossidabile/grunt-contrib-jasmine.git#deep-outfile",
+    "grunt-contrib-watch": "~0.4.4",
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-connect": "~0.3.0",
     "grunt-coffeelint": "0.0.6",

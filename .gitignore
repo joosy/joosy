@@ -3,3 +3,4 @@ components
 .grunt
 index.html
 *.gem
+Gemfile.lock

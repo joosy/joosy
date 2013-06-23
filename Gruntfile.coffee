@@ -107,4 +107,14 @@ module.exports = (grunt) ->
     bower.version = meta.version
     FS.writeFileSync 'bower.json', JSON.stringify(bower, null, 2)
 
-  grunt.registerTask 'publish', ['test', 'release']
+  grunt.registerTask 'publish:ensureCommits', ->
+    complete = @async()
+
+    grunt.util.spawn {cmd: "git", args: ["status", "--porcelain" ]}, (error, result) ->
+      if !!error || result.stdout.length > 0
+        console.log ""
+        console.log "Uncommited changes found. Please commit prior to release or use `--force`.".bold
+        console.log ""
+        complete false
+
+  grunt.registerTask 'publish', ['test', 'publish:ensureCommits', 'release']

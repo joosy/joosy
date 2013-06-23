@@ -1,6 +1,6 @@
-Generator = require './generator'
+@Base = require './base' if module?
 
-module.exports = class extends Generator
+class Layout extends @Base
   constructor: (@name, destination, templates) ->
     super(destination, templates)
     @destination = @join @destination, 'source'
@@ -11,10 +11,15 @@ module.exports = class extends Generator
     template  = if namespace.length > 0 then 'namespaced' else 'basic'
 
     @template ['layout', "#{template}.coffee"], ['layouts', @join(namespace...), "#{basename}.coffee"],
-      namespace_name: namespace.map (x) -> x.camelize()
-      class_name: basename.camelize()
+      namespace_name: (@camelize(x) for x in namespace).join('.')
+      class_name: @camelize(basename)
       view_name: basename
 
     @file ['templates', 'layouts', @join(namespace...), "#{basename}.jst.hamlc"]
 
     @actions
+
+if module?
+  module.exports = Layout
+else
+  @Generator = Layout

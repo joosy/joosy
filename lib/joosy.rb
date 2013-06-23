@@ -1,5 +1,5 @@
-require 'haml_coffee_assets'
 require 'json'
+require 'haml_coffee_assets'
 
 module Joosy
   PACKAGE = File.expand_path("../../package.json", __FILE__)
@@ -12,5 +12,13 @@ module Joosy
       File.expand_path('../../src', __FILE__),
       File.dirname(HamlCoffeeAssets.helpers_path)
     ]
+  end
+
+  def self.generators_path
+    File.expand_path '../../src/joosy/generators', __FILE__
+  end
+
+  def self.templates_path
+    File.expand_path '../../templates', __FILE__
   end
 end

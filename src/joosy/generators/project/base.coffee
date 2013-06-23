@@ -1,8 +1,9 @@
-Generator = require '../generator'
+@Base = require '../base' if module?
 
-module.exports = class extends Generator
-  constructor: (@name, destination, templates) ->
+class ProjectBase extends @Base
+  constructor: (name, destination, templates) ->
     super(destination, templates)
+    @name = name.split('/').pop()
     @destination = @join @destination, 'source'
 
   generate: ->
@@ -26,3 +27,8 @@ module.exports = class extends Generator
       application: @name
 
     @actions
+
+if module?
+  module.exports = ProjectBase
+else
+  @Generator = ProjectBase

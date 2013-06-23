@@ -1,9 +1,8 @@
-meta      = require '../../../../package.json'
-Generator = require '../generator'
+@Base = require '../base' if module?
 
-module.exports = class extends Generator
+class ProjectStandalone extends @Base
   constructor: (@name, destination, templates) ->
-    destination = @join (destination || process.cwd()), @name unless destination?
+    destination = @join process.cwd(), @name  if !destination? && process?
     super(destination, templates)
 
   generate: ->
@@ -20,6 +19,11 @@ module.exports = class extends Generator
                                        ['stylesheets', 'application.styl']
 
     @template ['application', 'standalone', 'package.json'], ['package.json'],
-      joosy_version: meta.version
+      joosy_version: @version()
 
     @actions
+
+if module?
+  module.exports = ProjectStandalone
+else
+  @Generator = ProjectStandalone

@@ -1,14 +1,15 @@
-File      = require('grunt').file
-Log       = require('grunt').log
-Path      = require('path')
-EJS       = require('ejs')
-Commander = require('commander')
+if module?
+  File      = require('grunt').file
+  Log       = require('grunt').log
+  Path      = require('path')
+  EJS       = require('ejs')
+  Commander = require('commander')
 
-module.exports = class
-  constructor: (destination, templates) ->
-    @destination = destination || process.cwd()
-    @templates   = templates || @join(__dirname, '..', '..', '..', 'templates')
-    @actions     = []
+class Base
+  constructor: (@destination, @templates) ->
+    @destination ||= process?.cwd()
+    @templates   ||= @join(__dirname, '..', '..', '..', 'templates') if __dirname?
+    @actions       = []
 
   getNamespace: (name) ->
     name = name.split('/')
@@ -23,9 +24,7 @@ module.exports = class
     source = @join(@templates, source...) if source instanceof Array
     destination = @join(destination...) if destination instanceof Array
 
-    result = @compileTemplate source, data
-
-    @actions.push ['template', destination, result]
+    @actions.push ['template', destination, source, data]
 
   file: (destination, content='') ->
     destination = @join(destination...) if destination instanceof Array
@@ -38,18 +37,28 @@ module.exports = class
 
     @actions.push ['copy', destination, source]
 
-  #
-  # Required but Node-only methods
-  #
-  join: ->
-    Path.join arguments...
+  camelize: (string) ->
+    parts = (part.charAt(0).toUpperCase() + part.substr(1) for part in string.split(/_|-/))
+    parts.join ''
 
-  compileTemplate: (source, data) ->
-    EJS.render File.read(source), data
+  join: ->
+    if Path?
+      Path.join arguments...
+    else
+      Array.prototype.slice.call(arguments, 0).join('/')
+
+  #
+  # Methods that have to be overrided outside of Node.js
+  #
+  version: ->
+    require('../../../package.json').version
 
   #
   # Node-base performer
   #
+  compileTemplate: (source, data) ->
+    EJS.render File.read(source), data
+
   perform: (callback) ->
     actions = @actions.clone()
     @performAction actions.pop(), actions, callback
@@ -90,4 +99,10 @@ module.exports = class
       write()
       callback()
       
-  performTemplateAction: -> @performFileAction arguments...
+  performTemplateAction: (callback, destination, source, data) ->
+    @performFileAction callback, destination, @compileTemplate(source, data)
+
+if module?
+  module.exports = Base
+else
+  @Base = Base

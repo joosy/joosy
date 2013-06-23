@@ -65,7 +65,7 @@ Now run basic application generator with the following command:
 
     joosy new dummy
 
-Now you can `grunt server` to get Joosy placeholder at [localhost:4000/](http://localhost:4000/). Generated application will consist of one `Layout` and one `Page` both including very basic practices of Joosy.
+The main application code will appear at `source` directory. `stylesheets` is for Stylus-based styles and the main canvas of page is defined at `source/index.haml`. Now you can `grunt joosy:server` to start development server at [localhost:4000/](http://localhost:4000/).
 
 To generate assets statically prior to the deployment run
 

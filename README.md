@@ -1,4 +1,4 @@
-# Joosy 1.1: Feather
+# Joosy 1.2: Feather
 
 Feather brings a total project restructuring:
 

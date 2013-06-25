@@ -9,11 +9,10 @@
     "nib": "~0.9.1",
     "haml-coffee": "~1.11.1",
     "grunt": "~0.4.1",
-    "grunt-mincer": "~0.3.1",
+    "grunt-mincer": "git://github.com/inossidabile/grunt-mincer.git",
     "grunt-contrib-connect": "~0.3.0",
     "grunt-contrib-uglify": "~0.2.2",
     "grunt-contrib-watch": "~0.4.4",
-    "grunt-contrib-stylus": "~0.5.0",
     "grunt-contrib-cssmin": "~0.6.1",
     "grunt-bower-task": "~0.2.3",
     "grunt-cli": "~0.1.9"

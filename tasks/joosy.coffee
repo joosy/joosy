@@ -5,13 +5,12 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-mincer'
   grunt.loadNpmTasks 'grunt-contrib-connect'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
-  grunt.loadNpmTasks 'grunt-contrib-stylus'
   grunt.loadNpmTasks 'grunt-contrib-cssmin'
   grunt.loadNpmTasks 'grunt-bower-task'
 
   grunt.registerTask 'joosy:compile', ['joosy:compile:code', 'joosy:compile:styles', 'joosy:compile:playground']
-  grunt.registerTask 'joosy:compile:code', ['mince:application', 'uglify:application']
-  grunt.registerTask 'joosy:compile:styles', ['stylus:application', 'cssmin:application']
+  grunt.registerTask 'joosy:compile:code', ['mince:code', 'uglify:application']
+  grunt.registerTask 'joosy:compile:styles', ['mince:styles', 'cssmin:application']
 
   grunt.registerTask 'joosy:compile:playground', ->
     hamlc = require 'haml-coffee'

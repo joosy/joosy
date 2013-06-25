@@ -16,16 +16,17 @@ module.exports = (grunt) ->
           base: 'public'
 
     mince:
-      application:
+      code:
         include: ['source', 'components', 'vendor', 'node_modules/joosy/src']
         src: 'application.coffee'
         dest: 'public/assets/application.js'
-
-    stylus:
-      application:
-        options:
-          paths: ['stylesheets', 'public']
-        files: 'public/assets/application.css': 'stylesheets/application.styl'
+      styles:
+        include: ['stylesheets', 'public']
+        src: 'application.styl'
+        dest: 'public/assets/application.css'
+        configure: (mincer) ->
+          mincer.StylusEngine.registerConfigurator (stylus) ->
+            stylus.use require('nib')()
 
     uglify:
       application:

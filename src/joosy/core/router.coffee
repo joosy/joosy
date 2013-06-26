@@ -38,6 +38,11 @@ Joosy.Router =
   #
   __namespace: ""
   __asNamespace: ""
+
+  #
+  # Global url prefix
+  #
+  prefix: ''
   
   #
   # Set the restriction pattern. If the requested url does not match this it
@@ -74,7 +79,7 @@ Joosy.Router =
     Joosy.Module.merge @rawRoutes, routes
 
   #
-  # Changes current hash with shebang (#!) and therefore triggers new route loading
+  # Changes current hash and therefore triggers new route loading
   # to be loaded
   #
   # @param [String] to                       Route to navigate to
@@ -83,7 +88,10 @@ Joosy.Router =
   # @option options [Boolean] replaceState   If true uses replaces history entry instead of adding. Works only in browsers supporting history.pushState
   #
   navigate: (to, options={}) ->
-    path = to.replace /^\#?\!?/, '!'
+    path = to
+    path = path.substr(1) if path[0] == '#'
+    path = @prefix + path unless path.startsWith(@prefix)
+
     if options.respond != false
       location.hash = path
     else
@@ -213,7 +221,7 @@ Joosy.Router =
   #
   __respondRoute: (hash) ->
     Joosy.Modules.Log.debug "Router> Answering '#{hash}'"
-    fullPath = hash.replace /^#!?/, ''
+    fullPath = hash.replace ///^(#{@prefix})?///, ''
 
     if (@restrictPattern && fullPath.match(@restrictPattern) == null)
       @trigger 'restricted', fullPath
@@ -291,11 +299,11 @@ Joosy.Router =
   __injectReverseUrl: (as, route) ->
     return if as == undefined
     
-    fnc = (options) ->
+    fnc = (options) =>
       url = route
       (route.match(/\/:[^\/]+/g) || []).each (str) ->
         url = url.replace(str.substr(1), options[str.substr(2)])
-      "#!#{url}"
+      "##{@prefix}#{url}"
 
     Joosy.Helpers.Application["#{as}Path"] = (options) ->
       fnc(options)

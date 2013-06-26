@@ -17,6 +17,7 @@ describe "Joosy.Router", ->
 
   beforeEach ->
     Joosy.Router.reset()
+    Joosy.Router.prefix = '!'
 
   afterEach ->
     $(window).unbind 'hashchange'
@@ -117,7 +118,7 @@ describe "Joosy.Router", ->
 
   it "should navigate", ->
     Joosy.Router.navigate 'test'
-    expect(location.hash).toEqual '#!test'
+    expect(location.hash).toEqual "#!test"
     Joosy.Router.navigate ''
     expect(location.hash).toEqual '#!'
     location.hash = ''

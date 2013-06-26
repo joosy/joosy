@@ -66,6 +66,7 @@ class Joosy.Widget extends Joosy.Module
   # @param [jQuery] container             Container to attach to
   #
   __load: (@parent, @container, render=true) ->
+    @__runBeforeLoads()
     if render && @__renderer
       @swapContainer @container, @__renderer(@data || {})
     @refreshElements()

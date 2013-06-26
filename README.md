@@ -1,8 +1,14 @@
 # Joosy 1.2: Feather
 
+![Joosy](http://f.cl.ly/items/2N2J453J2B353F1A0t0I/joocy1.1.png)
+
+Joosy is a javascript framework. Being a harmonious extensions to Rails it introduces everything you like about backend right to your browser. Ready conventions set, extensive CoffeeScript, HAML support, Helpers, seamless backend integration, automatic code generation and more.
+
 [![NPM version](https://badge.fury.io/js/joosy.png)](http://badge.fury.io/js/joosy)
 [![Build Status](https://travis-ci.org/joosy/joosy.png)](https://travis-ci.org/joosy/joosy)
 [![Dependency Status](https://gemnasium.com/joosy/joosy.png)](https://gemnasium.com/joosy/joosy)
+
+---
 
 ## WARNING!!!
 
@@ -31,11 +37,9 @@ to change or work not as expected while 1.2 branch is still early alpha.
 
 Keep track on what's going on at the [Wiki](https://github.com/joosy/joosy/wiki#12-feather)
 
+---
+
 ## What is Joosy
-
-![Joosy](http://f.cl.ly/items/2N2J453J2B353F1A0t0I/joocy1.1.png)
-
-Joosy is a javascript framework. Being a harmonious extensions to Rails it introduces everything you like about this framework right to your browser. Ready conventions set, extensive CoffeeScript, HAML support, Helpers, seamless backend integration, automatic code generation and more.
 
 Joosy allows you to create web apps which work completely in the browser. So that, it helps you to relocate all your Rails Views to the client side. It also helps you with managing the growing quantity of JS code. On another hand, it makes your backend to have exactly one function – to be a simple REST provider. That leads to easier development support and improves the scalability greatly.
 
@@ -55,7 +59,7 @@ Use built-in generator to seed a basic application:
 
     rails g joosy:application
 
-Make sure to remove `public/index.html` and you are ready to go with [localhost:3000/](http://localhost:3000/). The main application code will appear at `app/assets/javascripts` directory. HTML canvas of the application can be found at `app/views/layouts/joosy.html.erb`.
+Make sure to remove `public/index.html` and you are ready to go with [localhost:3000](http://localhost:3000/). The main application code will appear at `app/assets/javascripts` directory. HTML canvas of the application can be found at `app/views/layouts/joosy.html.erb`.
 
 ### Jump in with Sinatra
 

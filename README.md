@@ -1,5 +1,9 @@
 # Joosy 1.2: Feather
 
+[![NPM version](https://badge.fury.io/js/joosy.png)](http://badge.fury.io/js/joosy)
+[![Build Status](https://travis-ci.org/joosy/joosy.png)](https://travis-ci.org/joosy/joosy)
+[![Dependency Status](https://gemnasium.com/joosy/joosy.png)](https://gemnasium.com/joosy/joosy)
+
 ## WARNING!!!
 
 Master branch is currently totally incompatible with the stable 1.1 and 1.0 branches. 1.2 features

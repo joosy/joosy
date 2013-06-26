@@ -1,10 +1,5 @@
 require 'json'
 
-begin
-  require 'haml_coffee_assets'
-rescue Gem::LoadError # This is required for the first bundle run
-end
-
 module Joosy
   PACKAGE = File.expand_path("../../package.json", __FILE__)
 

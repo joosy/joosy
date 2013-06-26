@@ -221,7 +221,7 @@ Joosy.Router =
   #
   __respondRoute: (hash) ->
     Joosy.Modules.Log.debug "Router> Answering '#{hash}'"
-    fullPath = hash.replace ///^(#{@prefix})?///, ''
+    fullPath = hash.replace ///^\#(#{@prefix})?///, ''
 
     if (@restrictPattern && fullPath.match(@restrictPattern) == null)
       @trigger 'restricted', fullPath

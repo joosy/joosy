@@ -98,6 +98,9 @@ describe "Joosy.Router", ->
     Joosy.Router.__respondRoute '/'
     expect(spies.root.callCount).toEqual 1
 
+    Joosy.Router.__respondRoute '#/'
+    expect(spies.root.callCount).toEqual 2
+
     Joosy.Router.__respondRoute '/page'
     expect(Joosy.Application.setCurrentPage.callCount).toEqual 1
     expect(Joosy.Application.setCurrentPage.args.last()).toEqual [TestPage, Object.extended()]

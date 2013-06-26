@@ -12,8 +12,13 @@ Joosy.Application =
 
   loading: true
   identity: true
-  debug: false
   debounceForms: false
+
+  config:
+    debug: false
+    router:
+      html5: false
+      base:  '/'
 
   #
   # Starts Joosy application by binding to element and bootstraping routes
@@ -23,7 +28,9 @@ Joosy.Application =
   # @param [Object] options
   #
   initialize: (@name, @selector, options={}) ->
-    @[key] = value for key, value of options
+    @mergeConfig(window.JoosyEnvironment) if window.JoosyEnvironment?
+    @mergeConfig(options)
+
     @templater = new Joosy.Templaters.RailsJST @name
 
     Joosy.Router.__setupRoutes()
@@ -53,3 +60,10 @@ Joosy.Application =
   setCurrentPage: (page, params) ->
     attempt = new page(params, @page)
     @page = attempt unless attempt.halted
+
+  mergeConfig: (options) ->
+    for key, value of options
+      if Object.isObject @config[key]
+        Object.merge @config[key], value
+      else
+        @config[key] = value

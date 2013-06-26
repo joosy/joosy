@@ -21,7 +21,7 @@ Joosy.Modules.Log =
   # Runs `log` if debug is active
   #
   debug: (args...) ->
-    return unless Joosy.Application.debug
+    return unless Joosy.Application.config.debug
     @log args...
 
   #
@@ -31,6 +31,6 @@ Joosy.Modules.Log =
   # @param [String] string            Message to log
   #
   debugAs: (context, string, args...) ->
-    return unless Joosy.Application.debug
+    return unless Joosy.Application.config.debug
     context = Joosy.Module.__className(context) || 'unknown context'
     @debug "#{context}> #{string}", args...

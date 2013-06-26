@@ -1,7 +1,7 @@
 describe "Joosy", ->
 
   it "should properly initialize", ->
-    expect(Joosy.Application.debug).toBeFalsy()
+    expect(Joosy.Application.config.debug).toBeFalsy()
     expect(Joosy.Modules).toBeDefined()
     expect(Joosy.Resource).toBeDefined()
 

@@ -7,20 +7,21 @@ describe "Joosy.Router", ->
     section: sinon.spy()
     wildcard: sinon.spy()
 
-  map = Object.extended
-    '/': spies.root
-    '/page': TestPage
-    '/section':
-      '/page/:id': spies.section
-      '/page2/:more': TestPage
-    404: spies.wildcard
+  map =
+    Object.extended
+      '/': spies.root
+      '/page': TestPage
+      '/section':
+        '/page/:id': spies.section
+        '/page2/:more': TestPage
+      404: spies.wildcard
 
   beforeEach ->
     Joosy.Router.reset()
     Joosy.Router.prefix = '!'
 
   afterEach ->
-    $(window).unbind 'hashchange'
+    $(window).off 'hashchange'
 
   it "should map", ->
     Joosy.Router.map map
@@ -124,7 +125,6 @@ describe "Joosy.Router", ->
     expect(location.hash).toEqual "#!test"
     Joosy.Router.navigate ''
     expect(location.hash).toEqual '#!'
-    location.hash = ''
 
   it "should restrict urls", ->
     sinon.stub Joosy.Router, '__respondRoute'

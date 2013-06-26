@@ -98,9 +98,7 @@ Joosy.Router =
       if !history.pushState
         @__ignoreRequest = to
         location.hash = path
-        setTimeout =>
-          @__ignoreRequest = false
-        , 2 # jQuery.hashchange checks hash changing every 1ms
+        setTimeout (=> @__ignoreRequest = false), 0
       else
         history[if options.replaceState then 'replaceState' else 'pushState'] {}, '', '#'+path
         

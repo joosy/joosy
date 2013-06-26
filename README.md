@@ -59,7 +59,7 @@ Use built-in generator to seed a basic application:
 
     rails g joosy:application
 
-Make sure to remove `public/index.html` and you are ready to go with [localhost:3000](http://localhost:3000/). The main application code will appear at `app/assets/javascripts` directory. HTML canvas of the application can be found at `app/views/layouts/joosy.html.erb`.
+Make sure to remove `public/index.html` and you are ready to go with [localhost:3000](http://localhost:3000/). The main application code can be found at `app/assets/javascripts` directory. HTML canvas of the application is at `app/views/layouts/joosy.html.erb`.
 
 ### Jump in with Sinatra
 

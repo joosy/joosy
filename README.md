@@ -86,11 +86,11 @@ You assets are at `public/` directory, enjoy!
   * Ensure you have Node.js available on your system
   * Clone the project
   * Run `npm install` to get required Node modules
-  * Run `bower install` to get require JS components
+  * Run `bower install` to get required JS components
   * Run `grunt test` to run specs once
   * Run `grunt` to watch sources (automatic changes compilations) and run test-server (get your browser to http://localhost:8888/)
 
-While current repository is, at the same time: NPM package, Ruby gem and Bower component – the main Core
+While current repository is at the same time NPM package, Ruby gem and Bower component, – the main Core
 environment is Node.js.
 
 ## Credits

@@ -73,13 +73,13 @@ Now run basic application generator with the following command:
 
     joosy new dummy
 
-The main application code will appear at `source` directory. `stylesheets` is for Stylus-based styles and the main canvas of page is defined at `source/index.haml`. Now you can `grunt joosy:server` to start development server at [localhost:4000/](http://localhost:4000/).
+The main application code will appear at `source` directory. `stylesheets` is for Stylus-based styles and the main canvas of page is defined at `source/index.haml`. Now you can `grunt joosy:server` to start development server at [localhost:4000](http://localhost:4000/).
 
-To generate assets statically prior to the deployment run
+To generate assets statically prior to the deployment run:
 
     grunt joosy:compile
 
-Your assets will appear at `public/` directory.
+You assets are at `public/` directory, enjoy!
 
 ## Hacking
 

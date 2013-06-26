@@ -51,11 +51,11 @@ Add Joosy gem to your Gemfile:
   gem 'joosy-rails', '~> 1.0.0'
 ```
 
-Using built-in generators you can quickly generate small app inside your Rails app to see Joosy application from inside a bit.
+Use built-in generator to seed a basic application:
 
-    rails g joosy:application dummy
+    rails g joosy:application
 
-Now you can run `rails s` to get Joosy placeholder at [localhost:3000/dummy](http://localhost:3000/dummy). Generated application will consist of one `Layout` and one `Page` both including very basic practices of Joosy.
+Make sure to remove `public/index.html` and you are ready to go with [localhost:3000/](http://localhost:3000/). The main application code will appear at `app/assets/javascripts` directory. HTML canvas of the application can be found at `app/views/layouts/joosy.html.erb`.
 
 ### Jump in with Sinatra
 

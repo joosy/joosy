@@ -1,19 +1,19 @@
-describe "Joosy.Resource.Generic", ->
+describe "Joosy.Resources.Base", ->
 
-  class TestInline extends Joosy.Resource.Generic
+  class TestInline extends Joosy.Resources.Base
     @entity 'test_inline'
 
-  class Test extends Joosy.Resource.REST
+  class Test extends Joosy.Resources.REST
     @entity 'test'
     @map 'test_inlines', TestInline
 
-  class TestNode extends Joosy.Resource.Generic
+  class TestNode extends Joosy.Resources.Base
     @entity 'test_node'
     @map 'children', TestNode
     @map 'parent', TestNode
 
   beforeEach ->
-    @resource = Joosy.Resource.Generic.build @data =
+    @resource = Joosy.Resources.Base.build @data =
       foo: 'bar'
       bar: 'baz'
       very:
@@ -24,7 +24,7 @@ describe "Joosy.Resource.Generic", ->
     expect(Test::__primaryKey).toEqual 'id'
 
   it "remembers where it belongs", ->
-    resource = new Joosy.Resource.Generic foo: 'bar'
+    resource = new Joosy.Resources.Base foo: 'bar'
     expect(resource.data).toEqual foo: 'bar'
 
   it "produces magic function", ->
@@ -49,7 +49,7 @@ describe "Joosy.Resource.Generic", ->
     expect(@resource 'another.deep').toEqual value: 'banana strikes back'
 
   it "handles @at", ->
-    class Fluffy extends Joosy.Resource.Generic
+    class Fluffy extends Joosy.Resources.Base
       @entity 'fluffy'
 
     clone = Fluffy.at('rumbas!')
@@ -73,7 +73,7 @@ describe "Joosy.Resource.Generic", ->
     expect(callback.callCount).toEqual(2)
 
   it "handles the before filter", ->
-    class R extends Joosy.Resource.Generic
+    class R extends Joosy.Resources.Base
       @beforeLoad (data) ->
         data ||= {}
         data.tested = true
@@ -84,13 +84,13 @@ describe "Joosy.Resource.Generic", ->
       expect(resource 'tested').toBeTruthy()
 
   it "should map inlines", ->
-    class RumbaMumba extends Joosy.Resource.Generic
+    class RumbaMumba extends Joosy.Resources.Base
       @entity 'rumba_mumba'
 
-    class R extends Joosy.Resource.Generic
+    class R extends Joosy.Resources.Base
       @map 'rumbaMumbas', RumbaMumba
 
-    class S extends Joosy.Resource.Generic
+    class S extends Joosy.Resources.Base
       @map 'rumbaMumba', RumbaMumba
 
     resource = R.build
@@ -98,20 +98,20 @@ describe "Joosy.Resource.Generic", ->
         {foo: 'bar'},
         {bar: 'baz'}
       ]
-    expect(resource('rumbaMumbas') instanceof Joosy.Resource.Collection).toBeTruthy()
+    expect(resource('rumbaMumbas') instanceof Joosy.Resources.Collection).toBeTruthy()
     expect(resource('rumbaMumbas').at(0)('foo')).toEqual 'bar'
 
     resource = S.build
       rumbaMumba: {foo: 'bar'}
-    expect(resource('rumbaMumba') instanceof Joosy.Resource.Generic).toBeTruthy()
+    expect(resource('rumbaMumba') instanceof Joosy.Resources.Base).toBeTruthy()
     expect(resource('rumbaMumba.foo')).toEqual 'bar'
 
   it "should use magic collections", ->
-    class window.RumbaMumbasCollection extends Joosy.Resource.Collection
+    class window.RumbaMumbasCollection extends Joosy.Resources.Collection
 
-    class RumbaMumba extends Joosy.Resource.Generic
+    class RumbaMumba extends Joosy.Resources.Base
       @entity 'rumba_mumba'
-    class R extends Joosy.Resource.Generic
+    class R extends Joosy.Resources.Base
       @map 'rumbaMumbas', RumbaMumba
 
     resource = R.build
@@ -125,12 +125,12 @@ describe "Joosy.Resource.Generic", ->
     window.RumbaMumbasCollection = undefined
 
   it "should use manually set collections", ->
-    class OloCollection extends Joosy.Resource.Collection
+    class OloCollection extends Joosy.Resources.Collection
 
-    class RumbaMumba extends Joosy.Resource.Generic
+    class RumbaMumba extends Joosy.Resources.Base
       @entity 'rumba_mumba'
       @collection OloCollection
-    class R extends Joosy.Resource.Generic
+    class R extends Joosy.Resources.Base
       @map 'rumbaMumbas', RumbaMumba
 
     resource = R.build
@@ -142,7 +142,6 @@ describe "Joosy.Resource.Generic", ->
     expect(resource('rumbaMumbas').at(0)('foo')).toEqual 'bar'
 
   describe "identity map", ->
-
     it "handles builds", ->
       foo = Test.build 1
       bar = Test.build 1

@@ -1,4 +1,5 @@
-class Joosy.Resource.Watcher extends Joosy.Module
+#### !!!UNSPECED ####
+class Joosy.Resources.Watcher extends Joosy.Module
   @include Joosy.Modules.Events
 
   @cache: (cacheKey) -> @::__cacheKey = cacheKey

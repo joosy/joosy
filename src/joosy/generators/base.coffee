@@ -67,7 +67,7 @@ class Base
     method = "perform#{action.shift().camelize()}Action"
     next   = =>
       if actions.length > 0
-        @performAction(actions.pop(), actions, callback) 
+        @performAction(actions.pop(), actions, callback)
       else
         callback()
 

@@ -1,5 +1,5 @@
 describe "Joosy.Helpers.Form", ->
-  class Test extends Joosy.Resource.Generic
+  class Test extends Joosy.Resources.Base
     @entity 'test'
 
   h = Joosy.Helpers.Application

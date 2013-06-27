@@ -1,4 +1,4 @@
-#= require joosy/core/joosy
+#= require ../form
 
 #
 # Form helper
@@ -6,7 +6,7 @@
 Joosy.helpers 'Application', ->
 
   description = (resource, method, extendIds, idSuffix) ->
-    if Joosy.Module.hasAncestor resource.constructor, Joosy.Resource.Generic
+    if Joosy.Module.hasAncestor resource.constructor, Joosy.Resources.Base
       id        = resource.id()
       resource  = resource.__entityName
 

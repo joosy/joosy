@@ -1,6 +1,6 @@
-describe "Joosy.Resource.Collection", ->
+describe "Joosy.Resources.Collection", ->
 
-  class Test extends Joosy.Resource.Generic
+  class Test extends Joosy.Resources.Base
     @entity 'test'
 
   data = '[{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]'
@@ -11,7 +11,7 @@ describe "Joosy.Resource.Collection", ->
     expect(collection.data[0].data.name).toEqual 'test1'
 
   beforeEach ->
-    @collection = new Joosy.Resource.Collection(Test)
+    @collection = new Joosy.Resources.Collection(Test)
 
   it "should initialize", ->
     expect(@collection.model).toEqual Test
@@ -37,7 +37,7 @@ describe "Joosy.Resource.Collection", ->
     expect(callback.callCount).toEqual 0
 
   it "should properly handle the before filter", ->
-    class RC extends Joosy.Resource.Collection
+    class RC extends Joosy.Resources.Collection
       @beforeLoad (data) ->
         data.each (entry, i) ->
           data[i].tested = true

@@ -12,10 +12,28 @@ module.exports = (grunt) ->
       root: 'joosy.coffee'
       path: 'src'
       build: 'lib/joosy.js'
+      extensions: (name) ->
+        root: "joosy/extensions/#{name}"
+        build: "lib/extensions/#{name}.js"
     specs:
-      units: 'spec/**/*_spec.*'
+      units:
+        core: 'spec/joosy/core/**/*_spec.*'
+        extensions: 'spec/joosy/extensions/**/*_spec.*'
       helpers: 'spec/helpers/**/*.*'
       build: '.grunt'
+
+  specOptions = (category, specs) ->
+    host: 'http://localhost:8888/'
+    keepRunner: true
+    outfile: "#{category}.html"
+    vendor: [
+      'components/sinonjs/sinon.js',
+      'components/jquery/jquery.js',
+      'components/jquery-form/jquery.form.js',
+      'components/sugar/release/sugar-full.min.js'
+    ],
+    specs: "#{locations.specs.build}/#{specs}"
+    helpers: locations.specs.build + '/' + locations.specs.helpers
 
   #
   # Grunt extensions
@@ -48,21 +66,33 @@ module.exports = (grunt) ->
       specs:
         options:
           nospawn: true
-        files: [locations.specs.units, locations.specs.helpers]
+        files: [locations.specs.units.core, locations.specs.units.extensions, locations.specs.helpers]
         tasks: ['coffee', 'jasmine']
 
     coffee:
       specs:
         expand: true
-        src: [locations.specs.units, locations.specs.helpers]
+        src: [locations.specs.units.core, locations.specs.units.extensions, locations.specs.helpers]
         dest: locations.specs.build
         ext: '.js'
 
     mince:
-      main:
+      core:
         include: [locations.source.path]
         src: locations.source.root
         dest: locations.source.build
+      preloaders:
+        include: [locations.source.path]
+        src: locations.source.extensions('preloaders').root
+        dest: locations.source.extensions('preloaders').build
+      resources:
+        include: [locations.source.path]
+        src: locations.source.extensions('resources').root
+        dest: locations.source.extensions('resources').build
+      form:
+        include: [locations.source.path]
+        src: locations.source.extensions('form').root
+        dest: locations.source.extensions('form').build
 
     coffeelint:
       source:
@@ -73,20 +103,14 @@ module.exports = (grunt) ->
             level: 'ignore'
 
     jasmine:
-      joosy:
+      core:
+        options: specOptions('core', locations.specs.units.core)
         src: locations.source.build
-        options:
-          host: 'http://localhost:8888/'
-          keepRunner: true
-          outfile: 'index.html'
-          vendor: [
-            'components/sinonjs/sinon.js',
-            'components/jquery/jquery.js',
-            'components/jquery-form/jquery.form.js',
-            'components/sugar/release/sugar-full.min.js'
-          ],
-          specs: locations.specs.build + '/' + locations.specs.units
-          helpers: locations.specs.build + '/' + locations.specs.helpers
+
+      extensions:
+        options: specOptions('extensions', locations.specs.units.extensions)
+        src: [locations.source.build].include ['preloaders', 'resources', 'form'].map (x) ->
+          locations.source.extensions(x).build
 
   grunt.event.on 'watch', (action, filepath) ->
     grunt.config ['coffee', 'specs', 'src'], filepath
@@ -96,7 +120,7 @@ module.exports = (grunt) ->
   #
   grunt.registerTask 'default', ['connect', 'build', 'watch']
 
-  grunt.registerTask 'build', ['mince', 'coffee', 'jasmine:joosy:build', 'bowerize']
+  grunt.registerTask 'build', ['mince', 'coffee', 'jasmine:core:build', 'jasmine:extensions:build', 'bowerize']
 
   grunt.registerTask 'test', ['connect', 'mince', 'coffee', 'bowerize', 'jasmine']
 

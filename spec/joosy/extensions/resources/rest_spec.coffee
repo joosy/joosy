@@ -1,17 +1,17 @@
-describe "Joosy.Resource.REST", ->
+describe "Joosy.Resources.REST", ->
 
-  class FluffyInline extends Joosy.Resource.REST
+  class FluffyInline extends Joosy.Resources.REST
     @entity 'fluffy_inline'
 
-  class FluffyParent extends Joosy.Resource.REST
+  class FluffyParent extends Joosy.Resources.REST
     @entity 'fluffy_parent'
 
-  class Fluffy extends Joosy.Resource.REST
+  class Fluffy extends Joosy.Resources.REST
     @entity 'fluffy'
     @map 'fluffy_inlines', FluffyInline
 
   Joosy.namespace 'Animal', ->
-    class @Cat extends Joosy.Resource.REST
+    class @Cat extends Joosy.Resources.REST
       @entity 'cat'
 
   beforeEach ->
@@ -94,7 +94,7 @@ describe "Joosy.Resource.REST", ->
     rawData = '{"page": 42, "fluffies": [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]}'
 
     callback = sinon.spy (target, data) ->
-      expect(target instanceof Joosy.Resource.RESTCollection).toEqual true
+      expect(target instanceof Joosy.Resources.RESTCollection).toEqual true
       expect(target.size()).toEqual 2
       expect(target.at(0) instanceof Fluffy).toEqual true
       expect(data).toEqual $.parseJSON(rawData)
@@ -174,7 +174,6 @@ describe "Joosy.Resource.REST", ->
         checkAndRespond @server.requests[0], 'DELETE', /^\/fluffies/, rawData
 
   describe "identity map", ->
-
     it "handles finds", ->
       inline = FluffyInline.build(1)
       root   = Fluffy.find 1

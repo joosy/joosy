@@ -1,17 +1,19 @@
+#= require ./collection
+
 #
 # Collection of REST Resources
 #
 # @include Joosy.Modules.Log
 # @include Joosy.Modules.Events
 #
-class Joosy.Resource.RESTCollection extends Joosy.Resource.Collection
+class Joosy.Resources.RESTCollection extends Joosy.Resources.Collection
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
 
   #
   # Refetches the data from backend and triggers `changed`
   #
-  # @param [Hash] options         See {Joosy.Resource.REST.find} for possible options
+  # @param [Hash] options         See {Joosy.Resources.REST.find} for possible options
   # @param [Function] callback    Resulting callback
   #
   reload: (options={}, callback=false) ->

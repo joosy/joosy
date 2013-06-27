@@ -2,7 +2,7 @@
 # Basic data wrapper with triggering and entity name binding
 #
 # @example Basic usage
-#   class R extends Joosy.Resource.Generic
+#   class R extends Joosy.Resources.Base
 #     @entity 'r'
 #
 #     @beforeLoad (data) ->
@@ -18,7 +18,7 @@
 # @include Joosy.Modules.Log
 # @include Joosy.Modules.Events
 #
-class Joosy.Resource.Generic extends Joosy.Module
+class Joosy.Resources.Base extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
 
@@ -34,7 +34,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   # ensure correct garbage collection.
   #
   @resetIdentity: ->
-    Joosy.Resource.Generic.identity = {}
+    Joosy.Resources.Base.identity = {}
 
   #
   # Allows to modify data before it gets stored.
@@ -71,7 +71,7 @@ class Joosy.Resource.Generic extends Joosy.Module
     #
     class Clone extends this
 
-    if entity instanceof Joosy.Resource.Generic
+    if entity instanceof Joosy.Resources.Base
       Clone.__source  = entity.memberPath()
       Clone.__source += '/' + @::__entityName.pluralize() if @::__entityName
     else
@@ -91,18 +91,18 @@ class Joosy.Resource.Generic extends Joosy.Module
   # Sets the collection to use
   #
   # @note By default will try to seek for `EntityNamesCollection`.
-  #   Will fallback to {Joosy.Resource.Collection}
+  #   Will fallback to {Joosy.Resources.Collection}
   #
   # @param [Class] klass       Class to assign as collection
   #
   @collection: (klass) -> @::__collection = -> klass
 
   #
-  # Implements {Joosy.Resource.Generic.collection} default behavior.
+  # Implements {Joosy.Resources.Base.collection} default behavior.
   #
   __collection: ->
     named = @__entityName.camelize().pluralize() + 'Collection'
-    if window[named] then window[named] else Joosy.Resource.Collection
+    if window[named] then window[named] else Joosy.Resources.Collection
 
   #
   # Dynamically creates collection of inline resources.
@@ -111,9 +111,9 @@ class Joosy.Resource.Generic extends Joosy.Module
   #   to handle inline changes with triggers and all that resources stuff
   #
   # @example Basic usage
-  #   class Zombie extends Joosy.Resource.Generic
+  #   class Zombie extends Joosy.Resources.Base
   #     @entity 'zombie'
-  #   class Puppy extends Joosy.Resource.Generic
+  #   class Puppy extends Joosy.Resources.Base
   #     @entity 'puppy'
   #     @map 'zombies'
   #
@@ -134,7 +134,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       throw new Error "#{Joosy.Module.__className @}> class can not be detected for '#{name}' mapping"
 
     @beforeLoad (data) ->
-      klass = klass() unless Joosy.Module.hasAncestor(klass, Joosy.Resource.Generic)
+      klass = klass() unless Joosy.Module.hasAncestor(klass, Joosy.Resources.Base)
 
       @__map(data, name, klass)
 
@@ -142,13 +142,13 @@ class Joosy.Resource.Generic extends Joosy.Module
   # Wraps instance of resource inside shim-function allowing to track
   # data changes. See class example
   #
-  # @return [Joosy.Resource.Generic]
+  # @return [Joosy.Resources.Base]
   #
   @build: (data={}) ->
     klass = @::__entityName
 
-    Joosy.Resource.Generic.identity ||= {}
-    Joosy.Resource.Generic.identity[klass] ||= {}
+    Joosy.Resources.Base.identity ||= {}
+    Joosy.Resources.Base.identity[klass] ||= {}
 
     shim = ->
       shim.__call.apply shim, arguments
@@ -169,11 +169,11 @@ class Joosy.Resource.Generic extends Joosy.Module
     if Joosy.Application.identity
       id = data[shim.__primaryKey]
 
-      if id? && Joosy.Resource.Generic.identity[klass][id]
-        shim = Joosy.Resource.Generic.identity[klass][id]
+      if id? && Joosy.Resources.Base.identity[klass][id]
+        shim = Joosy.Resources.Base.identity[klass][id]
         shim.load data
       else
-        Joosy.Resource.Generic.identity[klass][id] = shim
+        Joosy.Resources.Base.identity[klass][id] = shim
         @apply shim, [data]
     else
       @apply shim, [data]
@@ -200,7 +200,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   #
   # @param [Object] data      Data to store
   #
-  # @return [Joosy.Resource.Generic]      Returns self
+  # @return [Joosy.Resources.Base]      Returns self
   #
   load: (data) ->
     @__fillData data
@@ -215,7 +215,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   __get: (path) ->
     target = @__callTarget path
 
-    if target[0] instanceof Joosy.Resource.Generic
+    if target[0] instanceof Joosy.Resources.Base
       return target[0](target[1])
     else
       return target[0][target[1]]
@@ -229,7 +229,7 @@ class Joosy.Resource.Generic extends Joosy.Module
   __set: (path, value) ->
     target = @__callTarget path
 
-    if target[0] instanceof Joosy.Resource.Generic
+    if target[0] instanceof Joosy.Resources.Base
       target[0](target[1], value)
     else
       target[0][target[1]] = value
@@ -251,7 +251,7 @@ class Joosy.Resource.Generic extends Joosy.Module
 
       for part in path
         target[part] ||= {}
-        if target instanceof Joosy.Resource.Generic
+        if target instanceof Joosy.Resources.Base
           target = target(part)
         else
           target = target[part]
@@ -261,7 +261,7 @@ class Joosy.Resource.Generic extends Joosy.Module
       [@data, path]
 
   #
-  # Wrapper for {Joosy.Resource.Generic.build} magic
+  # Wrapper for {Joosy.Resources.Base.build} magic
   #
   __call: (path, value) ->
     if arguments.length > 1

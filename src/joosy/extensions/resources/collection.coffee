@@ -3,14 +3,14 @@
 # Turns JSON array into array of Resources and manages them.
 #
 # @note You should not use Collection directly. It will be
-#   automatically created by things like {Joosy.Resource.Generic.map}
-#   or {Joosy.Resource.REST.find}.
+#   automatically created by things like {Joosy.Resources.Base.map}
+#   or {Joosy.Resources.REST.find}.
 #
 # @example Basic sample
-#   class R extends Joosy.Resource.Generic
+#   class R extends Joosy.Resources.Base
 #     @entity 'r'
 #
-#   collection = new Joosy.Resource.Collection(R)
+#   collection = new Joosy.Resources.Collection(R)
 #
 #   collection.load [{foo: 'bar'}, {foo: 'baz'}]
 #   collection.each (resource) ->
@@ -18,7 +18,7 @@
 #
 # @include Joosy.Modules.Events
 #
-class Joosy.Resource.Collection extends Joosy.Module
+class Joosy.Resources.Collection extends Joosy.Module
   @include Joosy.Modules.Events
 
   #
@@ -63,7 +63,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   #                                       If hash was given will seek for moodel name camelized and pluralized.
   # @param [Boolean] notify               Indicates whether to trigger 'changed' event
   #
-  # @return [Joosy.Resource.Collection]   Returns self.
+  # @return [Joosy.Resources.Collection]   Returns self.
   #
   load: (entities, notify=true) ->
     if @__beforeLoad?
@@ -110,7 +110,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # @param [Function] description       Callback matcher
   #
-  # @return [Joosy.Resource.Generic]
+  # @return [Joosy.Resources.Base]
   #
   find: (description) ->
     @data.find description
@@ -123,7 +123,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # @param [Integer] id       Id to find
   #
-  # @return [Joosy.Resource.Generic]
+  # @return [Joosy.Resources.Base]
   #
   findById: (id) ->
     @data.find (x) -> x.id().toString() == id.toString()
@@ -133,7 +133,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   #
   # @param [Integer] i    Index
   #
-  # @return [Joosy.Resource.Generic]
+  # @return [Joosy.Resources.Base]
   #
   at: (i) ->
     @data[i]
@@ -145,7 +145,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   # @param [Resource] target    Resource by itself
   # @param [Boolean] notify     Indicates whether to trigger 'changed' event
   #
-  # @return [Joosy.Resource.Generic]        Removed element
+  # @return [Joosy.Resources.Base]        Removed element
   #
   remove: (target, notify=true) ->
     if Object.isNumber target
@@ -165,7 +165,7 @@ class Joosy.Resource.Collection extends Joosy.Module
   # @param [Integer] index          Index to add to. If omited will be pushed to the end
   # @param [Boolean] notify         Indicates whether to trigger 'changed' event
   #
-  # @return [Joosy.Resource.Generic]    Added element
+  # @return [Joosy.Resources.Base]    Added element
   #
   add: (element, index=false, notify=true) ->
     if typeof index is 'number'

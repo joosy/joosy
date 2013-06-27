@@ -1,15 +1,18 @@
+#= require ./base
+#= require ./collection
+
 #
 # Resource with REST/JSON backend
 #
-class Joosy.Resource.REST extends Joosy.Resource.Generic
+class Joosy.Resources.REST extends Joosy.Resources.Base
 
   #
   # Implements `@collection` default behavior.
-  # Changes the default fallback to Joosy.Resource.RESTCollection.
+  # Changes the default fallback to Joosy.Resources.RESTCollection.
   #
   __collection: ->
     named = @__entityName.camelize().pluralize() + 'Collection'
-    if window[named] then window[named] else Joosy.Resource.RESTCollection
+    if window[named] then window[named] else Joosy.Resources.RESTCollection
 
   #
   # Builds parents part of member path based on parents array
@@ -21,7 +24,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   @__parentsPath: (parents) ->
     parents.reduce (path, parent) ->
-      path += if Joosy.Module.hasAncestor parent.constructor, Joosy.Resource.REST
+      path += if Joosy.Module.hasAncestor parent.constructor, Joosy.Resources.REST
         parent.memberPath()
       else
         parent
@@ -30,7 +33,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Builds base path
   #
-  # @param [Hash] options       See {Joosy.Resource.REST.find} for possible options
+  # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
   #
   # @example Basic usage
   #   Resource.basePath() # /resources
@@ -51,7 +54,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Builds base path
   #
-  # @see Joosy.Resource.REST.basePath
+  # @see Joosy.Resources.REST.basePath
   #
   basePath: (options={}) ->
     @constructor.basePath options
@@ -60,7 +63,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   # Builds member path based on the given id.
   #
   # @param [String] id          ID of entity to build member path for
-  # @param [Hash] options       See {Joosy.Resource.REST.find} for possible options
+  # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
   #
   # @example Basic usage
   #   Resource.memberPath(1, from: 'foo') # /resources/1/foo
@@ -73,7 +76,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Builds member path
   #
-  # @param [Hash] options       See {Joosy.Resource.REST.find} for possible options
+  # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
   #
   # @example Basic usage
   #   resource.memberPath(from: 'foo') # /resources/1/foo
@@ -84,7 +87,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Builds collection path
   #
-  # @param [Hash] options       See {Joosy.Resource.REST.find} for possible options
+  # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
   #
   # @example Basic usage
   #   Resource.collectionPath() # /resources/
@@ -97,7 +100,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Builds collection path
   #
-  # @see Joosy.Resource.REST.collectionPath
+  # @see Joosy.Resources.REST.collectionPath
   #
   collectionPath: (options={}) ->
     @constructor.collectionPath options
@@ -217,7 +220,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   # @param [Function] callback    Resulting callback
   #   (will receive retrieved Collection/Resource)
   #
-  # @option options [Joosy.Resource.REST] parent            Sets the given resource as a base path
+  # @option options [Joosy.Resources.REST] parent            Sets the given resource as a base path
   #   i.e. /parents/1/resources
   # @option options [String] parent                         Sets the given staring as a base path
   #   i.e. /trololo/resources
@@ -261,7 +264,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # Refetches the data from backend and triggers `changed`
   #
-  # @param [Hash] options         See {Joosy.Resource.REST.find} for possible options
+  # @param [Hash] options         See {Joosy.Resources.REST.find} for possible options
   # @param [Function] callback    Resulting callback
   #
   reload: (options={}, callback=false) ->

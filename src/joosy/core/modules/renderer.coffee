@@ -89,9 +89,6 @@ Joosy.Modules.Renderer =
     # be passed as a context, not as a argument
     assignContext = false
 
-    isResource    = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Generic
-    isCollection  = Joosy.Module.hasAncestor locals.constructor, Joosy.Resource.Collection
-
     if Object.isString template
       if @__renderSection?
         template = Joosy.Application.templater.resolveTemplate @__renderSection(), template, this
@@ -102,8 +99,8 @@ Joosy.Modules.Renderer =
     else if !Object.isFunction template
       throw new Error "#{Joosy.Module.__className @}> template (maybe @view) does not look like a string or lambda"
 
-    if !Object.isObject(locals) && Object.extended().constructor != locals.constructor && !isResource && !isCollection
-      throw new Error "#{Joosy.Module.__className @}> locals (maybe @data?) not in: dumb hash, Resource, Collection"
+    if !Object.isObject(locals) && Object.extended().constructor != locals.constructor
+      throw new Error "#{Joosy.Module.__className @}> locals (maybe @data?) is not a hash"
 
     renderers =
       render: (template, locals={}) =>
@@ -116,11 +113,7 @@ Joosy.Modules.Renderer =
     context = =>
       data = {}
 
-      if isResource
-        Joosy.Module.merge data, stack.locals.data
-      else
-        Joosy.Module.merge data, stack.locals
-
+      Joosy.Module.merge data, stack.locals
       Joosy.Module.merge data, @__instantiateHelpers(), false
       Joosy.Module.merge data, renderers
       data
@@ -150,25 +143,13 @@ Joosy.Modules.Renderer =
 
       morph.__bindings = []
 
-      if isCollection
-        for resource in locals.data
-          binding = [resource, update]
-          resource.bind 'changed', update
-          stack.metamorphBindings.push binding
-          morph.__bindings.push binding
-      if isResource || isCollection
-        binding = [locals, update]
-        locals.bind 'changed', update
-        stack.metamorphBindings.push binding
-        morph.__bindings.push binding
-      else
-        for key, object of locals
-          if locals.hasOwnProperty key
-            if object?.bind? && object?.unbind?
-              binding = [object, update]
-              object.bind 'changed', update
-              stack.metamorphBindings.push binding
-              morph.__bindings.push binding
+      for key, object of locals
+        if locals.hasOwnProperty key
+          if object?.bind? && object?.unbind?
+            binding = [object, update]
+            object.bind 'changed', update
+            stack.metamorphBindings.push binding
+            morph.__bindings.push binding
 
       morph.outerHTML()
     else

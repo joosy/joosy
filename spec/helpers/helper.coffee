@@ -1,5 +1,5 @@
 beforeEach ->
-  Joosy.Resource.Generic.resetIdentity()
+  Joosy.Resources.Base?.resetIdentity()
 
   window.JST = {}
   $('body').append('<div id="ground">')

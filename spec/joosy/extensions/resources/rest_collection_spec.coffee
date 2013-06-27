@@ -1,11 +1,11 @@
-describe "Joosy.Resource.RESTCollection", ->
+describe "Joosy.Resources.RESTCollection", ->
 
-  class Test extends Joosy.Resource.REST
+  class Test extends Joosy.Resources.REST
     @entity 'test'
 
   beforeEach ->
     @server = sinon.fakeServer.create()
-    @collection = new Joosy.Resource.RESTCollection(Test)
+    @collection = new Joosy.Resources.RESTCollection(Test)
 
   afterEach ->
     @server.restore()
@@ -30,7 +30,7 @@ describe "Joosy.Resource.RESTCollection", ->
     expect(@collection.data[0].data.name).toEqual 'test3'
 
   it "should use own storage", ->
-    class TestsCollection extends Joosy.Resource.RESTCollection
+    class TestsCollection extends Joosy.Resources.RESTCollection
       @model Test
     collection = new TestsCollection()
     collection.add 'test'

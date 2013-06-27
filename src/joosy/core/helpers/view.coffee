@@ -24,14 +24,6 @@ Joosy.helpers 'Application', ->
     temp.innerHTML
 
   #
-  # Converts \n into <br/> in your text
-  #
-  # @param [String] text      Text to convert
-  #
-  @nl2br = (text) ->
-    text.toString().replace /\n/g, '<br/>'
-
-  #
   # Wraps the inline block into given template
   # Request template will receive the inline block as @yield parameter
   #

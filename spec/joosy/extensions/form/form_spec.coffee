@@ -19,7 +19,7 @@ describe "Joosy.Form", ->
     @exactForm = $('#exact')
     @arrayForm = $('#array')
 
-    class Test extends Joosy.Resource.REST
+    class Test extends Joosy.Resources.REST
       @entity 'test'
     @Test = Test
 
@@ -36,7 +36,7 @@ describe "Joosy.Form", ->
           test: 'test'
       EXact:
         MATCH: 'works'
-      items: (new Joosy.Resource.RESTCollection(Test)).load([{attr: 'one'}, {attr: 'two'}])
+      items: (new Joosy.Resources.RESTCollection(Test)).load([{attr: 'one'}, {attr: 'two'}])
       single: Test.build(attr: 'sin')
 
   afterEach ->

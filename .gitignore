@@ -1,6 +1,6 @@
 node_modules
 components
 .grunt
-index.html
+*.html
 *.gem
 Gemfile.lock

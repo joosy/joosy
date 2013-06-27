@@ -1,9 +1,3 @@
-#= require joosy/core/joosy
-#= require joosy/core/modules/module
-#= require joosy/core/modules/log
-#= require joosy/core/modules/events
-#= require joosy/core/modules/container
-
 #
 # AJAXifies form including file uploads and stuff. Built on top of jQuery.Form.
 #
@@ -94,7 +88,7 @@ class Joosy.Form extends Joosy.Module
   #   by returning false from your own error callback. Both of callbacks will run if
   #   you return true.
   #
-  # @option options [Joosy.Resource.Generic] resource      The resource to fill the form with
+  # @option options [Joosy.Resources.Base] resource        The resource to fill the form with
   # @option options [String] resourceName                  The string to use as a resource name prefix for fields to match invalidation
   # @option options [String] action                        Action URL for the form
   # @option options [String] method                        HTTP method, for example PUT, that will passed in _method param
@@ -196,10 +190,10 @@ class Joosy.Form extends Joosy.Module
             input.filter("[value='#{val}']").attr 'checked', 'checked'
           else
             input.val val
-        if val instanceof Joosy.Resource.RESTCollection
+        if val instanceof Joosy.Resources.RESTCollection
           for entity, i in val.data
             filler entity.data, @concatFieldName(scope, "[#{property}_attributes][#{i}]")
-        else if val instanceof Joosy.Resource.REST
+        else if val instanceof Joosy.Resources.REST
           filler val.data, @concatFieldName(scope, "[#{property}_attributes][0]")
         else if Object.isObject(val) || Object.isArray(val)
           filler val, key

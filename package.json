@@ -6,6 +6,11 @@
   ],
   "version": "1.2.0-alpha.16",
   "author": "Boris Staal <boris@staal.io>",
+  "homepage": "http://joosy.ws/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/joosy/joosy.git"
+  },
   "bin": {
     "joosy": "bin/joosy"
   },

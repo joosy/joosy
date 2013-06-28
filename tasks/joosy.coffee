@@ -14,7 +14,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'joosy:compile:playground', ->
     hamlc = require 'haml-coffee'
-    grunt.file.write 'public/index.html', hamlc.compile(grunt.file.read 'source/index.haml')()
+    grunt.file.write 'public/index.html', hamlc.compile(grunt.file.read 'source/index.haml')(environment: 'production')
 
   grunt.registerTask 'joosy:server', ->
     @async()
@@ -38,7 +38,7 @@ module.exports = (grunt) ->
 
     server.use '/', (req, res, next) ->
       if req.url == '/'
-        res.end hamlc.compile(grunt.file.read 'source/index.haml')()
+        res.end hamlc.compile(grunt.file.read 'source/index.haml')(environment: 'development')
       else
         next()
   

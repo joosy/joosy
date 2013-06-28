@@ -28,9 +28,9 @@ module.exports = (grunt) ->
     outfile: "#{category}.html"
     vendor: [
       'components/sinonjs/sinon.js',
+      'components/sugar/release/sugar-full.min.js',
       'components/jquery/jquery.js',
-      'components/jquery-form/jquery.form.js',
-      'components/sugar/release/sugar-full.min.js'
+      'components/jquery-form/jquery.form.js'
     ],
     specs: "#{locations.specs.build}/#{specs}"
     helpers: locations.specs.build + '/' + locations.specs.helpers
@@ -91,8 +91,8 @@ module.exports = (grunt) ->
         dest: locations.source.extensions('resources').build
       form:
         include: [locations.source.path]
-        src: locations.source.extensions('form').root
-        dest: locations.source.extensions('form').build
+        src: locations.source.extensions('resources-form').root
+        dest: locations.source.extensions('resources-form').build
 
     coffeelint:
       source:
@@ -109,7 +109,7 @@ module.exports = (grunt) ->
 
       extensions:
         options: specOptions('extensions', locations.specs.units.extensions)
-        src: [locations.source.build].include ['preloaders', 'resources', 'form'].map (x) ->
+        src: [locations.source.build].include ['preloaders', 'resources', 'resources-form'].map (x) ->
           locations.source.extensions(x).build
 
   grunt.event.on 'watch', (action, filepath) ->

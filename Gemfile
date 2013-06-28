@@ -1,5 +1,6 @@
 source "http://rubygems.org"
 
+gem 'pry'
+
 gemspec
 
-gem 'pry'

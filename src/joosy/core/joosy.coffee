@@ -1,4 +1,4 @@
-#= require_self ./
+#= require_self
 #= require joosy/core/modules/module
 
 #

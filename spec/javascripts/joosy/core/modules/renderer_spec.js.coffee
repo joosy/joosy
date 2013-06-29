@@ -112,41 +112,6 @@ describe "Joosy.Modules.Renderer", ->
     runs ->
       expect(elem.text()).toBe "suck"
 
-  it "renders collections and track its new items", ->
-    class Foo extends Joosy.Resource.Generic
-      @entity 'foo'
-
-    data = new Joosy.Resource.Collection(Foo)
-    data.load [
-      {key: 1},
-      {key: 2}
-    ]
-
-    @TestContainer.view (locals) ->
-      template = -> @data.map((item) -> item('key')).join('')
-      @renderDynamic(template, locals)
-
-    elem = $("<div></div>")
-    @ground.append elem
-    elem.html @dummyContainer.__renderer(data)
-
-    waits 0
-
-    runs ->
-      expect(elem.text()).toBe "12"
-      data.add Foo.build(key: 3)
-
-    waits 0
-
-    runs ->
-      expect(elem.text()).toBe "123"
-      data.at(2)('key', 6)
-
-    waits 0
-
-    runs ->
-      expect(elem.text()).toBe "126"
-
   it "debounces morpher updates", ->
     @TestContainer.view (locals) ->
       template = -> @object.value

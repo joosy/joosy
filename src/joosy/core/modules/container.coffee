@@ -27,13 +27,20 @@ Joosy.Modules.Container =
   #     bar: '.bar'
   #
   refreshElements: ->
-    @__collectElements().each (key, value) =>
-      # TODO: Check for possible collisions?
-      @['$'+key] = @$(value)
+    @__assignElements @, @__collectElements()
 
     if @hasOwnProperty "__onRefreshes"
       @__onRefreshes.each (callback) => callback.apply @
       @__onRefreshes = []
+
+  __assignElements: (root, entries) ->
+    Object.each entries, (key, value) =>
+      if Object.isObject(value)
+        @__assignElements root['$'+key]={}, value
+      else
+        value = @__extractSelector value
+        root['$'+key] = @$(value)
+        root['$'+key].selector = value
 
   #
   # Clears old HTML links, set the new HTML from the callback and refreshes elements
@@ -86,10 +93,16 @@ Joosy.Modules.Container =
   # @param [String] selector            Selector to convert
   #
   __extractSelector: (selector) ->
-    if r = selector.match /\$([A-z]+)/
-      selector = @__collectElements()[r[1]]
+    selector = selector.replace /(\$[A-z0-9\.\$]+)/g, (path) =>
+      path    = path.split('.')
+      keyword = path.pop()
 
-    selector
+      target = @
+      target = target?[part] for part in path
+
+      target?[keyword]?.selector
+
+    selector.trim()
 
   #
   # Bings events defined in 'events' to container
@@ -101,7 +114,7 @@ Joosy.Modules.Container =
   #     'click $foo': -> #this will search for selector of foo element
   #
   __delegateEvents: ->
-    module = this
+    module = @
     events = @__collectEvents()
 
     events.each (key, method) =>

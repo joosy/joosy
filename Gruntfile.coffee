@@ -62,12 +62,12 @@ module.exports = (grunt) ->
     watch:
       source:
         files: [locations.source.path + '/**/*']
-        tasks: ['mince', 'jasmine']
+        tasks: ['mince']
       specs:
         options:
           nospawn: true
         files: [locations.specs.units.core, locations.specs.units.extensions, locations.specs.helpers]
-        tasks: ['coffee', 'jasmine']
+        tasks: ['coffee']
 
     coffee:
       specs:

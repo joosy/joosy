@@ -1,3 +1,5 @@
+#= require joosy/core/joosy
+
 #
 # Basic events implementation
 #

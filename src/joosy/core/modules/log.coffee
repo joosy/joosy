@@ -1,3 +1,5 @@
+#= require joosy/core/joosy
+
 #
 # Wrappers for console.log
 #

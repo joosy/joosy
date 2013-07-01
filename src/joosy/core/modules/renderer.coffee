@@ -1,3 +1,4 @@
+#= require joosy/core/joosy
 #= require_tree ../templaters
 #= require vendor/metamorph
 

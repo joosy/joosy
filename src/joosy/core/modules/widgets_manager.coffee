@@ -1,3 +1,5 @@
+#= require joosy/core/joosy
+
 #
 # Widgets management routines
 #

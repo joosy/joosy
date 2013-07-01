@@ -69,7 +69,10 @@
   # @param [Function] block           Configuration block (see example)
   #
   synchronize: ->
-    Joosy.Modules.Events.synchronize arguments...
+    unless Joosy.Modules.Events
+      console.error "Events module is required to use `Joosy.synchronize'!"
+    else
+      Joosy.Modules.Events.synchronize arguments...
 
   #
   # Generates UUID

@@ -1,3 +1,5 @@
+#= require joosy/core/joosy
+
 #
 # Filters registration routines
 #

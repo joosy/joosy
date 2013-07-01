@@ -1,3 +1,5 @@
+#= require joosy/core/joosy
+
 #
 # Comfortable and clever wrappers for timeouts management
 #

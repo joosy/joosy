@@ -1,3 +1,5 @@
+#= require joosy/core/joosy
+
 #
 # DOM container handling, DOM elements and DOM events bindings
 #

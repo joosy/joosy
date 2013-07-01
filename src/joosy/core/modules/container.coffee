@@ -23,29 +23,12 @@ Joosy.Modules.Container =
   #
   # Rebinds selectors defined in 'elements' hash to object properties
   #
-  # @example Sample elements
-  #   elements:
-  #     foo: '.foo'
-  #     bar: '.bar'
-  #
   refreshElements: ->
     @__assignElements()
 
     if @hasOwnProperty "__onRefreshes"
       @__onRefreshes.each (callback) => callback.apply @
       @__onRefreshes = []
-
-  __assignElements: (root, entries) ->
-    root    ||= @
-    entries ||= @__collectElements()
-
-    Object.each entries, (key, value) =>
-      if Object.isObject(value)
-        @__assignElements root['$'+key]={}, value
-      else
-        value = @__extractSelector value
-        root['$'+key] = @$(value)
-        root['$'+key].selector = value
 
   #
   # Clears old HTML links, set the new HTML from the callback and refreshes elements
@@ -110,7 +93,27 @@ Joosy.Modules.Container =
     selector.trim()
 
   #
-  # Bings events defined in 'events' to container
+  # Assigns elements defined in 'elements'
+  #
+  # @example Sample elements
+  #   elements:
+  #     foo: '.foo'
+  #     bar: '.bar'
+  #
+  __assignElements: (root, entries) ->
+    root    ||= @
+    entries ||= @__collectElements()
+
+    Object.each entries, (key, value) =>
+      if Object.isObject(value)
+        @__assignElements root['$'+key]={}, value
+      else
+        value = @__extractSelector value
+        root['$'+key] = @$(value)
+        root['$'+key].selector = value
+
+  #
+  # Binds events defined in 'events' to container
   #
   # @example Sample events
   #   events:

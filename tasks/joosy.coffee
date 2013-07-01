@@ -1,7 +1,5 @@
 module.exports = (grunt) ->
 
-  Path = require('path')
-
   grunt.loadNpmTasks 'grunt-mincer'
   grunt.loadNpmTasks 'grunt-contrib-connect'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
@@ -14,16 +12,20 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'joosy:compile:playground', ->
     hamlc = require 'haml-coffee'
-    grunt.file.write 'public/index.html', hamlc.compile(grunt.file.read 'source/index.haml')(environment: 'production')
+    grunt.file.write 'public/index.html', hamlc.compile(grunt.file.read 'source/index.haml')(
+      environment: 'production'
+      config: grunt.config.get('joosy.config') || {}
+    )
 
   grunt.registerTask 'joosy:server', ->
     @async()
-    connect = require('connect')
-    mincer  = require('mincer')
-    hamlc   = require('haml-coffee')
+    connect = require 'connect'
+    mincer  = require 'mincer'
+    hamlc   = require 'haml-coffee'
+    path    = require 'path'
 
     mincer.StylusEngine.registerConfigurator (stylus) ->
-      stylus.options.paths.push Path.join(process.cwd(), 'public')
+      stylus.options.paths.push path.join(process.cwd(), 'public')
       stylus.use require('nib')()
 
     server = connect()
@@ -38,12 +40,24 @@ module.exports = (grunt) ->
 
     server.use '/', (req, res, next) ->
       if req.url == '/'
-        res.end hamlc.compile(grunt.file.read 'source/index.haml')(environment: 'development')
+        res.end hamlc.compile(grunt.file.read 'source/index.haml')(
+          environment: 'development'
+          config: grunt.config.get('joosy.config') || {}
+        )
       else
         next()
-  
+
+    if grunt.config.get('joosy.proxy')
+      proxy = require 'proxy-middleware'
+      url   = require 'url'
+
+      for from, to of grunt.config.get('joosy.proxy')
+        console.log "-> Proxying #{from} to #{to}"
+        server.use from, proxy(url.parse to)
+
     server.use connect.static('public')
     server.listen 4000
+    console.log "-> Started on 4000\n"
 
   grunt.registerTask 'joosy:server:production', ->
     @async()

@@ -2,7 +2,10 @@ module.exports = (grunt) ->
 
   grunt.loadNpmTasks 'joosy'
 
-  grunt.initConfig      
+  grunt.initConfig
+    joosy:
+      config: {}
+
     bower:
       install:
         options:

@@ -14,7 +14,7 @@ class ProjectStandalone extends @Base
     @file ['public', '.gitkeep']
     @file ['vendor', '.gitkeep']
 
-    @copy ['application', 'standalone', '.gitignore'],           ['.gitignore']
+    @copy ['application', 'standalone', '_gitignore'],           ['.gitignore']
     @copy ['application', 'standalone', 'bower.json'],           ['bower.json']
     @copy ['application', 'standalone', 'Gruntfile.coffee'],     ['Gruntfile.coffee']
     @copy ['application', 'standalone', 'Procfile'],             ['Procfile']

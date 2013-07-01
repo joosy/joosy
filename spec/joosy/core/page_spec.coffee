@@ -110,7 +110,7 @@ describe "Joosy.Page", ->
         spies.push @box.__fetch = sinon.spy (callback) ->
           expect(@__oneShotEvents[0][0]).toEqual ['dataReceived']
           callback()
-          expect(@__oneShotEvents).toEqual []
+          expect(@__oneShotEvents).toEqual {}
 
         spies.push @box.__paint = sinon.spy (stage, callback) ->
           expect(stage.selector).toEqual @layout.content().selector
@@ -150,7 +150,7 @@ describe "Joosy.Page", ->
         spies.push @box.__fetch = sinon.spy (callback) ->
           expect(@__oneShotEvents[0][0]).toEqual ['dataReceived']
           callback()
-          expect(@__oneShotEvents).toEqual []
+          expect(@__oneShotEvents).toEqual {}
 
         spies.push ApplicationLayout::__paint = sinon.spy (stage, page, callback) ->
           expect(stage.selector).toEqual Joosy.Application.content().selector

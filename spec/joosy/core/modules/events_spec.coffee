@@ -59,17 +59,17 @@ describe "Joosy.Modules.Events", ->
 
     3.times =>
       @box.bind 'event', callback
-    expect(@box.__boundEvents).toEqual [[['event'], callback], [['event'], callback], [['event'], callback]]
+    expect(@box.__boundEvents).toEqual 0: [['event'], callback], 1: [['event'], callback],  2: [['event'], callback]
 
     3.times =>
       @box.wait 'event', callback
-    expect(@box.__oneShotEvents).toEqual [[['event'], callback], [['event'], callback], [['event'], callback]]
+    expect(@box.__oneShotEvents).toEqual 0: [['event'], callback], 1: [['event'], callback], 2: [['event'], callback]
 
   it "should handle inheritance well", ->
     callback = sinon.spy()
     @sub.wait 'foo', callback
 
-    expect(@sub.__oneShotEvents).toEqual [[['foo'], callback]]
+    expect(@sub.__oneShotEvents).toEqual 0: [['foo'], callback]
     expect(@box.__oneShotEvents).toBeUndefined()
 
   it "should be safe for concurrent usage", ->

@@ -18,7 +18,7 @@ total restructuring of the way we build the gem and the way you are supposed to 
 To keep things working please use either
 
 ```ruby
-  gem 'joosy', '~> 1.1.0'
+  gem 'joosy', '~> 1.1.1'
 ```
 
 or

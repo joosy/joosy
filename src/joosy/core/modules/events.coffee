@@ -15,13 +15,13 @@ Joosy.Modules.Events =
   # @param [Hash] options               Options
   #
   wait: (name, events, callback) ->
-    @__oneShotEvents ||= Object.extended()
+    @__oneShotEvents ||= {}
 
     # unnamed binding
     if Object.isFunction(events)
       callback = events
       events   = name
-      name     = @__oneShotEvents.keys().length.toString()
+      name     = Object.keys(@__oneShotEvents).length.toString()
 
     events = @__splitEvents events
     @__validateEvents events
@@ -37,13 +37,13 @@ Joosy.Modules.Events =
   # @param [Hash] options               Options
   #
   bind: (name, events, callback) ->
-    @__boundEvents ||= Object.extended()
+    @__boundEvents ||= {}
 
     # unnamed binding
     if Object.isFunction(events)
       callback = events
       events   = name
-      name     = @__boundEvents.keys().length.toString()
+      name     = Object.keys(@__boundEvents).length.toString()
 
     events = @__splitEvents events
     @__validateEvents events

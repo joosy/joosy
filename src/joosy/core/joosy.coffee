@@ -1,5 +1,5 @@
 #= require_self
-#= require joosy/core/modules/module
+#= require joosy/core/module
 
 #
 # All the tiny core stuff
@@ -55,17 +55,6 @@
   #
   helpers: (name, generator) ->
     Joosy.namespace "Joosy.Helpers.#{name}", generator
-
-  #
-  # Scary `hello world`
-  #
-  test: ->
-    text = "Hi :). I'm Joosy. And everything is just fine!"
-
-    if console
-      console.log text
-    else
-      alert text
 
   #
   # Runs set of callbacks finializing with result callback

@@ -2,7 +2,7 @@
 # Base Joosy class extending Coffee class with module-like injections
 #   and other tiny stuff.
 #
-class Joosy.Module
+class @Joosy.Module
   #
   # Sets the default namespace for all Joosy descendants.
   # This is used in {Joosy.namespace} magic.

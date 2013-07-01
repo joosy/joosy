@@ -27,13 +27,16 @@ Joosy.Modules.Container =
   #     bar: '.bar'
   #
   refreshElements: ->
-    @__assignElements @, @__collectElements()
+    @__assignElements()
 
     if @hasOwnProperty "__onRefreshes"
       @__onRefreshes.each (callback) => callback.apply @
       @__onRefreshes = []
 
   __assignElements: (root, entries) ->
+    root    ||= @
+    entries ||= @__collectElements()
+
     Object.each entries, (key, value) =>
       if Object.isObject(value)
         @__assignElements root['$'+key]={}, value

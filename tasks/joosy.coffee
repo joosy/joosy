@@ -8,7 +8,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-cssmin'
   grunt.loadNpmTasks 'grunt-bower-task'
 
-  grunt.registerTask 'joosy:compile', ['joosy:compile:code', 'joosy:compile:styles', 'joosy:compile:playground']
+  grunt.registerTask 'joosy:compile', ['mince', 'uglify', 'cssmin', 'joosy:compile:playground']
   grunt.registerTask 'joosy:compile:code', ['mince:code', 'uglify:application']
   grunt.registerTask 'joosy:compile:styles', ['mince:styles', 'cssmin:application']
 
@@ -32,7 +32,7 @@ module.exports = (grunt) ->
     assets.appendPath 'stylesheets',
     assets.appendPath 'components'
     assets.appendPath 'vendor'
-    assets.appendPath 'node_modules/joosy/lib'
+    assets.appendPath 'node_modules/joosy/src'
 
     server.use '/assets', mincer.createServer(assets)
 

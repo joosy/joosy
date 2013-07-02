@@ -29,6 +29,8 @@ module.exports = (grunt) ->
         dest: 'public/assets/application.css'
         configure: (mincer) ->
           mincer.StylusEngine.registerConfigurator (stylus) ->
+            stylus.define '$environment', 'development'
+            stylus.define '$config', config: grunt.config.get('joosy.config') || {}
             stylus.use require('nib')()
 
     uglify:

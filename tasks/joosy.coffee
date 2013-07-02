@@ -28,6 +28,8 @@ module.exports = (grunt) ->
 
     mincer.StylusEngine.registerConfigurator (stylus) ->
       stylus.options.paths.push path.join(process.cwd(), 'public')
+      stylus.define '$environment', 'development'
+      stylus.define '$config', config: grunt.config.get('joosy.config') || {}
       stylus.use require('nib')()
 
     server = connect()
@@ -49,11 +51,11 @@ module.exports = (grunt) ->
       else
         next()
 
-    if grunt.config.get('joosy.proxy')
+    if grunt.config.get('joosy.server.proxy')
       proxy = require 'proxy-middleware'
       url   = require 'url'
 
-      for from, to of grunt.config.get('joosy.proxy')
+      for from, to of grunt.config.get('joosy.server.proxy')
         console.log "-> Proxying #{from} to #{to}"
         server.use from, proxy(url.parse to)
 

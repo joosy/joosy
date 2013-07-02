@@ -30,7 +30,7 @@ module.exports = (grunt) ->
         configure: (mincer) ->
           mincer.StylusEngine.registerConfigurator (stylus) ->
             stylus.define '$environment', 'development'
-            stylus.define '$config', config: grunt.config.get('joosy.config') || {}
+            stylus.define '$config', grunt.config.get('joosy.config') || {}
             stylus.use require('nib')()
 
     uglify:

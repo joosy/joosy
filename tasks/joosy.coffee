@@ -29,7 +29,7 @@ module.exports = (grunt) ->
     mincer.StylusEngine.registerConfigurator (stylus) ->
       stylus.options.paths.push path.join(process.cwd(), 'public')
       stylus.define '$environment', 'development'
-      stylus.define '$config', config: grunt.config.get('joosy.config') || {}
+      stylus.define '$config', grunt.config.get('joosy.config') || {}
       stylus.use require('nib')()
 
     server = connect()

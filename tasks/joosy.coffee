@@ -24,6 +24,8 @@ module.exports = (grunt) ->
     hamlc   = require 'haml-coffee'
     path    = require 'path'
 
+    mincer.logger.use console
+
     mincer.StylusEngine.registerConfigurator (stylus) ->
       stylus.options.paths.push path.join(process.cwd(), 'public')
       stylus.use require('nib')()

@@ -66,7 +66,7 @@ module.exports = (grunt) ->
         setup?(server)
         server.listen port
 
-        console.log "=> Started on 4000"
+        console.log "=> Started on 4000\n"
 
       serveProxied: (server, map) ->
         URL   = require 'url'
@@ -93,11 +93,10 @@ module.exports = (grunt) ->
       serveHAML: (server, path='/', source='source/index.haml') ->
         server.use path, (req, res, next) ->
           if req.url == path
+            console.log "Served #{path} (#{source})"
             res.end grunt.joosy.haml.compile(source)
           else
             next()
-
-          console.log "=> Serving HAML at #{path} from #{source}"
 
       serveStatic: (server, compress=false) ->
         Gzippo = require 'gzippo'

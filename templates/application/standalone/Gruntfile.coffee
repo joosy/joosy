@@ -4,7 +4,8 @@ module.exports = (grunt) ->
 
   grunt.initConfig
     joosy:
-      config: {}
+      # config: require('./config.json')
+      # proxy: [ {'/joosy': 'http://joosy.ws'} ]
       assets:
         application:
           src: 'application.coffee'

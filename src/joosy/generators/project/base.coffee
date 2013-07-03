@@ -15,6 +15,7 @@ class ProjectBase extends @Base
   generate: ->
     @file ['resources', '.gitkeep']
     @file ['widgets', '.gitkeep']
+    @file ['templates', 'widgets', '.gitkeep']
 
     @copy ['application', 'base', 'routes.coffee'],                    ['routes.coffee']
     @copy ['application', 'base', 'helpers', 'application.coffee'],    ['helpers', 'application.coffee']

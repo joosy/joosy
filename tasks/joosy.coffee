@@ -115,7 +115,7 @@ module.exports = (grunt) ->
     complete  = @async()
     bowerized = ->
       if process.env['NODE_ENV'] == 'production'
-        grunt.task.run 'joosy:compile'
+        grunt.task.run 'compile'
 
       complete()
 
@@ -142,7 +142,7 @@ module.exports = (grunt) ->
     grunt.joosy.server.start process.env['PORT'] ? 4000, (server) ->
       grunt.joosy.server.serveStatic server, true
 
-  grunt.registerTask 'compile', ['joosy:assets', 'joosy:haml']
+  grunt.registerTask 'joosy:compile', ['joosy:assets', 'joosy:haml']
 
   grunt.registerTask 'joosy:assets', ->
     complete = @async()

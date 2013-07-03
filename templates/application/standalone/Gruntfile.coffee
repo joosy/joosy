@@ -25,8 +25,6 @@ module.exports = (grunt) ->
 
     uglify:
       application:
-        options:
-          sourceMap: 'public/assets/application.js.map'
         files:
           'public/assets/application.js': 'public/assets/application.js'
 

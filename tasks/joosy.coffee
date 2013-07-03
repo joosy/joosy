@@ -26,10 +26,10 @@ module.exports = (grunt) ->
           stylus.use require('nib')()
 
         assets = new Mincer.Environment(process.cwd())
-        assets.appendPath 'source',
-        assets.appendPath 'stylesheets',
-        assets.appendPath 'components'
+        assets.appendPath 'source'
+        assets.appendPath 'stylesheets'
         assets.appendPath 'vendor'
+        assets.appendPath 'components'
         assets.appendPath 'node_modules/joosy/src'
 
         assets

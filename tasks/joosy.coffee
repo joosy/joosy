@@ -110,10 +110,6 @@ module.exports = (grunt) ->
 
     bower: -> require('bower')
 
-  # Dependencies
-  grunt.loadNpmTasks 'grunt-contrib-uglify'
-  grunt.loadNpmTasks 'grunt-contrib-cssmin'
-
   # Tasks
   grunt.registerTask 'joosy:postinstall', ->
     complete  = @async()
@@ -146,9 +142,9 @@ module.exports = (grunt) ->
     grunt.joosy.server.start process.env['PORT'] ? 4000, (server) ->
       grunt.joosy.server.serveStatic server, true
 
-  grunt.registerTask 'joosy:compile', ['joosy:mince', 'joosy:haml', 'uglify', 'cssmin']
+  grunt.registerTask 'compile', ['joosy:assets', 'joosy:haml']
 
-  grunt.registerTask 'joosy:mince', ->
+  grunt.registerTask 'joosy:assets', ->
     complete = @async()
     assets   = grunt.joosy.helpers.list(@, 'joosy.assets', @args[0])
 

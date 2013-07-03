@@ -20,6 +20,7 @@ module.exports = (grunt) ->
           dest: 'public/assets/application.css'
       haml:
         application:
+          path: '/'
           src: 'index.haml'
           dest: 'public/index.html'
 

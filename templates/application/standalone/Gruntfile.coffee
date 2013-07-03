@@ -5,33 +5,17 @@ module.exports = (grunt) ->
   grunt.initConfig
     joosy:
       config: {}
-
-    bower:
-      install:
-        options:
-          copy: false
-          verbose: true
-
-    connect:
-      server:
-        options:
-          port: 4000
-          base: 'public'
-
-    mince:
-      code:
-        include: ['source', 'components', 'vendor', 'node_modules/joosy/src']
-        src: 'application.coffee'
-        dest: 'public/assets/application.js'
-      styles:
-        include: ['stylesheets', 'public']
-        src: 'application.styl'
-        dest: 'public/assets/application.css'
-        configure: (mincer) ->
-          mincer.StylusEngine.registerConfigurator (stylus) ->
-            stylus.define '$environment', 'development'
-            stylus.define '$config', grunt.config.get('joosy.config') || {}
-            stylus.use require('nib')()
+      assets:
+        application:
+          src: 'application.coffee'
+          dest: 'public/assets/application.js'
+        styles:
+          src: 'application.styl'
+          dest: 'public/assets/application.css'
+      haml:
+        application:
+          src: 'index.haml'
+          dest: 'public/index.html'
 
     uglify:
       application:
@@ -41,6 +25,6 @@ module.exports = (grunt) ->
           'public/assets/application.js': 'public/assets/application.js'
 
     cssmin:
-      application:
+      styles:
         files:
           'public/assets/application.css': 'public/assets/application.css'

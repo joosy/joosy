@@ -90,13 +90,21 @@ module.exports = (grunt) ->
 
         console.log "=> Serving assets from #{path}"
 
-      serveHAML: (server, path='/', source='source/index.haml') ->
-        server.use path, (req, res, next) ->
-          if req.url == path
-            console.log "Served #{path} (#{source})"
-            res.end grunt.joosy.haml.compile(source)
-          else
-            next()
+      serveHAML: (server, map) ->
+        return unless map?
+
+        for _, entry of map
+          paths = entry.path
+          paths = [paths] unless Object.isArray(paths)
+
+          for path in paths
+            server.use path, (req, res, next) ->
+              if req.url == path
+                res.end grunt.joosy.haml.compile("source/"+entry.src)
+                console.log "Served #{path} (#{entry.src})"
+              else
+                next()
+          console.log "=> Serving #{entry.src} from #{paths.join(', ')}"
 
       serveStatic: (server, compress=false) ->
         Gzippo = require 'gzippo'
@@ -132,7 +140,7 @@ module.exports = (grunt) ->
     
     grunt.joosy.server.start 4000, (server) ->
       grunt.joosy.server.serveAssets server
-      grunt.joosy.server.serveHAML server
+      grunt.joosy.server.serveHAML server, grunt.config.get('joosy.haml')
       grunt.joosy.server.serveProxied server, grunt.config.get('joosy.server.proxy')
       grunt.joosy.server.serveStatic server
 

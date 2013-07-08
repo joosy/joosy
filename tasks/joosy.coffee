@@ -52,12 +52,14 @@ module.exports = (grunt) ->
               callbacks.success?() if deepness == 0
 
     haml:
-      compile: (file, environment='development') ->
+      compile: (file, partials='./', environment='development') ->
         HAMLC = require 'haml-coffee'
 
         HAMLC.compile(grunt.file.read file)(
           environment: environment
           config: grunt.config.get('joosy.config') || {}
+          partial: (location) ->
+            grunt.joosy.haml.compile(partials+'/'+location, environment)
         )
 
     server:
@@ -99,8 +101,8 @@ module.exports = (grunt) ->
 
           for path in paths
             server.use path, (req, res, next) ->
-              if req.url == '/'
-                res.end grunt.joosy.haml.compile("source/"+entry.src)
+              if req.originalUrl == path
+                res.end grunt.joosy.haml.compile("source/"+entry.src, entry.partials)
                 console.log "Served #{path} (#{entry.src})"
               else
                 next()
@@ -163,5 +165,5 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'joosy:haml', ->
     for _, entry of grunt.joosy.helpers.list(@, 'joosy.haml', @args[0])
-      grunt.file.write entry.dest, grunt.joosy.haml.compile("source/#{entry.src}", 'production')
+      grunt.file.write entry.dest, grunt.joosy.haml.compile("source/#{entry.src}", entry.partials, 'production')
       grunt.log.ok "Compiled #{entry.dest}"

@@ -26,8 +26,8 @@ module.exports = (grunt) ->
           stylus.use require('nib')()
 
         assets = new Mincer.Environment(process.cwd())
-        assets.appendPath 'source'
-        assets.appendPath 'stylesheets'
+        assets.appendPath 'source/javascript'
+        assets.appendPath 'source/stylesheets'
         assets.appendPath 'vendor'
         assets.appendPath 'components'
         assets.appendPath 'node_modules/joosy/src'
@@ -52,7 +52,7 @@ module.exports = (grunt) ->
               callbacks.success?() if deepness == 0
 
     haml:
-      compile: (file, partials='./', environment='development') ->
+      compile: (file, partials='source/haml', environment='development') ->
         HAMLC = require 'haml-coffee'
 
         HAMLC.compile(grunt.file.read file)(
@@ -96,17 +96,19 @@ module.exports = (grunt) ->
         return unless map?
 
         for _, entry of map
-          paths = entry.path
-          paths = [paths] unless Object.isArray(paths)
+          do (_, entry) ->
+            paths = entry.path
+            paths = [paths] unless Object.isArray(paths)
 
-          for path in paths
-            server.use path, (req, res, next) ->
-              if req.originalUrl == path
-                res.end grunt.joosy.haml.compile("source/"+entry.src, entry.partials)
-                console.log "Served #{path} (#{entry.src})"
-              else
-                next()
-          console.log "=> Serving #{entry.src} from #{paths.join(', ')}"
+            for path in paths
+              do (path) ->
+                server.use path, (req, res, next) ->
+                  if req.originalUrl == path
+                    res.end grunt.joosy.haml.compile("source/haml/"+entry.src, entry.partials)
+                    console.log "Served #{path} (#{entry.src})"
+                  else
+                    next()
+            console.log "=> Serving #{entry.src} from #{paths.join(', ')}"
 
       serveStatic: (server, compress=false) ->
         Gzippo = require 'gzippo'
@@ -165,5 +167,5 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'joosy:haml', ->
     for _, entry of grunt.joosy.helpers.list(@, 'joosy.haml', @args[0])
-      grunt.file.write entry.dest, grunt.joosy.haml.compile("source/#{entry.src}", entry.partials, 'production')
+      grunt.file.write entry.dest, grunt.joosy.haml.compile("source/haml/#{entry.src}", entry.partials, 'production')
       grunt.log.ok "Compiled #{entry.dest}"

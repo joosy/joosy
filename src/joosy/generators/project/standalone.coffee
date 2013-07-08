@@ -18,10 +18,12 @@ class ProjectStandalone extends @Base
     @copy ['application', 'standalone', 'bower.json'],           ['bower.json']
     @copy ['application', 'standalone', 'Gruntfile.coffee'],     ['Gruntfile.coffee']
     @copy ['application', 'standalone', 'Procfile'],             ['Procfile']
-    @copy ['application', 'standalone', 'source', 'index.haml'], ['source', 'index.haml']
 
-    @copy ['application', 'standalone', 'stylesheets', 'application.styl'],
-                                       ['stylesheets', 'application.styl']
+    @copy ['application', 'standalone', 'source', 'haml', 'index.haml'], 
+                                       ['source', 'haml', 'index.haml']
+
+    @copy ['application', 'standalone', 'source', 'stylesheets', 'application.styl'],
+                                       ['source', 'stylesheets', 'application.styl']
 
     @template ['application', 'standalone', 'package.json'], ['package.json'],
       joosy_version: @version()

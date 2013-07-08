@@ -7,11 +7,11 @@ module.exports = class
     @options.dependencies = """
                             #= require jquery/jquery.js
                             #= require jquery-form/jquery.form.js
-                            #= require sugar/release/sugar-full.min.js
+                            #= require sugar/release/sugar.min.js
                             """
 
     @standalone = new Standalone(@options)
-    @base       = new Base(@options, Path.join(@standalone.destination, 'source'))
+    @base       = new Base(@options, Path.join(@standalone.destination, 'source/javascript'))
 
   generate: ->
     @standalone.generate()

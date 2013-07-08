@@ -99,7 +99,7 @@ module.exports = (grunt) ->
 
           for path in paths
             server.use path, (req, res, next) ->
-              if req.url == path
+              if req.url == '/'
                 res.end grunt.joosy.haml.compile("source/"+entry.src)
                 console.log "Served #{path} (#{entry.src})"
               else
@@ -157,7 +157,7 @@ module.exports = (grunt) ->
     assets   = grunt.joosy.helpers.list(@, 'joosy.assets', @args[0])
 
     grunt.joosy.assets.compile 'production', assets,
-      error: (msg) -> grunt.fail.fatal msg
+      error: (asset, msg) -> grunt.fail.fatal msg
       compiled: (asset, dest) -> grunt.log.ok "Compiled #{dest}"
       success: complete
 

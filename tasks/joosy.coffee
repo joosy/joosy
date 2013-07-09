@@ -5,29 +5,49 @@ module.exports = (grunt) ->
   connect = require 'connect'
   Mincer  = require 'mincer'
 
+  paths =
+    haml:        Path.join('source', 'haml')
+    javascript:  Path.join('source', 'javascript')
+    stylesheets: Path.join('source', 'stylesheets')
+    public:      'public'
+
   grunt.joosy =
     helpers:
-      list: (task, config, entry) ->
-        entries = grunt.config.get(config) || {} 
-
-        return if entry
-          task.requiresConfig "#{config}.#{entry}"
+      normalizeFiles: (config, target) ->
+        entries = grunt.config.get(config) || {}
+        entries = if target
+          grunt.config.requires "#{config}.#{target}"
           [ entries[entry] ]
         else
           Object.values entries
+
+        entries
+
+      expandFiles: (root, entry) ->
+        root  = Path.join(root, entry.cwd) if entry.cwd?
+        files = grunt.file.expand({cwd: Path.join(process.cwd(), root)}, entry.src)
+
+        return {
+          cwd: root,
+          list: files.map (file) ->
+            src:      file
+            extname:  Path.extname file
+            filename: Path.basename file, Path.extname(file)
+            dirname:  Path.dirname file
+        }
 
     assets:
       instance: (environment='development') ->
         Mincer.logger.use console
         Mincer.StylusEngine.registerConfigurator (stylus) ->
-          stylus.options.paths.push Path.join(process.cwd(), 'public')
+          stylus.options.paths.push Path.join(process.cwd(), paths.public)
           stylus.define '$environment', environment
           stylus.define '$config', grunt.config.get('joosy.config') || {}
           stylus.use require('nib')()
 
         assets = new Mincer.Environment(process.cwd())
-        assets.appendPath 'source/javascript'
-        assets.appendPath 'source/stylesheets'
+        assets.appendPath paths.javascript
+        assets.appendPath paths.stylesheets
         assets.appendPath 'vendor'
         assets.appendPath 'components'
         assets.appendPath 'node_modules/joosy/src'
@@ -52,14 +72,14 @@ module.exports = (grunt) ->
               callbacks.success?() if deepness == 0
 
     haml:
-      compile: (file, partials='source/haml', environment='development') ->
+      compile: (file, partials=paths.haml, environment='development') ->
         HAMLC = require 'haml-coffee'
 
         HAMLC.compile(grunt.file.read file)(
           environment: environment
           config: grunt.config.get('joosy.config') || {}
           partial: (location) ->
-            grunt.joosy.haml.compile(partials+'/'+location, environment)
+            grunt.joosy.haml.compile(Path.join(partials,location), environment)
         )
 
     server:
@@ -93,32 +113,42 @@ module.exports = (grunt) ->
         console.log "=> Serving assets from #{path}"
 
       serveHAML: (server, map) ->
-        return unless map?
+        serve = (urls, template, partials) ->
+          urls = [urls] unless Object.isArray(urls)
 
-        for _, entry of map
-          do (_, entry) ->
-            paths = entry.path
-            paths = [paths] unless Object.isArray(paths)
+          for url in urls
+            do (url) ->
+              server.use url, (req, res, next) ->
+                if req.originalUrl == url
+                  res.end grunt.joosy.haml.compile(template, partials)
+                  console.log "Served #{url} (#{template})"
+                else
+                  next()
+          console.log "=> Serving #{template} from #{urls.join(', ')}"
 
-            for path in paths
-              do (path) ->
-                server.use path, (req, res, next) ->
-                  if req.originalUrl == path
-                    res.end grunt.joosy.haml.compile("source/haml/"+entry.src, entry.partials)
-                    console.log "Served #{path} (#{entry.src})"
-                  else
-                    next()
-            console.log "=> Serving #{entry.src} from #{paths.join(', ')}"
+        for entry in map
+          do (entry) ->
+            unless entry.expand
+              serve(entry.url, Path.join(paths.haml, entry.src), entry.partials)
+            else
+              files = grunt.joosy.helpers.expandFiles(paths.haml, entry)
+
+              for file in files.list
+                serve(
+                  entry.url(file),
+                  Path.join(files.cwd, file.src),
+                  entry.partials
+                )
 
       serveStatic: (server, compress=false) ->
         Gzippo = require 'gzippo'
 
         unless compress
-          server.use connect.static('public')
+          server.use connect.static(paths.public)
         else
-          server.use Gzippo.staticGzip('public')
+          server.use Gzippo.staticGzip(paths.public)
 
-        console.log "=> Serving static from /public"
+        console.log "=> Serving static from /#{paths.public}"
 
     bower: -> require('bower')
 
@@ -144,7 +174,7 @@ module.exports = (grunt) ->
     
     grunt.joosy.server.start 4000, (server) ->
       grunt.joosy.server.serveAssets server
-      grunt.joosy.server.serveHAML server, grunt.config.get('joosy.haml')
+      grunt.joosy.server.serveHAML server, grunt.joosy.helpers.normalizeFiles('joosy.haml')
       grunt.joosy.server.serveProxied server, grunt.config.get('joosy.server.proxy')
       grunt.joosy.server.serveStatic server
 
@@ -156,16 +186,35 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'joosy:compile', ['joosy:assets', 'joosy:haml']
 
-  grunt.registerTask 'joosy:assets', ->
+  grunt.registerTask 'joosy:assets', (target) ->
     complete = @async()
-    assets   = grunt.joosy.helpers.list(@, 'joosy.assets', @args[0])
+    assets   = grunt.joosy.helpers.normalizeFiles('joosy.assets', target)
 
     grunt.joosy.assets.compile 'production', assets,
       error: (asset, msg) -> grunt.fail.fatal msg
       compiled: (asset, dest) -> grunt.log.ok "Compiled #{dest}"
       success: complete
 
-  grunt.registerTask 'joosy:haml', ->
-    for _, entry of grunt.joosy.helpers.list(@, 'joosy.haml', @args[0])
-      grunt.file.write entry.dest, grunt.joosy.haml.compile("source/haml/#{entry.src}", entry.partials, 'production')
-      grunt.log.ok "Compiled #{entry.dest}"
+  grunt.registerTask 'joosy:haml', (target) ->
+    for _, entry of grunt.joosy.helpers.normalizeFiles('joosy.haml', target)
+      unless entry.expand
+        grunt.file.write entry.dest, grunt.joosy.haml.compile(
+            Path.join(paths.haml, entry.src),
+            entry.partials,
+            'production'
+          )
+
+        grunt.log.ok "Compiled #{entry.dest}"
+      else
+        files = grunt.joosy.helpers.expandFiles(paths.haml, entry)
+
+        for file in files.list
+          destination = Path.join entry.dest, file.dirname, file.filename+(entry.ext || '.html')
+
+          grunt.file.write destination, grunt.joosy.haml.compile(
+              Path.join(files.cwd, file.src),
+              entry.partials,
+              'production'
+            )
+
+          grunt.log.ok "Compiled #{destination}"

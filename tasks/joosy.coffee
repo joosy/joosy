@@ -218,3 +218,24 @@ module.exports = (grunt) ->
             )
 
           grunt.log.ok "Compiled #{destination}"
+
+
+  grunt.registerTask 'joosy:clean', ->
+    trash = []
+
+    for entry in grunt.joosy.helpers.normalizeFiles('joosy.assets')
+      trash.push entry.dest
+
+    for entry in grunt.joosy.helpers.normalizeFiles('joosy.haml')
+      unless entry.expand
+        trash.push entry.dest
+      else
+        files = grunt.joosy.helpers.expandFiles(paths.haml, entry)
+
+        for file in files.list
+          trash.push Path.join(entry.dest, file.dirname, file.filename+(entry.ext || '.html'))
+
+    for file in trash
+      if grunt.file.exists(file)
+        grunt.file.delete(file)
+        grunt.log.warn "Removed #{file}"

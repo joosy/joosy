@@ -72,14 +72,15 @@ module.exports = (grunt) ->
               callbacks.success?() if deepness == 0
 
     haml:
-      compile: (file, partials=paths.haml, environment='development') ->
+      compile: (file, partials=paths.haml, environment='development', locals={}) ->
         HAMLC = require 'haml-coffee'
 
         HAMLC.compile(grunt.file.read file)(
-          environment: environment
-          config: grunt.config.get('joosy.config') || {}
-          partial: (location) ->
-            grunt.joosy.haml.compile(Path.join(partials,location), environment)
+          Object.merge locals,
+            environment: environment
+            config: grunt.config.get('joosy.config') || {}
+            partial: (location, locals) ->
+              grunt.joosy.haml.compile(Path.join(partials, location), partials, environment, locals)
         )
 
     server:
@@ -141,11 +142,10 @@ module.exports = (grunt) ->
                 )
 
       serveStatic: (server, compress=false) ->
-        Gzippo = require 'gzippo'
-
         unless compress
           server.use connect.static(paths.public)
         else
+          Gzippo = require 'gzippo'
           server.use Gzippo.staticGzip(paths.public)
 
         console.log "=> Serving static from /#{paths.public}"

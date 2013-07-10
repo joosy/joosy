@@ -49,7 +49,7 @@ module.exports = (grunt) ->
         assets.appendPath paths.javascript
         assets.appendPath paths.stylesheets
         assets.appendPath 'vendor'
-        assets.appendPath 'components'
+        assets.appendPath 'bower_components'
         assets.appendPath 'node_modules/joosy/src'
 
         assets

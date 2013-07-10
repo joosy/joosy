@@ -27,10 +27,10 @@ module.exports = (grunt) ->
     keepRunner: true
     outfile: "#{category}.html"
     vendor: [
-      'components/sinonjs/sinon.js',
-      'components/sugar/release/sugar-full.min.js',
-      'components/jquery/jquery.js',
-      'components/jquery-form/jquery.form.js'
+      'bower_components/sinonjs/sinon.js',
+      'bower_components/sugar/release/sugar-full.min.js',
+      'bower_components/jquery/jquery.js',
+      'bower_components/jquery-form/jquery.form.js'
     ],
     specs: "#{locations.specs.build}/#{specs}"
     helpers: locations.specs.build + '/' + locations.specs.helpers

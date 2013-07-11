@@ -93,13 +93,14 @@ You assets are at `public/` directory, enjoy!
 While current repository is at the same time NPM package, Ruby gem and Bower component, – the main Core
 environment is Node.js.
 
-## Credits
+## Maintainers
 
-* Boris Staal ([@_inossidabile](http://twitter.com/#!/_inossidabile)) [![endorse](http://api.coderwall.com/inossidabile/endorsecount.png)](http://coderwall.com/inossidabile)
-* Andrew Shaydurov ([@ImGearHead](http://twitter.com/#!/ImGearHead))
-* Alexander Pavlenko ([@alerticus](http://twitter.com/#!/alerticus))
-* Peter Zotov ([@whitequark](http://twitter.com/#!/whitequark))
+* Boris Staal, [@inossidabile](http://staal.io)
+* Andrew Shaydurov, [@ImGearHead](http://twitter.com/ImGearHead)
+* Alexander Pavlenko, [@alerticus](http://twitter.com/alerticus)
 
-## LICENSE
+## License
+
+Copyright 2011-2013 [Boris Staal](http://staal.io)
 
 It is free software, and may be redistributed under the terms of MIT license.

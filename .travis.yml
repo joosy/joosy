@@ -5,3 +5,8 @@ before_script:
   - npm install -g grunt-cli
   - ./node_modules/.bin/bower install
 script: "grunt test"
+branches:
+  except:
+    - 1.0
+    - 1.1
+    - gh-pages

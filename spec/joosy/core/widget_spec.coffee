@@ -23,7 +23,7 @@ describe "Joosy.Widget", ->
     spies = [sinon.spy()]
     @TestWidget.view spies[0]
     @parent = new Joosy.Layout()
-    spies.push sinon.spy(@box, 'refreshElements')
+    spies.push sinon.spy(@box, '__assignElements')
     spies.push sinon.spy(@box, '__delegateEvents')
     spies.push sinon.spy(@box, '__runAfterLoads')
     target = @box.__load @parent, @ground

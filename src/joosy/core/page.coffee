@@ -250,13 +250,13 @@ class Joosy.Page extends Joosy.Module
   #
   # Page bootstrap proccess
   #
-  #   * {Joosy.Modules.Container.refreshElements}
+  #   * {Joosy.Modules.Container.__assignElements}
   #   * {Joosy.Modules.Container.__delegateEvents}
   #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
   #   * Scrolling
   #
   __load: ->
-    @refreshElements()
+    @__assignElements()
     @__delegateEvents()
     @__setupWidgets()
     @__runAfterLoads @params, @previous

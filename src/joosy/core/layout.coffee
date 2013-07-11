@@ -133,12 +133,12 @@ class Joosy.Layout extends Joosy.Module
   #
   # Layout bootstrap proccess.
   #
-  #   * {Joosy.Modules.Container.refreshElements}
+  #   * {Joosy.Modules.Container.__assignElements}
   #   * {Joosy.Modules.Container.__delegateEvents}
   #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
   #
   __load: (@container) ->
-    @refreshElements()
+    @__assignElements()
     @__delegateEvents()
     @__setupWidgets()
     @__runAfterLoads()

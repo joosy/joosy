@@ -104,7 +104,7 @@ class Joosy.Form extends Joosy.Module
     @container = $(form)
     return if @container.length == 0
 
-    @refreshElements()
+    @__assignElements()
     @__delegateEvents()
 
     method = @container.get(0).getAttribute('method')?.toLowerCase()
@@ -179,7 +179,7 @@ class Joosy.Form extends Joosy.Module
       data.__joosy_form_filler_lock = true
       Object.each data, (property, val) =>
         key = @concatFieldName scope, property
-        input = @$fields.filter("[name='#{key}']:not(:file),[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
+        input = @$fields("[name='#{key}']:not(:file),[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
         if input.length > 0
           if input.is ':checkbox'
             if val
@@ -246,7 +246,7 @@ class Joosy.Form extends Joosy.Module
   #
   __before: (xhr, settings) ->
     if !@before? || @before(arguments...) is true
-      @$fields.removeClass @invalidationClass
+      @$fields().removeClass @invalidationClass
 
   #
   # Inner error callback.
@@ -292,7 +292,7 @@ class Joosy.Form extends Joosy.Module
   # @param [String] field         Name of field to find
   #
   findField: (field) ->
-    @$fields.filter("[name='#{field}']")
+    @$fields("[name='#{field}']")
 
   #
   # Simulates REST methods by adding hidden _method input with real method

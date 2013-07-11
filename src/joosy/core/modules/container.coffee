@@ -24,8 +24,6 @@ Joosy.Modules.Container =
   # Rebinds selectors defined in 'elements' hash to object properties
   #
   refreshElements: ->
-    @__assignElements()
-
     if @hasOwnProperty "__onRefreshes"
       @__onRefreshes.each (callback) => callback.apply @
       @__onRefreshes = []
@@ -109,7 +107,11 @@ Joosy.Modules.Container =
         @__assignElements root['$'+key]={}, value
       else
         value = @__extractSelector value
-        root['$'+key] = @$(value)
+
+        root['$'+key] = (filter) =>
+          return @$(value) unless filter
+          return @$(value).filter(filter)
+
         root['$'+key].selector = value
 
   #

@@ -58,7 +58,7 @@ class Joosy.Widget extends Joosy.Module
   # Widget bootstrap proccess
   #
   #   * Rendering (if required)
-  #   * {Joosy.Modules.Container.refreshElements}
+  #   * {Joosy.Modules.Container.__assignElements}
   #   * {Joosy.Modules.Container.__delegateEvents}
   #
   # @param [Joosy.Page, Joosy.Layout]     Page or Layout to attach to
@@ -68,7 +68,7 @@ class Joosy.Widget extends Joosy.Module
     @__runBeforeLoads()
     if render && @__renderer
       @swapContainer @container, @__renderer(@data || {})
-    @refreshElements()
+    @__assignElements()
     @__delegateEvents()
     @__setupWidgets()
     @__runAfterLoads()

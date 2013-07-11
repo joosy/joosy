@@ -112,9 +112,6 @@ module.exports = (grunt) ->
         src: [locations.source.build].include ['preloaders', 'resources', 'resources-form'].map (x) ->
           locations.source.extensions(x).build
 
-  grunt.event.on 'watch', (action, filepath) ->
-    grunt.config ['coffee', 'specs', 'src'], filepath
-
   #
   # Tasks
   #

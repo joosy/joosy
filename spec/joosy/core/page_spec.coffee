@@ -65,7 +65,7 @@ describe "Joosy.Page", ->
 
     it "should load itself", ->
       spies = []
-      spies.push sinon.spy(@box, 'refreshElements')
+      spies.push sinon.spy(@box, '__assignElements')
       spies.push sinon.spy(@box, '__delegateEvents')
       spies.push sinon.spy(@box, '__setupWidgets')
       spies.push sinon.spy(@box, '__runAfterLoads')

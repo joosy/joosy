@@ -230,7 +230,7 @@ describe "Joosy.Form", ->
 
     it "should trigger 'success'", ->
       expect(@target.method).toEqual 'POST'
-      expect(@target.url).toEqual '/tests/1'
+      expect(@target.url).toMatch /.*?\/tests\/1/
       @target.respond 200, 'Content-Type': 'application/json', '{"form": "works"}'
       expect(@spy.callCount).toEqual 1
       expect(@spy.args[0][0]).toEqual {form: 'works'}

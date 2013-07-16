@@ -5,13 +5,13 @@ describe "Joosy.Modules.Container", ->
 
     class @TestContainer extends Joosy.Module
       @include Joosy.Modules.Container
-      elements:
+      @mapElements
         posts: '.post'
         content:
           post1: '#post1'
           post2: '#post2'
         footer: '.footer'
-      events:
+      @mapEvents
         'test': 'onContainerTest'
       container: $('#application', @ground)
 
@@ -41,18 +41,17 @@ describe "Joosy.Modules.Container", ->
     expect(callback.callCount).toEqual 1
 
   describe "elements", ->
-    it "inherit declarations", ->
+    it "declares", ->
       class SubContainerA extends @TestContainer
-        elements:
+        @mapElements
           first: 'first'
           second: 'second'
       class SubContainerB extends SubContainerA
-        elements:
+        @mapElements
           first: 'overrided'
           third: 'third'
-      subBox = new SubContainerB()
-      target = subBox.__collectElements()
-      expect(target).toEqual Object.extended
+
+      expect((new SubContainerB()).__elements).toEqual Object.extended
         posts: '.post'
         content: 
           post1: '#post1'
@@ -61,13 +60,15 @@ describe "Joosy.Modules.Container", ->
         second: 'second'
         third: 'third'
         footer: '.footer'
-      target = (new @TestContainer()).__collectElements()
-      expect(target).toEqual Object.extended
+
+      expect((new @TestContainer()).__elements).toEqual Object.extended
         posts: '.post'
         footer: '.footer'
         content: 
           post1: '#post1'
           post2: '#post2'
+
+      console.log (new @TestContainer)
 
     it "resolve selector", ->
       @box.__assignElements()
@@ -113,29 +114,28 @@ describe "Joosy.Modules.Container", ->
       expect(target).toBe @box.$('.footer').get 0
 
   describe "events", ->
-    it "inherit declarations", ->
+    it "declares", ->
       class SubContainerA extends @TestContainer
-        events:
+        @mapEvents
           'test .post': 'callback2'
           'custom' : 'method'
       class SubContainerB extends SubContainerA
-        events:
+        @mapEvents
           'test $footer': 'onFooterTest'
           'custom' : 'overrided'
-      subBox = new SubContainerB()
-      target = subBox.__collectEvents()
+      target = (new SubContainerB()).__events
       expect(target).toEqual Object.extended
         'test': 'onContainerTest'
         'test .post': 'callback2'
         'test $footer': 'onFooterTest'
         'custom' : 'overrided'
-      target = (new @TestContainer()).__collectEvents()
+      target = (new @TestContainer()).__events
       expect(target).toEqual Object.extended('test': 'onContainerTest')
 
     it "delegate", ->
       @box.__assignElements()
       callbacks = 1.upto(3).map -> sinon.spy()
-      @box.events = Object.extended(@box.events).merge
+      @box.__events = Object.extended(@box.__events).merge
         'test .post': callbacks[2]
         'test $footer': 'onFooterTest'
 

@@ -7,6 +7,12 @@
 #
 Joosy.Modules.WidgetsManager =
 
+  included: ->
+    @mapWidgets = (map) ->
+      unless @::hasOwnProperty "__widgets"
+        @::__widgets = Object.clone(@.__super__.__widgets) || {}
+      Object.merge @::__widgets, map
+
   #
   # Registeres and runs widget inside specified container
   #
@@ -21,7 +27,7 @@ Joosy.Modules.WidgetsManager =
       widget = widget()
 
     @__activeWidgets ||= []
-    @__activeWidgets.push widget.__load(this, $(container))
+    @__activeWidgets.push widget.__load(@, $(container))
 
     widget
 
@@ -36,25 +42,15 @@ Joosy.Modules.WidgetsManager =
     @__activeWidgets.splice @__activeWidgets.indexOf(widget), 1
 
   #
-  # Gathers widgets definitions from current and super classes
-  #
-  __collectWidgets: ->
-    widgets = Object.extended @widgets || {}
-
-    klass = this
-    while klass = klass.constructor.__super__
-      Joosy.Module.merge widgets, klass.widgets, false
-
-    widgets
-
-  #
   # Intialize all widgets for current object
   #
   __setupWidgets: ->
-    widgets    = @__collectWidgets()
+    widgets    = @__widgets
     registered = Object.extended()
 
-    widgets.each (selector, widget) =>
+    return unless widgets
+
+    Object.each widgets, (selector, widget) =>
       if selector == '$container'
         activeSelector = @container
       else

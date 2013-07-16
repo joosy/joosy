@@ -29,17 +29,17 @@ describe "Joosy.Modules.WidgetsManager", ->
 
   it "should inherit widget declarations", ->
     @box.container = @ground
-    @TestWidgetManager::widgets =
+    @TestWidgetManager::__widgets =
       'test': 'widget'
     class SubWidgetManagerA extends @TestWidgetManager
-      widgets:
+      @mapWidgets
         'selector': 'widget'
     class SubWidgetManagerB extends SubWidgetManagerA
-      widgets:
+      @mapWidgets
         'widgets': 'widget'
         'selector': 'overriden'
     subBox = new SubWidgetManagerB()
-    target = subBox.__collectWidgets()
+    target = subBox.__widgets
     expect(target).toEqual Object.extended
       'test': 'widget'
       'widgets':  'widget'
@@ -48,17 +48,17 @@ describe "Joosy.Modules.WidgetsManager", ->
   it "should register widgets per declaration", ->
     @seedGround()
     @box.container = $('#application')
-    @box.elements = {footer: '.footer'}
-    @box.widgets =
+    @box.__elements = {footer: '.footer'}
+    @box.__widgets =
       '$container': Joosy.Widget
       '$footer': Joosy.Widget
       '.post': sinon.stub()
-    @box.widgets['.post'].returns @widgetMock
+    @box.__widgets['.post'].returns @widgetMock
     @box.__assignElements()
     @box.__setupWidgets()
     expect(@box.__activeWidgets.length).toEqual 5
-    expect(@box.widgets['.post'].callCount).toEqual 3
-    expect(@box.widgets['.post'].getCall(0).calledOn @box).toBeTruthy()
+    expect(@box.__widgets['.post'].callCount).toEqual 3
+    expect(@box.__widgets['.post'].getCall(0).calledOn @box).toBeTruthy()
 
   it "should bootstrap widget properly", ->
     class TextWidget extends Joosy.Widget
@@ -67,7 +67,7 @@ describe "Joosy.Modules.WidgetsManager", ->
 
     @seedGround()
     @box.container = $('#application')
-    @box.widgets =
+    @box.__widgets =
       '.post:first': TextWidget
       '.widget:first': (i) -> new TextWidget i
     @box.__setupWidgets()

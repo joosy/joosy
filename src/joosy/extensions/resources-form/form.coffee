@@ -40,7 +40,7 @@ class Joosy.Form extends Joosy.Module
   #
   # List of elements for internal usage
   #
-  elements:
+  @mapElements
     'fields': 'input,select,textarea'
 
   #

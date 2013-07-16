@@ -8,10 +8,18 @@
 # @mixin
 #
 Joosy.Modules.Container =
-  events: false
-  elements: false
-
   eventSplitter: /^(\S+)\s*(.*)$/
+
+  included: ->
+    @mapElements = (map) ->
+      unless @::hasOwnProperty "__elements"
+        @::__elements = Object.clone(@.__super__.__elements) || {}
+      Object.merge @::__elements, map
+
+    @mapEvents = (map) ->
+      unless @::hasOwnProperty "__events"
+        @::__events = Object.clone(@.__super__.__events) || {}
+      Object.merge @::__events, map
 
   onRefresh: (callback) ->
     @__onRefreshes = [] unless @hasOwnProperty "__onRefreshes"
@@ -50,30 +58,6 @@ Joosy.Modules.Container =
     container
 
   #
-  # Gathers 'elements' from current and super classes
-  #
-  __collectElements: ->
-    elements = Object.extended @elements || {}
-
-    klass = this
-    while klass = klass.constructor.__super__
-      Joosy.Module.merge elements, klass.elements, false
-
-    elements
-
-  #
-  # Gathers 'events' from current and super classes
-  #
-  __collectEvents: ->
-    events = Object.extended @events || {}
-
-    klass = this
-    while klass = klass.constructor.__super__
-      Joosy.Module.merge events, klass.events, false
-
-    events
-
-  #
   # Converts '$...' notation to selector from 'elements'
   #
   # @param [String] selector            Selector to convert
@@ -94,13 +78,15 @@ Joosy.Modules.Container =
   # Assigns elements defined in 'elements'
   #
   # @example Sample elements
-  #   elements:
+  #   @mapElements
   #     foo: '.foo'
   #     bar: '.bar'
   #
   __assignElements: (root, entries) ->
     root    ||= @
-    entries ||= @__collectElements()
+    entries ||= @__elements
+
+    return unless entries
 
     Object.each entries, (key, value) =>
       if Object.isObject(value)
@@ -118,16 +104,18 @@ Joosy.Modules.Container =
   # Binds events defined in 'events' to container
   #
   # @example Sample events
-  #   events:
+  #   @mapEvents
   #     'click': -> # this will raise on container click
   #     'click .foo': -> # this will raise on .foo click
   #     'click $foo': -> #this will search for selector of foo element
   #
   __delegateEvents: ->
     module = @
-    events = @__collectEvents()
+    events = @__events
 
-    events.each (key, method) =>
+    return unless events
+
+    Object.each events, (key, method) =>
       unless Object.isFunction method
         method = @[method]
       callback = (event) ->

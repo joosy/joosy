@@ -110,7 +110,7 @@
         callback?()
 
     for p in images
-      result.push $('<img/>').load(checker).error(checker).attr('src', p)
+      result.push $('<img/>').on('load', checker).on('error', checker).attr('src', p)
 
     result
 

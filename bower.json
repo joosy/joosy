@@ -19,6 +19,7 @@
     "jquery-form": "latest"
   },
   "devDependencies": {
-    "sinonjs": "~1.7.1"
+    "sinonjs": "~1.7.1",
+    "zepto": "~1.0.0"
   }
 }

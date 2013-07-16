@@ -22,16 +22,14 @@ module.exports = (grunt) ->
       helpers: 'spec/helpers/**/*.*'
       build: '.grunt'
 
-  specOptions = (category, specs) ->
+  specOptions = (category, specs, vendor=[]) ->
     host: 'http://localhost:8888/'
     keepRunner: true
     outfile: "#{category}.html"
     vendor: [
       'bower_components/sinonjs/sinon.js',
-      'bower_components/sugar/release/sugar-full.min.js',
-      'bower_components/jquery/jquery.js',
-      'bower_components/jquery-form/jquery.form.js'
-    ],
+      'bower_components/sugar/release/sugar-full.min.js'
+    ].concat(vendor),
     specs: "#{locations.specs.build}/#{specs}"
     helpers: locations.specs.build + '/' + locations.specs.helpers
 
@@ -104,11 +102,21 @@ module.exports = (grunt) ->
 
     jasmine:
       core:
-        options: specOptions('core', locations.specs.units.core)
+        options: specOptions('core', locations.specs.units.core, [
+            'bower_components/jquery/jquery.js'
+          ])
         src: locations.source.build
 
+      zepto:
+        options: specOptions('zepto', locations.specs.units.core, [
+            'bower_components/zepto/zepto.js'
+          ])
+        src: locations.source.build
       extensions:
-        options: specOptions('extensions', locations.specs.units.extensions)
+        options: specOptions('extensions', locations.specs.units.extensions, [
+            'bower_components/jquery/jquery.js',
+            'bower_components/jquery-form/jquery.form.js'
+          ])
         src: [locations.source.build].include ['preloaders', 'resources', 'resources-form'].map (x) ->
           locations.source.extensions(x).build
 

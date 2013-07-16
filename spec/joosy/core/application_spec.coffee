@@ -11,8 +11,6 @@ describe "Joosy.Application", ->
     Joosy.Application.initialize 'app', '#application', router: {foo: 'bar'}
     expect(Joosy.Application.page).toBeUndefined()
     expect(Joosy.Application.selector).toEqual '#application'
-    expect(Joosy.Application.sandboxSelector).toMatch /#[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}/
-    expect($(Joosy.Application.sandboxSelector).length).toEqual 1
     expect(Joosy.Router.__setupRoutes.callCount).toEqual 1
     expect(Joosy.Application.name).toEqual 'app'
     expect(Joosy.Application.config.router.foo).toEqual 'bar'

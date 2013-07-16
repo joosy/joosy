@@ -35,10 +35,6 @@ Joosy.Application =
 
     Joosy.Router.__setupRoutes()
 
-    @sandboxSelector = Joosy.uuid()
-    @content().after "<div id='#{@sandboxSelector}' style='display:none'></div>"
-    @sandboxSelector = '#' + @sandboxSelector
-
   #
   # Gets current application root node
   #

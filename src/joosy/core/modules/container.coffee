@@ -131,7 +131,7 @@ Joosy.Modules.Container =
       unless Object.isFunction method
         method = @[method]
       callback = (event) ->
-        method.call module, this, event
+        method.call module, $(this), event
 
       match      = key.match @eventSplitter
       eventName  = match[1]

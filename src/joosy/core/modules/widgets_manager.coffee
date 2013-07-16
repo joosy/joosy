@@ -58,9 +58,7 @@ Joosy.Modules.WidgetsManager =
       if selector == '$container'
         activeSelector = @container
       else
-        if r = selector.match /\$([A-z_]+)/
-          selector = @elements[r[1]]
-
+        selector = @__extractSelector(selector) if @__extractSelector?
         activeSelector = $(selector, @container)
 
       registered[selector] = Object.extended()

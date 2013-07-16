@@ -75,6 +75,13 @@
       Joosy.Modules.Events.synchronize arguments...
 
   #
+  # Generates ID unique within current run
+  #
+  uid: ->
+    @__uid ||= 0
+    "__joosy#{@__uid++}"
+
+  #
   # Generates UUID
   #
   uuid: ->

@@ -3,6 +3,8 @@ describe "Joosy.Modules.WidgetsManager", ->
   beforeEach ->
     class @TestWidgetManager extends Joosy.Module
       @include Joosy.Modules.WidgetsManager
+      @include Joosy.Modules.Container
+
     @box = new @TestWidgetManager()
     @widgetMock = Object.extended(
       __load: sinon.stub()
@@ -52,6 +54,7 @@ describe "Joosy.Modules.WidgetsManager", ->
       '$footer': Joosy.Widget
       '.post': sinon.stub()
     @box.widgets['.post'].returns @widgetMock
+    @box.__assignElements()
     @box.__setupWidgets()
     expect(@box.__activeWidgets.length).toEqual 5
     expect(@box.widgets['.post'].callCount).toEqual 3

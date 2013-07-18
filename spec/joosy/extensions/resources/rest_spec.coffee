@@ -1,5 +1,8 @@
 describe "Joosy.Resources.REST", ->
 
+  beforeEach ->
+    Joosy.Resources.Base?.resetIdentity()
+
   class FluffyInline extends Joosy.Resources.REST
     @entity 'fluffy_inline'
 

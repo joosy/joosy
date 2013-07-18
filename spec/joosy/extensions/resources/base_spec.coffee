@@ -1,5 +1,8 @@
 describe "Joosy.Resources.Base", ->
 
+  beforeEach ->
+    Joosy.Resources.Base?.resetIdentity()
+
   class TestInline extends Joosy.Resources.Base
     @entity 'test_inline'
 

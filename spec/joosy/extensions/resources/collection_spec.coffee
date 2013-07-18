@@ -1,5 +1,8 @@
 describe "Joosy.Resources.Collection", ->
 
+  beforeEach ->
+    Joosy.Resources.Base?.resetIdentity()
+
   class Test extends Joosy.Resources.Base
     @entity 'test'
 

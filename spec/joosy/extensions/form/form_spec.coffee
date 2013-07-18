@@ -1,6 +1,8 @@
 describe "Joosy.Form", ->
 
   beforeEach ->
+    Joosy.Resources.Base?.resetIdentity()
+
     @server = sinon.fakeServer.create()
     @seedGround()
     @nudeForm = "<form id='nude'><input name='test[foo]'/><input name='test[bar]'/><input name='test[bool]' type='checkbox' value='1'/><input name='test[set]' type='radio' value='qwe' /><input name='test[set]' type='radio' value='zxc' /></form>"

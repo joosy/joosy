@@ -111,6 +111,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @get: (options, callback) ->
     if Object.isFunction(options)
@@ -124,6 +125,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @post: (options, callback) ->
     if Object.isFunction(options)
@@ -137,6 +139,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @put: (options, callback) ->
     if Object.isFunction(options)
@@ -150,6 +153,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @delete: (options, callback) ->
     if Object.isFunction(options)
@@ -163,6 +167,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   get: (options, callback) ->
     if Object.isFunction(options)
@@ -176,6 +181,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   post: (options, callback) ->
     if Object.isFunction(options)

@@ -1,21 +1,23 @@
 beforeEach ->
   @addMatchers
+
     toBeSequenced: ->
+      # Are we working with array?
       if !Object.isArray(@actual) || @actual.length == 0
-        @message = -> 'toBeSequenced: not array or empty array given'
+        @message = -> 'Not array or empty array given'
         return false
-      i = 0
-      for spy in @actual
+
+      # Was every spy called just once?
+      for spy, i in @actual
         unless spy.callCount == 1
-          @message = -> "toBeSequenced: spy ##{i} was called #{spy.callCount} times"
+          @message = -> "Spy ##{i} was called #{spy.callCount} times instead of just one"
           return false
-        i++
+
+      # Were they called in a proper order?
       if @actual.length > 1
-        for spy in @actual.from(1)
-          i = @actual.indexOf spy
-          previous = @actual[i - 1]
-          unless spy.calledAfter previous
-            @message = -> "toBeSequenced: spy ##{i} wasn't called after spy ##{i - 1}"
+        for spy, i in @actual.from(1)
+          unless spy.calledAfter @actual[i]
+            @message = -> "Spy ##{i+1} wasn't called after spy ##{i}"
             return false
 
       return true
@@ -25,16 +27,24 @@ beforeEach ->
         "Expected #{@actual} to be a tag #{tagName} with attributes #{JSON.stringify attrs} and content #{content}"
 
       tag = $ @actual
-      flag = true
 
-      flag = flag && tag.length == 1
-      flag = flag && tag[0].nodeName == tagName.toUpperCase()
-      if content != false
-        flag = flag && tag.html() == content
+      # Is it alone?
+      flag = tag.length == 1
 
+      # Tag name matches?
+      flag &&= tag[0].nodeName == tagName.toUpperCase()
+
+      # Content matches?
+      flag &&= tag.html() == content if content != false
+
+      # Same number of attributes?
+      flag &&= tag[0].attributes.length == Object.keys(attrs).length
+
+      # Attributes match?
       for name, val of attrs
-        flag = flag && !!(if val.constructor == RegExp then tag.attr(name).match(val) else tag.attr(name) == val)
-
-      flag = flag && tag[0].attributes.length == Object.keys(attrs).length
+        if val.constructor == RegExp
+          flag &&= tag.attr(name).match(val)
+        else
+          flag &&= tag.attr(name) == val
 
       flag

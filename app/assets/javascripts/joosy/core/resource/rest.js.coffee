@@ -108,6 +108,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @get: (options, callback) ->
     if Object.isFunction(options)
@@ -121,6 +122,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @post: (options, callback) ->
     if Object.isFunction(options)
@@ -134,6 +136,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @put: (options, callback) ->
     if Object.isFunction(options)
@@ -147,6 +150,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @delete: (options, callback) ->
     if Object.isFunction(options)
@@ -160,6 +164,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   get: (options, callback) ->
     if Object.isFunction(options)
@@ -173,6 +178,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   post: (options, callback) ->
     if Object.isFunction(options)
@@ -186,6 +192,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   put: (options, callback) ->
     if Object.isFunction(options)
@@ -199,6 +206,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   delete: (options, callback) ->
     if Object.isFunction(options)
@@ -263,6 +271,7 @@ class Joosy.Resource.REST extends Joosy.Resource.Generic
   #
   # @param [Hash] options         See {Joosy.Resource.REST.find} for possible options
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   reload: (options={}, callback=false) ->
     if Object.isFunction(options)

@@ -49,10 +49,7 @@ Joosy.Modules.Renderer =
   __instantiateHelpers: ->
     unless @__helpersInstance
       @__helpersInstance = Object.extended Joosy.Helpers.Application
-
-      if @onRefresh
-        @__helpersInstance.onRefresh = (callback) =>
-          @onRefresh callback
+      @__helpersInstance.__owner = @
 
       if @__helpers
         for helper in @__helpers
@@ -61,18 +58,13 @@ Joosy.Modules.Renderer =
     @__helpersInstance
 
   # If we do not have __proto__ available...
-  __proxifyHelpers: (locals) ->
-    if locals.hasOwnProperty '__proto__'
-      locals.__proto__ = @__instantiateHelpers()
-      locals
-    else
-      unless @__helpersProxyInstance
-        @__helpersProxyInstance = (locals) ->
-          Joosy.Module.merge this, locals
-
-        @__helpersProxyInstance.prototype = @__instantiateHelpers()
-
-      new @__helpersProxyInstance locals
+  __instantiateRenderers: (stack) ->
+    render: (template, locals={}) =>
+      @render template, locals, stack
+    renderDynamic: (template, locals={}) =>
+      @renderDynamic template, locals, stack
+    renderInline: (locals={}, template) =>
+      @renderDynamic template, locals, stack
 
   render: (template, locals={}, parentStackPointer=false) ->
     @__render false, template, locals, parentStackPointer
@@ -103,20 +95,12 @@ Joosy.Modules.Renderer =
     if !Object.isObject(locals) && Object.extended().constructor != locals.constructor
       throw new Error "#{Joosy.Module.__className @}> locals (maybe @data?) is not a hash"
 
-    renderers =
-      render: (template, locals={}) =>
-        @render template, locals, stack
-      renderDynamic: (template, locals={}) =>
-        @renderDynamic template, locals, stack
-      renderInline: (locals={}, template) =>
-        @renderDynamic template, locals, stack
-
     context = =>
       data = {}
 
       Joosy.Module.merge data, stack.locals
       Joosy.Module.merge data, @__instantiateHelpers(), false
-      Joosy.Module.merge data, renderers
+      Joosy.Module.merge data, @__instantiateRenderers(stack)
       data
 
     result = ->
@@ -129,8 +113,8 @@ Joosy.Modules.Renderer =
       morph  = Metamorph result()
       update = =>
         if morph.isRemoved()
-          for [object, callback] in morph.__bindings
-            object.unbind callback
+          for [object, binding] in morph.__bindings
+            object.unbind binding
         else
           for child in stack.children
             @__removeMetamorphs child

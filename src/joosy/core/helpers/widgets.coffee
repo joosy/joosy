@@ -5,11 +5,15 @@
 #
 Joosy.helpers 'Application', ->
 
-  @widget = (element, widget) ->
-    uuid    = Joosy.uid()
-    params  = id: uuid
-    parts   = element.split '.'
-    if parts[1]
-      params.class = parts.from(1).join ' '
+  @widget = (tag, options, widget) ->
+    declaration = {}
 
-    @tag parts[0], params
+    unless widget?
+      widget  = options
+      options = {}
+
+    options.id = Joosy.uid()
+    declaration["#{options.id}"] = widget
+
+    @__owner.constructor.mapWidgets declaration
+    @tag tag, options

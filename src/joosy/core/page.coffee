@@ -334,10 +334,10 @@ class Joosy.Page extends Joosy.Module
 
     @__callSyncedThrough @previous, '__erase', callbacksParams, =>
       @previous?.__unload()
-      @__callSyncedThrough this, '__beforePaint', callbacksParams, =>
+      @__callSyncedThrough @, '__beforePaint', callbacksParams, =>
         @trigger 'stageClear'
 
-    @__callSyncedThrough this, '__fetch', [], =>
+    @__callSyncedThrough @, '__fetch', [], =>
       Joosy.Modules.Log.debugAs @, "Fetch complete"
       @trigger 'dataReceived'
 
@@ -364,7 +364,7 @@ class Joosy.Page extends Joosy.Module
       @__callSyncedThrough @layout, '__paint', callbacksParams, =>
         # Layout HTML
         data = Joosy.Module.merge {}, @layout.data || {}
-        data = Joosy.Module.merge data, yield: => @layout.yield()
+        data = Joosy.Module.merge data, yield: @layout.yield()
 
         @swapContainer Joosy.Application.content(), @layout.__renderer data
 

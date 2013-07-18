@@ -161,7 +161,7 @@ class Joosy.Layout extends Joosy.Module
   #   element with UUID called `yield`.
   #
   yield: ->
-    @uuid = Joosy.uuid()
+    @uuid ||= Joosy.uuid()
 
   #
   # Gets layout element.

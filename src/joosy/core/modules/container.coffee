@@ -75,17 +75,21 @@ Joosy.Modules.Container =
 
     return unless entries
 
-    Object.each entries, (key, value) =>
+    for key,value of entries
       if Object.isObject(value)
         @__assignElements root['$'+key]={}, value
       else
         value = @__extractSelector value
-
-        root['$'+key] = (filter) =>
-          return @$(value) unless filter
-          return @$(value).filter(filter)
-
+        root['$'+key] = @__wrapElement(value)
         root['$'+key].selector = value
+
+  #
+  # Wraps actual element closures. Required to clear context to avoid circular reference
+  #
+  __wrapElement: (value) ->
+    (filter) =>
+      return @$(value) unless filter
+      return @$(value).filter(filter)
 
   #
   # Binds events defined in 'events' to container

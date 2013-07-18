@@ -35,7 +35,7 @@ describe "Joosy.Modules.Events", ->
   it "should allow for binding and unbinding to events", ->
     callback = sinon.spy()
 
-    @box.bind 'event', callback
+    event = @box.bind 'event', callback
 
     @box.trigger 'other-event'
     expect(callback.callCount).toEqual 0
@@ -49,7 +49,7 @@ describe "Joosy.Modules.Events", ->
     @box.trigger 'event'
     expect(callback.callCount).toEqual 3
 
-    @box.unbind callback
+    @box.unbind event
 
     @box.trigger 'event'
     expect(callback.callCount).toEqual 3

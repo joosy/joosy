@@ -30,6 +30,14 @@ Joosy.Modules.Events =
     name
 
   #
+  # Removes waiter action
+  #
+  # @param [Function] target            Name of waiter to unbind
+  #
+  unwait: (target) ->
+    delete @__oneShotEvents[target]
+
+  #
   # Binds action to run each time any of given event was triggered
   #
   # @param [String|Array] events        List of events separated by space
@@ -54,17 +62,10 @@ Joosy.Modules.Events =
   #
   # Unbinds action from runing on trigger
   #
-  # @param [Function] target            Action to unbind
+  # @param [Function] target            Name of bind to unbind
   #
   unbind: (target) ->
-    needle = undefined
-
-    for name, [events, callback] of @__boundEvents
-      if (Object.isFunction(target) && callback == target) || name == target
-        needle = name
-        break
-
-    delete @__boundEvents[needle] if needle?
+    delete @__boundEvents[target]
 
   #
   # Triggers event for {bind} and {wait}

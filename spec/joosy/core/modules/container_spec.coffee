@@ -32,14 +32,6 @@ describe "Joosy.Modules.Container", ->
     expect(newContainer.parent().get(0)).toBe parent.get 0
     expect(callback.callCount).toEqual 1
 
-  it "calls afterRefreshes", ->
-    callback = sinon.spy()
-    @box.onRefresh -> callback()
-
-    @box.refreshElements()
-    @box.refreshElements()
-    expect(callback.callCount).toEqual 1
-
   describe "elements", ->
     it "declares", ->
       class SubContainerA extends @TestContainer

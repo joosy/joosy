@@ -21,20 +21,8 @@ Joosy.Modules.Container =
         @::__events = Object.clone(@.__super__.__events) || {}
       Object.merge @::__events, map
 
-  onRefresh: (callback) ->
-    @__onRefreshes = [] unless @hasOwnProperty "__onRefreshes"
-    @__onRefreshes.push callback
-
   $: (selector) ->
     $(selector, @container)
-
-  #
-  # Rebinds selectors defined in 'elements' hash to object properties
-  #
-  refreshElements: ->
-    if @hasOwnProperty "__onRefreshes"
-      @__onRefreshes.each (callback) => callback.apply @
-      @__onRefreshes = []
 
   #
   # Clears old HTML links, set the new HTML from the callback and refreshes elements
@@ -44,7 +32,6 @@ Joosy.Modules.Container =
   reloadContainer: (htmlCallback) ->
     @__removeMetamorphs?()
     @container.html htmlCallback()
-    @refreshElements()
 
   #
   # Fills container with given data removing all events

@@ -87,7 +87,7 @@ Joosy.Modules.Renderer =
     stack.locals   = locals
 
     # If template was given as a lambda, parameters should
-    # be passed as a context, not as a argument
+    # be passed as a context, not as an argument
     assignContext = false
 
     if Object.isString template
@@ -136,21 +136,18 @@ Joosy.Modules.Renderer =
             @__removeMetamorphs child
           stack.children = []
           morph.html result()
-          @refreshElements?()
 
       # This is here to break stack tree and save from
       # repeating DOM handling
       update = update.debounce 0
 
-      morph.__bindings = []
-
       for key, object of locals
         if locals.hasOwnProperty key
           if object?.bind? && object?.unbind?
-            binding = [object, update]
-            object.bind 'changed', update
+            binding = [object, object.bind('changed', update)]
             stack.metamorphBindings.push binding
-            morph.__bindings.push binding
+
+      morph.__bindings = stack.metamorphBindings
 
       morph.outerHTML()
     else

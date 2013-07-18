@@ -116,21 +116,3 @@ describe "Joosy.Modules.Renderer", ->
     elem.html @dummyContainer.__renderer({ })
 
     expect(elem.text()).toBe "60"
-
-  it "proxies onRefresh for containers", ->
-    class Box extends Joosy.Module
-      @include Joosy.Modules.Renderer
-      @include Joosy.Modules.Container
-
-    callback = sinon.spy()
-
-    Box.view (locals) ->
-      template = -> @onRefresh -> callback()
-      @render(template, locals)
-
-    box = new Box
-
-    box.__renderer({ })
-    box.refreshElements()
-
-    expect(callback.callCount).toEqual 1

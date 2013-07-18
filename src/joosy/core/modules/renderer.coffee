@@ -55,7 +55,7 @@ Joosy.Modules.Renderer =
   __instantiateHelpers: ->
     unless @__helpersInstance
       @__helpersInstance = Object.extended Joosy.Helpers.Application
-      @__helpersInstance.__owner = @
+      @__helpersInstance.__renderer = @
 
       if @__helpers
         for helper in @__helpers

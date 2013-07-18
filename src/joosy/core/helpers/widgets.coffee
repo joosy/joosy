@@ -12,7 +12,7 @@ Joosy.helpers 'Application', ->
 
     options.id = Joosy.uid()
 
-    @__owner.setTimeout 0, =>
-      @__owner.registerWidget($('#'+options.id), widget)
+    @__renderer.setTimeout 0, =>
+      @__renderer.registerWidget($('#'+options.id), widget)
 
     @tag tag, options

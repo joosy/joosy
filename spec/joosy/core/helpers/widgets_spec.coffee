@@ -3,12 +3,12 @@ describe "Joosy.Helpers.Widgets", ->
   h = Joosy.Helpers.Application
 
   beforeEach ->
-    h.__owner =
+    h.__renderer =
       setTimeout: (timeout, action) -> setTimeout action, timeout
       registerWidget: @spy = sinon.spy()
 
   afterEach ->
-    delete h.__owner
+    delete h.__renderer
 
   it "renders widget tag", ->
     runs ->

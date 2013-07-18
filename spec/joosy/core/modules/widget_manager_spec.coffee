@@ -47,18 +47,19 @@ describe "Joosy.Modules.WidgetsManager", ->
 
   it "should register widgets per declaration", ->
     @seedGround()
-    @box.container = $('#application')
+    @box.container  = $('#application')
     @box.__elements = {footer: '.footer'}
-    @box.__widgets =
+    @box.__widgets  = __widgets =
       '$container': Joosy.Widget
       '$footer': Joosy.Widget
-      '.post': sinon.stub()
-    @box.__widgets['.post'].returns @widgetMock
+      '.post': sinon.stub().returns @widgetMock
+
     @box.__assignElements()
     @box.__setupWidgets()
+
     expect(@box.__activeWidgets.length).toEqual 5
-    expect(@box.__widgets['.post'].callCount).toEqual 3
-    expect(@box.__widgets['.post'].getCall(0).calledOn @box).toBeTruthy()
+    expect(__widgets['.post'].callCount).toEqual 3
+    expect(__widgets['.post'].getCall(0).calledOn @box).toBeTruthy()
 
   it "should bootstrap widget properly", ->
     class TextWidget extends Joosy.Widget

@@ -46,6 +46,12 @@ Joosy.Modules.Renderer =
 
       @::__helpers = @::__helpers.unique()
 
+  render: (template, locals={}, parentStackPointer=false) ->
+    @__render false, template, locals, parentStackPointer
+
+  renderDynamic: (template, locals={}, parentStackPointer=false) ->
+    @__render true, template, locals, parentStackPointer
+
   __instantiateHelpers: ->
     unless @__helpersInstance
       @__helpersInstance = Object.extended Joosy.Helpers.Application
@@ -57,7 +63,6 @@ Joosy.Modules.Renderer =
 
     @__helpersInstance
 
-  # If we do not have __proto__ available...
   __instantiateRenderers: (stack) ->
     render: (template, locals={}) =>
       @render template, locals, stack
@@ -65,12 +70,6 @@ Joosy.Modules.Renderer =
       @renderDynamic template, locals, stack
     renderInline: (locals={}, template) =>
       @renderDynamic template, locals, stack
-
-  render: (template, locals={}, parentStackPointer=false) ->
-    @__render false, template, locals, parentStackPointer
-
-  renderDynamic: (template, locals={}, parentStackPointer=false) ->
-    @__render true, template, locals, parentStackPointer
 
   __render: (dynamic, template, locals={}, parentStackPointer=false) ->
     stack = @__renderingStackChildFor parentStackPointer

@@ -330,8 +330,6 @@ class Joosy.Page extends Joosy.Module
         # Loading
         @__load()
 
-        @layout.content()
-
     @__callSyncedThrough @previous, '__erase', callbacksParams, =>
       @previous?.__unload()
       @__callSyncedThrough @, '__beforePaint', callbacksParams, =>
@@ -375,8 +373,6 @@ class Joosy.Page extends Joosy.Module
         # Loading
         @layout.__load Joosy.Application.content()
         @__load()
-
-        Joosy.Application.content()
 
     @__callSyncedThrough @previous?.layout, '__erase', callbacksParams, =>
       @previous?.layout?.__unload?()

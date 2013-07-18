@@ -45,12 +45,11 @@ Joosy.Modules.WidgetsManager =
   # Intialize all widgets for current object
   #
   __setupWidgets: ->
-    widgets    = @__widgets
+    return unless @__widgets
+
     registered = Object.extended()
 
-    return unless widgets
-
-    Object.each widgets, (selector, widget) =>
+    Object.each @__widgets, (selector, widget) =>
       if selector == '$container'
         activeSelector = @container
       else
@@ -69,6 +68,8 @@ Joosy.Modules.WidgetsManager =
         registered[selector][Joosy.Module.__className instance]  += 1
 
         @registerWidget $(elem), instance
+
+    @__widgets = {}
 
     registered.each (selector, value) =>
       value.each (widget, count) =>

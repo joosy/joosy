@@ -6,14 +6,13 @@
 Joosy.helpers 'Application', ->
 
   @widget = (tag, options, widget) ->
-    declaration = {}
-
     unless widget?
       widget  = options
       options = {}
 
     options.id = Joosy.uid()
-    declaration["#{options.id}"] = widget
 
-    @__owner.constructor.mapWidgets declaration
+    @__owner.setTimeout 0, =>
+      @__owner.registerWidget($('#'+options.id), widget)
+
     @tag tag, options

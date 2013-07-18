@@ -213,9 +213,11 @@ class Joosy.Resources.Base extends Joosy.Module
   # @return [mixed]
   #
   __get: (path) ->
-    target = @__callTarget path
+    target = @__callTarget path, true
 
-    if target[0] instanceof Joosy.Resources.Base
+    if !target
+      return undefined
+    else if target[0] instanceof Joosy.Resources.Base
       return target[0](target[1])
     else
       return target[0][target[1]]
@@ -241,15 +243,18 @@ class Joosy.Resources.Base extends Joosy.Module
   # Locates the actual instance of attribute path `foo.bar` from get/set
   #
   # @param [String] path    Path to the attribute (`foo.bar`)
+  # @param [Boolean] safe   Indicates whether nested hashes should not be automatically created when they don't exist
   # @return [Array]         Instance of object containing last step of path and keyword for required field
   #
-  __callTarget: (path) ->
+  __callTarget: (path, safe=false) ->
     if path.has(/\./) && !@data[path]?
       path    = path.split '.'
       keyword = path.pop()
       target  = @data
 
       for part in path
+        return false if safe && !target[part]?
+
         target[part] ||= {}
         if target instanceof Joosy.Resources.Base
           target = target(part)

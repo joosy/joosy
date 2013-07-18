@@ -195,6 +195,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   put: (options, callback) ->
     if Object.isFunction(options)
@@ -272,6 +273,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         See {Joosy.Resources.REST.find} for possible options
   # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   reload: (options={}, callback=false) ->
     if Object.isFunction(options)

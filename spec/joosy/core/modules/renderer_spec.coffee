@@ -6,6 +6,9 @@ describe "Joosy.Modules.Renderer", ->
     class @TestContainer extends Joosy.Module
       @include Joosy.Modules.Renderer
 
+      multiplier: (value) ->
+        "#{value * 10}"
+
     @dummyContainer = new @TestContainer
 
     class @TestObject extends Joosy.Module
@@ -86,11 +89,11 @@ describe "Joosy.Modules.Renderer", ->
       expect(elem.text()).toBe "me evil"
       expect(updater.callCount).toEqual 2
 
-  it "includes rendering helpers in locals", ->
-    @TestContainer.helpers "Hoge"
+  it "includes helpers module in locals", ->
+    @TestContainer.helper Joosy.Helpers.Hoge
 
     @TestContainer.view (locals) ->
-      template = (locals) -> @multiplier(10)
+      template = -> @multiplier(10)
 
       @render(template, locals)
 
@@ -100,6 +103,23 @@ describe "Joosy.Modules.Renderer", ->
     elem.html @dummyContainer.__renderer({ })
 
     expect(elem.text()).toBe "50"
+
+  it "includes local helper in locals", ->
+    @TestContainer.helper 'multiplier'
+
+    @TestContainer.view (locals) ->
+      template = -> @multiplier(10)
+
+      @render(template, locals)
+
+    @dummyContainer.__assignHelpers()
+
+    elem = $("<div></div>")
+    @ground.append elem
+
+    elem.html @dummyContainer.__renderer({ })
+
+    expect(elem.text()).toBe "100"
 
   it "includes global rendering helpers in locals", ->
     Joosy.Helpers.Application.globalMultiplier = (value) ->

@@ -57,6 +57,7 @@ class Joosy.Widget extends Joosy.Module
   #
   # Widget bootstrap proccess
   #
+  #   * {Joosy.Modules.Renderer.__assignHelpers}
   #   * Rendering (if required)
   #   * {Joosy.Modules.Container.__assignElements}
   #   * {Joosy.Modules.Container.__delegateEvents}
@@ -66,6 +67,7 @@ class Joosy.Widget extends Joosy.Module
   #
   __load: (@parent, @container, render=true) ->
     @__runBeforeLoads()
+    @__assignHelpers()
     if render && @__renderer
       @swapContainer @container, @__renderer(@data || {})
     @__assignElements()

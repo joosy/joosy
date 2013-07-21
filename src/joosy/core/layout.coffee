@@ -133,11 +133,13 @@ class Joosy.Layout extends Joosy.Module
   #
   # Layout bootstrap proccess.
   #
+  #   * {Joosy.Modules.Renderer.__assignHelpers}
   #   * {Joosy.Modules.Container.__assignElements}
   #   * {Joosy.Modules.Container.__delegateEvents}
   #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
   #
   __load: (@container) ->
+    @__assignHelpers()
     @__assignElements()
     @__delegateEvents()
     @__setupWidgets()
@@ -162,12 +164,6 @@ class Joosy.Layout extends Joosy.Module
   #
   yield: ->
     @uid ||= Joosy.uid()
-
-  # page: (tag, options) ->
-  #   options ||= {}
-  #   options.id = @uid()
-
-  #   @tag tag, options
 
   #
   # Gets layout element.

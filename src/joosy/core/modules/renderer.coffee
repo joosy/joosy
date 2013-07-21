@@ -35,15 +35,9 @@ Joosy.Modules.Renderer =
           else
             @render template, locals
 
-    @helpers = (helpers...) ->
+    @helper = (helpers...) ->
       @::__helpers ||= []
-      helpers.map (helper) =>
-        module = Joosy.Helpers[helper]
-        unless module
-          throw new Error "Cannot find helper module #{helper}"
-
-        @::__helpers.push module
-
+      @::__helpers = @::__helpers.add(helpers).unique()
       @::__helpers = @::__helpers.unique()
 
   render: (template, locals={}, parentStackPointer=false) ->
@@ -51,6 +45,15 @@ Joosy.Modules.Renderer =
 
   renderDynamic: (template, locals={}, parentStackPointer=false) ->
     @__render true, template, locals, parentStackPointer
+
+  __assignHelpers: ->
+    @__helpers?.each (helper, i) =>
+      unless Object.isObject(helper)
+        unless @[helper]?
+          throw new Error "Cannot find method '#{helper}' to use as helper"
+
+        @__helpers[i] = {}
+        @__helpers[i][helper] = => @[helper] arguments...
 
   __instantiateHelpers: ->
     unless @__helpersInstance

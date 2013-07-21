@@ -250,12 +250,14 @@ class Joosy.Page extends Joosy.Module
   #
   # Page bootstrap proccess
   #
+  #   * {Joosy.Modules.Renderer.__assignHelpers}
   #   * {Joosy.Modules.Container.__assignElements}
   #   * {Joosy.Modules.Container.__delegateEvents}
   #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
   #   * Scrolling
   #
   __load: ->
+    @__assignHelpers()
     @__assignElements()
     @__delegateEvents()
     @__setupWidgets()

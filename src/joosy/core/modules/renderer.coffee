@@ -16,8 +16,6 @@ Joosy.Modules.Renderer =
   __renderer: ->
     throw new Error "#{Joosy.Module.__className @constructor} does not have an attached template"
 
-  __helpers: null
-
   #
   # Defines class-level helpers: @view and @helpers
   #
@@ -36,7 +34,9 @@ Joosy.Modules.Renderer =
             @render template, locals
 
     @helper = (helpers...) ->
-      @::__helpers ||= []
+      unless @::hasOwnProperty "__helpers"
+        @::__helpers = @.__super__.__helpers?.clone() || []
+
       @::__helpers = @::__helpers.add(helpers).unique()
       @::__helpers = @::__helpers.unique()
 
@@ -57,6 +57,8 @@ Joosy.Modules.Renderer =
 
   __instantiateHelpers: ->
     unless @__helpersInstance
+      @__assignHelpers()
+
       @__helpersInstance = Object.extended Joosy.Helpers.Application
       @__helpersInstance.__renderer = @
 

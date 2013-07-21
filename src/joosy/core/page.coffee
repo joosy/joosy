@@ -250,14 +250,12 @@ class Joosy.Page extends Joosy.Module
   #
   # Page bootstrap proccess
   #
-  #   * {Joosy.Modules.Renderer.__assignHelpers}
   #   * {Joosy.Modules.Container.__assignElements}
   #   * {Joosy.Modules.Container.__delegateEvents}
   #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
   #   * Scrolling
   #
   __load: ->
-    @__assignHelpers()
     @__assignElements()
     @__delegateEvents()
     @__setupWidgets()
@@ -363,10 +361,7 @@ class Joosy.Page extends Joosy.Module
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough @layout, '__paint', callbacksParams, =>
         # Layout HTML
-        data = Joosy.Module.merge {}, @layout.data || {}
-        data = Joosy.Module.merge data, yield: @layout.yield()
-
-        @swapContainer Joosy.Application.content(), @layout.__renderer data
+        @swapContainer Joosy.Application.content(), @layout.__renderer(@layout.data || {})
 
         # Page HTML
         @swapContainer @layout.content(), @__renderer(@data || {})

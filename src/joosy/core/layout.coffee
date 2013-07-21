@@ -33,6 +33,7 @@ class Joosy.Layout extends Joosy.Module
   @include Joosy.Modules.Filters
 
   @view 'default'
+  @helper 'page'
 
   #
   # Sets the method which will controll the painting preparation proccess.
@@ -133,13 +134,11 @@ class Joosy.Layout extends Joosy.Module
   #
   # Layout bootstrap proccess.
   #
-  #   * {Joosy.Modules.Renderer.__assignHelpers}
   #   * {Joosy.Modules.Container.__assignElements}
   #   * {Joosy.Modules.Container.__delegateEvents}
   #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
   #
   __load: (@container) ->
-    @__assignHelpers()
     @__assignElements()
     @__delegateEvents()
     @__setupWidgets()
@@ -159,11 +158,13 @@ class Joosy.Layout extends Joosy.Module
     @__runAfterUnloads()
 
   #
-  # @todo Rename this shit already. We are not going to release having function that marks
-  #   element with UUID called `yield`.
+  # Helpers that outputs container for the page
   #
-  yield: ->
-    @uid ||= Joosy.uid()
+  page: (tag, options) ->
+    options ||= {}
+    options.id = @uid = Joosy.uid()
+
+    Joosy.Helpers.Application.tag tag, options
 
   #
   # Gets layout element.

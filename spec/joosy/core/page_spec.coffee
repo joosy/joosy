@@ -37,7 +37,7 @@ describe "Joosy.Page", ->
 
     it "should not render layout if it not changes", ->
       @box.layout = new ApplicationLayout()
-      @box.layout.yield()
+      @box.layout.page()
       new @TestPage {}, @box
       expect(@TestPage::__bootstrap.callCount).toEqual 1
       expect(@TestPage::__bootstrapLayout.callCount).toEqual 1

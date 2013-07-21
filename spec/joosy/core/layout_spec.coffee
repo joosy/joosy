@@ -40,11 +40,11 @@ describe "Joosy.Layout", ->
 
   it "should generate uid", ->
     sinon.spy Joosy, 'uid'
-    @box.yield()
+    @box.page()
     expect(Joosy.uid.callCount).toEqual 1
     expect(@box.uid).toBeDefined()
     Joosy.uid.restore()
 
   it "should use uid as selector", ->
-    @box.yield()
+    @box.page()
     expect(@box.content().selector).toEqual '#' + @box.uid

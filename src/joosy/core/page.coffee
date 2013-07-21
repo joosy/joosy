@@ -215,7 +215,7 @@ class Joosy.Page extends Joosy.Module
     unless @halted = !@__runBeforeLoads(@params, @previous)
       Joosy.Application.loading = true
 
-      if !@previous?.layout?.uuid? || @previous?.__layoutClass != @__layoutClass
+      if !@previous?.layout?.uid? || @previous?.__layoutClass != @__layoutClass
         @__bootstrapLayout()
       else
         @__bootstrap()

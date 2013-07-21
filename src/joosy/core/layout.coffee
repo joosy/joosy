@@ -161,7 +161,13 @@ class Joosy.Layout extends Joosy.Module
   #   element with UUID called `yield`.
   #
   yield: ->
-    @uuid ||= Joosy.uuid()
+    @uid ||= Joosy.uid()
+
+  # page: (tag, options) ->
+  #   options ||= {}
+  #   options.id = @uid()
+
+  #   @tag tag, options
 
   #
   # Gets layout element.
@@ -169,4 +175,4 @@ class Joosy.Layout extends Joosy.Module
   # @return [jQuery]
   #
   content: ->
-    $("##{@uuid}")
+    $("##{@uid}")

@@ -38,13 +38,13 @@ describe "Joosy.Layout", ->
     @box.__unload()
     expect(spies).toBeSequenced()
 
-  it "should generate uuid", ->
-    sinon.spy Joosy, 'uuid'
+  it "should generate uid", ->
+    sinon.spy Joosy, 'uid'
     @box.yield()
-    expect(Joosy.uuid.callCount).toEqual 1
-    expect(@box.uuid).toBeDefined()
-    Joosy.uuid.restore()
+    expect(Joosy.uid.callCount).toEqual 1
+    expect(@box.uid).toBeDefined()
+    Joosy.uid.restore()
 
-  it "should uuid as selector", ->
+  it "should use uid as selector", ->
     @box.yield()
-    expect(@box.content().selector).toEqual '#' + @box.uuid
+    expect(@box.content().selector).toEqual '#' + @box.uid

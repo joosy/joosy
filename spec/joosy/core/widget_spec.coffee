@@ -1,33 +1,36 @@
 describe "Joosy.Widget", ->
 
   beforeEach ->
-    class @TestWidget extends Joosy.Widget
-    @box = new @TestWidget()
+    class @Widget extends Joosy.Widget
+    @widget = new @Widget
 
-  it "should use Router", ->
+  it "integrates with Router", ->
     target = sinon.stub Joosy.Router, 'navigate'
-    @box.navigate 'there'
+    @widget.navigate 'there'
     expect(target.callCount).toEqual 1
     expect(target.alwaysCalledWithExactly 'there').toBeTruthy()
     Joosy.Router.navigate.restore()
 
-  it "should load itself", ->
-    @box.data = {tested: true}
-    spies = [sinon.spy()]
-    @TestWidget.view spies[0]
-    @parent = new Joosy.Layout()
-    spies.push sinon.spy(@box, '__assignElements')
-    spies.push sinon.spy(@box, '__delegateEvents')
-    spies.push sinon.spy(@box, '__runAfterLoads')
-    target = @box.__load @parent, @$ground
-    expect(target).toBe @box
+  it "loads", ->
+    spies = []
+    spies.push sinon.spy()
+    spies.push sinon.spy(@widget, '__assignElements')
+    spies.push sinon.spy(@widget, '__delegateEvents')
+    spies.push sinon.spy(@widget, '__runAfterLoads')
+
+    @widget.data = tested: true
+    @Widget.view spies[0]
+    @parent = new Joosy.Layout
+
+    target = @widget.__load @parent, @$ground
+
+    expect(target).toBe @widget
     expect(spies[0].getCall(0).calledOn()).toBeFalsy()
     expect(spies[0].getCall(0).args[0].tested).toBe true
     expect(spies).toBeSequenced()
 
-  it "should unload itself", ->
-    sinon.spy @box, '__runAfterUnloads'
-    @box.__unload()
-    target = @box.__runAfterUnloads
-    expect(target.callCount).toEqual 1
-    expect(target.getCall(0).calledOn()).toBeFalsy()
+  it "unloads", ->
+    sinon.spy @widget, '__runAfterUnloads'
+    @widget.__unload()
+    expect(@widget.__runAfterUnloads.callCount).toEqual 1
+    expect(@widget.__runAfterUnloads.getCall(0).calledOn()).toBeFalsy()

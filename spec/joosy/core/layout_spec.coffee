@@ -1,50 +1,46 @@
 describe "Joosy.Layout", ->
 
   beforeEach ->
-    class @TestLayout extends Joosy.Layout
-    @box = new @TestLayout()
+    class @Layout extends Joosy.Layout
+    @layout = new @Layout
 
-  it "should have appropriate accessors", ->
-    callback_names = ['beforePaint', 'paint', 'erase']
-    callback_names.each (func) =>
-      @TestLayout[func] 'callback'
-      expect(@TestLayout::['__' + func]).toEqual 'callback'
+  it "has appropriate accessors", ->
+    callbackNames = ['beforePaint', 'paint', 'erase']
+    callbackNames.each (callbackName) =>
+      @Layout[callbackName] 'callback'
+      expect(@Layout::['__' + callbackName]).toEqual 'callback'
 
-  it "should have default view", ->
-    @box = new @TestLayout()
-    expect(@box.__renderDefault instanceof Function).toBeTruthy()
+  it "generates uid", ->
+    @layout.page()
+    expect(@layout.uid).toBeDefined()
 
-  it "should use Router", ->
+  it "uses uid as selector", ->
+    @layout.page()
+    expect(@layout.content().selector).toEqual '#' + @layout.uid
+
+  it "has default view", ->
+    expect(@layout.__renderDefault instanceof Function).toBeTruthy()
+
+  it "integrates with Router", ->
     target = sinon.stub Joosy.Router, 'navigate'
-    @box.navigate 'there'
+    @layout.navigate 'there'
     expect(target.callCount).toEqual 1
     expect(target.alwaysCalledWithExactly 'there').toBeTruthy()
     Joosy.Router.navigate.restore()
 
-  it "should load itself", ->
+  it "loads", ->
     spies = []
-    spies.push sinon.spy(@box, '__assignElements')
-    spies.push sinon.spy(@box, '__delegateEvents')
-    spies.push sinon.spy(@box, '__setupWidgets')
-    spies.push sinon.spy(@box, '__runAfterLoads')
-    @box.__load(@$ground)
+    spies.push sinon.spy(@layout, '__assignElements')
+    spies.push sinon.spy(@layout, '__delegateEvents')
+    spies.push sinon.spy(@layout, '__setupWidgets')
+    spies.push sinon.spy(@layout, '__runAfterLoads')
+    @layout.__load(@$ground)
     expect(spies).toBeSequenced()
 
-  it "should unload itself", ->
+  it "unloads", ->
     spies = []
-    spies.push sinon.spy(@box, '__clearTime')
-    spies.push sinon.spy(@box, '__unloadWidgets')
-    spies.push sinon.spy(@box, '__runAfterUnloads')
-    @box.__unload()
+    spies.push sinon.spy(@layout, '__clearTime')
+    spies.push sinon.spy(@layout, '__unloadWidgets')
+    spies.push sinon.spy(@layout, '__runAfterUnloads')
+    @layout.__unload()
     expect(spies).toBeSequenced()
-
-  it "should generate uid", ->
-    sinon.spy Joosy, 'uid'
-    @box.page()
-    expect(Joosy.uid.callCount).toEqual 1
-    expect(@box.uid).toBeDefined()
-    Joosy.uid.restore()
-
-  it "should use uid as selector", ->
-    @box.page()
-    expect(@box.content().selector).toEqual '#' + @box.uid

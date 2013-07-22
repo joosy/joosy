@@ -117,6 +117,7 @@ class Joosy.Layout extends Joosy.Module
   # @param [Hash] params              List of route params
   #
   constructor: (@params) ->
+    @uid = Joosy.uid()
 
   #
   # @see Joosy.Router.navigate
@@ -160,10 +161,8 @@ class Joosy.Layout extends Joosy.Module
   #
   # Helpers that outputs container for the page
   #
-  page: (tag, options) ->
-    options ||= {}
-    options.id = @uid = Joosy.uid()
-
+  page: (tag, options={}) ->
+    options.id = @uid
     Joosy.Helpers.Application.tag tag, options
 
   #

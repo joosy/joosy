@@ -64,7 +64,12 @@ Joosy.Modules.Renderer =
   # Converts all possible `@helper` arguments to the objects available for merge
   #
   __assignHelpers: ->
-    @__helpers?.each (helper, i) =>
+    return unless @__helpers?
+  
+    unless @hasOwnProperty "__helpers"
+      @__helpers = @__helpers.clone()
+
+    @__helpers.each (helper, i) =>
       unless Object.isObject(helper)
         unless @[helper]?
           throw new Error "Cannot find method '#{helper}' to use as helper"

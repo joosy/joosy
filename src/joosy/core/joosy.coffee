@@ -92,29 +92,6 @@
     .toUpperCase()
 
   #
-  # Preloads sets of images then runs callback
-  #
-  # @param [Array<String>] images             Images paths
-  # @param [Function] callback                Action to run when every picture was loaded (or triggered an error)
-  #
-  preloadImages: (images, callback) ->
-    unless Object.isArray(images)
-      images = [images]
-    if images.length == 0
-      callback()
-
-    ticks   = images.length
-    result  = []
-    checker = ->
-      if (ticks -= 1) == 0
-        callback?()
-
-    for p in images
-      result.push $('<img/>').on('load', checker).on('error', checker).attr('src', p)
-
-    result
-
-  #
   # Basic URI builder. Joins base path with params hash
   #
   # @param [String] url         Base url

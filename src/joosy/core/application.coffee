@@ -42,12 +42,6 @@ Joosy.Application =
     $(@selector)
 
   #
-  # Gets current application sandbox node
-  #
-  sandbox: ->
-    $(@sandboxSelector)
-
-  #
   # Switches to given page
   #
   # @param [Joosy.Page] page      The class (not object) of page to load

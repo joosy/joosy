@@ -1,178 +1,242 @@
 describe "Joosy.Page", ->
 
-  beforeEach ->
-    window.JST = 'app/templates/layouts/default': (->)
-    class window.ApplicationLayout extends Joosy.Layout
-    class @TestPage extends Joosy.Page
-
-
-  describe "not rendered page", ->
+  describe "manager", ->
 
     beforeEach ->
-      sinon.stub @TestPage.prototype, '__bootstrap'
-      sinon.stub @TestPage.prototype, '__bootstrapLayout'
-      @box = new @TestPage()
-      expect(@TestPage::__bootstrap.callCount).toEqual 0
-      expect(@TestPage::__bootstrapLayout.callCount).toEqual 1
+      @Layout = class Layout extends Joosy.Layout
 
+      class @Page extends Joosy.Page
+        @layout Layout
 
-    it "should have appropriate accessors", ->
-      callback_names = ['beforePaint', 'paint', 'afterPaint', 'erase']
-      callback_names.each (func) =>
-        @TestPage[func] 'callback'
-        expect(@TestPage::['__' + func]).toEqual 'callback'
+      sinon.stub @Page.prototype, '__bootstrap'
+      sinon.stub @Page.prototype, '__bootstrapLayout'
 
-      @TestPage.scroll '#here'
-      expect(@TestPage::__scrollElement).toEqual '#here'
-      expect(@TestPage::__scrollSpeed).toEqual 500
-      expect(@TestPage::__scrollMargin).toEqual 0
+    afterEach ->
+      @Page::__bootstrap.restore()
+      @Page::__bootstrapLayout.restore()
 
-      @TestPage.scroll '#there', speed: 1000, margin: -5
-      expect(@TestPage::__scrollElement).toEqual '#there'
-      expect(@TestPage::__scrollSpeed).toEqual 1000
-      expect(@TestPage::__scrollMargin).toEqual -5
+    it "has appropriate accessors", ->
+      callbackNames = ['beforePaint', 'paint', 'afterPaint', 'erase']
+      callbackNames.each (callbackName) =>
+        @Page[callbackName] 'callback'
+        expect(@Page::['__' + callbackName]).toEqual 'callback'
 
-      @TestPage.layout 'test'
-      expect(@TestPage::__layoutClass).toEqual 'test'
+      @Page.scroll '#here'
+      expect(@Page::__scrollElement).toEqual '#here'
+      expect(@Page::__scrollSpeed).toEqual 500
+      expect(@Page::__scrollMargin).toEqual 0
 
-    it "should not render layout if it not changes", ->
-      @box.layout = new ApplicationLayout()
-      @box.layout.page()
-      new @TestPage {}, @box
-      expect(@TestPage::__bootstrap.callCount).toEqual 1
-      expect(@TestPage::__bootstrapLayout.callCount).toEqual 1
+      @Page.scroll '#there', speed: 1000, margin: -5
+      expect(@Page::__scrollElement).toEqual '#there'
+      expect(@Page::__scrollSpeed).toEqual 1000
+      expect(@Page::__scrollMargin).toEqual -5
 
-    it "should render layout if it changes", ->
-      class SubLayout extends Joosy.Layout
-      @box = new @TestPage()
-      new @TestPage {}, @box
-      expect(@TestPage::__bootstrap.callCount).toEqual 0
-      expect(@TestPage::__bootstrapLayout.callCount).toEqual 3
+      @Page.layout 'test'
+      expect(@Page::__layoutClass).toEqual 'test'
 
-    it "should stop render on beforeFilter result", ->
-      sinon.stub @TestPage.prototype, '__runBeforeLoads'
-      @TestPage::__runBeforeLoads.returns(false)
-      new @TestPage()
-      expect(@TestPage::__bootstrap.callCount).toEqual 0
-      expect(@TestPage::__bootstrapLayout.callCount).toEqual 1
-
-    it "should use Router", ->
+    it "integrates with Router", ->
       target = sinon.stub Joosy.Router, 'navigate'
-      @box.navigate 'there'
+      (new @Page).navigate 'there'
       expect(target.callCount).toEqual 1
       expect(target.alwaysCalledWithExactly 'there').toBeTruthy()
       Joosy.Router.navigate.restore()
 
-    it "should load itself", ->
-      spies = []
-      spies.push sinon.spy(@box, '__assignElements')
-      spies.push sinon.spy(@box, '__delegateEvents')
-      spies.push sinon.spy(@box, '__setupWidgets')
-      spies.push sinon.spy(@box, '__runAfterLoads')
-      @box.__load()
-      expect(spies).toBeSequenced()
+    it "respects beforeFilters cancelation", ->
+      sinon.stub @Page.prototype, '__runBeforeLoads'
+      @Page::__runBeforeLoads.returns(false)
 
-    it "should unload itself", ->
-      spies = []
-      spies.push sinon.spy(@box, '__clearTime')
-      spies.push sinon.spy(@box, '__unloadWidgets')
-      spies.push sinon.spy(@box, '__removeMetamorphs')
-      spies.push sinon.spy(@box, '__runAfterUnloads')
-      @box.__unload()
-      expect(spies).toBeSequenced()
+      new @Page
 
-    describe "rendered page", ->
+      expect(@Page::__bootstrap.callCount).toEqual 0
+      expect(@Page::__bootstrapLayout.callCount).toEqual 0
+
+    describe "layout switcher", ->
 
       beforeEach ->
-        @box.previous = new @TestPage()
-        @box.previous.layout = new @box.previous.__layoutClass
-        @box.__renderDefault = sinon.spy()
-        @box.__layoutClass.prototype.__renderDefault = sinon.spy()
-        @TestPage::__bootstrap.restore()
-        @TestPage::__bootstrapLayout.restore()
+        @page = new @Page
+        @page.layout = new @Layout
 
+      it "does not render when previous layout is the same", ->
+        new @Page {}, @page
 
-      it "should wait stageClear and dataReceived event to start render", ->
-        spies = []
+        expect(@Page::__bootstrap.callCount).toEqual 1
+        expect(@Page::__bootstrapLayout.callCount).toEqual 1
 
-        spies.push @box.previous.__erase = sinon.spy (stage, callback) ->
-          expect(stage.selector).toEqual @layout.content().selector
-          callback()
+      it "renders when previous layout is another class", ->
+        class Layout extends Joosy.Layout
+        class Page extends Joosy.Page
+          @layout Layout
 
-        spies.push sinon.spy(@box.previous, '__unload')
+        sinon.stub Page.prototype, '__bootstrap'
+        sinon.stub Page.prototype, '__bootstrapLayout'
 
-        spies.push @box.__beforePaint = sinon.spy (stage, callback) ->
-          expect(stage.selector).toEqual @layout.content().selector
-          expect(@__oneShotEvents[0][0]).toEqual ['stageClear', 'dataReceived']
-          callback()
-          expect(@__oneShotEvents[0][0]).toEqual ['dataReceived']
+        new Page {}, @page
 
-        spies.push @box.__fetch = sinon.spy (callback) ->
-          expect(@__oneShotEvents[0][0]).toEqual ['dataReceived']
-          callback()
-          expect(@__oneShotEvents).toEqual {}
+        expect(@Page::__bootstrap.callCount).toEqual 0
+        expect(@Page::__bootstrapLayout.callCount).toEqual 1
+        expect(Page::__bootstrap.callCount).toEqual 0
+        expect(Page::__bootstrapLayout.callCount).toEqual 1
 
-        spies.push @box.__paint = sinon.spy (stage, callback) ->
-          expect(stage.selector).toEqual @layout.content().selector
-          expect(typeof callback).toEqual 'function'
-          # callback()  - start rendering
+    it "loads", ->
+      page = new @Page
 
-        @box.__bootstrap()
+      spies = []
+      spies.push sinon.spy(page, '__assignElements')
+      spies.push sinon.spy(page, '__delegateEvents')
+      spies.push sinon.spy(page, '__setupWidgets')
+      spies.push sinon.spy(page, '__runAfterLoads')
+      page.__load()
+      expect(spies).toBeSequenced()
 
-        expect(spies).toBeSequenced()
+    it "unloads", ->
+      page = new @Page
 
-      it "should render page", ->
-        spies = []
+      spies = []
+      spies.push sinon.spy(page, '__clearTime')
+      spies.push sinon.spy(page, '__unloadWidgets')
+      spies.push sinon.spy(page, '__removeMetamorphs')
+      spies.push sinon.spy(page, '__runAfterUnloads')
+      page.__unload()
+      expect(spies).toBeSequenced()
 
-        spies.push @box.__renderDefault
-        spies.push sinon.spy(@box, 'swapContainer')
-        spies.push sinon.spy(@box, '__load')
+  describe "rendering", ->
 
-        @box.__bootstrap()
-        expect(spies).toBeSequenced()
+    beforeEach ->
+      # Layouts inject themselves into `Joosy.Application.content`
+      # so let's make them inject where we want
+      sinon.stub Joosy.Application, 'content'
+      Joosy.Application.content.returns @$ground
 
-      it "should wait stageClear and dataReceived event to start layout render", ->
-        spies = []
+      # We test every module separately so there's no need to run all those
+      sinon.stub Joosy.Page.prototype, '__load'
+      sinon.stub Joosy.Page.prototype, '__unload'
+      sinon.stub Joosy.Layout.prototype, '__load'
+      sinon.stub Joosy.Layout.prototype, '__unload'
 
-        spies.push ApplicationLayout::__erase = sinon.spy (stage, page, callback) ->
-          expect(stage.selector).toEqual Joosy.Application.content().selector
-          callback()
+    afterEach ->
+      Joosy.Application.content.restore()
+      Joosy.Page::__load.restore()
+      Joosy.Page::__unload.restore()
+      Joosy.Layout::__load.restore()
+      Joosy.Layout::__unload.restore()
 
-        spies.push sinon.spy(@box.previous.layout, '__unload')
-        spies.push sinon.spy(@box.previous, '__unload')
+    it "renders", ->
+      class Layout extends Joosy.Layout
+        @view (locals) -> locals.page 'div', class: 'layout'
 
-        spies.push ApplicationLayout::__beforePaint = sinon.spy (stage, page, callback) =>
-          expect(stage.selector).toEqual Joosy.Application.content().selector
-          expect(@box.__oneShotEvents[0][0]).toEqual ['stageClear', 'dataReceived']
-          callback()
-          expect(@box.__oneShotEvents[0][0]).toEqual ['dataReceived']
+      class Page extends Joosy.Page
+        @layout Layout
+        @view (locals) -> 'page'
 
-        spies.push @box.__fetch = sinon.spy (callback) ->
-          expect(@__oneShotEvents[0][0]).toEqual ['dataReceived']
-          callback()
-          expect(@__oneShotEvents).toEqual {}
+      page = new Page
+      expect(@$ground.html()).toMatch /<div class\=\"layout\" id=\"__joosy\d+\">page<\/div>/
 
-        spies.push ApplicationLayout::__paint = sinon.spy (stage, page, callback) ->
-          expect(stage.selector).toEqual Joosy.Application.content().selector
-          expect(typeof callback).toEqual 'function'
-          # callback()  - start rendering
+    it "changes page", ->
+      class Layout extends Joosy.Layout
+        @view (locals) -> locals.page 'div'
 
-        @box.__bootstrapLayout()
+      class PageA extends Joosy.Page
+        @layout Layout
+        @view (locals) -> 'page a'
 
-        expect(spies).toBeSequenced()
+      class PageB extends Joosy.Page
+        @layout Layout
+        @view (locals) -> 'page b'
 
-      it "should render layout and page", ->
-        spies = []
+      page = new PageA
+      expect(@$ground.html()).toMatch /<div id=\"__joosy\d+\">page a<\/div>/
 
-        @box.params = {tested: true}
+      page = new PageB {}, page
+      expect(@$ground.html()).toMatch /<div id=\"__joosy\d+\">page b<\/div>/
 
-        spies.push @box.__layoutClass.prototype.__renderDefault
-        spies.push @box.__renderDefault
-        swapContainer = sinon.spy(@box, 'swapContainer')
-        spies.push @box.__layoutClass.prototype.__load = sinon.spy()
-        spies.push sinon.spy(@box, '__load')
+    it "changes layout", ->
+      class LayoutA extends Joosy.Layout
+        @view (locals) -> locals.page 'div'
 
-        @box.__bootstrapLayout()
-        expect(spies).toBeSequenced()
-        expect(swapContainer.callCount).toEqual 2
-        expect(@box.layout.params).toEqual {tested: true}
+      class PageA extends Joosy.Page
+        @layout LayoutA
+        @view (locals) -> ''
+
+      class LayoutB extends Joosy.Layout
+        @view (locals) -> locals.page 'div'
+
+      class PageB extends Joosy.Page
+        @layout LayoutB
+        @view (locals) -> ''
+
+      page = new PageA
+      html = @$ground.html()
+      expect(html).toMatch /<div id=\"__joosy\d+\"><\/div>/
+
+      page = new PageB {}, page
+      expect(@$ground.html()).toMatch /<div id=\"__joosy\d+\"><\/div>/
+      expect(@$ground.html()).not.toEqual html
+
+    it "proxies @params to layout", ->
+      class Layout extends Joosy.Layout
+        @view (locals) -> locals.page 'div', class: 'layout'
+
+        constructor: (@params) ->
+          expect(@params).toEqual foo: 'bar'
+          super
+
+      class Page extends Joosy.Page
+        @layout Layout
+        @view (locals) -> 'page'
+
+      page = new Page foo: 'bar'
+
+    it "passes @data to @view", ->
+      class Layout extends Joosy.Layout
+        @fetch (complete) ->
+          expect(@data).toEqual {}
+          @data.foo = 'bar'
+          complete()
+
+        @view (locals) ->
+          expect(locals.foo).toEqual 'bar'
+
+      class Page extends Joosy.Page
+        @layout Layout
+
+        @fetch (complete) ->
+          expect(@data).toEqual {}
+          @data.foo = 'bar'
+          complete()
+
+        @view (locals) ->
+          expect(locals.foo).toEqual 'bar'
+
+      page = new Page
+
+    it "hooks", ->
+      spies = []
+      11.times -> spies.push sinon.spy()
+
+      class Layout extends Joosy.Layout
+        @beforePaint (container, page, complete) -> spies[0](); complete()
+        @fetch       (complete)                  -> spies[1](); complete()
+        @paint       (container, page, complete) -> spies[3](); complete()
+
+        @view spies[4]
+
+      class PageA extends Joosy.Page
+        @layout Layout
+
+        @fetch       (complete)            -> spies[2](); complete()
+        @erase       (container, complete) -> spies[6](); complete()
+        @view spies[5]
+
+      class PageB extends Joosy.Page
+        @layout Layout
+
+        @beforePaint (container, complete) -> spies[7](); complete()
+        @fetch       (complete)            -> spies[8](); complete()
+        @paint       (container, complete) -> spies[9](); complete()
+
+        @view spies[10]
+
+      page = new PageA
+      page = new PageB {}, page
+
+      expect(spies).toBeSequenced()

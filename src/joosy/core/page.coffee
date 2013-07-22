@@ -378,6 +378,6 @@ class Joosy.Page extends Joosy.Module
         @trigger 'stageClear'
 
     @__callSyncedThrough @layout, '__fetch', [], =>
-      @__callSyncedThrough this, '__fetch', [], =>
+      @__callSyncedThrough @, '__fetch', [], =>
         Joosy.Modules.Log.debugAs @, "Fetch complete"
         @trigger 'dataReceived'

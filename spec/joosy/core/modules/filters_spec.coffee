@@ -1,72 +1,91 @@
 describe "Joosy.Modules.Filters", ->
 
   beforeEach ->
-    class @TestFilters extends Joosy.Module
+    class @Filters extends Joosy.Module
       @include Joosy.Modules.Filters
-    @box = new @TestFilters()
 
+    @filters = new @Filters
 
-  it "should inherit filters by copying them", ->
-    class SubFiltersA extends @TestFilters
+  it "inherits filters by copying them", ->
+    class A extends @Filters
       @beforeLoad 'filter1'
       @afterLoad 'filter2'
       @afterUnload 'filter3'
-    class SubFiltersB extends SubFiltersA
+
+    class B extends A
       @beforeLoad 'filter4'
       @afterLoad 'filter5'
       @afterUnload 'filter6'
-    target = new SubFiltersB()
+
+    target = new B
     expect(target.__beforeLoads).toEqual ['filter1', 'filter4']
     expect(target.__afterLoads).toEqual ['filter2', 'filter5']
     expect(target.__afterUnloads).toEqual ['filter3', 'filter6']
-    target = new SubFiltersA()
+
+    target = new A
     expect(target.__beforeLoads).toEqual ['filter1']
     expect(target.__afterLoads).toEqual ['filter2']
     expect(target.__afterUnloads).toEqual ['filter3']
-    target = new @TestFilters()
+
+    target = new @Filters
     expect(target.__beforeLoads).toBeUndefined()
     expect(target.__afterLoads).toBeUndefined()
     expect(target.__afterUnloads).toBeUndefined()
 
-  it "should run callbacks", ->
-    callback = 0.upto(2).map -> sinon.spy()
-    @box.constructor.beforeLoad callback[0]
-    @box.constructor.afterLoad callback[1]
-    @box.constructor.afterUnload callback[2]
-    @box.__runBeforeLoads 1, 2
-    @box.__runAfterLoads 1, 2
-    @box.__runAfterUnloads 1, 2
-    for i in 0.upto(2)
-      expect(callback[i].callCount).toEqual 1
-      expect(callback[i].alwaysCalledWithExactly 1, 2).toBeTruthy()
+  it "runs callbacks", ->
+    callbacks = 0.upto(2).map -> sinon.spy()
+    @Filters.beforeLoad callbacks[0]
+    @Filters.afterLoad callbacks[1]
+    @Filters.afterUnload callbacks[2]
 
-  it "should chain beforeLoad filters", ->
-    callback = 0.upto(2).map -> sinon.stub()
-    callback[0].returns true
-    callback[1].returns false
-    @box.constructor.beforeLoad(callback[i]) for i in 0.upto 2
-    expect(@box.__runBeforeLoads()).toBeFalsy()
-    expect(callback[0].callCount).toEqual 1
-    expect(callback[1].callCount).toEqual 1
-    expect(callback[2].callCount).toEqual 0
+    @filters.__runBeforeLoads 1, 2
+    @filters.__runAfterLoads 1, 2
+    @filters.__runAfterUnloads 1, 2
 
-  it "should chain beforeLoad filters", ->
-    callback = 0.upto(1).map -> sinon.stub()
-    callback[0].returns true
-    callback[1].returns true
-    @box.constructor.beforeLoad(callback[i]) for i in 0.upto(1)
-    expect(@box.__runBeforeLoads()).toBeTruthy()
-    expect(callback[0].callCount).toEqual 1
-    expect(callback[1].callCount).toEqual 1
+    for i in 0.upto(2)
+      expect(callbacks[i].callCount).toEqual 1
+      expect(callbacks[i].alwaysCalledWithExactly 1, 2).toBeTruthy()
 
-  it "should accept callback names", ->
-    @box.constructor.beforeLoad 'callback0'
-    @box.constructor.afterLoad 'callback1'
-    @box.constructor.afterUnload 'callback2'
-    for i in 0.upto(2)
-      @box['callback' + i] = sinon.spy()
-    @box.__runBeforeLoads()
-    @box.__runAfterLoads()
-    @box.__runAfterUnloads()
-    for i in 0.upto(2)
-      expect(@box['callback' + i].callCount).toEqual 1
+  describe "chaining", ->
+
+    it "evaluates", ->
+      callbacks = 0.upto(1).map =>
+        callback = sinon.stub()
+        @Filters.beforeLoad callback
+        callback
+
+      callbacks[0].returns true
+      callbacks[1].returns true
+
+      expect(@filters.__runBeforeLoads()).toBeTruthy()
+
+      expect(callbacks[0].callCount).toEqual 1
+      expect(callbacks[1].callCount).toEqual 1
+
+    it "breaks on false", ->
+      callbacks = 0.upto(2).map =>
+        callback = sinon.stub()
+        @Filters.beforeLoad callback
+        callback
+
+      callbacks[0].returns true
+      callbacks[1].returns false
+
+      expect(@filters.__runBeforeLoads()).toBeFalsy()
+
+      expect(callbacks[0].callCount).toEqual 1
+      expect(callbacks[1].callCount).toEqual 1
+      expect(callbacks[2].callCount).toEqual 0
+
+  it "accepts method names as callbacks", ->
+    @filters['callback' + i] = sinon.spy() for i in 0.upto(2)
+
+    @Filters.beforeLoad  'callback0'
+    @Filters.afterLoad   'callback1'
+    @Filters.afterUnload 'callback2'
+      
+    @filters.__runBeforeLoads()
+    @filters.__runAfterLoads()
+    @filters.__runAfterUnloads()
+
+    expect(@filters['callback' + i].callCount).toEqual 1 for i in 0.upto(2)

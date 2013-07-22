@@ -1,32 +1,50 @@
 describe "Joosy.Helpers.Widgets", ->
 
-  h = Joosy.Helpers.Application
-
   beforeEach ->
-    h.__renderer =
-      setTimeout: (timeout, action) -> setTimeout action, timeout
-      registerWidget: @spy = sinon.spy()
+    @$ground.seed()
 
-  afterEach ->
-    delete h.__renderer
+    # Widget we are going to include using helper
+    class @Widget extends Joosy.Widget
+      @view -> "test"
+
+    # Least possible configuration capable of using helper
+    class @Renderer extends Joosy.Module
+      @include Joosy.Modules.Renderer
+      @include Joosy.Modules.TimeManager
+      @include Joosy.Modules.WidgetsManager
+
+    @renderer = new @Renderer
+    @widget   = new @Widget
+    @template = (context) => context.widget 'div', @widget
 
   it "renders widget tag", ->
     runs ->
-      expect(h.widget 'div', ->).toBeTag 'div', false,
+      @$ground.find('#header').html @renderer.render(@template)
+
+      expect(@$ground.find('#header').html()).toBeTag 'div', '',
+        id: /__joosy\d+/
+
+  it "renders widget tag", ->
+    runs ->
+      @template = (context) => context.widget 'div', {class: 'test'}, @widget
+
+      @$ground.find('#header').html @renderer.render(@template)
+
+      expect(@$ground.find('#header').html()).toBeTag 'div', '',
+        id: /__joosy\d+/
+        class: 'test'
+
+  it "bootstraps widget", ->
+    runs ->
+      @$ground.find('#header').html @renderer.render(@template)
+
+      # At the first step only the container will be injected into HTML
+      expect(@$ground.find('#header').html()).toBeTag 'div', '',
         id: /__joosy\d+/
 
     waits 0
 
     runs ->
-      expect(@spy.callCount).toEqual 1
-
-  it "renders widget tag with given classes", ->
-    runs ->
-      expect(h.widget 'div', {class: 'class1 class2'}, ->).toBeTag 'div', false,
-        id: /__joosy\d+/,
-        class: 'class1 class2'
-
-    waits 0
-
-    runs ->
-      expect(@spy.callCount).toEqual 1
+      # But at the next asynchronous tick, widget will be emerged
+      expect(@$ground.find('#header').html()).toBeTag 'div', 'test',
+        id: /__joosy\d+/

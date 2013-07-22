@@ -64,16 +64,18 @@ Joosy.Modules.WidgetsManager =
         else
           instance = widget.call this, index
 
-        registered[selector][Joosy.Module.__className instance] ||= 0
-        registered[selector][Joosy.Module.__className instance]  += 1
+        if Joosy.Application.config.debug
+          registered[selector][Joosy.Module.__className instance] ||= 0
+          registered[selector][Joosy.Module.__className instance]  += 1
 
         @registerWidget $(elem), instance
 
     @__widgets = {}
 
-    registered.each (selector, value) =>
-      value.each (widget, count) =>
-        Joosy.Modules.Log.debugAs @, "Widget #{widget} registered at '#{selector}'. Elements: #{count}"
+    if Joosy.Application.config.debug
+      registered.each (selector, value) =>
+        value.each (widget, count) =>
+          Joosy.Modules.Log.debugAs @, "Widget #{widget} registered at '#{selector}'. Elements: #{count}"
 
   #
   # Unregister all widgets for current object

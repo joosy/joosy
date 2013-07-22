@@ -31,7 +31,9 @@ Joosy.Modules.Filters =
 
 
 ['beforeLoad', 'afterLoad', 'afterUnload'].each (filter) =>
-  Joosy.Modules.Filters["__run#{filter.camelize(true)}s"] = (opts...) ->
+  camelized = filter.charAt(0).toUpperCase() + filter.slice(1);
+
+  Joosy.Modules.Filters["__run#{camelized}s"] = (opts...) ->
     return true unless @["__#{filter}s"]
 
     @["__#{filter}s"].reduce (flag, func) =>

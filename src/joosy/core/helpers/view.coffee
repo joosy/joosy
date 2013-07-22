@@ -5,6 +5,18 @@
 #
 Joosy.helpers 'Application', ->
 
+  #
+  # Generates HTML tag string
+  #
+  # @param [String] name          Tag name
+  # @param [Object] options       Tag attributes
+  # @param [String] content       String content to inject
+  # @param [Function] content     Function that will be evaluated and the result will be taken as a content
+  #
+  # Example
+  #   != @tag 'div', {class: 'foo'}, =>
+  #     != @tag 'hr'
+  #
   @tag = (name, options={}, content='') ->
     content = content() if Object.isFunction(content)
 

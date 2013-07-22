@@ -1,25 +1,20 @@
 describe "Joosy.Modules.TimeManager", ->
 
   beforeEach ->
-    class @TestTimeManager extends Joosy.Module
+    class @Manager extends Joosy.Module
       @include Joosy.Modules.TimeManager
-    @box = new @TestTimeManager()
 
+    @manager = new @Manager
 
-  it "should keep timeouts list", ->
-    timer = @box.setTimeout 10000, ->
-    expect(@box.__timeouts).toEqual [timer]
-    window.clearTimeout timer
-
-  it "should keep intervals list", ->
-    timer = @box.setInterval 10000, ->
-    expect(@box.__intervals).toEqual [timer]
-    window.clearInterval timer
-
-  it "should stop intervals and timeouts", ->
+  it "stops intervals and timeouts", ->
     callback = sinon.spy()
+
     runs ->
-      @box.setTimeout 10, callback
-      @box.__clearTime()
-    waits(10)
-    runs -> expect(callback.callCount).toEqual(0)
+      @manager.setTimeout 1, callback
+      @manager.setInterval 1, callback
+      @manager.__clearTime()
+
+    waits 2
+
+    runs ->
+      expect(callback.callCount).toEqual 0

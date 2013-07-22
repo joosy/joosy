@@ -4,13 +4,6 @@ describe "Joosy.Widget", ->
     class @TestWidget extends Joosy.Widget
     @box = new @TestWidget()
 
-  it "should have appropriate accessors", ->
-    test = ->
-    @TestWidget.view test
-    expect(@TestWidget::__renderer).toEqual test
-    @TestWidget.view 'test'
-    expect(@TestWidget::__renderer instanceof Function).toBeTruthy()
-
   it "should use Router", ->
     target = sinon.stub Joosy.Router, 'navigate'
     @box.navigate 'there'
@@ -26,10 +19,10 @@ describe "Joosy.Widget", ->
     spies.push sinon.spy(@box, '__assignElements')
     spies.push sinon.spy(@box, '__delegateEvents')
     spies.push sinon.spy(@box, '__runAfterLoads')
-    target = @box.__load @parent, @ground
+    target = @box.__load @parent, @$ground
     expect(target).toBe @box
-    expect(@box.__renderer.getCall(0).calledOn()).toBeFalsy()
-    expect(@box.__renderer.getCall(0).args[0]).toEqual {tested: true}
+    expect(spies[0].getCall(0).calledOn()).toBeFalsy()
+    expect(spies[0].getCall(0).args[0].tested).toBe true
     expect(spies).toBeSequenced()
 
   it "should unload itself", ->

@@ -12,7 +12,7 @@ describe "Joosy.Layout", ->
 
   it "should have default view", ->
     @box = new @TestLayout()
-    expect(@box.__renderer instanceof Function).toBeTruthy()
+    expect(@box.__renderDefault instanceof Function).toBeTruthy()
 
   it "should use Router", ->
     target = sinon.stub Joosy.Router, 'navigate'
@@ -27,7 +27,7 @@ describe "Joosy.Layout", ->
     spies.push sinon.spy(@box, '__delegateEvents')
     spies.push sinon.spy(@box, '__setupWidgets')
     spies.push sinon.spy(@box, '__runAfterLoads')
-    @box.__load(@ground)
+    @box.__load(@$ground)
     expect(spies).toBeSequenced()
 
   it "should unload itself", ->

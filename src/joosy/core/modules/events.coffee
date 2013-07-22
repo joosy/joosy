@@ -23,10 +23,7 @@ Joosy.Modules.Events =
       events   = name
       name     = Object.keys(@__oneShotEvents).length.toString()
 
-    events = @__splitEvents events
-    @__validateEvents events
-
-    @__oneShotEvents[name] = [events, callback]
+    @__oneShotEvents[name] = [@__splitEvents(events), callback]
     name
 
   #
@@ -53,10 +50,7 @@ Joosy.Modules.Events =
       events   = name
       name     = Object.keys(@__boundEvents).length.toString()
 
-    events = @__splitEvents events
-    @__validateEvents events
-
-    @__boundEvents[name] = [events, callback]
+    @__boundEvents[name] = [@__splitEvents(events), callback]
     name
 
   #
@@ -74,6 +68,7 @@ Joosy.Modules.Events =
   #
   trigger: (event, data...) ->
     Joosy.Modules.Log.debugAs @, "Event #{event} triggered"
+
     if @__oneShotEvents
       fire = []
       for name, [events, callback] of @__oneShotEvents
@@ -84,6 +79,7 @@ Joosy.Modules.Events =
         callback = @__oneShotEvents[name][1]
         delete @__oneShotEvents[name]
         callback data...
+
     if @__boundEvents
       for name, [events, callback] of @__boundEvents
         if events.any event
@@ -102,75 +98,91 @@ Joosy.Modules.Events =
   # @param [Function] block           Configuration block (see example)
   #
   synchronize: (block) ->
-    context = new Joosy.Events.SynchronizationContext(this)
-    block.call(this, context)
+    context = new Joosy.Events.SynchronizationContext(@)
+    block.call(@, context)
 
     if context.expectations.length == 0
-      context.after.call(this)
+      context.after.call(@)
     else
-      @wait context.expectations, => context.after.call(this)
+      @wait context.expectations, => context.after.call(@)
       context.actions.each (data) =>
-        data[0].call this, =>
+        data[0].call @, =>
           @trigger data[1]
 
   __splitEvents: (events) ->
     if Object.isString events
       if events.isBlank()
-        []
+        events = []
       else
-        events.trim().split /\s+/
-    else
-      events
+        events = events.trim().split /\s+/
 
-  __validateEvents: (events) ->
     unless Object.isArray(events) && events.length > 0
       throw new Error "#{Joosy.Module.__className @}> bind invalid events: #{events}"
 
-
-Joosy.Events = {}
-
-class Joosy.Events.Namespace
-  constructor: (@parent) ->
-    @bindings = []
-
-  bind: (args...) -> @bindings.push @parent.bind(args...)
-  unbind: ->
-    @parent.unbind b for b in @bindings
-    @bindings = []
+    events
 
 #
-# Internal representation of {Joosy.Modules.Events.synchronize} context
+# Additional events helpers and tools
 #
-# @see Joosy.Modules.Events.synchronize
-#
-class Joosy.Events.SynchronizationContext
-  @uid = 0
+Joosy.namespace 'Joosy.Events', ->
+  #
+  # Events namespace
+  #
+  # Creates unified collection of bindings to a particular instance
+  # that can be unbinded alltogether
+  #
+  # @example
+  #   namespace = Joosy.Events.Namespace(something)
+  #
+  #   namespace.bind 'event1', ->
+  #   namespace.bind 'event2', ->
+  #   namespace.unbind() # unbinds both bindings
+  #
+  class @Namespace
+    #
+    # @param [Object] @parent         Any instance that can trigger events
+    #
+    constructor: (@parent) ->
+      @bindings = []
 
-  constructor: (@parent) ->
-    @expectations = []
-    @actions = []
+    bind: (args...) -> @bindings.push @parent.bind(args...)
+    unbind: ->
+      @parent.unbind b for b in @bindings
+      @bindings = []
 
   #
-  # Internal simple counter to separate given synchronization actions
+  # Internal representation of {Joosy.Modules.Events.synchronize} context
   #
-  uid: ->
-    @constructor.uid += 1
+  # @see Joosy.Modules.Events.synchronize
+  #
+  class @SynchronizationContext
+    @uid = 0
 
-  #
-  # Registeres another async function that should be synchronized
-  #
-  # @param [Function] action        `(Function) -> null` to call.
-  #   Should call given function to mark itself complete.
-  #
-  do: (action) ->
-    event = "synchro-#{@uid()}"
-    @expectations.push event
-    @actions.push [action, event]
+    constructor: (@parent) ->
+      @expectations = []
+      @actions = []
 
-  #
-  # Registers finalizer: the action that will be called when all do-functions
-  #   marked themselves as complete.
-  #
-  # @param [Function] after       Function to call.
-  #
-  after: (@after) ->
+    #
+    # Internal simple counter to separate given synchronization actions
+    #
+    uid: ->
+      @constructor.uid += 1
+
+    #
+    # Registeres another async function that should be synchronized
+    #
+    # @param [Function] action        `(Function) -> null` to call.
+    #   Should call given function to mark itself complete.
+    #
+    do: (action) ->
+      event = "synchro-#{@uid()}"
+      @expectations.push event
+      @actions.push [action, event]
+
+    #
+    # Registers finalizer: the action that will be called when all do-functions
+    #   marked themselves as complete.
+    #
+    # @param [Function] after       Function to call.
+    #
+    after: (@after) ->

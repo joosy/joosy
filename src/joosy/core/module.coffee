@@ -52,14 +52,34 @@ class @Joosy.Module
 
     false
 
-  @alias: (method, feature, action) ->
-    chained = "#{method}Without#{feature.camelize()}"
+  #
+  # Allows to override method keeping the previous implementation accessible
+  #
+  # @param [String] method        Name of the method to override
+  # @param [String] feature       Shortcut to use as previous implementation suffix
+  # @param [String] action        Name of new method to use
+  # @param [Function] action      New implementation
+  #
+  @aliasMethodChain: (method, feature, action) ->
+    camelized = feature.charAt(0).toUpperCase() + feature.slice(1)
+    chained = "#{method}Without#{camelized}"
+
+    action = @::[action] unless Object.isFunction(action)
 
     @::[chained] = @::[method]
     @::[method] = action
 
-  @aliasStatic: (method, feature, action) ->
-    chained = "#{method}Without#{feature.camelize()}"
+  #
+  # Allows to override class-level method keeping the previous implementation accessible
+  #
+  # @param [String] method        Name of the method to override
+  # @param [String] feature       Shortcut to use as previous implementation suffix
+  # @param [String] action        Name of new method to use
+  # @param [Function] action      New implementation
+  #
+  @aliasStaticMethodChain: (method, feature, action) ->
+    camelized = feature.charAt(0).toUpperCase() + feature.slice(1)
+    chained = "#{method}Without#{camelized}"
 
     @[chained] = @[method]
     @[method] = action

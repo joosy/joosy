@@ -1,15 +1,23 @@
 describe "Joosy.Modules.Log", ->
 
   beforeEach ->
-    class @TestLog extends Joosy.Module
+    class @Logger extends Joosy.Module
       @include Joosy.Modules.Log
-    @box = new @TestLog()
+
+    @logger = new @Logger
+    @stub   = sinon.stub console, 'log'
+
+  afterEach ->
+    console.log.restore()
 
   it "should log into console", ->
-    @box.log 'message', 'appendix'
+    @logger.log 'message', 'appendix'
+    expect(@stub.callCount).toEqual 1
 
   it "should log debug messages into console", ->
     Joosy.Application.config.debug = true
-    @box.debug 'debug message'
+    @logger.debug 'debug message'
     Joosy.Application.config.debug = false
-    @box.debug 'unseen debug message'
+    @logger.debug 'unseen debug message'
+
+    expect(@stub.callCount).toEqual 1

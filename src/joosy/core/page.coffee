@@ -324,7 +324,7 @@ class Joosy.Page extends Joosy.Module
       @previous?.__afterPaint?(callbacksParams)
       @__callSyncedThrough this, '__paint', callbacksParams, =>
         # Page HTML
-        @swapContainer @layout.content(), @__renderer(@data || {})
+        @swapContainer @layout.content(), @__renderDefault(@data || {})
         @container = @layout.content()
 
         # Loading
@@ -361,10 +361,10 @@ class Joosy.Page extends Joosy.Module
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough @layout, '__paint', callbacksParams, =>
         # Layout HTML
-        @swapContainer Joosy.Application.content(), @layout.__renderer(@layout.data || {})
+        @swapContainer Joosy.Application.content(), @layout.__renderDefault(@layout.data || {})
 
         # Page HTML
-        @swapContainer @layout.content(), @__renderer(@data || {})
+        @swapContainer @layout.content(), @__renderDefault(@data || {})
         @container = @layout.content()
 
         # Loading

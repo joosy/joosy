@@ -1,10 +1,10 @@
 describe "Joosy.Helpers.View", ->
 
+  # Shortcut
   h = Joosy.Helpers.Application
 
   it "renders tag with string content", ->
     tag = h.tag 'div', {id: 'id'}, 'content'
-
     expect(tag).toEqual '<div id="id">content</div>'
 
   it "renders tag with lambda content", ->

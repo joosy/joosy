@@ -11,11 +11,30 @@ Joosy.Modules.Container =
   eventSplitter: /^(\S+)\s*(.*)$/
 
   included: ->
+    #
+    # Extends elements mapping scheme
+    #
+    # @example
+    #   @mapElements
+    #     'name':       '.selector'
+    #     'name2':      '$name .selector'
+    #     'category':
+    #       'name3':    '.selector'
+    #
     @mapElements = (map) ->
       unless @::hasOwnProperty "__elements"
         @::__elements = Object.clone(@.__super__.__elements) || {}
       Object.merge @::__elements, map
 
+    #
+    # Extends events mapping scheme
+    #
+    # @example
+    #   @mapEvents
+    #     'click':            ($container, event) -> #fires on container
+    #     'click .selector':  ($element, event) -> #fires on .selector
+    #     'click $name':      ($element, event) -> #fires on selector assigned to 'name' element
+    #
     @mapEvents = (map) ->
       unless @::hasOwnProperty "__events"
         @::__events = Object.clone(@.__super__.__events) || {}
@@ -23,15 +42,6 @@ Joosy.Modules.Container =
 
   $: (selector) ->
     $(selector, @container)
-
-  #
-  # Clears old HTML links, set the new HTML from the callback and refreshes elements
-  #
-  # @param [Function] htmlCallback       `() -> String` callback that will generate new HTML
-  #
-  reloadContainer: (htmlCallback) ->
-    @__removeMetamorphs?()
-    @container.html htmlCallback()
 
   #
   # Fills container with given data removing all events

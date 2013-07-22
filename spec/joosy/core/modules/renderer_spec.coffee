@@ -1,138 +1,142 @@
 describe "Joosy.Modules.Renderer", ->
 
   beforeEach ->
-    @seedGround()
-
-    class @TestContainer extends Joosy.Module
+    class @Renderer extends Joosy.Module
       @include Joosy.Modules.Renderer
 
-      multiplier: (value) ->
-        "#{value * 10}"
+    @renderer = new @Renderer
 
-    @dummyContainer = new @TestContainer
+  it "renders default template", ->
+    template = sinon.stub()
+    template.returns "result"
 
-    class @TestObject extends Joosy.Module
-      @include Joosy.Modules.Events
+    @Renderer.view template
 
-      constructor: (@value) ->
+    expect(@renderer.__renderDefault(foo: 'bar')).toEqual 'result'
+    expect(template.getCall(0).args[0].foo).toEqual 'bar'
+    expect(template.getCall(0).args[0].__renderer).toEqual @renderer
 
-      update: (@value) ->
-        @trigger 'changed'
+  describe "rendering", ->
+    beforeEach ->
+      @template = (locals) =>
+        expect(locals.foo).toEqual 'bar'
+        expect(locals.__renderer).toEqual @renderer
+        "result"
 
-    @dummyObject = new @TestObject("initial")
+    it "accepts lambda", ->
+      expect(@renderer.render @template, foo: 'bar').toEqual 'result'
 
-    Joosy.namespace 'Joosy.Helpers.Hoge', ->
-      @multiplier = (value) ->
-        "#{value * 5}"
+    it "accepts template", ->
+      target = sinon.stub Joosy.Application.templater, 'buildView'
+      target.returns @template
 
-  it "updates contents, but only while it is bound to DOM", ->
-    @TestContainer.view (locals) ->
-      template = -> @object.value
+      expect(@renderer.render @template, foo: 'bar').toEqual 'result'
 
-      @renderDynamic(template, locals)
+      Joosy.Application.templater.buildView.restore()
 
-    elem = $("<div></div>")
-    @ground.append elem
+  describe "dynamic rendering", ->
+    beforeEach ->
+      # Instance we are going to use to trigger dynamic rendering
+      class @Entity extends Joosy.Module
+        @include Joosy.Modules.Events
 
-    elem.html @dummyContainer.__renderer({ object: @dummyObject })
-    expect(elem.text()).toBe "initial"
+        constructor: (@value) ->
 
-    @dummyObject.update "new"
+        update: (@value) ->
+          @trigger 'changed'
 
-    waits 0
+      @entity = new @Entity("initial")
 
-    runs ->
-      expect(elem.text()).toBe "new"
+    it "updates content", ->
+      template = (locals) -> locals.entity.value
 
-    waits 0
+      runs ->
+        @$ground.html @renderer.renderDynamic(template, entity: @entity)
+        expect(@$ground.text()).toBe "initial"
 
-    runs ->
-      @dummyContainer.__removeMetamorphs()
-      @dummyObject.update "afterwards"
+      runs ->
+        @entity.update "new"
 
-    waits 0
+      waits 0
 
-    runs ->
-      expect(elem.text()).toBe "new"
+      runs ->
+        expect(@$ground.text()).toBe "new"
 
-  it "debounces morpher updates", ->
-    @TestContainer.view (locals) ->
-      template = -> @object.value
+    it "does not update unloaded content", ->
+      template = (locals) -> locals.entity.value
 
-      @renderDynamic(template, locals)
+      runs ->
+        @$ground.html @renderer.renderDynamic(template, entity: @entity)
+        expect(@$ground.text()).toBe "initial"
+        @renderer.__removeMetamorphs()
 
-    elem = $("<div></div>")
-    @ground.append elem
+      runs ->
+        @entity.update "new"
 
-    sinon.spy window, 'Metamorph'
+      waits 0
 
-    elem.html @dummyContainer.__renderer({ object: @dummyObject })
-    expect(elem.text()).toBe "initial"
+      runs ->
+        expect(@$ground.text()).toBe "initial"
 
-    updater = sinon.spy window.Metamorph.returnValues[0], 'html'
+    describe "Metamorph magic", ->
+      beforeEach ->
+        sinon.spy window, 'Metamorph'
 
-    @dummyObject.update "new"
+        template = (locals) -> locals.entity.value
+        @$ground.html @renderer.renderDynamic(template, entity: @entity)
 
-    waits 0
+        # With this we intercept calls to Metamorph updates
+        @updater = sinon.spy window.Metamorph.returnValues[0], 'html'
 
-    runs ->
-      expect(elem.text()).toBe "new"
-      expect(updater.callCount).toEqual 1
+      afterEach ->
+        Metamorph.restore()
 
-    runs ->
-      @dummyObject.update "don't make"
-      @dummyObject.update "me evil"
+      it "debounces", ->
+        @entity.update "new"
+        @entity.update "don't make"
+        @entity.update "me evil"
 
-    waits 0
+        waits 0
 
-    runs ->
-      expect(elem.text()).toBe "me evil"
-      expect(updater.callCount).toEqual 2
+        runs ->
+          expect(@updater.callCount).toEqual 1
+          expect(@$ground.text()).toEqual "me evil"
 
-  it "includes helpers module in locals", ->
-    @TestContainer.helper Joosy.Helpers.Hoge
+      it "catches manually removed nodes", ->
+        @$ground.html ''
 
-    @TestContainer.view (locals) ->
-      template = -> @multiplier(10)
+        @entity.update "new"
+        @entity.update "don't make"
+        @entity.update "me evil"
 
-      @render(template, locals)
+        waits 0
 
-    elem = $("<div></div>")
-    @ground.append elem
+        runs ->
+          expect(@updater.callCount).toEqual 0
 
-    elem.html @dummyContainer.__renderer({ })
+  describe "helpers includer", ->
 
-    expect(elem.text()).toBe "50"
+    it "works with modules", ->
+      Joosy.namespace 'Joosy.Helpers.Hoge', ->
+        @multiplier = (value) -> "#{value * 5}"
 
-  it "includes local helper in locals", ->
-    @TestContainer.helper 'multiplier'
+      @Renderer.helper Joosy.Helpers.Hoge
+      template = (locals) -> locals.multiplier(10)
 
-    @TestContainer.view (locals) ->
-      template = -> @multiplier(10)
+      expect(@renderer.render template).toBe "50"
 
-      @render(template, locals)
+    it "works with local methods", ->
+      @Renderer::multiplier = (value) -> "#{value * 10}"
+      @Renderer.helper 'multiplier'
+      template = (locals) -> locals.multiplier(10)
 
-    @dummyContainer.__assignHelpers()
+      expect(@renderer.render template).toBe "100"
+      delete @Renderer::multiplier
 
-    elem = $("<div></div>")
-    @ground.append elem
+    it "works with globals", ->
+      Joosy.Helpers.Application.multiplier = (value) -> "#{value * 3}"
+      template = (locals) -> locals.multiplier(10)
 
-    elem.html @dummyContainer.__renderer({ })
+      expect(@renderer.render template).toBe "30"
+      delete Joosy.Helpers.Application.multiplier
 
-    expect(elem.text()).toBe "100"
-
-  it "includes global rendering helpers in locals", ->
-    Joosy.Helpers.Application.globalMultiplier = (value) ->
-      value * 6
-
-    @TestContainer.view (locals) ->
-      template = (locals) -> @globalMultiplier(10)
-
-      @render(template, locals)
-
-    elem = $("<div></div>")
-    @ground.append elem
-
-    elem.html @dummyContainer.__renderer({ })
-
-    expect(elem.text()).toBe "60"

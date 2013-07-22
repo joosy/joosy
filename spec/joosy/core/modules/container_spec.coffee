@@ -1,49 +1,62 @@
 describe "Joosy.Modules.Container", ->
 
   beforeEach ->
-    @seedGround()
+    @$ground.seed()
+    container = @$ground.find('#application')
 
-    class @TestContainer extends Joosy.Module
+    class @Container extends Joosy.Module
       @include Joosy.Modules.Container
+
       @mapElements
         posts: '.post'
         content:
           post1: '#post1'
           post2: '#post2'
         footer: '.footer'
+
       @mapEvents
         'test': 'onContainerTest'
-      container: $('#application', @ground)
 
-    @box = new @TestContainer()
+      container: container
 
-  it "reinitializes container", ->
-    oldContainer = @box.container
-    parent       = oldContainer.parent()
-    callback     = sinon.spy()
+  it "swaps container", ->
+    initial = (new @Container).container
+    parent  = initial.parent()
+    event   = sinon.spy()
 
-    oldContainer.bind 'test', callback
-    oldContainer.trigger 'test'
-    expect(callback.callCount).toEqual 1
+    # Binded events trigger
+    initial.bind 'test', event
+    initial.trigger 'test'
+    expect(event.callCount).toEqual 1
 
-    newContainer = Joosy.Modules.Container.swapContainer oldContainer, 'new content'
-    newContainer.trigger 'test'
-    expect(newContainer.html()).toEqual 'new content'
-    expect(newContainer.parent().get(0)).toBe parent.get 0
-    expect(callback.callCount).toEqual 1
+    swapped = Joosy.Modules.Container.swapContainer initial, 'new content'
 
-  describe "elements", ->
+    # Injects into DOM properly
+    expect(swapped.html()).toEqual 'new content'
+    expect(swapped.parent().get 0).toEqual parent.get 0
+
+    # Binded events disappear
+    swapped.trigger 'test'
+    expect(event.callCount).toEqual 1
+
+  describe "elements assigner", ->
+
+    beforeEach ->
+      @container = new @Container
+      @container.__assignElements()
+
     it "declares", ->
-      class SubContainerA extends @TestContainer
+      class A extends @Container
         @mapElements
           first: 'first'
           second: 'second'
-      class SubContainerB extends SubContainerA
+
+      class B extends A
         @mapElements
           first: 'overrided'
           third: 'third'
 
-      expect((new SubContainerB()).__elements).toEqual Object.extended
+      expect((new B).__elements).toEqual Object.extended
         posts: '.post'
         content: 
           post1: '#post1'
@@ -53,90 +66,88 @@ describe "Joosy.Modules.Container", ->
         third: 'third'
         footer: '.footer'
 
-      expect((new @TestContainer()).__elements).toEqual Object.extended
+      expect((new @Container).__elements).toEqual Object.extended
         posts: '.post'
         footer: '.footer'
         content: 
           post1: '#post1'
           post2: '#post2'
 
-      console.log (new @TestContainer)
+    describe "selector resolvance", ->
 
-    it "resolve selector", ->
-      @box.__assignElements()
+      it "works for plane selectors", ->
+        expect(@container.__extractSelector '$footer').toEqual '.footer'
 
-      target = @box.__extractSelector '$footer'
-      expect(target).toEqual '.footer'
+      it "works for deep selectors", ->
+        expect(@container.__extractSelector '$content.$post1').toEqual '#post1'
 
-      target = @box.__extractSelector '$content.$post1'
-      expect(target).toEqual '#post1'
+      it "works for plane extended selectors", ->
+        expect(@container.__extractSelector '$footer tr').toEqual '.footer tr'
 
-      target = @box.__extractSelector '$footer tr'
-      expect(target).toEqual '.footer tr'
+      it "works for deep extended selectors", ->
+        expect(@container.__extractSelector '$footer $content.$post1').toEqual '.footer #post1'
 
-      target = @box.__extractSelector '$footer $content.$post1'
-      expect(target).toEqual '.footer #post1'
-
-    it "nesteds get assigned", ->
-      @box.__assignElements()
-      expect(@box.$content.$post1().get 0).toBe $('#post1').get 0
-
-    it "get assigned", ->
-      @box.__assignElements()
-
-      target = @box.$footer().get 0
+    it "assigns", ->
+      target = @container.$footer().get 0
       expect(target).toBeTruthy()
-      expect(target).toBe $('.footer', @box.container).get 0
-      expect(target).toBe @box.$('.footer').get 0
+      expect(target).toBe $('.footer', @container.container).get 0
+      expect(target).toBe @container.$('.footer').get 0
 
-    it "allow to filter", ->
-      @box.__assignElements()
+    it "assigns nesteds", ->
+      expect(@container.$content.$post1().get 0).toBe $('#post1').get 0
 
-      target = @box.$posts('#post1').get 0
+    it "filters assignation", ->
+      target = @container.$posts('#post1').get 0
       expect(target).toBeTruthy()
-      expect(target).toBe $('#post1', @box.container).get 0
+      expect(target).toBe $('#post1', @container.container).get 0
 
-    it "respect container boundaries", ->
-      @box.__assignElements()
+    it "respects container boundaries", ->
+      @$ground.prepend('<div class="footer" />')  # out of container
 
-      @ground.prepend('<div class="footer" />')  # out of container
-      target = @box.$footer().get 0
+      target = @container.$footer().get 0
       expect(target).toBeTruthy()
-      expect(target).toBe $('.footer', @box.container).get 0
-      expect(target).toBe @box.$('.footer').get 0
+      expect(target).toBe $('.footer', @container.container).get 0
+      expect(target).toBe @container.$('.footer').get 0
 
-  describe "events", ->
+  describe "events delegator", ->
+
     it "declares", ->
-      class SubContainerA extends @TestContainer
+      class A extends @Container
         @mapEvents
           'test .post': 'callback2'
           'custom' : 'method'
-      class SubContainerB extends SubContainerA
+
+      class B extends A
         @mapEvents
           'test $footer': 'onFooterTest'
           'custom' : 'overrided'
-      target = (new SubContainerB()).__events
-      expect(target).toEqual Object.extended
+
+      expect((new B).__events).toEqual Object.extended
         'test': 'onContainerTest'
         'test .post': 'callback2'
         'test $footer': 'onFooterTest'
         'custom' : 'overrided'
-      target = (new @TestContainer()).__events
-      expect(target).toEqual Object.extended('test': 'onContainerTest')
 
-    it "delegate", ->
-      @box.__assignElements()
+      expect((new @Container).__events).toEqual Object.extended
+        'test': 'onContainerTest'
+
+    it "delegates", ->
       callbacks = 1.upto(3).map -> sinon.spy()
-      @box.__events = Object.extended(@box.__events).merge
+
+      @Container.mapEvents
         'test .post': callbacks[2]
         'test $footer': 'onFooterTest'
+      @Container::onContainerTest = callbacks[0]
+      @Container::onFooterTest = callbacks[1]
 
-      @box.onContainerTest = callbacks[0]
-      @box.onFooterTest = callbacks[1]
-      @box.__delegateEvents()
-      @box.container.trigger 'test'
-      $('.footer', @box.container).trigger 'test'
-      $('.post', @box.container).trigger 'test'
+      container = new @Container
+      container.__assignElements()
+      container.__delegateEvents()
+
+      container.container.trigger 'test'
+      $('.footer', container.container).trigger 'test'
+      $('.post', container.container).trigger 'test'
+
       expect(callbacks[0].callCount).toEqual 5
       expect(callbacks[1].callCount).toEqual 1
       expect(callbacks[2].callCount).toEqual 3

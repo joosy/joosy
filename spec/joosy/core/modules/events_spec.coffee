@@ -1,111 +1,178 @@
 describe "Joosy.Modules.Events", ->
 
   beforeEach ->
-    class @TestEvents extends Joosy.Module
+    class @Eventer extends Joosy.Module
       @include Joosy.Modules.Events
-    class @SubTestEvents extends @TestEvents
-      @include Joosy.Modules.Events
-    @box = new @TestEvents()
-    @sub = new @SubTestEvents()
 
-  it "should run callback once when the all listed events have occurred", ->
-    callback = sinon.spy()
+  describe "base", ->
 
-    @box.wait '  events   list ', callback
+    beforeEach ->
+      @callback = sinon.spy()
+      @eventer  = new @Eventer
 
-    @box.trigger 'events'
-    expect(callback.callCount).toEqual 0
-    @box.trigger 'list'
-    expect(callback.callCount).toEqual 1
+    describe "waiter", ->
 
-    @box.trigger 'events'
-    expect(callback.callCount).toEqual 1
-    @box.trigger 'list'
-    expect(callback.callCount).toEqual 1
+      it "fires", ->
+        @eventer.wait 'events list', @callback
 
-    expect(=> @box.wait '', callback).toThrow()
-    expect(callback.callCount).toEqual 1
+        @eventer.trigger 'events'
+        expect(@callback.callCount).toEqual 0
 
-    expect(=> @box.wait '    ', callback).toThrow()
-    expect(callback.callCount).toEqual 1
+        @eventer.trigger 'list'
+        expect(@callback.callCount).toEqual 1
 
-    expect(=> @box.wait [], callback).toThrow()
-    expect(callback.callCount).toEqual 1
+      it "fires just once", ->
+        @eventer.wait 'events list', @callback
 
-  it "should allow for binding and unbinding to events", ->
-    callback = sinon.spy()
+        @eventer.trigger 'events'
+        @eventer.trigger 'list'
+        @eventer.trigger 'events'
+        @eventer.trigger 'list'
 
-    event = @box.bind 'event', callback
+        expect(@callback.callCount).toEqual 1
 
-    @box.trigger 'other-event'
-    expect(callback.callCount).toEqual 0
-    @box.trigger 'event'
-    expect(callback.callCount).toEqual 1
-    @box.trigger 'event'
-    expect(callback.callCount).toEqual 2
+      it "unbinds", ->
+        binding = @eventer.wait 'events list', @callback
+        @eventer.unwait binding
 
-    @box.unbind 'other-event'
+        @eventer.trigger 'events'
+        @eventer.trigger 'list'
 
-    @box.trigger 'event'
-    expect(callback.callCount).toEqual 3
+        expect(@callback.callCount).toEqual 0
 
-    @box.unbind event
+      it "recognizes invalid arguments", ->
+        expect(=> @eventer.wait '', @callback).toThrow()
+        expect(=> @eventer.wait '    ', @callback).toThrow()
+        expect(=> @eventer.wait [], @callback).toThrow()
 
-    @box.trigger 'event'
-    expect(callback.callCount).toEqual 3
+    describe "binder", ->
 
-  it "should allow multiple binding", ->
-    callback = ->
+      it "fires", ->
+        @eventer.bind 'events list', @callback
 
-    3.times =>
-      @box.bind 'event', callback
-    expect(@box.__boundEvents).toEqual 0: [['event'], callback], 1: [['event'], callback],  2: [['event'], callback]
+        @eventer.trigger 'events'
+        expect(@callback.callCount).toEqual 1
 
-    3.times =>
-      @box.wait 'event', callback
-    expect(@box.__oneShotEvents).toEqual 0: [['event'], callback], 1: [['event'], callback], 2: [['event'], callback]
+        @eventer.trigger 'list'
+        expect(@callback.callCount).toEqual 2
 
-  it "should handle inheritance well", ->
-    callback = sinon.spy()
-    @sub.wait 'foo', callback
+      it "fires multiple times", ->
+        @eventer.bind 'events list', @callback
 
-    expect(@sub.__oneShotEvents).toEqual 0: [['foo'], callback]
-    expect(@box.__oneShotEvents).toBeUndefined()
+        @eventer.trigger 'events'
+        @eventer.trigger 'list'
+        @eventer.trigger 'events'
+        @eventer.trigger 'list'
 
-  it "should be safe for concurrent usage", ->
-    Joosy.synchronize (context) ->
-      context.do (done)  ->
-        window.setTimeout ->
-          expect(-> done()).not.toThrow()
-        , 1
-    Joosy.synchronize (context) ->
-      context.do (done)  ->
-        window.setTimeout ->
-          expect(-> done()).not.toThrow()
-        , 2
-    waits 3
+        expect(@callback.callCount).toEqual 4
 
-  it "should call finalizer", ->
-    callback = sinon.spy()
+      it "unbinds", ->
+        binding = @eventer.bind 'events list', @callback
+        @eventer.unbind binding
 
-    Joosy.synchronize (context) ->
-      context.do (done) ->
-        callback()
-        done()
-      context.after ->
-        expect(callback.callCount).toEqual 1
-        callback()
+        @eventer.trigger 'events'
+        @eventer.trigger 'list'
 
-    waits 1
-    expect(callback.callCount).toEqual 2
+        expect(@callback.callCount).toEqual 0
 
-  it "should call finalizer even if context.do hasn't been called", ->
-    callback = sinon.spy()
+      it "recognizes invalid arguments", ->
+        expect(=> @eventer.bind '', @callback).toThrow()
+        expect(=> @eventer.bind '    ', @callback).toThrow()
+        expect(=> @eventer.bind [], @callback).toThrow()
 
-    Joosy.synchronize (context) ->
-      context.after ->
-        expect(callback.callCount).toEqual 0
-        callback()
+    it "allows simultaneous usage", ->
+      3.times (i) => @eventer.bind "event#{i}", @callback
+      3.times (i) => @eventer.wait "event#{i}", @callback
 
-    waits 1
-    expect(callback.callCount).toEqual 1
+      @eventer.trigger 'event2'
+
+      expect(@callback.callCount).toEqual 2
+
+    it "handles inheritance well", ->
+      class A extends @Eventer
+      a = new A
+
+      a.wait 'event', @callback
+
+      expect(a.__oneShotEvents).toEqual 0: [['event'], @callback]
+      expect(@eventer.__oneShotEvents).toBeUndefined()
+
+  describe "synchronizer", ->
+
+    it "finalizes", ->
+      callback = sinon.spy()
+
+      Joosy.Modules.Events.synchronize (context) ->
+        context.do (done) ->
+          callback()
+          done()
+        context.after ->
+          expect(callback.callCount).toEqual 1
+          callback()
+
+      waits 1
+      expect(callback.callCount).toEqual 2
+
+    it "finalizes with no dependencies defined", ->
+      callback = sinon.spy()
+
+      Joosy.Modules.Events.synchronize (context) ->
+        context.after ->
+          expect(callback.callCount).toEqual 0
+          callback()
+
+      waits 1
+      expect(callback.callCount).toEqual 1
+
+    it "gets called in proper context", ->
+      eventer = new @Eventer
+
+      eventer.synchronize (context) ->
+        context.do (done) ->
+          expect(@).toEqual eventer
+        context.after ->
+
+    it "is safe for concurrent usage", ->
+      test = (method) ->
+        expect(-> method()).not.toThrow()
+
+      Joosy.Modules.Events.synchronize (context) ->
+        context.do (done)  ->
+          window.setTimeout (-> test done), 1
+
+      Joosy.Modules.Events.synchronize (context) ->
+        context.do (done)  ->
+          window.setTimeout (-> test done), 2
+
+      waits 3
+
+  describe "namespece", ->
+
+    beforeEach ->
+      @callback = sinon.spy()
+
+    it "proxies events", ->
+      eventer   = new @Eventer
+      namespace = new Joosy.Events.Namespace(eventer)
+
+      namespace.bind 'event1', @callback
+      namespace.bind 'event2', @callback
+
+      eventer.trigger 'event1'
+      eventer.trigger 'event2'
+
+      expect(@callback.callCount).toEqual 2
+
+    it "unbinds events", ->
+      eventer   = new @Eventer
+      namespace = new Joosy.Events.Namespace(eventer)
+
+      namespace.bind 'event1', @callback
+      namespace.bind 'event2', @callback
+
+      namespace.unbind()
+
+      eventer.trigger 'event1'
+      eventer.trigger 'event2'
+
+      expect(@callback.callCount).toEqual 0

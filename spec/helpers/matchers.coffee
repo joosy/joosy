@@ -1,6 +1,13 @@
 beforeEach ->
   @addMatchers
 
+    #
+    # Checks whether listed array of callbacks was 
+    # called in exact order one by one
+    #
+    # @example
+    #   [ (->), (->), (->) ].toBesequenced()
+    #
     toBeSequenced: ->
       # Are we working with array?
       if !Object.isArray(@actual) || @actual.length == 0
@@ -22,9 +29,17 @@ beforeEach ->
 
       return true
 
+    #
+    # Checks the exact equality of tag including attributes and content
+    # with the posibility to check attributes values by regexp
+    #
+    # @example
+    #   tag = "<div class='foo' id='bar'>foo</div>"
+    #   tag.toBeTag 'div', 'foo', class: 'foo', id: /\S+/
+    #
     toBeTag: (tagName, content, attrs) ->
       @message = =>
-        "Expected #{@actual} to be a tag #{tagName} with attributes #{JSON.stringify attrs} and content #{content}"
+        "Expected #{@actual} to be a tag #{tagName} with attributes #{JSON.stringify attrs} and content '#{content}'"
 
       tag = $ @actual
 

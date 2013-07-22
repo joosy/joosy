@@ -1,11 +1,14 @@
+#
+# DOM builders
+#
 beforeEach ->
-  @body   = $('body')
-  @ground = $('<div/>').attr('id', 'ground')
+  @$body   = $('body')
+  @$ground = $('<div/>').attr('id', 'ground')
 
-  @body.append @ground
+  @$body.append @$ground
 
-  @seedGround = ->
-    @ground.html """
+  @$ground.seed = @seedGround = =>
+    @$ground.html """
       <div id="application" class="application">
         <div id="header" class="header" />
         <div id="wrapper" class="wrapper">
@@ -23,4 +26,8 @@ beforeEach ->
       </div>
     """
 
-afterEach -> @ground.remove()
+#
+# DOM cleanup
+#
+afterEach ->
+  @$ground.remove()

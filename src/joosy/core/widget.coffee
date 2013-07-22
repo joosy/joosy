@@ -33,7 +33,7 @@ class Joosy.Widget extends Joosy.Module
   #
   # By default widget will not render on load
   #
-  __renderer: false
+  __renderDefault: false
 
   #
   # Initial data that will be passed to view on load
@@ -66,8 +66,8 @@ class Joosy.Widget extends Joosy.Module
   #
   __load: (@parent, @container, render=true) ->
     @__runBeforeLoads()
-    if render && @__renderer
-      @swapContainer @container, @__renderer(@data || {})
+    if render && @__renderDefault
+      @swapContainer @container, @__renderDefault(@data || {})
     @__assignElements()
     @__delegateEvents()
     @__setupWidgets()

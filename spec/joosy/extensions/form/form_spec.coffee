@@ -12,7 +12,7 @@ describe "Joosy.Form", ->
     @exactForm = "<form id='exact'><input name='test[EXact][MATCH]'/></form>"
     @arrayForm = "<form id='array'><input name='test[arr][1][0][1]'/></form>"
 
-    @ground.find('#sidebar').after(@nudeForm).after(@putForm).after(@moreForm).after(@nestedForm).after(@exactForm).after(@arrayForm)
+    @$ground.find('#sidebar').after(@nudeForm).after(@putForm).after(@moreForm).after(@nestedForm).after(@exactForm).after(@arrayForm)
 
     @nudeForm = $('#nude')
     @putForm  = $('#put')

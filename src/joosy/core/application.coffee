@@ -31,7 +31,7 @@ Joosy.Application =
     @mergeConfig(window.JoosyEnvironment) if window.JoosyEnvironment?
     @mergeConfig(options)
 
-    @templater = new Joosy.Templaters.RailsJST @name
+    @templater = new Joosy.Templaters.JST @name
 
     Joosy.Router.__setupRoutes()
 

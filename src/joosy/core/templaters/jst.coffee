@@ -1,10 +1,12 @@
 #= require joosy/core/joosy
 
 #
-# Rails JST template precompilation binding
+# JST template precompilation binding
 #
-class Joosy.Templaters.RailsJST
-  constructor: (@applicationName) ->
+class Joosy.Templaters.JST
+  constructor: (applicationName) ->
+    if Object.isString(applicationName) && applicationName.length > 0
+      @applicationName = applicationName
 
   #
   # Gets template lambda by its full name
@@ -13,22 +15,22 @@ class Joosy.Templaters.RailsJST
   #
   buildView: (name) ->
     template = false
-    haystack = [
-      "#{@applicationName}/templates/#{name}-#{I18n?.locale}",
-      "#{@applicationName}/templates/#{name}",
-      "templates/#{name}-#{I18n?.locale}",
-      "templates/#{name}"
-    ]
 
-    haystack.each (path) ->
-      if JST[path]
-        location = path
-        template = JST[path]
+    if @applicationName
+      haystack = [
+        "#{@applicationName}/templates/#{name}-#{I18n?.locale}",
+        "#{@applicationName}/templates/#{name}"
+      ]
+    else
+      haystack = [
+        "templates/#{name}-#{I18n?.locale}",
+        "templates/#{name}"
+      ]
 
-    unless template
-      throw new Error "Template '#{name}' not found. Checked at: #{location}"
+    for path in haystack 
+      return window.JST[path] if window.JST[path]
 
-    template
+    throw new Error "Template '#{name}' not found. Checked at: '#{haystack.join(', ')}'"
 
   #
   # Gets full name of template by several params

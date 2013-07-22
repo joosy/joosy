@@ -4,11 +4,6 @@ Joosy.namespace 'Welcome', ->
     @layout ApplicationLayout
     @view   'index'
 
-    @afterLoad ->
-      @startHeartbeat()
-      @$content().css
-        'padding-top': "#{$(window).height() / 2 - 80}px"
-
     @mapElements
       content: '#content'
       joosy:   '.joosy'
@@ -16,6 +11,11 @@ Joosy.namespace 'Welcome', ->
     @mapEvents
       'mouseover $joosy': -> clearInterval @heartbeat
       'mouseout $joosy': 'startHeartbeat'
+
+    @afterLoad ->
+      @startHeartbeat()
+      @$content().css
+        'padding-top': "#{$(window).height() / 2 - 80}px"
 
     startHeartbeat: ->
       @heartbeat = @setInterval 1500, =>

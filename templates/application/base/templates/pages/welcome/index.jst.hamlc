@@ -1,6 +1,6 @@
 #wrapper
   #content
     %h1 Welcome aboard
-    .joosy{:style => 'background: #F71; border-radius: 10px; width: 250px; display: inline-block'}
-      %div{:style => 'color: #FFF; padding: 10px;'}
+    .joosy{style: 'background: #F71; border-radius: 10px; width: 250px; display: inline-block'}
+      %div{style: 'color: #FFF; padding: 10px;'}
         It's Joosy time!

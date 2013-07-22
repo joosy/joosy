@@ -1,2 +1,2 @@
-#page{:style => 'text-align: center'}
-  .content{:id => @yield()}
+#page{style: 'text-align: center'}
+  != @page 'div', class: 'content'

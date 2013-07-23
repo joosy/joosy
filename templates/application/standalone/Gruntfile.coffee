@@ -39,3 +39,5 @@ module.exports = (grunt) ->
   #
   grunt.registerTask 'compile', ['joosy:compile', 'uglify', 'cssmin']
   grunt.registerTask 'server',  ['joosy:server']
+
+  grunt.registerTask 'joosy:postinstall', ['joosy:bower', 'joosy:compile:production']

@@ -195,7 +195,7 @@ class Joosy.Page extends Joosy.Module
   #
   @title: (title, separator=' / ') ->
     @afterLoad ->
-      titleStr = if Object.isFunction(title) then title.apply(this) else title
+      titleStr = if Object.isFunction(title) then title.apply(@) else title
       titleStr = titleStr.join(separator) if Object.isArray(titleStr)
       @__previousTitle = document.title
       document.title = titleStr
@@ -270,11 +270,13 @@ class Joosy.Page extends Joosy.Module
   #
   # Page destruction proccess.
   #
+  #   * {Joosy.Modules.Container.__clearContainer}
   #   * {Joosy.Modules.TimeManager.__clearTime}
   #   * {Joosy.Modules.WidgetsManager.__unloadWidgets}
   #   * {Joosy.Modules.Renderer.__removeMetamorphs}
   #
   __unload: ->
+    @__clearContainer()
     @__clearTime()
     @__unloadWidgets()
     @__removeMetamorphs()
@@ -324,7 +326,7 @@ class Joosy.Page extends Joosy.Module
       @previous?.__afterPaint?(callbacksParams)
       @__callSyncedThrough this, '__paint', callbacksParams, =>
         # Page HTML
-        @swapContainer @layout.content(), @__renderDefault(@data || {})
+        @layout.content().html @__renderDefault(@data || {})
         @container = @layout.content()
 
         # Loading
@@ -361,14 +363,14 @@ class Joosy.Page extends Joosy.Module
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough @layout, '__paint', callbacksParams, =>
         # Layout HTML
-        @swapContainer Joosy.Application.content(), @layout.__renderDefault(@layout.data || {})
+        @layout.container.html @layout.__renderDefault(@layout.data || {})
 
         # Page HTML
-        @swapContainer @layout.content(), @__renderDefault(@data || {})
         @container = @layout.content()
+        @container.html @__renderDefault(@data || {})
 
         # Loading
-        @layout.__load Joosy.Application.content()
+        @layout.__load()
         @__load()
 
     @__callSyncedThrough @previous?.layout, '__erase', callbacksParams, =>

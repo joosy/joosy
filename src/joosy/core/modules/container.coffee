@@ -44,17 +44,6 @@ Joosy.Modules.Container =
     $(selector, @container)
 
   #
-  # Fills container with given data removing all events
-  #
-  # @param [jQuery] container       jQuery entity of container to update
-  # @param [String] data            HTML to inject
-  #
-  swapContainer: (container, data) ->
-    container.unbind().off()
-    container.html data
-    container
-
-  #
   # Converts '$...' notation to selector from 'elements'
   #
   # @param [String] selector            Selector to convert
@@ -134,3 +123,7 @@ Joosy.Modules.Container =
       else
         @container.on eventName, selector, callback
         Joosy.Modules.Log.debugAs @, "#{eventName} binded on #{selector}"
+
+  __clearContainer: ->
+    @container?.unbind().off()
+    @container = $()

@@ -19,26 +19,6 @@ describe "Joosy.Modules.Container", ->
 
       container: container
 
-  it "swaps container", ->
-    initial = (new @Container).container
-    parent  = initial.parent()
-    event   = sinon.spy()
-
-    # Binded events trigger
-    initial.bind 'test', event
-    initial.trigger 'test'
-    expect(event.callCount).toEqual 1
-
-    swapped = Joosy.Modules.Container.swapContainer initial, 'new content'
-
-    # Injects into DOM properly
-    expect(swapped.html()).toEqual 'new content'
-    expect(swapped.parent().get 0).toEqual parent.get 0
-
-    # Binded events disappear
-    swapped.trigger 'test'
-    expect(event.callCount).toEqual 1
-
   describe "elements assigner", ->
 
     beforeEach ->

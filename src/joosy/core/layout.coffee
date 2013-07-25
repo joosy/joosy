@@ -118,6 +118,7 @@ class Joosy.Layout extends Joosy.Module
   #
   constructor: (@params) ->
     @uid = Joosy.uid()
+    @container = Joosy.Application.content()
 
   #
   # @see Joosy.Router.navigate
@@ -139,7 +140,7 @@ class Joosy.Layout extends Joosy.Module
   #   * {Joosy.Modules.Container.__delegateEvents}
   #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
   #
-  __load: (@container) ->
+  __load: ->
     @__assignElements()
     @__delegateEvents()
     @__setupWidgets()
@@ -148,11 +149,13 @@ class Joosy.Layout extends Joosy.Module
   #
   # Layout destruction proccess.
   #
+  #   * {Joosy.Modules.Container.__clearContainer}
   #   * {Joosy.Modules.TimeManager.__clearTime}
   #   * {Joosy.Modules.WidgetsManager.__unloadWidgets}
   #   * {Joosy.Modules.Renderer.__removeMetamorphs}
   #
   __unload: ->
+    @__clearContainer()
     @__clearTime()
     @__unloadWidgets()
     @__removeMetamorphs()

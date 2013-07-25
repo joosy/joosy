@@ -67,7 +67,7 @@ class Joosy.Widget extends Joosy.Module
   __load: (@parent, @container, render=true) ->
     @__runBeforeLoads()
     if render && @__renderDefault
-      @swapContainer @container, @__renderDefault(@data || {})
+      @container.html @__renderDefault(@data || {})
     @__assignElements()
     @__delegateEvents()
     @__setupWidgets()
@@ -78,10 +78,12 @@ class Joosy.Widget extends Joosy.Module
   #
   # Layout destruction proccess.
   #
+  #   * {Joosy.Modules.Container.__clearContainer}
   #   * {Joosy.Modules.TimeManager.__clearTime}
   #   * {Joosy.Modules.Renderer.__removeMetamorphs}
   #
   __unload: ->
+    @__clearContainer()
     @__clearTime()
     @__unloadWidgets()
     @__removeMetamorphs()

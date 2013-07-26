@@ -123,10 +123,16 @@ module.exports = (grunt) ->
   # Tasks
   #
   grunt.registerMultiTask 'mince', ->
-    Mincer.CoffeeEngine.configure bare: false
     environment = new Mincer.Environment
     environment.appendPath x for x in @data.include
-    grunt.file.write @data.dest, environment.findAsset(@data.src).toString()
+
+    result = """
+             (function() {
+             #{environment.findAsset(@data.src).toString()}
+             }).call(this);
+             """
+
+    grunt.file.write @data.dest, result
 
   grunt.registerTask 'default', ['connect', 'build', 'watch']
 

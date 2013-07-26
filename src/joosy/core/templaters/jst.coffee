@@ -47,3 +47,7 @@ class Joosy.Templaters.JST
     path.unshift section
 
     "#{path.join '/'}/#{template}"
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/templaters/jst', -> Joosy.Templaters.JST

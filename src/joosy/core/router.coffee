@@ -311,3 +311,7 @@ Joosy.Router =
       "#{url}#{fnc(options)}"
 
 Joosy.Module.merge Joosy.Router, Joosy.Modules.Events
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/router', -> Joosy.Router

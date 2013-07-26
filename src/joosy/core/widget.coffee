@@ -88,3 +88,7 @@ class Joosy.Widget extends Joosy.Module
     @__unloadWidgets()
     @__removeMetamorphs()
     @__runAfterUnloads()
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/widget', -> Joosy.Widget

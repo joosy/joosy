@@ -84,3 +84,7 @@ Joosy.Modules.WidgetsManager =
     if @__activeWidgets
       for widget in @__activeWidgets
         widget.__unload()
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/modules/widgets_manager', -> Joosy.Modules.WidgetsManager

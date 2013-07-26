@@ -57,3 +57,7 @@ Joosy.Application =
         Object.merge @config[key], value
       else
         @config[key] = value
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/application', -> Joosy.Application

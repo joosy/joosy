@@ -133,3 +133,7 @@ class Joosy.Module
 
     object.extended?.apply this
     null
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/module', -> Joosy.Module

@@ -182,3 +182,7 @@ class Joosy.Events.SynchronizationContext
   # @param [Function] after       Function to call.
   #
   after: (@after) ->
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/modules/events', -> Joosy.Modules.Events

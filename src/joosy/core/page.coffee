@@ -383,3 +383,7 @@ class Joosy.Page extends Joosy.Module
       @__callSyncedThrough @, '__fetch', [], =>
         Joosy.Modules.Log.debugAs @, "Fetch complete"
         @trigger 'dataReceived'
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/page', -> Joosy.Page

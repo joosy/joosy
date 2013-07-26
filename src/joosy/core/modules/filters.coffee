@@ -40,3 +40,7 @@ Joosy.Modules.Filters =
       func = @[func] unless Object.isFunction func
       flag && func.apply(@, opts) != false
     , true
+
+  # AMD wrapper
+if define?.amd?
+  define 'joosy/modules/filters', -> Joosy.Modules.Filters

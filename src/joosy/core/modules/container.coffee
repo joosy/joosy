@@ -127,3 +127,7 @@ Joosy.Modules.Container =
   __clearContainer: ->
     @container?.unbind().off()
     @container = $()
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/modules/container', -> Joosy.Modules.Container

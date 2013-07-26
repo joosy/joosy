@@ -209,3 +209,7 @@ Joosy.Modules.Renderer =
         remove stackPointer
     else
       remove stackPointer
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/modules/renderer', -> Joosy.Modules.Renderer

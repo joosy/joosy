@@ -46,3 +46,7 @@ Joosy.Modules.TimeManager =
     if @__timeouts
       for entry in @__timeouts
         window.clearTimeout entry
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/modules/time_manager', -> Joosy.Modules.TimeManager

@@ -175,3 +175,7 @@ class Joosy.Layout extends Joosy.Module
   #
   content: ->
     $("##{@uid}")
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/layout', -> Joosy.Layout

@@ -36,3 +36,7 @@ Joosy.Modules.Log =
     return unless Joosy.Application.config.debug
     context = Joosy.Module.__className(context) || 'unknown context'
     @debug "#{context}> #{string}", args...
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/modules/log', -> Joosy.Modules.Log

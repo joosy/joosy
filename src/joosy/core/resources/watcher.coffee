@@ -49,3 +49,7 @@ class Joosy.Resources.Watcher extends Joosy.Module
       data = bl.call(this, data) for bl in @__beforeLoads
 
     data
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/resources/watcher', -> Joosy.Resources.Watcher

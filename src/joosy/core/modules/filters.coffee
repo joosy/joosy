@@ -41,6 +41,6 @@ Joosy.Modules.Filters =
       flag && func.apply(@, opts) != false
     , true
 
-  # AMD wrapper
+# AMD wrapper
 if define?.amd?
   define 'joosy/modules/filters', -> Joosy.Modules.Filters

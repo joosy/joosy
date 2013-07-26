@@ -1,6 +1,6 @@
 {
   "name": "joosy",
-  "version": "1.2.0-alpha.43",
+  "version": "1.2.0-alpha.44",
   "main": "lib/joosy.js",
   "ignore": [
     "bin",

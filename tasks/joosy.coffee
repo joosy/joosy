@@ -39,7 +39,8 @@ module.exports = (grunt) ->
     assets:
       instance: (environment='development') ->
         Mincer.logger.use console
-        Mincer.StylusEngine.registerConfigurator (stylus) ->
+        Mincer.CoffeeEngine.configure bare: false
+        Mincer.StylusEngine.configure (stylus) ->
           stylus.options.paths.push Path.join(process.cwd(), paths.public)
           stylus.define '$environment', environment
           stylus.define '$config', grunt.config.get('joosy.config') || {}
@@ -60,16 +61,12 @@ module.exports = (grunt) ->
 
         for entry in map
           do (entry) ->
-            deepness++
             asset = assets.findAsset entry.src
             callbacks.error? "Cannot find #{entry.src}" unless asset
+            grunt.file.write entry.dest, asset.toString()
+            callbacks.compiled? asset, entry.dest
 
-            asset.compile (err) ->
-              deepness--
-              callbacks.error? asset, err if err
-              grunt.file.write entry.dest, asset.toString()
-              callbacks.compiled? asset, entry.dest
-              callbacks.success?() if deepness == 0
+        callbacks.success?()
 
     haml:
       compile: (file, partials=paths.haml, environment='development', locals={}) ->

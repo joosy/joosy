@@ -6,7 +6,7 @@
 #
 # @mixin
 #
-@Joosy =
+Joosy =
   #
   # Core modules container
   #
@@ -21,6 +21,9 @@
   # Templaters container
   #
   Templaters: {}
+
+  Helpers: {}
+  Events: {}
 
   #
   # Registeres anything inside specified namespace (objects chain starting from `window`)
@@ -54,7 +57,8 @@
   # @param [Boolean] generator      Helpers content
   #
   helpers: (name, generator) ->
-    Joosy.namespace "Joosy.Helpers.#{name}", generator
+    Joosy.Helpers[name] ||= {}
+    generator.apply Joosy.Helpers[name]
 
   #
   # Runs set of callbacks finializing with result callback
@@ -116,3 +120,5 @@
       paramsString = '&' + paramsString
 
     url + paramsString + hash
+
+@Joosy = Joosy

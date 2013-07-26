@@ -122,67 +122,63 @@ Joosy.Modules.Events =
     events
 
 #
-# Additional events helpers and tools
+# Events namespace
 #
-Joosy.namespace 'Joosy.Events', ->
+# Creates unified collection of bindings to a particular instance
+# that can be unbinded alltogether
+#
+# @example
+#   namespace = Joosy.Events.Namespace(something)
+#
+#   namespace.bind 'event1', ->
+#   namespace.bind 'event2', ->
+#   namespace.unbind() # unbinds both bindings
+#
+class Joosy.Events.Namespace
   #
-  # Events namespace
+  # @param [Object] @parent         Any instance that can trigger events
   #
-  # Creates unified collection of bindings to a particular instance
-  # that can be unbinded alltogether
-  #
-  # @example
-  #   namespace = Joosy.Events.Namespace(something)
-  #
-  #   namespace.bind 'event1', ->
-  #   namespace.bind 'event2', ->
-  #   namespace.unbind() # unbinds both bindings
-  #
-  class @Namespace
-    #
-    # @param [Object] @parent         Any instance that can trigger events
-    #
-    constructor: (@parent) ->
-      @bindings = []
+  constructor: (@parent) ->
+    @bindings = []
 
-    bind: (args...) -> @bindings.push @parent.bind(args...)
-    unbind: ->
-      @parent.unbind b for b in @bindings
-      @bindings = []
+  bind: (args...) -> @bindings.push @parent.bind(args...)
+  unbind: ->
+    @parent.unbind b for b in @bindings
+    @bindings = []
+
+#
+# Internal representation of {Joosy.Modules.Events.synchronize} context
+#
+# @see Joosy.Modules.Events.synchronize
+#
+class Joosy.Events.SynchronizationContext
+  @uid = 0
+
+  constructor: (@parent) ->
+    @expectations = []
+    @actions = []
 
   #
-  # Internal representation of {Joosy.Modules.Events.synchronize} context
+  # Internal simple counter to separate given synchronization actions
   #
-  # @see Joosy.Modules.Events.synchronize
+  uid: ->
+    @constructor.uid += 1
+
   #
-  class @SynchronizationContext
-    @uid = 0
+  # Registeres another async function that should be synchronized
+  #
+  # @param [Function] action        `(Function) -> null` to call.
+  #   Should call given function to mark itself complete.
+  #
+  do: (action) ->
+    event = "synchro-#{@uid()}"
+    @expectations.push event
+    @actions.push [action, event]
 
-    constructor: (@parent) ->
-      @expectations = []
-      @actions = []
-
-    #
-    # Internal simple counter to separate given synchronization actions
-    #
-    uid: ->
-      @constructor.uid += 1
-
-    #
-    # Registeres another async function that should be synchronized
-    #
-    # @param [Function] action        `(Function) -> null` to call.
-    #   Should call given function to mark itself complete.
-    #
-    do: (action) ->
-      event = "synchro-#{@uid()}"
-      @expectations.push event
-      @actions.push [action, event]
-
-    #
-    # Registers finalizer: the action that will be called when all do-functions
-    #   marked themselves as complete.
-    #
-    # @param [Function] after       Function to call.
-    #
-    after: (@after) ->
+  #
+  # Registers finalizer: the action that will be called when all do-functions
+  #   marked themselves as complete.
+  #
+  # @param [Function] after       Function to call.
+  #
+  after: (@after) ->

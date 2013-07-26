@@ -36,7 +36,6 @@ module.exports = (grunt) ->
   #
   # Grunt extensions
   #
-  grunt.loadNpmTasks 'grunt-mincer'
   grunt.loadNpmTasks 'grunt-contrib-connect'
   grunt.loadNpmTasks 'grunt-contrib-coffee'
   grunt.loadNpmTasks 'grunt-contrib-jasmine'
@@ -123,6 +122,12 @@ module.exports = (grunt) ->
   #
   # Tasks
   #
+  grunt.registerMultiTask 'mince', ->
+    Mincer.CoffeeEngine.configure bare: false
+    environment = new Mincer.Environment
+    environment.appendPath x for x in @data.include
+    grunt.file.write @data.dest, environment.findAsset(@data.src).toString()
+
   grunt.registerTask 'default', ['connect', 'build', 'watch']
 
   grunt.registerTask 'build', ['mince', 'coffee', 'jasmine:core:build', 'jasmine:extensions:build', 'bowerize']

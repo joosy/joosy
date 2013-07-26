@@ -4,7 +4,7 @@
   "keywords": [
     "joosy"
   ],
-  "version": "1.2.0-alpha.43",
+  "version": "1.2.0-alpha.44",
   "author": "Boris Staal <boris@staal.io>",
   "homepage": "http://joosy.ws/",
   "repository": {
@@ -28,7 +28,7 @@
     "commander": "~1.2.0",
     "colors": "~0.6.0-1",
     "grunt": "~0.4.1",
-    "mincer": "~0.4.6",
+    "mincer": "~0.5.2",
     "connect": "~2.7.11",
     "haml-coffee": "~1.11.1",
     "proxy-middleware": "~0.4.0",
@@ -37,7 +37,6 @@
     "nib": "~0.9.1"
   },
   "devDependencies": {
-    "grunt-mincer": "~0.3.2",
     "grunt-contrib-jasmine": "~0.5.1",
     "grunt-contrib-watch": "~0.4.4",
     "grunt-contrib-coffee": "~0.7.0",

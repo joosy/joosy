@@ -263,7 +263,7 @@ Joosy.Router =
 
     vals.shift()
     for param in route.capture
-      params[param] = vals.shift()
+      params[param] = decodeURIComponent vals.shift()
 
     params
 

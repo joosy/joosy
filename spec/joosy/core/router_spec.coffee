@@ -75,10 +75,10 @@ describe "Joosy.Router", ->
     result = Joosy.Router.__paramsFromRouteMatch ['full regex match here', 1, 2, 3, 4], route.values().first()
 
     expect(result).toEqual Object.extended
-      'with':   1
-      'plenty': 2
-      'of':     3
-      'params': 4
+      'with':   '1'
+      'plenty': '2'
+      'of':     '3'
+      'params': '4'
 
   it "should build query params", ->
     result = Joosy.Router.__paramsFromQueryArray ["foo=bar", "bar=baz"]

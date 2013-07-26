@@ -17,6 +17,7 @@ module.exports = (grunt) ->
         build: "lib/extensions/#{name}.js"
     specs:
       units:
+        environments: 'spec/joosy/environments/*_spec.*'
         core: 'spec/joosy/core/**/*_spec.*'
         extensions: 'spec/joosy/extensions/**/*_spec.*'
       helpers: 'spec/helpers/**/*.*'
@@ -25,7 +26,7 @@ module.exports = (grunt) ->
   specOptions = (category, specs, vendor=[]) ->
     host: 'http://localhost:8888/'
     keepRunner: true
-    outfile: "#{category}.html"
+    outfile: "spec/#{category}.html"
     vendor: [
       'bower_components/sinonjs/sinon.js',
       'bower_components/sugar/release/sugar-full.min.js'
@@ -63,13 +64,13 @@ module.exports = (grunt) ->
       specs:
         options:
           nospawn: true
-        files: [locations.specs.units.core, locations.specs.units.extensions, locations.specs.helpers]
+        files: [ locations.specs.helpers ].add(Object.values locations.specs.units)
         tasks: ['coffee']
 
     coffee:
       specs:
         expand: true
-        src: [locations.specs.units.core, locations.specs.units.extensions, locations.specs.helpers]
+        src: [ locations.specs.helpers ].add(Object.values locations.specs.units)
         dest: locations.specs.build
         ext: '.js'
 
@@ -111,6 +112,20 @@ module.exports = (grunt) ->
             'bower_components/zepto/zepto.js'
           ])
         src: locations.source.build
+
+      'environments-global':
+        options: specOptions('environments-global', ['spec/joosy/environments/global*'], [
+            'bower_components/jquery/jquery.js'
+          ])
+        src: locations.source.build
+
+      'environments-amd':
+        options: specOptions('environments-amd', ['spec/joosy/environments/amd*'], [
+            'bower_components/jquery/jquery.js',
+            'bower_components/requirejs/require.js'
+          ])
+        src: locations.source.build
+
       extensions:
         options: specOptions('extensions', locations.specs.units.extensions, [
             'bower_components/jquery/jquery.js',

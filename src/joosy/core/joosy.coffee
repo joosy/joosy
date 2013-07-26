@@ -121,4 +121,7 @@ Joosy =
 
     url + paramsString + hash
 
-@Joosy = Joosy
+if define?.amd?
+  define 'joosy', -> Joosy
+else
+  @Joosy = Joosy

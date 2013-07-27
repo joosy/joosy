@@ -1,4 +1,4 @@
-#= require joosy/core/joosy
+#= require joosy/joosy
 
 #
 # JST template precompilation binding

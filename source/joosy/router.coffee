@@ -1,6 +1,8 @@
-#= require joosy/core/joosy
+#= require joosy/joosy
+#= require joosy/modules/events
+#= require joosy/page
 #= require_self
-#= require joosy/core/router/drawer
+#= require joosy/router/drawer
 
 #
 # Router. Reacts on URI change event and loads proper pages

@@ -10,11 +10,11 @@ module.exports = (grunt) ->
   locations =
     source:
       root: 'joosy.coffee'
-      path: 'src'
-      build: 'lib/joosy.js'
+      path: 'source'
+      build: 'build/joosy.js'
       extensions: (name) ->
         root: "joosy/extensions/#{name}"
-        build: "lib/joosy/extensions/#{name}.js"
+        build: "build/joosy/extensions/#{name}.js"
     specs:
       units:
         environments: 'spec/joosy/environments/*_spec.*'

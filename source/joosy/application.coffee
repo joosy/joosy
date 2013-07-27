@@ -1,4 +1,8 @@
-#= require joosy/core/joosy
+#= require joosy/joosy
+#= require joosy/router
+#= require_tree ./templaters
+#= require_tree ./resources
+#= require_tree ./helpers
 
 #
 # Joosy Application container

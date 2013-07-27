@@ -9,7 +9,7 @@ describe "Joosy", ->
 
     runs ->
       $.ajax
-        url: '../lib/joosy.js'
+        url: '../build/joosy.js'
         dataType: 'text'
         success: (script) ->
           (new Function( "with(this) { " + script + "}")).call(ghetto)

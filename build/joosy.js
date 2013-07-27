@@ -191,155 +191,6 @@
 
 }).call(this);
 (function() {
-  Joosy.Application = {
-    Pages: {},
-    Layouts: {},
-    Controls: {},
-    identity: true,
-    debounceForms: false,
-    config: {
-      debug: false,
-      router: {
-        html5: false,
-        base: '/',
-        prefix: ''
-      }
-    },
-    initialize: function(name, selector, options) {
-      this.name = name;
-      this.selector = selector;
-      if (options == null) {
-        options = {};
-      }
-      if (window.JoosyEnvironment != null) {
-        Object.merge(this.config, window.JoosyEnvironment, true);
-      }
-      Object.merge(this.config, options, true);
-      this.templater = new Joosy.Templaters.JST(this.name);
-      this.router = new Joosy.Router(this.config.router);
-      return this.router.setup();
-    },
-    navigate: function() {
-      var _ref;
-      return (_ref = this.router).navigate.apply(_ref, arguments);
-    },
-    content: function() {
-      return $(this.selector);
-    },
-    setCurrentPage: function(page, params) {
-      var attempt;
-      attempt = new page(params, this.page);
-      if (!attempt.halted) {
-        return this.page = attempt;
-      }
-    }
-  };
-
-  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/application', function() {
-      return Joosy.Application;
-    });
-  }
-
-}).call(this);
-(function() {
-  Joosy.helpers('Application', function() {
-    this.tag = function(name, options, content) {
-      var e, element, temp;
-      if (options == null) {
-        options = {};
-      }
-      if (content == null) {
-        content = '';
-      }
-      if (Object.isFunction(content)) {
-        content = content();
-      }
-      element = document.createElement(name);
-      temp = document.createElement('div');
-      Object.each(options, function(name, value) {
-        return element.setAttribute(name, value);
-      });
-      try {
-        element.innerHTML = content;
-      } catch (_error) {
-        e = _error;
-        if (content) {
-          throw e;
-        }
-      }
-      temp.appendChild(element);
-      return temp.innerHTML;
-    };
-    return this.renderWrapped = function(template, lambda) {
-      return this.render(template, Joosy.Module.merge(this, {
-        "yield": lambda()
-      }));
-    };
-  });
-
-}).call(this);
-(function() {
-  Joosy.helpers('Application', function() {
-    return this.widget = function(tag, options, widget) {
-      var _this = this;
-      if (widget == null) {
-        widget = options;
-        options = {};
-      }
-      options.id = Joosy.uid();
-      this.__renderer.setTimeout(0, function() {
-        return _this.__renderer.registerWidget($('#' + options.id), widget);
-      });
-      return this.tag(tag, options);
-    };
-  });
-
-}).call(this);
-(function() {
-  var __slice = [].slice;
-
-  Joosy.Modules.Log = {
-    log: function() {
-      var args;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      if (typeof console === "undefined" || console === null) {
-        return;
-      }
-      if (console.log.apply != null) {
-        args.unshift("Joosy>");
-        return console.log.apply(console, args);
-      } else {
-        return console.log(args.first());
-      }
-    },
-    debug: function() {
-      var args;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      if (!Joosy.Application.config.debug) {
-        return;
-      }
-      return this.log.apply(this, args);
-    },
-    debugAs: function() {
-      var args, context, string;
-      context = arguments[0], string = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
-      if (!Joosy.Application.config.debug) {
-        return;
-      }
-      context = Joosy.Module.__className(context) || 'unknown context';
-      return this.debug.apply(this, ["" + context + "> " + string].concat(__slice.call(args)));
-    }
-  };
-
-  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/modules/log', function() {
-      return Joosy.Modules.Log;
-    });
-  }
-
-}).call(this);
-(function() {
   var __slice = [].slice;
 
   Joosy.Modules.Events = {
@@ -499,6 +350,49 @@
 
 }).call(this);
 (function() {
+  var __slice = [].slice;
+
+  Joosy.Modules.Log = {
+    log: function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      if (typeof console === "undefined" || console === null) {
+        return;
+      }
+      if (console.log.apply != null) {
+        args.unshift("Joosy>");
+        return console.log.apply(console, args);
+      } else {
+        return console.log(args.first());
+      }
+    },
+    debug: function() {
+      var args;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      if (!Joosy.Application.config.debug) {
+        return;
+      }
+      return this.log.apply(this, args);
+    },
+    debugAs: function() {
+      var args, context, string;
+      context = arguments[0], string = arguments[1], args = 3 <= arguments.length ? __slice.call(arguments, 2) : [];
+      if (!Joosy.Application.config.debug) {
+        return;
+      }
+      context = Joosy.Module.__className(context) || 'unknown context';
+      return this.debug.apply(this, ["" + context + "> " + string].concat(__slice.call(args)));
+    }
+  };
+
+  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
+    define('joosy/modules/log', function() {
+      return Joosy.Modules.Log;
+    });
+  }
+
+}).call(this);
+(function() {
   Joosy.Modules.Container = {
     eventSplitter: /^(\S+)\s*(.*)$/,
     included: function() {
@@ -604,52 +498,6 @@
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
     define('joosy/modules/container', function() {
       return Joosy.Modules.Container;
-    });
-  }
-
-}).call(this);
-(function() {
-  Joosy.Templaters.JST = (function() {
-    function JST(applicationName) {
-      if (Object.isString(applicationName) && applicationName.length > 0) {
-        this.applicationName = applicationName;
-      }
-    }
-
-    JST.prototype.buildView = function(name) {
-      var haystack, path, template, _i, _len;
-      template = false;
-      if (this.applicationName) {
-        haystack = ["" + this.applicationName + "/templates/" + name + "-" + (typeof I18n !== "undefined" && I18n !== null ? I18n.locale : void 0), "" + this.applicationName + "/templates/" + name];
-      } else {
-        haystack = ["templates/" + name + "-" + (typeof I18n !== "undefined" && I18n !== null ? I18n.locale : void 0), "templates/" + name];
-      }
-      for (_i = 0, _len = haystack.length; _i < _len; _i++) {
-        path = haystack[_i];
-        if (window.JST[path]) {
-          return window.JST[path];
-        }
-      }
-      throw new Error("Template '" + name + "' not found. Checked at: '" + (haystack.join(', ')) + "'");
-    };
-
-    JST.prototype.resolveTemplate = function(section, template, entity) {
-      var path, _ref, _ref1;
-      if (template.startsWith('/')) {
-        return template.substr(1);
-      }
-      path = ((_ref = entity.constructor) != null ? (_ref1 = _ref.__namespace__) != null ? _ref1.map('underscore') : void 0 : void 0) || [];
-      path.unshift(section);
-      return "" + (path.join('/')) + "/" + template;
-    };
-
-    return JST;
-
-  })();
-
-  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/templaters/jst', function() {
-      return Joosy.Templaters.JST;
     });
   }
 
@@ -1282,6 +1130,50 @@
 
 }).call(this);
 (function() {
+  var _this = this,
+    __slice = [].slice;
+
+  Joosy.Modules.Filters = {
+    included: function() {
+      var _this = this;
+      return ['beforeLoad', 'afterLoad', 'afterUnload'].each(function(filter) {
+        return _this[filter] = function(callback) {
+          if (!this.prototype.hasOwnProperty("__" + filter + "s")) {
+            this.prototype["__" + filter + "s"] = [].concat(this.__super__["__" + filter + "s"] || []);
+          }
+          return this.prototype["__" + filter + "s"].push(callback);
+        };
+      });
+    }
+  };
+
+  ['beforeLoad', 'afterLoad', 'afterUnload'].each(function(filter) {
+    var camelized;
+    camelized = filter.charAt(0).toUpperCase() + filter.slice(1);
+    return Joosy.Modules.Filters["__run" + camelized + "s"] = function() {
+      var opts,
+        _this = this;
+      opts = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      if (!this["__" + filter + "s"]) {
+        return true;
+      }
+      return this["__" + filter + "s"].reduce(function(flag, func) {
+        if (!Object.isFunction(func)) {
+          func = _this[func];
+        }
+        return flag && func.apply(_this, opts) !== false;
+      }, true);
+    };
+  });
+
+  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
+    define('joosy/modules/filters', function() {
+      return Joosy.Modules.Filters;
+    });
+  }
+
+}).call(this);
+(function() {
   Joosy.Modules.TimeManager = {
     setTimeout: function(timeout, action) {
       var timer,
@@ -1419,45 +1311,77 @@
 
 }).call(this);
 (function() {
-  var _this = this,
-    __slice = [].slice;
+  var _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Joosy.Modules.Filters = {
-    included: function() {
-      var _this = this;
-      return ['beforeLoad', 'afterLoad', 'afterUnload'].each(function(filter) {
-        return _this[filter] = function(callback) {
-          if (!this.prototype.hasOwnProperty("__" + filter + "s")) {
-            this.prototype["__" + filter + "s"] = [].concat(this.__super__["__" + filter + "s"] || []);
-          }
-          return this.prototype["__" + filter + "s"].push(callback);
-        };
-      });
+  Joosy.Widget = (function(_super) {
+    __extends(Widget, _super);
+
+    function Widget() {
+      _ref = Widget.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
-  };
 
-  ['beforeLoad', 'afterLoad', 'afterUnload'].each(function(filter) {
-    var camelized;
-    camelized = filter.charAt(0).toUpperCase() + filter.slice(1);
-    return Joosy.Modules.Filters["__run" + camelized + "s"] = function() {
-      var opts,
-        _this = this;
-      opts = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      if (!this["__" + filter + "s"]) {
-        return true;
-      }
-      return this["__" + filter + "s"].reduce(function(flag, func) {
-        if (!Object.isFunction(func)) {
-          func = _this[func];
-        }
-        return flag && func.apply(_this, opts) !== false;
-      }, true);
+    Widget.include(Joosy.Modules.Log);
+
+    Widget.include(Joosy.Modules.Events);
+
+    Widget.include(Joosy.Modules.Container);
+
+    Widget.include(Joosy.Modules.Renderer);
+
+    Widget.include(Joosy.Modules.Filters);
+
+    Widget.include(Joosy.Modules.TimeManager);
+
+    Widget.include(Joosy.Modules.WidgetsManager);
+
+    Widget.prototype.__renderDefault = false;
+
+    Widget.prototype.data = false;
+
+    Widget.prototype.navigate = function() {
+      var _ref1;
+      return (_ref1 = Joosy.Application).navigate.apply(_ref1, arguments);
     };
-  });
+
+    Widget.prototype.__renderSection = function() {
+      return 'widgets';
+    };
+
+    Widget.prototype.__load = function(parent, container, render) {
+      this.parent = parent;
+      this.container = container;
+      if (render == null) {
+        render = true;
+      }
+      this.__runBeforeLoads();
+      if (render && this.__renderDefault) {
+        this.container.html(this.__renderDefault(this.data || {}));
+      }
+      this.__assignElements();
+      this.__delegateEvents();
+      this.__setupWidgets();
+      this.__runAfterLoads();
+      return this;
+    };
+
+    Widget.prototype.__unload = function() {
+      this.__clearContainer();
+      this.__clearTime();
+      this.__unloadWidgets();
+      this.__removeMetamorphs();
+      return this.__runAfterUnloads();
+    };
+
+    return Widget;
+
+  })(Joosy.Module);
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/modules/filters', function() {
-      return Joosy.Modules.Filters;
+    define('joosy/widget', function() {
+      return Joosy.Widget;
     });
   }
 
@@ -1839,111 +1763,6 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Joosy.Resources.Watcher = (function(_super) {
-    __extends(Watcher, _super);
-
-    Watcher.include(Joosy.Modules.Events);
-
-    Watcher.cache = function(cacheKey) {
-      return this.prototype.__cacheKey = cacheKey;
-    };
-
-    Watcher.fetcher = function(fetcher) {
-      return this.prototype.__fetcher = fetcher;
-    };
-
-    Watcher.beforeLoad = function(action) {
-      if (!this.prototype.hasOwnProperty('__beforeLoads')) {
-        this.prototype.__beforeLoads = [].concat(this.__super__.__beforeLoads || []);
-      }
-      return this.prototype.__beforeLoads.push(action);
-    };
-
-    function Watcher(cacheKey, fetcher) {
-      if (cacheKey == null) {
-        cacheKey = false;
-      }
-      if (fetcher == null) {
-        fetcher = false;
-      }
-      if (Object.isFunction(cacheKey)) {
-        fetcher = cacheKey;
-        cacheKey = void 0;
-      }
-      if (fetcher) {
-        this.__fetcher = fetcher;
-      }
-      if (cacheKey) {
-        this.__cacheKey = cacheKey;
-      }
-    }
-
-    Watcher.prototype.load = function(callback) {
-      var _this = this;
-      if (this.__cacheKey && localStorage[this.__cacheKey]) {
-        this.data = this.prepare(JSON.parse(localStorage[this.__cacheKey]));
-        this.trigger('changed');
-        this.refresh();
-        return typeof callback === "function" ? callback(this) : void 0;
-      } else {
-        return this.__fetcher(function(result) {
-          if (_this.__cacheKey) {
-            localStorage[_this.__cacheKey] = JSON.stringify(result);
-          }
-          _this.data = _this.prepare(result);
-          _this.trigger('changed');
-          return typeof callback === "function" ? callback(_this) : void 0;
-        });
-      }
-    };
-
-    Watcher.prototype.clone = function() {
-      var copy;
-      copy = new this.constructor(this.__cacheKey, this.__fetcher);
-      copy.data = Object.clone(this.data, true);
-      copy.trigger('changed');
-      return copy;
-    };
-
-    Watcher.prototype.refresh = function(callback) {
-      var _this = this;
-      return this.__fetcher(function(result) {
-        if (_this.__cacheKey) {
-          localStorage[_this.__cacheKey] = JSON.stringify(result);
-        }
-        _this.data = _this.prepare(result);
-        _this.trigger('changed');
-        return typeof callback === "function" ? callback(_this) : void 0;
-      });
-    };
-
-    Watcher.prototype.prepare = function(data) {
-      var bl, _i, _len, _ref;
-      if (this.__beforeLoads != null) {
-        _ref = this.__beforeLoads;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          bl = _ref[_i];
-          data = bl.call(this, data);
-        }
-      }
-      return data;
-    };
-
-    return Watcher;
-
-  })(Joosy.Module);
-
-  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/resources/watcher', function() {
-      return Joosy.Resources.Watcher;
-    });
-  }
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
   Joosy.Router = (function(_super) {
     __extends(Router, _super);
 
@@ -2265,77 +2084,258 @@
 
 }).call(this);
 (function() {
-  var _ref,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Joosy.Widget = (function(_super) {
-    __extends(Widget, _super);
-
-    function Widget() {
-      _ref = Widget.__super__.constructor.apply(this, arguments);
-      return _ref;
+  Joosy.Templaters.JST = (function() {
+    function JST(applicationName) {
+      if (Object.isString(applicationName) && applicationName.length > 0) {
+        this.applicationName = applicationName;
+      }
     }
 
-    Widget.include(Joosy.Modules.Log);
-
-    Widget.include(Joosy.Modules.Events);
-
-    Widget.include(Joosy.Modules.Container);
-
-    Widget.include(Joosy.Modules.Renderer);
-
-    Widget.include(Joosy.Modules.Filters);
-
-    Widget.include(Joosy.Modules.TimeManager);
-
-    Widget.include(Joosy.Modules.WidgetsManager);
-
-    Widget.prototype.__renderDefault = false;
-
-    Widget.prototype.data = false;
-
-    Widget.prototype.navigate = function() {
-      var _ref1;
-      return (_ref1 = Joosy.Application).navigate.apply(_ref1, arguments);
-    };
-
-    Widget.prototype.__renderSection = function() {
-      return 'widgets';
-    };
-
-    Widget.prototype.__load = function(parent, container, render) {
-      this.parent = parent;
-      this.container = container;
-      if (render == null) {
-        render = true;
+    JST.prototype.buildView = function(name) {
+      var haystack, path, template, _i, _len;
+      template = false;
+      if (this.applicationName) {
+        haystack = ["" + this.applicationName + "/templates/" + name + "-" + (typeof I18n !== "undefined" && I18n !== null ? I18n.locale : void 0), "" + this.applicationName + "/templates/" + name];
+      } else {
+        haystack = ["templates/" + name + "-" + (typeof I18n !== "undefined" && I18n !== null ? I18n.locale : void 0), "templates/" + name];
       }
-      this.__runBeforeLoads();
-      if (render && this.__renderDefault) {
-        this.container.html(this.__renderDefault(this.data || {}));
+      for (_i = 0, _len = haystack.length; _i < _len; _i++) {
+        path = haystack[_i];
+        if (window.JST[path]) {
+          return window.JST[path];
+        }
       }
-      this.__assignElements();
-      this.__delegateEvents();
-      this.__setupWidgets();
-      this.__runAfterLoads();
-      return this;
+      throw new Error("Template '" + name + "' not found. Checked at: '" + (haystack.join(', ')) + "'");
     };
 
-    Widget.prototype.__unload = function() {
-      this.__clearContainer();
-      this.__clearTime();
-      this.__unloadWidgets();
-      this.__removeMetamorphs();
-      return this.__runAfterUnloads();
+    JST.prototype.resolveTemplate = function(section, template, entity) {
+      var path, _ref, _ref1;
+      if (template.startsWith('/')) {
+        return template.substr(1);
+      }
+      path = ((_ref = entity.constructor) != null ? (_ref1 = _ref.__namespace__) != null ? _ref1.map('underscore') : void 0 : void 0) || [];
+      path.unshift(section);
+      return "" + (path.join('/')) + "/" + template;
     };
 
-    return Widget;
+    return JST;
+
+  })();
+
+  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
+    define('joosy/templaters/jst', function() {
+      return Joosy.Templaters.JST;
+    });
+  }
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Joosy.Resources.Watcher = (function(_super) {
+    __extends(Watcher, _super);
+
+    Watcher.include(Joosy.Modules.Events);
+
+    Watcher.cache = function(cacheKey) {
+      return this.prototype.__cacheKey = cacheKey;
+    };
+
+    Watcher.fetcher = function(fetcher) {
+      return this.prototype.__fetcher = fetcher;
+    };
+
+    Watcher.beforeLoad = function(action) {
+      if (!this.prototype.hasOwnProperty('__beforeLoads')) {
+        this.prototype.__beforeLoads = [].concat(this.__super__.__beforeLoads || []);
+      }
+      return this.prototype.__beforeLoads.push(action);
+    };
+
+    function Watcher(cacheKey, fetcher) {
+      if (cacheKey == null) {
+        cacheKey = false;
+      }
+      if (fetcher == null) {
+        fetcher = false;
+      }
+      if (Object.isFunction(cacheKey)) {
+        fetcher = cacheKey;
+        cacheKey = void 0;
+      }
+      if (fetcher) {
+        this.__fetcher = fetcher;
+      }
+      if (cacheKey) {
+        this.__cacheKey = cacheKey;
+      }
+    }
+
+    Watcher.prototype.load = function(callback) {
+      var _this = this;
+      if (this.__cacheKey && localStorage[this.__cacheKey]) {
+        this.data = this.prepare(JSON.parse(localStorage[this.__cacheKey]));
+        this.trigger('changed');
+        this.refresh();
+        return typeof callback === "function" ? callback(this) : void 0;
+      } else {
+        return this.__fetcher(function(result) {
+          if (_this.__cacheKey) {
+            localStorage[_this.__cacheKey] = JSON.stringify(result);
+          }
+          _this.data = _this.prepare(result);
+          _this.trigger('changed');
+          return typeof callback === "function" ? callback(_this) : void 0;
+        });
+      }
+    };
+
+    Watcher.prototype.clone = function() {
+      var copy;
+      copy = new this.constructor(this.__cacheKey, this.__fetcher);
+      copy.data = Object.clone(this.data, true);
+      copy.trigger('changed');
+      return copy;
+    };
+
+    Watcher.prototype.refresh = function(callback) {
+      var _this = this;
+      return this.__fetcher(function(result) {
+        if (_this.__cacheKey) {
+          localStorage[_this.__cacheKey] = JSON.stringify(result);
+        }
+        _this.data = _this.prepare(result);
+        _this.trigger('changed');
+        return typeof callback === "function" ? callback(_this) : void 0;
+      });
+    };
+
+    Watcher.prototype.prepare = function(data) {
+      var bl, _i, _len, _ref;
+      if (this.__beforeLoads != null) {
+        _ref = this.__beforeLoads;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          bl = _ref[_i];
+          data = bl.call(this, data);
+        }
+      }
+      return data;
+    };
+
+    return Watcher;
 
   })(Joosy.Module);
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/widget', function() {
-      return Joosy.Widget;
+    define('joosy/resources/watcher', function() {
+      return Joosy.Resources.Watcher;
+    });
+  }
+
+}).call(this);
+(function() {
+  Joosy.helpers('Application', function() {
+    this.tag = function(name, options, content) {
+      var e, element, temp;
+      if (options == null) {
+        options = {};
+      }
+      if (content == null) {
+        content = '';
+      }
+      if (Object.isFunction(content)) {
+        content = content();
+      }
+      element = document.createElement(name);
+      temp = document.createElement('div');
+      Object.each(options, function(name, value) {
+        return element.setAttribute(name, value);
+      });
+      try {
+        element.innerHTML = content;
+      } catch (_error) {
+        e = _error;
+        if (content) {
+          throw e;
+        }
+      }
+      temp.appendChild(element);
+      return temp.innerHTML;
+    };
+    return this.renderWrapped = function(template, lambda) {
+      return this.render(template, Joosy.Module.merge(this, {
+        "yield": lambda()
+      }));
+    };
+  });
+
+}).call(this);
+(function() {
+  Joosy.helpers('Application', function() {
+    return this.widget = function(tag, options, widget) {
+      var _this = this;
+      if (widget == null) {
+        widget = options;
+        options = {};
+      }
+      options.id = Joosy.uid();
+      this.__renderer.setTimeout(0, function() {
+        return _this.__renderer.registerWidget($('#' + options.id), widget);
+      });
+      return this.tag(tag, options);
+    };
+  });
+
+}).call(this);
+(function() {
+  Joosy.Application = {
+    Pages: {},
+    Layouts: {},
+    Controls: {},
+    identity: true,
+    debounceForms: false,
+    config: {
+      debug: false,
+      router: {
+        html5: false,
+        base: '/',
+        prefix: ''
+      }
+    },
+    initialize: function(name, selector, options) {
+      this.name = name;
+      this.selector = selector;
+      if (options == null) {
+        options = {};
+      }
+      if (window.JoosyEnvironment != null) {
+        Object.merge(this.config, window.JoosyEnvironment, true);
+      }
+      Object.merge(this.config, options, true);
+      this.templater = new Joosy.Templaters.JST(this.name);
+      this.router = new Joosy.Router(this.config.router);
+      return this.router.setup();
+    },
+    navigate: function() {
+      var _ref;
+      return (_ref = this.router).navigate.apply(_ref, arguments);
+    },
+    content: function() {
+      return $(this.selector);
+    },
+    setCurrentPage: function(page, params) {
+      var attempt;
+      attempt = new page(params, this.page);
+      if (!attempt.halted) {
+        return this.page = attempt;
+      }
+    }
+  };
+
+  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
+    define('joosy/application', function() {
+      return Joosy.Application;
     });
   }
 

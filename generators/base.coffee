@@ -8,7 +8,7 @@ if module?
 class Base
   constructor: (@options, @destination, @templates) ->
     @destination ||= process?.cwd()
-    @templates   ||= @join(__dirname, '..', '..', '..', 'templates') if __dirname?
+    @templates   ||= @join(__dirname, 'templates') if __dirname?
     @actions       = []
 
   getNamespace: (name) ->
@@ -51,7 +51,7 @@ class Base
   # Methods that have to be overrided outside of Node.js
   #
   version: ->
-    require('../../../package.json').version
+    require('../package.json').version
 
   #
   # Node-base performer

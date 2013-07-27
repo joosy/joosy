@@ -1,4 +1,4 @@
-#= require joosy/core/joosy
+#= require joosy/joosy
 
 #
 # Rendering and string representation helpers

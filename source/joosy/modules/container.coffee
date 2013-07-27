@@ -1,4 +1,4 @@
-#= require joosy/core/joosy
+#= require joosy/joosy
 
 #
 # DOM container handling, DOM elements and DOM events bindings

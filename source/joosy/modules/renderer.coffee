@@ -1,6 +1,5 @@
-#= require joosy/core/joosy
-#= require_tree ../templaters
-#= require vendor/metamorph
+#= require metamorph
+#= require joosy/joosy
 
 #
 # Core DOM rendering mechanics

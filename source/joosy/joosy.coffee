@@ -1,5 +1,5 @@
 #= require_self
-#= require joosy/core/module
+#= require joosy/module
 
 #
 # All the tiny core stuff

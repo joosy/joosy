@@ -1,11 +1,13 @@
-#= require joosy/core/joosy
-#= require joosy/core/modules/log
-#= require joosy/core/modules/events
-#= require joosy/core/modules/container
-#= require joosy/core/modules/renderer
-#= require joosy/core/modules/time_manager
-#= require joosy/core/modules/widgets_manager
-#= require joosy/core/modules/filters
+#= require joosy/joosy
+#= require joosy/layout
+#= require joosy/widget
+#= require joosy/modules/log
+#= require joosy/modules/events
+#= require joosy/modules/container
+#= require joosy/modules/renderer
+#= require joosy/modules/time_manager
+#= require joosy/modules/widgets_manager
+#= require joosy/modules/filters
 
 #
 # Base class for all of your Joosy Pages.

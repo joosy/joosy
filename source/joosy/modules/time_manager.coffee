@@ -1,4 +1,4 @@
-#= require joosy/core/joosy
+#= require joosy/joosy
 
 #
 # Comfortable and clever wrappers for timeouts management

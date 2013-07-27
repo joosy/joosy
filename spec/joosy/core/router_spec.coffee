@@ -135,6 +135,12 @@ describe "Joosy.Router", ->
         waits 0
         runs -> expect(@spies.base.callCount).toEqual 0
 
+      it 'defaults to wildcard route', ->
+        runs -> @router.navigate '/trololo'
+        waits 0
+        runs ->
+          expect(@spies.wildcard.callCount).toEqual 1
+
       it 'navigates', ->
         runs -> @router.navigate '/base'
         waits 0
@@ -206,6 +212,12 @@ describe "Joosy.Router", ->
         runs -> @router.navigate '/base'
         waits 0
         runs -> expect(@spies.base.callCount).toEqual 0
+
+      it 'defaults to wildcard route', ->
+        runs -> @router.navigate '/trololo'
+        waits 0
+        runs ->
+          expect(@spies.wildcard.callCount).toEqual 1
 
       it 'navigates', ->
         runs -> @router.navigate '/base'

@@ -129,14 +129,14 @@ class Joosy.Router extends Joosy.Module
   # @param [Object] routes        Raw routes to prepare
   # @param [String] namespace     Inner cursor for recursion
   #
-  prepare: (routes, namespace='') ->
+  prepare: (routes, namespace) ->
     Object.each routes, (path, response) =>
       # 404 Route
-      if !namespace && path == 404
+      if !namespace && path == '404'
         @wildcardAction = response
         return
 
-      path = '/' + namespace + path
+      path = '/' + (namespace || '') + path
       path = path.replace /\/{2,}/, '/' # Removing duplicated '/'
 
       if response?
@@ -194,12 +194,12 @@ class Joosy.Router extends Joosy.Module
 
     for regex, route of @routes when @routes.hasOwnProperty regex
       if match = path.match new RegExp(regex)
-        @__respond route.to, @__grabParams(route, query, match)
+        @__respond route.to, @__grabParams(query, route, match)
         @trigger 'responded', path
         return
 
     if @wildcardAction?
-      @__respond @wildcardAction, @__grabParams(@wildcardAction, query)
+      @__respond @wildcardAction, @__grabParams(query)
       @trigger 'responded'
     else
       @trigger 'missed'
@@ -235,13 +235,13 @@ class Joosy.Router extends Joosy.Module
     else
       action.call @, params
 
-  __grabParams: (route, query=[], match=[]) ->
+  __grabParams: (query, route=null, match=[]) ->
     params = {}
 
     # Collect parameters from route placeholers
     match.shift() # First entry is full route regexp match that should be just skipped
 
-    route.capture?.each (key) ->
+    route?.capture?.each (key) ->
       params[key] = decodeURIComponent match.shift()
 
     # Collect parameters from URL query section

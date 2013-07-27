@@ -1,8 +1,5 @@
 describe "Joosy", ->
 
-  it "keeps environment clean", ->
-    expect(Joosy?).toBeFalsy()
-
   it "loads", ->
     result = false
 

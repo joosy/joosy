@@ -14,7 +14,7 @@ module.exports = (grunt) ->
       build: 'lib/joosy.js'
       extensions: (name) ->
         root: "joosy/extensions/#{name}"
-        build: "lib/extensions/#{name}.js"
+        build: "lib/joosy/extensions/#{name}.js"
     specs:
       units:
         environments: 'spec/joosy/environments/*_spec.*'
@@ -138,16 +138,10 @@ module.exports = (grunt) ->
   # Tasks
   #
   grunt.registerMultiTask 'mince', ->
+    Mincer.CoffeeEngine.configure bare: false
     environment = new Mincer.Environment
     environment.appendPath x for x in @data.include
-
-    result = """
-             (function() {
-             #{environment.findAsset(@data.src).toString()}
-             }).call(this);
-             """
-
-    grunt.file.write @data.dest, result
+    grunt.file.write @data.dest, environment.findAsset(@data.src).toString()
 
   grunt.registerTask 'default', ['connect', 'build', 'watch']
 

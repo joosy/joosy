@@ -6,7 +6,7 @@
 #
 # @mixin
 #
-Joosy =
+@Joosy =
   #
   # Core modules container
   #
@@ -123,5 +123,3 @@ Joosy =
 
 if define?.amd?
   define 'joosy', -> Joosy
-else
-  @Joosy = Joosy

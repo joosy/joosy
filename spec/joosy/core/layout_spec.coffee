@@ -22,11 +22,11 @@ describe "Joosy.Layout", ->
     expect(@layout.__renderDefault instanceof Function).toBeTruthy()
 
   it "integrates with Router", ->
-    target = sinon.stub Joosy.Router, 'navigate'
+    target = sinon.stub Joosy.Router.prototype, 'navigate'
     @layout.navigate 'there'
     expect(target.callCount).toEqual 1
     expect(target.alwaysCalledWithExactly 'there').toBeTruthy()
-    Joosy.Router.navigate.restore()
+    Joosy.Router::navigate.restore()
 
   it "loads", ->
     spies = []

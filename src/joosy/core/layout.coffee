@@ -123,8 +123,8 @@ class Joosy.Layout extends Joosy.Module
   #
   # @see Joosy.Router.navigate
   #
-  navigate: (args...) ->
-    Joosy.Router.navigate(args...)
+  navigate: ->
+    Joosy.Application.navigate arguments...
 
   #
   # This is required by {Joosy.Modules.Renderer}

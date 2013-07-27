@@ -223,8 +223,8 @@ class Joosy.Page extends Joosy.Module
   #
   # @see Joosy.Router.navigate
   #
-  navigate: (args...) ->
-    Joosy.Router.navigate(args...)
+  navigate: ->
+    Joosy.Application.navigate arguments...
 
   #
   # This is required by {Joosy.Modules.Renderer}
@@ -262,7 +262,6 @@ class Joosy.Page extends Joosy.Module
     @__runAfterLoads @params, @previous
     @__performScrolling() if @__scrollElement
     Joosy.Application.loading = false
-    Joosy.Router.trigger 'loaded', this
     @trigger 'loaded'
 
     Joosy.Modules.Log.debugAs @, "Page loaded"

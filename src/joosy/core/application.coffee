@@ -10,15 +10,15 @@ Joosy.Application =
   Layouts: {}
   Controls: {}
 
-  loading: true
   identity: true
   debounceForms: false
 
   config:
-    debug: false
+    debug:    false
     router:
-      html5: false
-      base:  '/'
+      html5:  false
+      base:   '/'
+      prefix: ''
 
   #
   # Starts Joosy application by binding to element and bootstraping routes
@@ -28,12 +28,15 @@ Joosy.Application =
   # @param [Object] options
   #
   initialize: (@name, @selector, options={}) ->
-    @mergeConfig(window.JoosyEnvironment) if window.JoosyEnvironment?
-    @mergeConfig(options)
+    Object.merge @config, window.JoosyEnvironment, true if window.JoosyEnvironment?
+    Object.merge @config, options, true
 
     @templater = new Joosy.Templaters.JST @name
+    @router    = new Joosy.Router @config.router
+    @router.setup()
 
-    Joosy.Router.__setupRoutes()
+  navigate: ->
+    @router.navigate arguments...
 
   #
   # Gets current application root node
@@ -50,13 +53,6 @@ Joosy.Application =
   setCurrentPage: (page, params) ->
     attempt = new page(params, @page)
     @page = attempt unless attempt.halted
-
-  mergeConfig: (options) ->
-    for key, value of options
-      if Object.isObject @config[key]
-        Object.merge @config[key], value
-      else
-        @config[key] = value
 
 # AMD wrapper
 if define?.amd?

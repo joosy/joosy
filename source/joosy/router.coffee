@@ -109,14 +109,15 @@ class Joosy.Router extends Joosy.Module
   @setup: (@config, @responder, respond=true) ->
     @config.prefix ||= ''
     @config.base   ||= ''
-    @config.base     = @config.base.substr(1) if @config.base[0] == '/'
+    @config.base     = '/'+@config.base unless @config.base[0] == '/'
     @config.html5    = false unless history.pushState
 
     @respond @canonizeLocation() if respond
 
     if @config.html5
-      $(window).bind 'popstate.JoosyRouter', =>
-        @respond @canonizeLocation()
+      $(window).bind 'popstate.JoosyRouter', (e) =>
+        unless e.event?.state
+          @respond @canonizeLocation()
     else
       $(window).bind 'hashchange.JoosyRouter', =>
         @respond @canonizeLocation()
@@ -227,7 +228,7 @@ class Joosy.Router extends Joosy.Module
         return
 
     if @wildcardAction?
-      @responder @wildcardAction, @__grabParams(query)
+      @responder @wildcardAction, path
       @trigger 'responded'
     else
       @trigger 'missed'

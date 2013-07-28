@@ -23,6 +23,7 @@ module.exports = (grunt) ->
           path: '/'
           src: 'index.haml'
           dest: 'public/index.html'
+          url: ['/', '/index.html']
 
     uglify:
       application:

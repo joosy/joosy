@@ -1,7 +1,17 @@
 {
+  "name": "<%= application %>",
+  "version": "0.0.1",
+  "main": "source/haml/index.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
   "dependencies": {
     "jquery": "~2.0.2",
     "sugar": "~1.3.9",
-    "jquery-form": "~3.32.0-2013.04.09"
+    "jquery-form": "~3.37.0"
   }
 }

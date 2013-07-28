@@ -1840,6 +1840,26 @@
 
 }).call(this);
 (function() {
+  Joosy.helpers('Routes', function() {
+    return this.linkTo = function(name, url, tagOptions) {
+      if (name == null) {
+        name = '';
+      }
+      if (url == null) {
+        url = '';
+      }
+      if (tagOptions == null) {
+        tagOptions = {};
+      }
+      return Joosy.Helpers.Application.tag('a', Joosy.Module.merge(tagOptions, {
+        'data-joosy': true,
+        href: url
+      }), name);
+    };
+  });
+
+}).call(this);
+(function() {
   var _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1863,6 +1883,10 @@
       } else {
         return window.history.loaded = true;
       }
+    });
+
+    $(window).on('click', 'a[data-joosy]', function(event) {
+      return Router.navigate(event.target.href);
     });
 
     Drawer = (function() {

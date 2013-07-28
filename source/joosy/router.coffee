@@ -1,6 +1,7 @@
 #= require joosy/joosy
 #= require joosy/modules/events
 #= require joosy/page
+#= require joosy/helpers/routes
 
 #
 # Router. Reacts on URI change event and loads proper pages
@@ -32,6 +33,9 @@ class Joosy.Router extends Joosy.Module
       @trigger 'popstate', event
     else
       window.history.loaded = true
+
+  $(window).on 'click', 'a[data-joosy]', (event) =>
+    @navigate event.target.href
 
   #
   # Rails-like wrapper around internal raw routes representation

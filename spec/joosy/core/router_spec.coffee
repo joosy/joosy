@@ -277,3 +277,25 @@ describe "Joosy.Router", ->
         expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '/section/page/1'
         expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual 'http://localhost:8888/section/page/1'
 
+  describe 'linker', ->
+    it 'defines helper', ->
+      tag = Joosy.Helpers.Routes.linkTo 'test', '/base', class: 'zomg!'
+
+      expect(tag).toBeTag 'a', 'test',
+        'data-joosy': 'true'
+        href: '/base'
+        class: 'zomg!'
+
+    if Zepto? # jQuery has a bug that doesn't allow automatic checking of this
+      it 'navigates', ->
+        sinon.stub Joosy.Router, 'navigate'
+
+        @$ground.html """
+                      <a href='#' id='test1'></a>
+                      <a href='#' id='test2' data-joosy='true'></a>
+                      """
+        $('#test1').click()
+        $('#test2').click()
+
+        expect(Joosy.Router.navigate.callCount).toEqual 1
+        Joosy.Router.navigate.restore()

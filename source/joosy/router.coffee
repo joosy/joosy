@@ -197,6 +197,7 @@ class Joosy.Router extends Joosy.Module
     params  = (path.match(/\/:[^\/]+/g) || []).map (str) ->
       str.substr 2
 
+    @routes ||= {}
     @routes[matcher] = 
       to: to,
       capture: params

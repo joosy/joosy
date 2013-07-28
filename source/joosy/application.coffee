@@ -42,10 +42,10 @@ Joosy.Application =
     Joosy.debug @config.debug
 
     Joosy.Router.setup @config.router, (action, params) =>
-      if Object.isFunction(action)
-        action(params)
-      else if Joosy.Module.hasAncestor action, Joosy.Page
+      if Joosy.Module.hasAncestor action, Joosy.Page
         @setCurrentPage action, params
+      else if Object.isFunction(action)
+        action(params)
       else
         throw new "Unknown kind of route action"
 

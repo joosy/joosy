@@ -22,8 +22,39 @@
   #
   Templaters: {}
 
+  #
+  # Helpers container
+  #
   Helpers: {}
+
+  #
+  # Events namespace
+  #
   Events: {}
+
+  
+  ### Global settings ###
+
+  #
+  # Debug mode
+  #
+  debug: (value) ->
+    if value?
+      @__debug = value
+    else
+      !!@__debug
+
+  #
+  # Templating engine
+  #
+  templater: (value) ->
+    if value?
+      @__templater = value
+    else
+      throw new Error "No templater registered" unless @__templater
+      @__templater
+
+  ### Global helpers ###
 
   #
   # Registeres anything inside specified namespace (objects chain starting from `window`)
@@ -61,6 +92,25 @@
     generator.apply Joosy.Helpers[name]
 
   #
+  # Generates ID unique within current run
+  #
+  uid: ->
+    @__uid ||= 0
+    "__joosy#{@__uid++}"
+
+  #
+  # Generates UUID
+  #
+  uuid: ->
+    'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
+      r = Math.random() * 16 | 0
+      v = if c is 'x' then r else r & 3 | 8
+      v.toString 16
+    .toUpperCase()
+
+  ### Shortcuts ###
+
+  #
   # Runs set of callbacks finializing with result callback
   #
   # @example Basic usage
@@ -77,23 +127,6 @@
       console.error "Events module is required to use `Joosy.synchronize'!"
     else
       Joosy.Modules.Events.synchronize arguments...
-
-  #
-  # Generates ID unique within current run
-  #
-  uid: ->
-    @__uid ||= 0
-    "__joosy#{@__uid++}"
-
-  #
-  # Generates UUID
-  #
-  uuid: ->
-    'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace /[xy]/g, (c) ->
-      r = Math.random() * 16 | 0
-      v = if c is 'x' then r else r & 3 | 8
-      v.toString 16
-    .toUpperCase()
 
   #
   # Basic URI builder. Joins base path with params hash

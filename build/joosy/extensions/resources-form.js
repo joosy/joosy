@@ -237,7 +237,7 @@
     Form.prototype.__debounce = function(xhr) {
       this.debugAs(this, "debounce: pending_request == " + this.__pending_request);
       if (this.__pending_request && this.debounce !== false) {
-        if (this.debounce || Joosy.Application.debounceForms) {
+        if (this.debounce || Joosy.Form.debounceForms) {
           xhr.abort();
           this.debugAs(this, "debounce: xhr aborted");
           return true;

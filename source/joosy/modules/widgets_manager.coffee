@@ -64,7 +64,7 @@ Joosy.Modules.WidgetsManager =
         else
           instance = widget.call this, index
 
-        if Joosy.Application.config.debug
+        if Joosy.debug()
           registered[selector][Joosy.Module.__className instance] ||= 0
           registered[selector][Joosy.Module.__className instance]  += 1
 
@@ -72,7 +72,7 @@ Joosy.Modules.WidgetsManager =
 
     @__widgets = {}
 
-    if Joosy.Application.config.debug
+    if Joosy.debug()
       registered.each (selector, value) =>
         value.each (widget, count) =>
           Joosy.Modules.Log.debugAs @, "Widget #{widget} registered at '#{selector}'. Elements: #{count}"

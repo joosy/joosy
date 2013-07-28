@@ -120,7 +120,7 @@
         data = {};
         data[shim.__primaryKey] = id;
       }
-      if (Joosy.Application.identity) {
+      if (Joosy.Resources.Base.identity) {
         id = data[shim.__primaryKey];
         if ((id != null) && Joosy.Resources.Base.identity[klass][id]) {
           shim = Joosy.Resources.Base.identity[klass][id];

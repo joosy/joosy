@@ -2,7 +2,7 @@ describe "Joosy.Layout", ->
 
   beforeEach ->
     class @Layout extends Joosy.Layout
-    @layout = new @Layout
+    @layout = new @Layout $('#application')
 
   it "has appropriate accessors", ->
     callbackNames = ['beforePaint', 'paint', 'erase']

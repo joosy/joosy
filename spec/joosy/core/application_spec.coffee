@@ -6,6 +6,7 @@ describe "Joosy.Application", ->
 
   afterEach ->
     Joosy.Router::setup.restore()
+    Joosy.Application.reset()
 
   it "initializes", ->
     Joosy.Application.initialize 'app', '#application', foo: {bar: 'baz'}
@@ -24,21 +25,21 @@ describe "Joosy.Application", ->
   it "manages pages", ->
     spy = sinon.spy()
 
-    class Page1
+    class Page1 extends Joosy.Page
       constructor: spy
 
-    class Page2
+    class Page2 extends Joosy.Page
       constructor: spy
 
     Joosy.Application.setCurrentPage(Page1, {foo: 'bar'})
 
     expect(Joosy.Application.page instanceof Page1).toBeTruthy()
     expect(spy.callCount).toEqual 1
-    expect(spy.args[0]).toEqual [{foo: 'bar'}, undefined]
+    expect(spy.args[0]).toEqual [Joosy.Application.content(), {foo: 'bar'}, undefined]
 
     Joosy.Application.setCurrentPage(Page2, {bar: 'baz'})
 
     expect(Joosy.Application.page instanceof Page2).toBeTruthy()
     expect(spy.callCount).toEqual 2
-    expect(spy.args[1][0]).toEqual {bar: 'baz'}
-    expect(spy.args[1][1] instanceof Page1).toBeTruthy()
+    expect(spy.args[1][1]).toEqual {bar: 'baz'}
+    expect(spy.args[1][2] instanceof Page1).toBeTruthy()

@@ -7,13 +7,6 @@
 # @mixin
 #
 Joosy.Modules.Renderer =
-
-  #
-  # Default behavior for non-set view (empty template?)
-  #
-  __renderDefault: ->
-    throw new Error "#{Joosy.Module.__className @constructor} does not have an attached template"
-
   #
   # Defines class-level helpers: @view and @helpers
   #
@@ -83,8 +76,11 @@ Joosy.Modules.Renderer =
     unless @__helpersInstance
       @__assignHelpers()
 
-      @__helpersInstance = Object.extended Joosy.Helpers.Application
+      @__helpersInstance = {}
       @__helpersInstance.__renderer = @
+
+      Joosy.Module.merge @__helpersInstance, Joosy.Helpers.Application
+      Joosy.Module.merge @__helpersInstance, Joosy.Helpers.Routes if Joosy.Helpers.Routes?
 
       if @__helpers
         for helper in @__helpers
@@ -116,8 +112,8 @@ Joosy.Modules.Renderer =
 
     if Object.isString template
       if @__renderSection?
-        template = Joosy.Application.templater.resolveTemplate @__renderSection(), template, this
-      template = Joosy.Application.templater.buildView template
+        template = Joosy.templater().resolveTemplate @__renderSection(), template, this
+      template = Joosy.templater().buildView template
     else if !Object.isFunction template
       throw new Error "#{Joosy.Module.__className @}> template (maybe @view) does not look like a string or lambda"
 

@@ -26,13 +26,17 @@ describe "Joosy.Modules.Renderer", ->
     it "accepts lambda", ->
       expect(@renderer.render @template, foo: 'bar').toEqual 'result'
 
+    it "expects templater definition", ->
+      expect(=> @renderer.render 'template', foo: 'bar').toThrow()
+
     it "accepts template", ->
-      target = sinon.stub Joosy.Application.templater, 'buildView'
-      target.returns @template
+      Joosy.templater
+        buildView: ->
+          -> 'result'
 
-      expect(@renderer.render @template, foo: 'bar').toEqual 'result'
+      expect(@renderer.render 'template', foo: 'bar').toEqual 'result'
 
-      Joosy.Application.templater.buildView.restore()
+      Joosy.templater false
 
   describe "dynamic rendering", ->
     beforeEach ->

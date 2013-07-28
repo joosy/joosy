@@ -15,9 +15,9 @@ describe "Joosy.Modules.Log", ->
     expect(@stub.callCount).toEqual 1
 
   it "should log debug messages into console", ->
-    Joosy.Application.config.debug = true
+    Joosy.debug(true)
     @logger.debug 'debug message'
-    Joosy.Application.config.debug = false
+    Joosy.debug(false)
     @logger.debug 'unseen debug message'
 
     expect(@stub.callCount).toEqual 1

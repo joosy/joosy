@@ -205,10 +205,10 @@ describe "Joosy.Form", ->
     describe 'Global debouncing enabled', ->
 
       beforeEach ->
-        Joosy.Application.debounceForms = true
+        Joosy.Form.debounceForms = true
 
       afterEach ->
-        Joosy.Application.debounceForms = false
+        Joosy.Form.debounceForms = false
 
       it 'should optionally allow multiple submit', ->
         @nudeForm = new Joosy.Form @nudeForm, debounce: false

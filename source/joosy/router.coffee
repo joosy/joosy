@@ -55,7 +55,7 @@ class Joosy.Router extends Joosy.Module
   #
   # The regexp to restrict routes reactions
   #
-  # @see {#restrict}
+  # @see #restrict
   #
   restriction: false
 
@@ -103,7 +103,7 @@ class Joosy.Router extends Joosy.Module
   #
   # Inits the routing system and loads the current route
   #
-  setup: (respond=true) ->
+  setup: (@responder, respond=true) ->
     @routes = {}
 
     @prepare @constructor.routes
@@ -142,9 +142,9 @@ class Joosy.Router extends Joosy.Module
       path = path.replace /\/{2,}/, '/' # Removing duplicated '/'
 
       if response?
-        if Object.isFunction(response) ||
-            Joosy.Module.hasAncestor(response, Joosy.Page) ||
-            (response.to? && response.as?)
+        if Object.isFunction(response)     ||
+            (response.to? && response.as?) ||
+            response.prototype
           Joosy.Module.merge @routes, @compileRoute(path, response)
         else
           @prepare response, path
@@ -153,7 +153,7 @@ class Joosy.Router extends Joosy.Module
   # Compiles one single route
   #
   # @param [String] path            Full path from raw route
-  # @param [Joosy.Page] response    Page that should be loaded at this route
+  # @param [Class] response         Class that should be instantiated at this route
   # @param [Function] response      Lambda to call at this route
   #
   compileRoute: (path, response) ->
@@ -196,12 +196,12 @@ class Joosy.Router extends Joosy.Module
 
     for regex, route of @routes when @routes.hasOwnProperty regex
       if match = path.match new RegExp(regex)
-        @__respond route.to, @__grabParams(query, route, match)
+        @responder route.to, @__grabParams(query, route, match)
         @trigger 'responded', path
         return
 
     if @wildcardAction?
-      @__respond @wildcardAction, @__grabParams(query)
+      @responder @wildcardAction, @__grabParams(query)
       @trigger 'responded'
     else
       @trigger 'missed'
@@ -213,29 +213,24 @@ class Joosy.Router extends Joosy.Module
   # @param [String] as               Helpers base name
   #
   defineHelpers: (path, as) ->
-    helper = (options) =>
+    config = @config
+    helper = (options) ->
       path.match(/\/:[^\/]+/g)?.each? (param) ->
         path = path.replace(param.substr(1), options[param.substr(2)])
 
-      if @config.html5
-        "#{@config.base}#{path}"
+      if config.html5
+        "#{config.base}#{path}"
       else
-        "##{@config.prefix}#{path}"
+        "##{config.prefix}#{path}"
 
-    Joosy.Helpers.Application["#{as}Path"] = (options) ->
-      helper(options)
-      
-    Joosy.Helpers.Application["#{as}Url"] = (options) =>
-      if @config.html5
-        "#{location.origin}#{helper(options)}"
-      else
-        "#{location.origin}#{location.pathname}#{helper(options)}"
+    Joosy.helpers 'Routes', ->
+      @["#{as}Path"] = helper
 
-  __respond: (action, params) ->
-    if Joosy.Module.hasAncestor action, Joosy.Page
-      Joosy.Application.setCurrentPage action, params
-    else
-      action.call @, params
+      @["#{as}Url"] = (options) ->
+        if config.html5
+          "#{location.origin}#{helper(options)}"
+        else
+          "#{location.origin}#{location.pathname}#{helper(options)}"
 
   __grabParams: (query, route=null, match=[]) ->
     params = {}

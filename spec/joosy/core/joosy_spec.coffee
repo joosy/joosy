@@ -1,10 +1,5 @@
 describe "Joosy", ->
 
-  it "initializes", ->
-    expect(Joosy.Application.config.debug).toBeFalsy()
-    expect(Joosy.Modules).toBeDefined()
-    expect(Joosy.Resources).toBeDefined()
-
   it "generates proper UUIDs", ->
     uuids = []
     2.times -> uuids.push Joosy.uuid()

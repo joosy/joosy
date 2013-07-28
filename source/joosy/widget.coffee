@@ -47,7 +47,7 @@ class Joosy.Widget extends Joosy.Module
   # Proxy to Joosy.Router.navigate
   #
   navigate: ->
-    Joosy.Application.navigate arguments...
+    Joosy.Application?.navigate arguments...
 
   #
   # This is required by {Joosy.Modules.Renderer}

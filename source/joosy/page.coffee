@@ -211,22 +211,20 @@ class Joosy.Page extends Joosy.Module
   # @params [Hash] params             Route params
   # @params [Joosy.Page] previous     Previous page to unload
   #
-  constructor: (@params, @previous) ->
+  constructor: (applicationContainer, @params, @previous) ->
     @__layoutClass ||= ApplicationLayout
 
     unless @halted = !@__runBeforeLoads(@params, @previous)
-      Joosy.Application.loading = true
-
       if !@previous?.layout?.uid? || @previous?.__layoutClass != @__layoutClass
-        @__bootstrapLayout()
+        @__bootstrapLayout(applicationContainer)
       else
-        @__bootstrap()
+        @__bootstrap(applicationContainer)
 
   #
   # @see Joosy.Router.navigate
   #
   navigate: ->
-    Joosy.Application.navigate arguments...
+    Joosy.Application?.navigate arguments...
 
   #
   # This is required by {Joosy.Modules.Renderer}
@@ -263,7 +261,6 @@ class Joosy.Page extends Joosy.Module
     @__setupWidgets()
     @__runAfterLoads @params, @previous
     @__performScrolling() if @__scrollElement
-    Joosy.Application.loading = false
     @trigger 'loaded'
 
     Joosy.Modules.Log.debugAs @, "Page loaded"
@@ -314,7 +311,7 @@ class Joosy.Page extends Joosy.Module
   #                       > paint
   #   fetch             /
   #
-  __bootstrap: ->
+  __bootstrap: (applicationContainer) ->
     Joosy.Modules.Log.debugAs @, "Boostraping page"
     @layout = @previous.layout
 
@@ -327,8 +324,8 @@ class Joosy.Page extends Joosy.Module
       @previous?.__afterPaint?(callbacksParams)
       @__callSyncedThrough this, '__paint', callbacksParams, =>
         # Page HTML
-        @layout.content().html @__renderDefault(@data || {})
         @container = @layout.content()
+        @container.html @__renderDefault(@data || {}) if @__renderDefault?
 
         # Loading
         @__load()
@@ -352,11 +349,11 @@ class Joosy.Page extends Joosy.Module
   #                       > paint
   #   fetch             /
   #
-  __bootstrapLayout: ->
+  __bootstrapLayout: (applicationContainer) ->
     Joosy.Modules.Log.debugAs @, "Boostraping page with layout"
-    @layout = new @__layoutClass(@params)
+    @layout = new @__layoutClass(applicationContainer, @params)
 
-    callbacksParams = [Joosy.Application.content(), this]
+    callbacksParams = [@layout.container, this]
 
     if @__scrollElement && @__scrollSpeed != 0
       @__fixHeight()
@@ -364,11 +361,12 @@ class Joosy.Page extends Joosy.Module
     @wait "stageClear dataReceived", =>
       @__callSyncedThrough @layout, '__paint', callbacksParams, =>
         # Layout HTML
-        @layout.container.html @layout.__renderDefault(@layout.data || {})
+        if @layout.__renderDefault?
+          @layout.container.html @layout.__renderDefault(@layout.data || {})
 
         # Page HTML
         @container = @layout.content()
-        @container.html @__renderDefault(@data || {})
+        @container.html @__renderDefault(@data || {}) if @__renderDefault?
 
         # Loading
         @layout.__load()

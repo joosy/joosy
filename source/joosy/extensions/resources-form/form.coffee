@@ -278,7 +278,7 @@ class Joosy.Form extends Joosy.Module
   __debounce: (xhr) ->
     @debugAs this, "debounce: pending_request == #{@__pending_request}"
     if @__pending_request && @debounce != false
-      if @debounce || Joosy.Application.debounceForms
+      if @debounce || Joosy.Form.debounceForms
         xhr.abort()
         @debugAs this, "debounce: xhr aborted"
         return true

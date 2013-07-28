@@ -36,7 +36,7 @@ describe "Joosy.Page", ->
 
     it "integrates with Router", ->
       target = sinon.stub Joosy.Router.prototype, 'navigate'
-      (new @Page).navigate 'there'
+      (new @Page $('#application')).navigate 'there'
       expect(target.callCount).toEqual 1
       expect(target.alwaysCalledWithExactly 'there').toBeTruthy()
       Joosy.Router::navigate.restore()
@@ -45,7 +45,7 @@ describe "Joosy.Page", ->
       sinon.stub @Page.prototype, '__runBeforeLoads'
       @Page::__runBeforeLoads.returns(false)
 
-      new @Page
+      new @Page $('#application')
 
       expect(@Page::__bootstrap.callCount).toEqual 0
       expect(@Page::__bootstrapLayout.callCount).toEqual 0
@@ -53,11 +53,11 @@ describe "Joosy.Page", ->
     describe "layout switcher", ->
 
       beforeEach ->
-        @page = new @Page
-        @page.layout = new @Layout
+        @page = new @Page $('#application')
+        @page.layout = new @Layout $('#application')
 
       it "does not render when previous layout is the same", ->
-        new @Page {}, @page
+        new @Page $('#application'), {}, @page
 
         expect(@Page::__bootstrap.callCount).toEqual 1
         expect(@Page::__bootstrapLayout.callCount).toEqual 1
@@ -70,7 +70,7 @@ describe "Joosy.Page", ->
         sinon.stub Page.prototype, '__bootstrap'
         sinon.stub Page.prototype, '__bootstrapLayout'
 
-        new Page {}, @page
+        new Page $('#application'), {}, @page
 
         expect(@Page::__bootstrap.callCount).toEqual 0
         expect(@Page::__bootstrapLayout.callCount).toEqual 1
@@ -78,7 +78,7 @@ describe "Joosy.Page", ->
         expect(Page::__bootstrapLayout.callCount).toEqual 1
 
     it "loads", ->
-      page = new @Page
+      page = new @Page $('#application')
 
       spies = []
       spies.push sinon.spy(page, '__assignElements')
@@ -89,7 +89,7 @@ describe "Joosy.Page", ->
       expect(spies).toBeSequenced()
 
     it "unloads", ->
-      page = new @Page
+      page = new @Page $('#application')
 
       spies = []
       spies.push sinon.spy(page, '__clearTime')
@@ -102,11 +102,6 @@ describe "Joosy.Page", ->
   describe "rendering", ->
 
     beforeEach ->
-      # Layouts inject themselves into `Joosy.Application.content`
-      # so let's make them inject where we want
-      sinon.stub Joosy.Application, 'content'
-      Joosy.Application.content.returns @$ground
-
       # We test every module separately so there's no need to run all those
       sinon.stub Joosy.Page.prototype, '__load'
       sinon.stub Joosy.Page.prototype, '__unload'
@@ -114,7 +109,6 @@ describe "Joosy.Page", ->
       sinon.stub Joosy.Layout.prototype, '__unload'
 
     afterEach ->
-      Joosy.Application.content.restore()
       Joosy.Page::__load.restore()
       Joosy.Page::__unload.restore()
       Joosy.Layout::__load.restore()
@@ -128,7 +122,7 @@ describe "Joosy.Page", ->
         @layout Layout
         @view (locals) -> 'page'
 
-      page = new Page
+      page = new Page @$ground
       expect(@$ground.html()).toMatch /<div class\=\"layout\" id=\"__joosy\d+\">page<\/div>/
 
     it "changes page", ->
@@ -143,10 +137,10 @@ describe "Joosy.Page", ->
         @layout Layout
         @view (locals) -> 'page b'
 
-      page = new PageA
+      page = new PageA @$ground
       expect(@$ground.html()).toMatch /<div id=\"__joosy\d+\">page a<\/div>/
 
-      page = new PageB {}, page
+      page = new PageB @$ground, {}, page
       expect(@$ground.html()).toMatch /<div id=\"__joosy\d+\">page b<\/div>/
 
     it "changes layout", ->
@@ -164,11 +158,11 @@ describe "Joosy.Page", ->
         @layout LayoutB
         @view (locals) -> ''
 
-      page = new PageA
+      page = new PageA @$ground
       html = @$ground.html()
       expect(html).toMatch /<div id=\"__joosy\d+\"><\/div>/
 
-      page = new PageB {}, page
+      page = new PageB @$ground, {}, page
       expect(@$ground.html()).toMatch /<div id=\"__joosy\d+\"><\/div>/
       expect(@$ground.html()).not.toEqual html
 
@@ -176,15 +170,16 @@ describe "Joosy.Page", ->
       class Layout extends Joosy.Layout
         @view (locals) -> locals.page 'div', class: 'layout'
 
-        constructor: (@params) ->
+        constructor: ->
+          super arguments...
           expect(@params).toEqual foo: 'bar'
-          super
+          
 
       class Page extends Joosy.Page
         @layout Layout
         @view (locals) -> 'page'
 
-      page = new Page foo: 'bar'
+      page = new Page $('#application'), foo: 'bar'
 
     it "passes @data to @view", ->
       class Layout extends Joosy.Layout
@@ -207,7 +202,7 @@ describe "Joosy.Page", ->
         @view (locals) ->
           expect(locals.foo).toEqual 'bar'
 
-      page = new Page
+      page = new Page $('#application')
 
     it "hooks", ->
       spies = []
@@ -236,7 +231,7 @@ describe "Joosy.Page", ->
 
         @view spies[10]
 
-      page = new PageA
-      page = new PageB {}, page
+      page = new PageA $('#application')
+      page = new PageB $('#application'), {}, page
 
       expect(spies).toBeSequenced()

@@ -7,6 +7,7 @@
 #= require joosy/modules/time_manager
 #= require joosy/modules/widgets_manager
 #= require joosy/modules/filters
+#= require joosy/helpers/view
 
 #
 # Base class for all of your Joosy Layouts.
@@ -117,15 +118,14 @@ class Joosy.Layout extends Joosy.Module
   #
   # @param [Hash] params              List of route params
   #
-  constructor: (@params) ->
+  constructor: (@container, @params) ->
     @uid = Joosy.uid()
-    @container = Joosy.Application.content()
 
   #
   # @see Joosy.Router.navigate
   #
   navigate: ->
-    Joosy.Application.navigate arguments...
+    Joosy.Application?.navigate arguments...
 
   #
   # This is required by {Joosy.Modules.Renderer}

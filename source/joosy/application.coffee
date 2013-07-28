@@ -14,8 +14,8 @@ Joosy.Application =
   Layouts: {}
   Controls: {}
 
-  identity: true
-  debounceForms: false
+  initialized: false
+  loading: true
 
   config:
     debug:    false
@@ -32,12 +32,37 @@ Joosy.Application =
   # @param [Object] options
   #
   initialize: (@name, @selector, options={}) ->
+    if @initialized
+      throw new Error 'Attempted to initialize Application twice'
+
     Object.merge @config, window.JoosyEnvironment, true if window.JoosyEnvironment?
     Object.merge @config, options, true
 
-    @templater = new Joosy.Templaters.JST @name
-    @router    = new Joosy.Router @config.router
-    @router.setup()
+    Joosy.templater new Joosy.Templaters.JST(@name)
+    Joosy.debug @config.debug
+
+    @router = new Joosy.Router @config.router
+    @router.setup (action, params) =>
+      if Object.isFunction(action)
+        action(params)
+      else if Joosy.Module.hasAncestor action, Joosy.Page
+        @setCurrentPage action, params
+      else
+        throw new "Unknown kind of route action"
+        
+
+    @initialized = true
+
+  reset: ->
+    Joosy.Router.reset()
+    Joosy.templater false
+    Joosy.debug false
+
+    @page?.__unload()
+    delete @page
+
+    @loading = true
+    @initialized = false
 
   navigate: ->
     @router.navigate arguments...
@@ -55,8 +80,13 @@ Joosy.Application =
   # @param [Object] params        Hash of page params
   #
   setCurrentPage: (page, params) ->
-    attempt = new page(params, @page)
-    @page = attempt unless attempt.halted
+    @loading = true
+    attempt = new page @content(), params, @page
+
+    unless attempt.halted
+      @page = attempt
+      @page.wait 'loaded', =>
+        @loading = false
 
 # AMD wrapper
 if define?.amd?

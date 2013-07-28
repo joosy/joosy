@@ -4,9 +4,8 @@
 # JST template precompilation binding
 #
 class Joosy.Templaters.JST
-  constructor: (applicationName) ->
-    if Object.isString(applicationName) && applicationName.length > 0
-      @applicationName = applicationName
+  constructor: (@config={}) ->
+    @prefix = @config.prefix if @config.prefix? && @config.prefix.length > 0
 
   #
   # Gets template lambda by its full name
@@ -16,10 +15,10 @@ class Joosy.Templaters.JST
   buildView: (name) ->
     template = false
 
-    if @applicationName
+    if @prefix
       haystack = [
-        "#{@applicationName}/templates/#{name}-#{I18n?.locale}",
-        "#{@applicationName}/templates/#{name}"
+        "#{@prefix}/templates/#{name}-#{I18n?.locale}",
+        "#{@prefix}/templates/#{name}"
       ]
     else
       haystack = [

@@ -9,9 +9,6 @@ class ProjectBase extends @Base
   constructor: (@options, destination, templates) ->
     super(@options, destination, templates)
 
-    @options.name ||= 'application'
-    @options.name   = @options.name.split('/').pop()
-
   generate: ->
     @file ['resources', '.gitkeep']
     @file ['widgets', '.gitkeep']
@@ -31,7 +28,8 @@ class ProjectBase extends @Base
 
 
     @template ['application', 'base', 'application.coffee'], ['application.coffee'],
-      application: @options.name
+      templaterPrefix: @options.templaterPrefix || null
+      enableHTML5: !!@options.enableHTML5
       dependencies: @options.dependencies.replace /^\s+|\s+$/g, ''
 
     @actions

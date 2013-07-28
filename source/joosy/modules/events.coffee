@@ -32,7 +32,7 @@ Joosy.Modules.Events =
   # @param [Function] target            Name of waiter to unbind
   #
   unwait: (target) ->
-    delete @__oneShotEvents[target]
+    delete @__oneShotEvents[target] if @__oneShotEvents?
 
   #
   # Binds action to run each time any of given event was triggered
@@ -59,7 +59,7 @@ Joosy.Modules.Events =
   # @param [Function] target            Name of bind to unbind
   #
   unbind: (target) ->
-    delete @__boundEvents[target]
+    delete @__boundEvents[target] if @__boundEvents?
 
   #
   # Triggers event for {bind} and {wait}

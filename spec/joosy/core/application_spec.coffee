@@ -9,16 +9,15 @@ describe "Joosy.Application", ->
     Joosy.Application.reset()
 
   it "initializes", ->
-    Joosy.Application.initialize 'app', '#application', foo: {bar: 'baz'}
+    Joosy.Application.initialize '#application', foo: {bar: 'baz'}
     expect(Joosy.Application.page).toBeUndefined()
     expect(Joosy.Application.selector).toEqual '#application'
     expect(Joosy.Router.setup.callCount).toEqual 1
-    expect(Joosy.Application.name).toEqual 'app'
     expect(Joosy.Application.config.foo.bar).toEqual 'baz'
     expect(Joosy.Application.content()).toEqual $('#application')
 
   it "merges config", ->
-    Joosy.Application.initialize 'app', '#application', router: {html5: true}
+    Joosy.Application.initialize '#application', router: {html5: true}
     expect(Joosy.Application.config.router.html5).toEqual true
     expect(Joosy.Application.config.router.base).toEqual ''
 

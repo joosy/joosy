@@ -5,6 +5,11 @@
 #
 # Router. Reacts on URI change event and loads proper pages
 #
+# Internal storage rules:
+#   * HTML5 Base option is stored with both leading and trailing slashes
+#   * Helpers pathes are stored without leading trailing slash
+#   * Route matchers declare leading and trailing slashes as optional
+#
 # Example:
 #   Joosy.Router.map
 #     404             : (path) -> alert "Page '#{path}' was not found :("
@@ -19,6 +24,14 @@
 #
 class Joosy.Router extends Joosy.Module
   @extend Joosy.Modules.Events
+
+  # We need to be constantly subscribed to popstate event to filter
+  # the first event that always happens on the initial load
+  $(window).bind 'popstate', (event) =>
+    if window.history.loaded?
+      @trigger 'popstate', event
+    else
+      window.history.loaded = true
 
   #
   # Rails-like wrapper around internal raw routes representation
@@ -109,15 +122,15 @@ class Joosy.Router extends Joosy.Module
   @setup: (@config, @responder, respond=true) ->
     @config.prefix ||= ''
     @config.base   ||= ''
-    @config.base     = '/'+@config.base unless @config.base[0] == '/'
+    @config.base     = ('/'+@config.base+'/').replace(/\/{2,}/g, '/')
     @config.html5    = false unless history.pushState
 
     @respond @canonizeLocation() if respond
 
     if @config.html5
-      $(window).bind 'popstate.JoosyRouter', (e) =>
-        unless e.event?.state
-          @respond @canonizeLocation()
+      @listener = @bind 'popstate pushstate', =>
+        @respond @canonizeLocation()
+
     else
       $(window).bind 'hashchange.JoosyRouter', =>
         @respond @canonizeLocation()
@@ -126,6 +139,7 @@ class Joosy.Router extends Joosy.Module
   # Clears current map of routes and deactivates bindings
   #
   @reset: ->
+    @unbind @listener
     $(window).unbind '.JoosyRouter'
     @restriction = false
     @routes = {}
@@ -151,7 +165,8 @@ class Joosy.Router extends Joosy.Module
     path = to
 
     if @config.html5
-      path = (@config.base+path).replace /\/{2,}/g, '/'
+      path = path.substr(1) if path[0] == '/'
+      path = @config.base+path
     else
       path = path.substr(1) if path[0] == '#'
 
@@ -160,7 +175,7 @@ class Joosy.Router extends Joosy.Module
 
     if @config.html5
       history.pushState {}, '', path
-      $(window).trigger 'popstate'
+      @trigger 'pushstate'
     else
       location.hash = path
     return
@@ -168,11 +183,13 @@ class Joosy.Router extends Joosy.Module
   #
   # Gets current route out of the window location
   #
+  # @note canonized location always starts with leading /
+  #
   @canonizeLocation: ->
     if @config.html5
-      location.pathname.replace(///^#{RegExp.escape @config.base}///, '')+location.search
+      location.pathname.replace(///^#{RegExp.escape @config.base}?///, '/')+location.search
     else
-      location.hash.replace ///^\#(#{@prefix})?///, ''
+      location.hash.replace ///^\#(#{@prefix})?\/?///, '/'
 
   #
   # Compiles one single route
@@ -185,6 +202,8 @@ class Joosy.Router extends Joosy.Module
     if path.toString() == '404'
       @wildcardAction = to
       return
+
+    path = path.substr(1) if path[0] == '/'
 
     matcher = path.replace /\/{2,}/g, '/'
     result  = {}
@@ -241,13 +260,15 @@ class Joosy.Router extends Joosy.Module
   #
   @defineHelpers: (path, as) ->
     helper = (options) ->
+      result = path
+
       path.match(/\/:[^\/]+/g)?.each? (param) ->
-        path = path.replace(param.substr(1), options[param.substr(2)])
+        result = result.replace(param.substr(1), options[param.substr(2)])
 
       if Joosy.Router.config.html5
-        "#{Joosy.Router.config.base}#{path}"
+        "#{Joosy.Router.config.base}#{result}"
       else
-        "##{Joosy.Router.config.prefix}#{path}"
+        "##{Joosy.Router.config.prefix}#{result}"
 
     Joosy.helpers 'Routes', ->
       @["#{as}Path"] = helper

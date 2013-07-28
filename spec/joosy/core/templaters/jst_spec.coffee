@@ -27,7 +27,7 @@ describe "Joosy.Templaters.JST", ->
     describe "with set application name", ->
 
       beforeEach ->
-        @templater = new Joosy.Templaters.JST('application')
+        @templater = new Joosy.Templaters.JST(prefix: 'application')
 
       it "resolves plain template", ->
         JST['application/templates/test'] = 'template'

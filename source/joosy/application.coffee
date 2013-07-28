@@ -19,6 +19,8 @@ Joosy.Application =
 
   config:
     debug:    false
+    templater:
+      prefix: ''
     router:
       html5:  false
       base:   ''
@@ -31,14 +33,14 @@ Joosy.Application =
   # @param [String] selector    jQuery-compatible selector of root application element
   # @param [Object] options
   #
-  initialize: (@name, @selector, options={}) ->
+  initialize: (@selector, options={}) ->
     if @initialized
       throw new Error 'Attempted to initialize Application twice'
 
     Object.merge @config, window.JoosyEnvironment, true if window.JoosyEnvironment?
     Object.merge @config, options, true
 
-    Joosy.templater new Joosy.Templaters.JST(@name)
+    Joosy.templater new Joosy.Templaters.JST(@config.templater)
     Joosy.debug @config.debug
 
     Joosy.Router.setup @config.router, (action, params) =>

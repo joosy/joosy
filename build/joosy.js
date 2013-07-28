@@ -228,7 +228,9 @@
       return name;
     },
     unwait: function(target) {
-      return delete this.__oneShotEvents[target];
+      if (this.__oneShotEvents != null) {
+        return delete this.__oneShotEvents[target];
+      }
     },
     bind: function(name, events, callback) {
       this.__boundEvents || (this.__boundEvents = {});
@@ -241,7 +243,9 @@
       return name;
     },
     unbind: function(target) {
-      return delete this.__boundEvents[target];
+      if (this.__boundEvents != null) {
+        return delete this.__boundEvents[target];
+      }
     },
     trigger: function() {
       var callback, data, event, events, fire, name, _ref, _ref1, _ref2, _ref3, _results,
@@ -1841,7 +1845,8 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Joosy.Router = (function(_super) {
-    var Drawer;
+    var Drawer,
+      _this = this;
 
     __extends(Router, _super);
 
@@ -1851,6 +1856,14 @@
     }
 
     Router.extend(Joosy.Modules.Events);
+
+    $(window).bind('popstate', function(event) {
+      if (window.history.loaded != null) {
+        return Router.trigger('popstate', event);
+      } else {
+        return window.history.loaded = true;
+      }
+    });
 
     Drawer = (function() {
       Drawer.run = function(block, namespace, alias) {
@@ -1949,9 +1962,7 @@
       }
       (_base = this.config).prefix || (_base.prefix = '');
       (_base1 = this.config).base || (_base1.base = '');
-      if (this.config.base[0] === '/') {
-        this.config.base = this.config.base.substr(1);
-      }
+      this.config.base = ('/' + this.config.base + '/').replace(/\/{2,}/g, '/');
       if (!history.pushState) {
         this.config.html5 = false;
       }
@@ -1959,7 +1970,7 @@
         this.respond(this.canonizeLocation());
       }
       if (this.config.html5) {
-        return $(window).bind('popstate.JoosyRouter', function() {
+        return this.listener = this.bind('popstate pushstate', function() {
           return _this.respond(_this.canonizeLocation());
         });
       } else {
@@ -1970,6 +1981,7 @@
     };
 
     Router.reset = function() {
+      this.unbind(this.listener);
       $(window).unbind('.JoosyRouter');
       this.restriction = false;
       return this.routes = {};
@@ -1986,7 +1998,10 @@
       }
       path = to;
       if (this.config.html5) {
-        path = (this.config.base + path).replace(/\/{2,}/g, '/');
+        if (path[0] === '/') {
+          path = path.substr(1);
+        }
+        path = this.config.base + path;
       } else {
         if (path[0] === '#') {
           path = path.substr(1);
@@ -1997,7 +2012,7 @@
       }
       if (this.config.html5) {
         history.pushState({}, '', path);
-        $(window).trigger('popstate');
+        this.trigger('pushstate');
       } else {
         location.hash = path;
       }
@@ -2005,9 +2020,9 @@
 
     Router.canonizeLocation = function() {
       if (this.config.html5) {
-        return location.pathname.replace(RegExp("^" + (RegExp.escape(this.config.base))), '') + location.search;
+        return location.pathname.replace(RegExp("^" + (RegExp.escape(this.config.base)) + "?"), '/') + location.search;
       } else {
-        return location.hash.replace(RegExp("^\\#(" + this.prefix + ")?"), '');
+        return location.hash.replace(RegExp("^\\#(" + this.prefix + ")?\\/?"), '/');
       }
     };
 
@@ -2017,6 +2032,9 @@
         this.wildcardAction = to;
         return;
       }
+      if (path[0] === '/') {
+        path = path.substr(1);
+      }
       matcher = path.replace(/\/{2,}/g, '/');
       result = {};
       matcher = matcher.replace(/\/:([^\/]+)/g, '/([^/]+)');
@@ -2025,6 +2043,7 @@
       params = (path.match(/\/:[^\/]+/g) || []).map(function(str) {
         return str.substr(2);
       });
+      this.routes || (this.routes = {});
       this.routes[matcher] = {
         to: to,
         capture: params,
@@ -2056,7 +2075,7 @@
         }
       }
       if (this.wildcardAction != null) {
-        this.responder(this.wildcardAction, this.__grabParams(query));
+        this.responder(this.wildcardAction, path);
         return this.trigger('responded');
       } else {
         return this.trigger('missed');
@@ -2066,18 +2085,19 @@
     Router.defineHelpers = function(path, as) {
       var helper;
       helper = function(options) {
-        var _ref1;
+        var result, _ref1;
+        result = path;
         if ((_ref1 = path.match(/\/:[^\/]+/g)) != null) {
           if (typeof _ref1.each === "function") {
             _ref1.each(function(param) {
-              return path = path.replace(param.substr(1), options[param.substr(2)]);
+              return result = result.replace(param.substr(1), options[param.substr(2)]);
             });
           }
         }
         if (Joosy.Router.config.html5) {
-          return "" + Joosy.Router.config.base + path;
+          return "" + Joosy.Router.config.base + result;
         } else {
-          return "#" + Joosy.Router.config.prefix + path;
+          return "#" + Joosy.Router.config.prefix + result;
         }
       };
       return Joosy.helpers('Routes', function() {
@@ -2132,17 +2152,18 @@
 }).call(this);
 (function() {
   Joosy.Templaters.JST = (function() {
-    function JST(applicationName) {
-      if (Object.isString(applicationName) && applicationName.length > 0) {
-        this.applicationName = applicationName;
+    function JST(config) {
+      this.config = config != null ? config : {};
+      if ((this.config.prefix != null) && this.config.prefix.length > 0) {
+        this.prefix = this.config.prefix;
       }
     }
 
     JST.prototype.buildView = function(name) {
       var haystack, path, template, _i, _len;
       template = false;
-      if (this.applicationName) {
-        haystack = ["" + this.applicationName + "/templates/" + name + "-" + (typeof I18n !== "undefined" && I18n !== null ? I18n.locale : void 0), "" + this.applicationName + "/templates/" + name];
+      if (this.prefix) {
+        haystack = ["" + this.prefix + "/templates/" + name + "-" + (typeof I18n !== "undefined" && I18n !== null ? I18n.locale : void 0), "" + this.prefix + "/templates/" + name];
       } else {
         haystack = ["templates/" + name + "-" + (typeof I18n !== "undefined" && I18n !== null ? I18n.locale : void 0), "templates/" + name];
       }
@@ -2307,15 +2328,17 @@
     loading: true,
     config: {
       debug: false,
+      templater: {
+        prefix: ''
+      },
       router: {
         html5: false,
         base: '',
         prefix: ''
       }
     },
-    initialize: function(name, selector, options) {
+    initialize: function(selector, options) {
       var _this = this;
-      this.name = name;
       this.selector = selector;
       if (options == null) {
         options = {};
@@ -2327,13 +2350,13 @@
         Object.merge(this.config, window.JoosyEnvironment, true);
       }
       Object.merge(this.config, options, true);
-      Joosy.templater(new Joosy.Templaters.JST(this.name));
+      Joosy.templater(new Joosy.Templaters.JST(this.config.templater));
       Joosy.debug(this.config.debug);
       Joosy.Router.setup(this.config.router, function(action, params) {
-        if (Object.isFunction(action)) {
-          return action(params);
-        } else if (Joosy.Module.hasAncestor(action, Joosy.Page)) {
+        if (Joosy.Module.hasAncestor(action, Joosy.Page)) {
           return _this.setCurrentPage(action, params);
+        } else if (Object.isFunction(action)) {
+          return action(params);
         } else {
           throw new "Unknown kind of route action";
         }

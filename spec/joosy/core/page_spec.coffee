@@ -67,8 +67,8 @@ describe "Joosy.Page", ->
         class Page extends Joosy.Page
           @layout Layout
 
-        sinon.stub Page.prototype, '__bootstrap'
-        sinon.stub Page.prototype, '__bootstrapLayout'
+        ['__bootstrap', '__bootstrapLayout'].each (x) ->
+          sinon.stub Page.prototype, x
 
         new Page $('#application'), {}, @page
 
@@ -80,22 +80,16 @@ describe "Joosy.Page", ->
     it "loads", ->
       page = new @Page $('#application')
 
-      spies = []
-      spies.push sinon.spy(page, '__assignElements')
-      spies.push sinon.spy(page, '__delegateEvents')
-      spies.push sinon.spy(page, '__setupWidgets')
-      spies.push sinon.spy(page, '__runAfterLoads')
+      spies = ['__assignElements', '__delegateEvents', '__setupWidgets', '__runAfterLoads'].map (x) ->
+        sinon.spy page, x
       page.__load()
       expect(spies).toBeSequenced()
 
     it "unloads", ->
       page = new @Page $('#application')
 
-      spies = []
-      spies.push sinon.spy(page, '__clearTime')
-      spies.push sinon.spy(page, '__unloadWidgets')
-      spies.push sinon.spy(page, '__removeMetamorphs')
-      spies.push sinon.spy(page, '__runAfterUnloads')
+      spies = ['__clearTime', '__unloadWidgets', '__removeMetamorphs', '__runAfterUnloads'].map (x) ->
+        sinon.spy page, x
       page.__unload()
       expect(spies).toBeSequenced()
 
@@ -123,7 +117,7 @@ describe "Joosy.Page", ->
         @view (locals) -> 'page'
 
       page = new Page @$ground
-      expect(@$ground.html()).toMatch /<div class\=\"layout\" id=\"__joosy\d+\">page<\/div>/
+      expect(@$ground.html()).toBeTag 'div', 'page', class: 'layout', id: /__joosy\d+/
 
     it "changes page", ->
       class Layout extends Joosy.Layout
@@ -138,10 +132,10 @@ describe "Joosy.Page", ->
         @view (locals) -> 'page b'
 
       page = new PageA @$ground
-      expect(@$ground.html()).toMatch /<div id=\"__joosy\d+\">page a<\/div>/
+      expect(@$ground.html()).toBeTag 'div', 'page a', id: /__joosy\d+/
 
       page = new PageB @$ground, {}, page
-      expect(@$ground.html()).toMatch /<div id=\"__joosy\d+\">page b<\/div>/
+      expect(@$ground.html()).toBeTag 'div', 'page b', id: /__joosy\d+/
 
     it "changes layout", ->
       class LayoutA extends Joosy.Layout
@@ -160,10 +154,10 @@ describe "Joosy.Page", ->
 
       page = new PageA @$ground
       html = @$ground.html()
-      expect(html).toMatch /<div id=\"__joosy\d+\"><\/div>/
+      expect(html).toBeTag 'div', '', id: /__joosy\d+/
 
       page = new PageB @$ground, {}, page
-      expect(@$ground.html()).toMatch /<div id=\"__joosy\d+\"><\/div>/
+      expect(@$ground.html()).toBeTag 'div', '', id: /__joosy\d+/
       expect(@$ground.html()).not.toEqual html
 
     it "proxies @params to layout", ->
@@ -173,7 +167,7 @@ describe "Joosy.Page", ->
         constructor: ->
           super arguments...
           expect(@params).toEqual foo: 'bar'
-          
+
 
       class Page extends Joosy.Page
         @layout Layout

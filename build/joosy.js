@@ -1416,22 +1416,77 @@
 }).call(this);
 (function() {
   Joosy.helpers('Application', function() {
-    this.tag = function(name, options, content) {
-      var e, element, temp;
+    var DOMnative, DOMtext;
+    DOMtext = document.createTextNode("test");
+    DOMnative = document.createElement("span");
+    DOMnative.appendChild(DOMtext);
+    this.escapeOnce = function(html) {
+      DOMtext.nodeValue = html;
+      return DOMnative.innerHTML;
+    };
+    this.tag = function(name, options, open, escape) {
+      var element, tag, temp, value;
       if (options == null) {
         options = {};
       }
-      if (content == null) {
-        content = '';
+      if (open == null) {
+        open = false;
       }
-      if (Object.isFunction(content)) {
-        content = content();
+      if (escape == null) {
+        escape = true;
       }
       element = document.createElement(name);
       temp = document.createElement('div');
-      Object.each(options, function(name, value) {
-        return element.setAttribute(name, value);
-      });
+      for (name in options) {
+        value = options[name];
+        if (escape) {
+          value = this.escapeOnce(value);
+        }
+        element.setAttribute(name, value);
+      }
+      temp.appendChild(element);
+      tag = temp.innerHTML;
+      if (open) {
+        tag = tag.replace('/>', '>');
+      }
+      return tag;
+    };
+    this.contentTag = function(name, contentOrOptions, options, escape) {
+      var content, e, element, temp, value;
+      if (contentOrOptions == null) {
+        contentOrOptions = null;
+      }
+      if (options == null) {
+        options = null;
+      }
+      if (escape == null) {
+        escape = true;
+      }
+      if (Object.isString(contentOrOptions)) {
+        options || (options = {});
+        content = contentOrOptions;
+      } else if (Object.isObject(contentOrOptions)) {
+        if (Object.isFunction(options)) {
+          escape = true;
+          content = options();
+        } else {
+          escape = options;
+          content = escape();
+        }
+        options = contentOrOptions;
+      } else {
+        options = {};
+        content = contentOrOptions();
+      }
+      element = document.createElement(name);
+      temp = document.createElement('div');
+      for (name in options) {
+        value = options[name];
+        if (escape) {
+          value = this.escapeOnce(value);
+        }
+        element.setAttribute(name, value);
+      }
       try {
         element.innerHTML = content;
       } catch (_error) {
@@ -1851,10 +1906,10 @@
       if (tagOptions == null) {
         tagOptions = {};
       }
-      return Joosy.Helpers.Application.tag('a', Joosy.Module.merge(tagOptions, {
+      return Joosy.Helpers.Application.contentTag('a', name, Joosy.Module.merge(tagOptions, {
         'data-joosy': true,
         href: url
-      }), name);
+      }));
     };
   });
 

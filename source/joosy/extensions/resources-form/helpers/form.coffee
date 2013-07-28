@@ -61,7 +61,7 @@ Joosy.helpers 'Application', ->
     d = description(resource, method, options.extendIds)
     delete options.extendIds
 
-    @tag 'label', Joosy.Module.merge(options, for: d.id), content
+    @contentTag 'label', content, Joosy.Module.merge(options, for: d.id)
 
   ['text', 'file', 'hidden', 'password'].each (type) =>
     @[type+'Field'] = (resource, method, options={}) -> input type, resource, method, options
@@ -85,15 +85,15 @@ Joosy.helpers 'Application', ->
       delete htmlOptions.includeBlank
       opts.unshift ['', '']
     opts = opts.reduce (str, vals) =>
-      params = if Object.isArray vals then ['option', { value: vals[1] }, vals[0]] else ['option', {}, vals]
+      params = if Object.isArray vals then ['option', vals[0], { value: vals[1] }] else ['option', vals, {}]
       if htmlOptions.value == (if Object.isArray(vals) then vals[1] else vals)
-        params[1].selected = 'selected'
-      str += @.tag.apply @, params
+        params[2].selected = 'selected'
+      str += @contentTag.apply @, params
     , ''
     extendIds = htmlOptions.extendIds
     delete htmlOptions.value
     delete htmlOptions.extendIds
-    @tag 'select', Joosy.Module.merge(description(resource, method, extendIds), htmlOptions), opts
+    @contentTag 'select', opts, Joosy.Module.merge(description(resource, method, extendIds), htmlOptions)
 
   @textArea = (resource, method, options={}) ->
     value     = options.value
@@ -101,4 +101,4 @@ Joosy.helpers 'Application', ->
     delete options.value
     delete options.extendIds
 
-    @tag 'textarea', Joosy.Module.merge(description(resource, method, extendIds), options), value
+    @contentTag 'textarea', value, Joosy.Module.merge(description(resource, method, extendIds), options)

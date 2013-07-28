@@ -39,7 +39,8 @@ beforeEach ->
     #
     toBeTag: (tagName, content, attrs) ->
       @message = =>
-        "Expected #{@actual} to be a tag #{tagName} with attributes #{JSON.stringify attrs} and content '#{content}'"
+        actual = $('<div>').append(@actual).html()
+        "Expected #{actual} to be a tag #{tagName} with attributes #{JSON.stringify attrs} and content '#{content}'"
 
       tag = $ @actual
 

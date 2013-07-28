@@ -493,9 +493,9 @@
       }
       d = description(resource, method, options.extendIds);
       delete options.extendIds;
-      return this.tag('label', Joosy.Module.merge(options, {
+      return this.contentTag('label', content, Joosy.Module.merge(options, {
         "for": d.id
-      }), content);
+      }));
     };
     ['text', 'file', 'hidden', 'password'].each(function(type) {
       return _this[type + 'Field'] = function(resource, method, options) {
@@ -554,19 +554,19 @@
       opts = opts.reduce(function(str, vals) {
         var params;
         params = Object.isArray(vals) ? [
-          'option', {
+          'option', vals[0], {
             value: vals[1]
-          }, vals[0]
-        ] : ['option', {}, vals];
+          }
+        ] : ['option', vals, {}];
         if (htmlOptions.value === (Object.isArray(vals) ? vals[1] : vals)) {
-          params[1].selected = 'selected';
+          params[2].selected = 'selected';
         }
-        return str += _this.tag.apply(_this, params);
+        return str += _this.contentTag.apply(_this, params);
       }, '');
       extendIds = htmlOptions.extendIds;
       delete htmlOptions.value;
       delete htmlOptions.extendIds;
-      return this.tag('select', Joosy.Module.merge(description(resource, method, extendIds), htmlOptions), opts);
+      return this.contentTag('select', opts, Joosy.Module.merge(description(resource, method, extendIds), htmlOptions));
     };
     return this.textArea = function(resource, method, options) {
       var extendIds, value;
@@ -577,7 +577,7 @@
       extendIds = options.extendIds;
       delete options.value;
       delete options.extendIds;
-      return this.tag('textarea', Joosy.Module.merge(description(resource, method, extendIds), options), value);
+      return this.contentTag('textarea', value, Joosy.Module.merge(description(resource, method, extendIds), options));
     };
   });
 

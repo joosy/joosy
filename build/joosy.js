@@ -1553,6 +1553,62 @@
 
 }).call(this);
 (function() {
+  Joosy.Modules.Page_Scrolling = {
+    included: function() {
+      return this.scroll = function(element, options) {
+        if (options == null) {
+          options = {};
+        }
+        this.prototype.__scrollElement = element;
+        this.prototype.__scrollSpeed = options.speed || 500;
+        return this.prototype.__scrollMargin = options.margin || 0;
+      };
+    },
+    __performScrolling: function() {
+      var scroll, _ref,
+        _this = this;
+      scroll = ((_ref = $(this.__extractSelector(this.__scrollElement)).offset()) != null ? _ref.top : void 0) + this.__scrollMargin;
+      Joosy.Modules.Log.debugAs(this, "Scrolling to " + (this.__extractSelector(this.__scrollElement)));
+      return $('html, body').animate({
+        scrollTop: scroll
+      }, this.__scrollSpeed, function() {
+        if (_this.__scrollSpeed !== 0) {
+          return _this.__releaseHeight();
+        }
+      });
+    },
+    __fixHeight: function() {
+      return $('html').css('min-height', $(document).height());
+    },
+    __releaseHeight: function() {
+      return $('html').css('min-height', '');
+    }
+  };
+
+}).call(this);
+(function() {
+  Joosy.Modules.Page_Title = {
+    title: function(title, separator) {
+      if (separator == null) {
+        separator = ' / ';
+      }
+      this.afterLoad(function() {
+        var titleStr;
+        titleStr = Object.isFunction(title) ? title.apply(this) : title;
+        if (Object.isArray(titleStr)) {
+          titleStr = titleStr.join(separator);
+        }
+        this.__previousTitle = document.title;
+        return document.title = titleStr;
+      });
+      return this.afterUnload(function() {
+        return document.title = this.__previousTitle;
+      });
+    }
+  };
+
+}).call(this);
+(function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -1572,6 +1628,10 @@
     Page.include(Joosy.Modules.WidgetsManager);
 
     Page.include(Joosy.Modules.Filters);
+
+    Page.include(Joosy.Modules.Page_Scrolling);
+
+    Page.extend(Joosy.Modules.Page_Title);
 
     Page.prototype.halted = false;
 
@@ -1627,47 +1687,6 @@
       };
     };
 
-    Page.scroll = function(element, options) {
-      if (options == null) {
-        options = {};
-      }
-      this.prototype.__scrollElement = element;
-      this.prototype.__scrollSpeed = options.speed || 500;
-      return this.prototype.__scrollMargin = options.margin || 0;
-    };
-
-    Page.prototype.__performScrolling = function() {
-      var scroll, _ref,
-        _this = this;
-      scroll = ((_ref = $(this.__extractSelector(this.__scrollElement)).offset()) != null ? _ref.top : void 0) + this.__scrollMargin;
-      Joosy.Modules.Log.debugAs(this, "Scrolling to " + (this.__extractSelector(this.__scrollElement)));
-      return $('html, body').animate({
-        scrollTop: scroll
-      }, this.__scrollSpeed, function() {
-        if (_this.__scrollSpeed !== 0) {
-          return _this.__releaseHeight();
-        }
-      });
-    };
-
-    Page.title = function(title, separator) {
-      if (separator == null) {
-        separator = ' / ';
-      }
-      this.afterLoad(function() {
-        var titleStr;
-        titleStr = Object.isFunction(title) ? title.apply(this) : title;
-        if (Object.isArray(titleStr)) {
-          titleStr = titleStr.join(separator);
-        }
-        this.__previousTitle = document.title;
-        return document.title = titleStr;
-      });
-      return this.afterUnload(function() {
-        return document.title = this.__previousTitle;
-      });
-    };
-
     function Page(applicationContainer, params, previous) {
       var _ref, _ref1, _ref2;
       this.params = params;
@@ -1689,14 +1708,6 @@
 
     Page.prototype.__renderSection = function() {
       return 'pages';
-    };
-
-    Page.prototype.__fixHeight = function() {
-      return $('html').css('min-height', $(document).height());
-    };
-
-    Page.prototype.__releaseHeight = function() {
-      return $('html').css('min-height', '');
     };
 
     Page.prototype.__load = function() {
@@ -1830,6 +1841,8 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Joosy.Router = (function(_super) {
+    var Drawer;
+
     __extends(Router, _super);
 
     function Router() {
@@ -1838,6 +1851,75 @@
     }
 
     Router.extend(Joosy.Modules.Events);
+
+    Drawer = (function() {
+      Drawer.run = function(block, namespace, alias) {
+        var context;
+        if (namespace == null) {
+          namespace = '';
+        }
+        if (alias == null) {
+          alias = '';
+        }
+        context = new Drawer(namespace, alias);
+        return block.call(context);
+      };
+
+      function Drawer(__namespace, __alias) {
+        this.__namespace = __namespace;
+        this.__alias = __alias;
+      }
+
+      Drawer.prototype.match = function(route, options) {
+        var as;
+        if (options == null) {
+          options = {};
+        }
+        if (options.as != null) {
+          if (this.__alias) {
+            as = this.__alias + options.as.charAt(0).toUpperCase() + options.as.slice(1);
+          } else {
+            as = options.as;
+          }
+        }
+        route = this.__namespace + route;
+        return Joosy.Router.compileRoute(route, options.to, as);
+      };
+
+      Drawer.prototype.root = function(options) {
+        if (options == null) {
+          options = {};
+        }
+        return this.match("/", {
+          to: options.to,
+          as: options.as || 'root'
+        });
+      };
+
+      Drawer.prototype.notFound = function(options) {
+        if (options == null) {
+          options = {};
+        }
+        return this.match(404, {
+          to: options.to
+        });
+      };
+
+      Drawer.prototype.namespace = function(name, options, block) {
+        var _ref1;
+        if (options == null) {
+          options = {};
+        }
+        if (Object.isFunction(options)) {
+          block = options;
+          options = {};
+        }
+        return Drawer.run(block, this.__namespace + name, (_ref1 = options.as) != null ? _ref1.toString() : void 0);
+      };
+
+      return Drawer;
+
+    })();
 
     Router.map = function(routes, namespace) {
       var _this = this;
@@ -1854,7 +1936,7 @@
     };
 
     Router.draw = function(block) {
-      return Joosy.Router.Drawer.run(block);
+      return Drawer.run(block);
     };
 
     Router.setup = function(config, responder, respond) {
@@ -2039,84 +2121,13 @@
 
     return Router;
 
-  })(Joosy.Module);
+  }).call(this, Joosy.Module);
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
     define('joosy/router', function() {
       return Joosy.Router;
     });
   }
-
-}).call(this);
-(function() {
-  Joosy.Router.Drawer = (function() {
-    Drawer.run = function(block, namespace, alias) {
-      var context;
-      if (namespace == null) {
-        namespace = '';
-      }
-      if (alias == null) {
-        alias = '';
-      }
-      context = new Drawer(namespace, alias);
-      return block.call(context);
-    };
-
-    function Drawer(__namespace, __alias) {
-      this.__namespace = __namespace;
-      this.__alias = __alias;
-    }
-
-    Drawer.prototype.match = function(route, options) {
-      var as;
-      if (options == null) {
-        options = {};
-      }
-      if (options.as != null) {
-        if (this.__alias) {
-          as = this.__alias + options.as.charAt(0).toUpperCase() + options.as.slice(1);
-        } else {
-          as = options.as;
-        }
-      }
-      route = this.__namespace + route;
-      return Joosy.Router.compileRoute(route, options.to, as);
-    };
-
-    Drawer.prototype.root = function(options) {
-      if (options == null) {
-        options = {};
-      }
-      return this.match("/", {
-        to: options.to,
-        as: options.as || 'root'
-      });
-    };
-
-    Drawer.prototype.notFound = function(options) {
-      if (options == null) {
-        options = {};
-      }
-      return this.match(404, {
-        to: options.to
-      });
-    };
-
-    Drawer.prototype.namespace = function(name, options, block) {
-      var _ref;
-      if (options == null) {
-        options = {};
-      }
-      if (Object.isFunction(options)) {
-        block = options;
-        options = {};
-      }
-      return Drawer.run(block, this.__namespace + name, (_ref = options.as) != null ? _ref.toString() : void 0);
-    };
-
-    return Drawer;
-
-  })();
 
 }).call(this);
 (function() {

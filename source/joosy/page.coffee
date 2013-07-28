@@ -8,6 +8,8 @@
 #= require joosy/modules/time_manager
 #= require joosy/modules/widgets_manager
 #= require joosy/modules/filters
+#= require joosy/modules/page/scrolling
+#= require joosy/modules/page/title
 
 #
 # Base class for all of your Joosy Pages.
@@ -33,6 +35,8 @@ class Joosy.Page extends Joosy.Module
   @include Joosy.Modules.TimeManager
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
+  @include Joosy.Modules.Page_Scrolling
+  @extend  Joosy.Modules.Page_Title
 
   halted: false
 
@@ -161,51 +165,6 @@ class Joosy.Page extends Joosy.Module
         callback.call(this, context)
 
   #
-  # Sets the position where page will be scrolled to after load.
-  #
-  # @note If you use animated scroll joosy will atempt to temporarily fix the
-  #   height of your document while scrolling to prevent jump effect.
-  #
-  # @param [jQuery] element         Element to scroll to
-  # @param [Hash] options
-  #
-  # @option options [Integer] speed       Sets the animation duration (500 is default)
-  # @option options [Integer] margin      Defines the margin from element position.
-  #   Can be negative.
-  #
-  @scroll: (element, options={}) ->
-    @::__scrollElement = element
-    @::__scrollSpeed = options.speed || 500
-    @::__scrollMargin = options.margin || 0
-
-  #
-  # Scrolls page to stored positions
-  #
-  __performScrolling: ->
-    scroll = $(@__extractSelector @__scrollElement).offset()?.top + @__scrollMargin
-    Joosy.Modules.Log.debugAs @, "Scrolling to #{@__extractSelector @__scrollElement}"
-    $('html, body').animate {scrollTop: scroll}, @__scrollSpeed, =>
-      if @__scrollSpeed != 0
-        @__releaseHeight()
-
-  #
-  # Sets the page HTML title.
-  #
-  # @note Title will be reverted on unload.
-  #
-  # @param [String] title       Title to set.
-  #
-  @title: (title, separator=' / ') ->
-    @afterLoad ->
-      titleStr = if Object.isFunction(title) then title.apply(@) else title
-      titleStr = titleStr.join(separator) if Object.isArray(titleStr)
-      @__previousTitle = document.title
-      document.title = titleStr
-
-    @afterUnload ->
-      document.title = @__previousTitle
-
-  #
   # Constructor is very destructive (c), it calls bootstrap directly so use with caution.
   #
   # @params [Hash] params             Route params
@@ -232,20 +191,6 @@ class Joosy.Page extends Joosy.Module
   #
   __renderSection: ->
     'pages'
-
-  #
-  # Freezes the page height through $(html).
-  #
-  # Required to implement better {Joosy.Page.scroll} behavior.
-  #
-  __fixHeight: ->
-    $('html').css 'min-height', $(document).height()
-
-  #
-  # Undo {#__fixHeight}
-  #
-  __releaseHeight: ->
-    $('html').css 'min-height', ''
 
   #
   # Page bootstrap proccess

@@ -1367,7 +1367,7 @@
 
     Widget.prototype.navigate = function() {
       var _ref1;
-      return (_ref1 = Joosy.Application) != null ? _ref1.navigate.apply(_ref1, arguments) : void 0;
+      return (_ref1 = Joosy.Router) != null ? _ref1.navigate.apply(_ref1, arguments) : void 0;
     };
 
     Widget.prototype.__renderSection = function() {
@@ -1507,7 +1507,7 @@
 
     Layout.prototype.navigate = function() {
       var _ref;
-      return (_ref = Joosy.Application) != null ? _ref.navigate.apply(_ref, arguments) : void 0;
+      return (_ref = Joosy.Router) != null ? _ref.navigate.apply(_ref, arguments) : void 0;
     };
 
     Layout.prototype.__renderSection = function() {
@@ -1684,7 +1684,7 @@
 
     Page.prototype.navigate = function() {
       var _ref;
-      return (_ref = Joosy.Application) != null ? _ref.navigate.apply(_ref, arguments) : void 0;
+      return (_ref = Joosy.Router) != null ? _ref.navigate.apply(_ref, arguments) : void 0;
     };
 
     Page.prototype.__renderSection = function() {
@@ -1825,35 +1825,46 @@
 
 }).call(this);
 (function() {
-  var __hasProp = {}.hasOwnProperty,
+  var _ref,
+    __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Joosy.Router = (function(_super) {
     __extends(Router, _super);
 
-    Router.include(Joosy.Modules.Events);
+    function Router() {
+      _ref = Router.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
 
-    Router.map = function(routes) {
-      this.routes || (this.routes = {});
-      return Joosy.Module.merge(this.routes, routes);
+    Router.extend(Joosy.Modules.Events);
+
+    Router.map = function(routes, namespace) {
+      var _this = this;
+      return Object.each(routes, function(path, to) {
+        if (namespace != null) {
+          path = namespace + '/' + path;
+        }
+        if (Object.isFunction(to) || to.prototype) {
+          return _this.compileRoute(path, to);
+        } else {
+          return _this.map(to, path);
+        }
+      });
     };
 
     Router.draw = function(block) {
       return Joosy.Router.Drawer.run(block);
     };
 
-    Router.reset = function() {
-      $(window).unbind('.JoosyRouter');
-      return this.routes = {};
-    };
-
-    Router.prototype.routes = {};
-
-    Router.prototype.restriction = false;
-
-    function Router(config) {
-      var _base, _base1;
-      this.config = config != null ? config : {};
+    Router.setup = function(config, responder, respond) {
+      var _base, _base1,
+        _this = this;
+      this.config = config;
+      this.responder = responder;
+      if (respond == null) {
+        respond = true;
+      }
       (_base = this.config).prefix || (_base.prefix = '');
       (_base1 = this.config).base || (_base1.base = '');
       if (this.config.base[0] === '/') {
@@ -1862,20 +1873,38 @@
       if (!history.pushState) {
         this.config.html5 = false;
       }
-    }
+      if (respond) {
+        this.respond(this.canonizeLocation());
+      }
+      if (this.config.html5) {
+        return $(window).bind('popstate.JoosyRouter', function() {
+          return _this.respond(_this.canonizeLocation());
+        });
+      } else {
+        return $(window).bind('hashchange.JoosyRouter', function() {
+          return _this.respond(_this.canonizeLocation());
+        });
+      }
+    };
 
-    Router.prototype.restrict = function(restriction) {
+    Router.reset = function() {
+      $(window).unbind('.JoosyRouter');
+      this.restriction = false;
+      return this.routes = {};
+    };
+
+    Router.restrict = function(restriction) {
       this.restriction = restriction;
     };
 
-    Router.prototype.navigate = function(to, options) {
+    Router.navigate = function(to, options) {
       var path;
       if (options == null) {
         options = {};
       }
       path = to;
       if (this.config.html5) {
-        path = (this.config.base + path).replace(/\/{2,}/, '/');
+        path = (this.config.base + path).replace(/\/{2,}/g, '/');
       } else {
         if (path[0] === '#') {
           path = path.substr(1);
@@ -1892,29 +1921,7 @@
       }
     };
 
-    Router.prototype.setup = function(responder, respond) {
-      var _this = this;
-      this.responder = responder;
-      if (respond == null) {
-        respond = true;
-      }
-      this.routes = {};
-      this.prepare(this.constructor.routes);
-      if (respond) {
-        this.respond(this.canonizeLocation());
-      }
-      if (this.config.html5) {
-        return $(window).bind('popstate.JoosyRouter', function() {
-          return _this.respond(_this.canonizeLocation());
-        });
-      } else {
-        return $(window).bind('hashchange.JoosyRouter', function() {
-          return _this.respond(_this.canonizeLocation());
-        });
-      }
-    };
-
-    Router.prototype.canonizeLocation = function() {
+    Router.canonizeLocation = function() {
       if (this.config.html5) {
         return location.pathname.replace(RegExp("^" + (RegExp.escape(this.config.base))), '') + location.search;
       } else {
@@ -1922,61 +1929,42 @@
       }
     };
 
-    Router.prototype.prepare = function(routes, namespace) {
-      var _this = this;
-      return Object.each(routes, function(path, response) {
-        if (!namespace && path === '404') {
-          _this.wildcardAction = response;
-          return;
-        }
-        path = '/' + (namespace || '') + path;
-        path = path.replace(/\/{2,}/, '/');
-        if (response != null) {
-          if (Object.isFunction(response) || ((response.to != null) && (response.as != null)) || response.prototype) {
-            return Joosy.Module.merge(_this.routes, _this.compileRoute(path, response));
-          } else {
-            return _this.prepare(response, path);
-          }
-        }
-      });
-    };
-
-    Router.prototype.compileRoute = function(path, response) {
+    Router.compileRoute = function(path, to, as) {
       var matcher, params, result;
-      matcher = path;
-      result = {};
-      if (!Object.isObject(response)) {
-        response = {
-          to: response
-        };
+      if (path.toString() === '404') {
+        this.wildcardAction = to;
+        return;
       }
+      matcher = path.replace(/\/{2,}/g, '/');
+      result = {};
       matcher = matcher.replace(/\/:([^\/]+)/g, '/([^/]+)');
       matcher = matcher.replace(/^\/?/, '^/?');
       matcher = matcher.replace(/\/?$/, '/?$');
       params = (path.match(/\/:[^\/]+/g) || []).map(function(str) {
         return str.substr(2);
       });
-      result[matcher] = Joosy.Module.merge(response, {
-        capture: params
-      });
-      if (response.as != null) {
-        this.defineHelpers(path, response.as);
+      this.routes[matcher] = {
+        to: to,
+        capture: params,
+        as: as
+      };
+      if (as != null) {
+        return this.defineHelpers(path, as);
       }
-      return result;
     };
 
-    Router.prototype.respond = function(path) {
-      var match, query, regex, route, _ref, _ref1;
+    Router.respond = function(path) {
+      var match, query, regex, route, _ref1, _ref2;
       Joosy.Modules.Log.debug("Router> Answering '" + path + "'");
       if (this.restriction && path.match(this.restriction) === null) {
         this.trigger('restricted', path);
         return;
       }
-      _ref = path.split('?'), path = _ref[0], query = _ref[1];
+      _ref1 = path.split('?'), path = _ref1[0], query = _ref1[1];
       query = (query != null ? typeof query.split === "function" ? query.split('&') : void 0 : void 0) || [];
-      _ref1 = this.routes;
-      for (regex in _ref1) {
-        route = _ref1[regex];
+      _ref2 = this.routes;
+      for (regex in _ref2) {
+        route = _ref2[regex];
         if (this.routes.hasOwnProperty(regex)) {
           if (match = path.match(new RegExp(regex))) {
             this.responder(route.to, this.__grabParams(query, route, match));
@@ -1993,28 +1981,27 @@
       }
     };
 
-    Router.prototype.defineHelpers = function(path, as) {
-      var config, helper;
-      config = this.config;
+    Router.defineHelpers = function(path, as) {
+      var helper;
       helper = function(options) {
-        var _ref;
-        if ((_ref = path.match(/\/:[^\/]+/g)) != null) {
-          if (typeof _ref.each === "function") {
-            _ref.each(function(param) {
+        var _ref1;
+        if ((_ref1 = path.match(/\/:[^\/]+/g)) != null) {
+          if (typeof _ref1.each === "function") {
+            _ref1.each(function(param) {
               return path = path.replace(param.substr(1), options[param.substr(2)]);
             });
           }
         }
-        if (config.html5) {
-          return "" + config.base + path;
+        if (Joosy.Router.config.html5) {
+          return "" + Joosy.Router.config.base + path;
         } else {
-          return "#" + config.prefix + path;
+          return "#" + Joosy.Router.config.prefix + path;
         }
       };
       return Joosy.helpers('Routes', function() {
         this["" + as + "Path"] = helper;
         return this["" + as + "Url"] = function(options) {
-          if (config.html5) {
+          if (Joosy.Router.config.html5) {
             return "" + location.origin + (helper(options));
           } else {
             return "" + location.origin + location.pathname + (helper(options));
@@ -2023,8 +2010,8 @@
       });
     };
 
-    Router.prototype.__grabParams = function(query, route, match) {
-      var params, _ref;
+    Router.__grabParams = function(query, route, match) {
+      var params, _ref1;
       if (route == null) {
         route = null;
       }
@@ -2034,16 +2021,16 @@
       params = {};
       match.shift();
       if (route != null) {
-        if ((_ref = route.capture) != null) {
-          _ref.each(function(key) {
+        if ((_ref1 = route.capture) != null) {
+          _ref1.each(function(key) {
             return params[key] = decodeURIComponent(match.shift());
           });
         }
       }
       query.each(function(entry) {
-        var key, value, _ref1;
+        var key, value, _ref2;
         if (!entry.isBlank()) {
-          _ref1 = entry.split('='), key = _ref1[0], value = _ref1[1];
+          _ref2 = entry.split('='), key = _ref2[0], value = _ref2[1];
           return params[key] = value;
         }
       });
@@ -2081,7 +2068,7 @@
     }
 
     Drawer.prototype.match = function(route, options) {
-      var as, map, routeName;
+      var as;
       if (options == null) {
         options = {};
       }
@@ -2092,17 +2079,8 @@
           as = options.as;
         }
       }
-      routeName = this.__namespace + route;
-      map = {};
-      if (options.as != null) {
-        map[routeName] = {
-          to: options.to,
-          as: as
-        };
-      } else {
-        map[routeName] = options.to;
-      }
-      return Joosy.Router.map(map);
+      route = this.__namespace + route;
+      return Joosy.Router.compileRoute(route, options.to, as);
     };
 
     Drawer.prototype.root = function(options) {
@@ -2320,7 +2298,7 @@
       debug: false,
       router: {
         html5: false,
-        base: '/',
+        base: '',
         prefix: ''
       }
     },
@@ -2340,8 +2318,7 @@
       Object.merge(this.config, options, true);
       Joosy.templater(new Joosy.Templaters.JST(this.name));
       Joosy.debug(this.config.debug);
-      this.router = new Joosy.Router(this.config.router);
-      this.router.setup(function(action, params) {
+      Joosy.Router.setup(this.config.router, function(action, params) {
         if (Object.isFunction(action)) {
           return action(params);
         } else if (Joosy.Module.hasAncestor(action, Joosy.Page)) {

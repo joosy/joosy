@@ -23,17 +23,9 @@ class Joosy.Router.Drawer
       else
         as = options.as
     
-    routeName = @__namespace + route
+    route = @__namespace + route
 
-    map = {}
-    if options.as?
-      map[routeName] =
-        to: options.to
-        as: as
-    else
-      map[routeName] = options.to
-    
-    Joosy.Router.map map
+    Joosy.Router.compileRoute route, options.to, as
   
   #
   # Shortcut to match "/"

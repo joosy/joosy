@@ -35,11 +35,11 @@ describe "Joosy.Page", ->
       expect(@Page::__layoutClass).toEqual 'test'
 
     it "integrates with Router", ->
-      target = sinon.stub Joosy.Router.prototype, 'navigate'
+      target = sinon.stub Joosy.Router, 'navigate'
       (new @Page $('#application')).navigate 'there'
       expect(target.callCount).toEqual 1
       expect(target.alwaysCalledWithExactly 'there').toBeTruthy()
-      Joosy.Router::navigate.restore()
+      Joosy.Router.navigate.restore()
 
     it "respects beforeFilters cancelation", ->
       sinon.stub @Page.prototype, '__runBeforeLoads'

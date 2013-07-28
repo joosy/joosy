@@ -21,7 +21,7 @@ Joosy.Application =
     debug:    false
     router:
       html5:  false
-      base:   '/'
+      base:   ''
       prefix: ''
 
   #
@@ -41,15 +41,13 @@ Joosy.Application =
     Joosy.templater new Joosy.Templaters.JST(@name)
     Joosy.debug @config.debug
 
-    @router = new Joosy.Router @config.router
-    @router.setup (action, params) =>
+    Joosy.Router.setup @config.router, (action, params) =>
       if Object.isFunction(action)
         action(params)
       else if Joosy.Module.hasAncestor action, Joosy.Page
         @setCurrentPage action, params
       else
         throw new "Unknown kind of route action"
-        
 
     @initialized = true
 

@@ -20,7 +20,7 @@
 # @mixin
 #
 class Joosy.Router extends Joosy.Module
-  @include Joosy.Modules.Events
+  @extend Joosy.Modules.Events
 
   #
   # Registers a set of raw routes
@@ -28,9 +28,13 @@ class Joosy.Router extends Joosy.Module
   #
   # @param [Object] routes        Set of routes in inner format (see class description)
   #
-  @map: (routes) ->
-    @routes ||= {}
-    Joosy.Module.merge @routes, routes
+  @map: (routes, namespace) ->
+    Object.each routes, (path, to) =>
+      path = namespace + '/' + path if namespace?
+      if Object.isFunction(to) || to.prototype
+        @compileRoute path, to
+      else
+        @map to, path
 
   #
   # Draws the routes similar to Ruby on Rails
@@ -41,29 +45,30 @@ class Joosy.Router extends Joosy.Module
     Joosy.Router.Drawer.run block
 
   #
-  # Clears current map of routes and deactivates instances
+  # Inits the routing system and loads the current route
   #
-  @reset: ->
-    $(window).unbind '.JoosyRouter'
-    @routes = {}
-
-  #
-  # Map of compiled rows
-  #
-  routes: {}
-  
-  #
-  # The regexp to restrict routes reactions
-  #
-  # @see #restrict
-  #
-  restriction: false
-
-  constructor: (@config={}) ->
+  @setup: (@config, @responder, respond=true) ->
     @config.prefix ||= ''
     @config.base   ||= ''
     @config.base     = @config.base.substr(1) if @config.base[0] == '/'
     @config.html5    = false unless history.pushState
+
+    @respond @canonizeLocation() if respond
+
+    if @config.html5
+      $(window).bind 'popstate.JoosyRouter', =>
+        @respond @canonizeLocation()
+    else
+      $(window).bind 'hashchange.JoosyRouter', =>
+        @respond @canonizeLocation()
+
+  #
+  # Clears current map of routes and deactivates bindings
+  #
+  @reset: ->
+    $(window).unbind '.JoosyRouter'
+    @restriction = false
+    @routes = {}
 
   #
   # Sets the restriction pattern.
@@ -72,7 +77,7 @@ class Joosy.Router extends Joosy.Module
   #
   # @param [Regexp] restriction
   #
-  restrict: (@restriction) ->
+  @restrict: (@restriction) ->
 
   #
   # Changes current URI and therefore triggers route loading
@@ -82,11 +87,11 @@ class Joosy.Router extends Joosy.Module
   # @option options [Boolean] respond        If false just changes route without responding
   # @option options [Boolean] replaceState   If true replaces history entry instead of adding. Works only in browsers supporting history.pushState
   #
-  navigate: (to, options={}) ->
+  @navigate: (to, options={}) ->
     path = to
 
     if @config.html5
-      path = (@config.base+path).replace /\/{2,}/, '/'
+      path = (@config.base+path).replace /\/{2,}/g, '/'
     else
       path = path.substr(1) if path[0] == '#'
 
@@ -101,53 +106,13 @@ class Joosy.Router extends Joosy.Module
     return
 
   #
-  # Inits the routing system and loads the current route
-  #
-  setup: (@responder, respond=true) ->
-    @routes = {}
-
-    @prepare @constructor.routes
-    @respond @canonizeLocation() if respond
-
-    if @config.html5
-      $(window).bind 'popstate.JoosyRouter', =>
-        @respond @canonizeLocation()
-    else
-      $(window).bind 'hashchange.JoosyRouter', =>
-        @respond @canonizeLocation()
-
-  #
   # Gets current route out of the window location
   #
-  canonizeLocation: ->
+  @canonizeLocation: ->
     if @config.html5
       location.pathname.replace(///^#{RegExp.escape @config.base}///, '')+location.search
     else
       location.hash.replace ///^\#(#{@prefix})?///, ''
-
-  #
-  # Compiles all routes recursively
-  #
-  # @param [Object] routes        Raw routes to prepare
-  # @param [String] namespace     Inner cursor for recursion
-  #
-  prepare: (routes, namespace) ->
-    Object.each routes, (path, response) =>
-      # 404 Route
-      if !namespace && path == '404'
-        @wildcardAction = response
-        return
-
-      path = '/' + (namespace || '') + path
-      path = path.replace /\/{2,}/, '/' # Removing duplicated '/'
-
-      if response?
-        if Object.isFunction(response)     ||
-            (response.to? && response.as?) ||
-            response.prototype
-          Joosy.Module.merge @routes, @compileRoute(path, response)
-        else
-          @prepare response, path
 
   #
   # Compiles one single route
@@ -156,12 +121,13 @@ class Joosy.Router extends Joosy.Module
   # @param [Class] response         Class that should be instantiated at this route
   # @param [Function] response      Lambda to call at this route
   #
-  compileRoute: (path, response) ->
-    matcher = path
-    result  = {}
+  @compileRoute: (path, to, as) ->
+    if path.toString() == '404'
+      @wildcardAction = to
+      return
 
-    unless Object.isObject(response)
-      response = {to: response}
+    matcher = path.replace /\/{2,}/g, '/'
+    result  = {}
 
     # Full RegExp matcher for the route
     matcher = matcher.replace(/\/:([^\/]+)/g, '/([^/]+)')   # Turning :params into regexp section
@@ -172,19 +138,19 @@ class Joosy.Router extends Joosy.Module
     params  = (path.match(/\/:[^\/]+/g) || []).map (str) ->
       str.substr 2
 
-    result[matcher] = Joosy.Module.merge response,
+    @routes[matcher] = 
+      to: to,
       capture: params
+      as: as
 
-    @defineHelpers path, response.as if response.as?
-
-    result
+    @defineHelpers path, as if as?
 
   #
   # Searches given route at compiled routes and reacts
   #
   # @param [String] hash        Hash value to search route for
   #
-  respond: (path) ->
+  @respond: (path) ->
     Joosy.Modules.Log.debug "Router> Answering '#{path}'"
 
     if (@restriction && path.match(@restriction) == null)
@@ -212,27 +178,26 @@ class Joosy.Router extends Joosy.Module
   # @param [String] path             String route representation to wrap into helper
   # @param [String] as               Helpers base name
   #
-  defineHelpers: (path, as) ->
-    config = @config
+  @defineHelpers: (path, as) ->
     helper = (options) ->
       path.match(/\/:[^\/]+/g)?.each? (param) ->
         path = path.replace(param.substr(1), options[param.substr(2)])
 
-      if config.html5
-        "#{config.base}#{path}"
+      if Joosy.Router.config.html5
+        "#{Joosy.Router.config.base}#{path}"
       else
-        "##{config.prefix}#{path}"
+        "##{Joosy.Router.config.prefix}#{path}"
 
     Joosy.helpers 'Routes', ->
       @["#{as}Path"] = helper
 
       @["#{as}Url"] = (options) ->
-        if config.html5
+        if Joosy.Router.config.html5
           "#{location.origin}#{helper(options)}"
         else
           "#{location.origin}#{location.pathname}#{helper(options)}"
 
-  __grabParams: (query, route=null, match=[]) ->
+  @__grabParams: (query, route=null, match=[]) ->
     params = {}
 
     # Collect parameters from route placeholers

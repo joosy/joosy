@@ -1,18 +1,18 @@
 describe "Joosy.Application", ->
 
   beforeEach ->
-    sinon.stub Joosy.Router.prototype, "setup"
+    sinon.stub Joosy.Router, "setup"
     @$ground.seed()
 
   afterEach ->
-    Joosy.Router::setup.restore()
+    Joosy.Router.setup.restore()
     Joosy.Application.reset()
 
   it "initializes", ->
     Joosy.Application.initialize 'app', '#application', foo: {bar: 'baz'}
     expect(Joosy.Application.page).toBeUndefined()
     expect(Joosy.Application.selector).toEqual '#application'
-    expect(Joosy.Router::setup.callCount).toEqual 1
+    expect(Joosy.Router.setup.callCount).toEqual 1
     expect(Joosy.Application.name).toEqual 'app'
     expect(Joosy.Application.config.foo.bar).toEqual 'baz'
     expect(Joosy.Application.content()).toEqual $('#application')

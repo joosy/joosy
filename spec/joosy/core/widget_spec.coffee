@@ -5,11 +5,11 @@ describe "Joosy.Widget", ->
     @widget = new @Widget
 
   it "integrates with Router", ->
-    target = sinon.stub Joosy.Router.prototype, 'navigate'
+    target = sinon.stub Joosy.Router, 'navigate'
     @widget.navigate 'there'
     expect(target.callCount).toEqual 1
     expect(target.alwaysCalledWithExactly 'there').toBeTruthy()
-    Joosy.Router::navigate.restore()
+    Joosy.Router.navigate.restore()
 
   it "loads", ->
     spies = []

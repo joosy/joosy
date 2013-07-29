@@ -5,8 +5,6 @@ module.exports = ->
   grunt = require 'grunt'
   path  = require 'path'
 
-  generators = ['page', 'resource', 'widget', 'layout']
-
   cli.command /help\s?(.*)/, ->
     name = cli.params.splats[0]
 

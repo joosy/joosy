@@ -1,9 +1,28 @@
 module.exports = ->
   Sugar = require 'sugar'
   cli   = require 'command-router'
-  meta  = require '../package.json'
+  meta  = require '../../../../package.json'
   grunt = require 'grunt'
   path  = require 'path'
+
+  generators = ['page', 'resource', 'widget', 'layout']
+
+  cli.command /help\s?(.*)/, ->
+    name = cli.params.splats[0]
+
+    commands = ['new', 'generate']
+
+    if  name == ''
+      console.log "Usage: `help :command`. Possible values: #{commands.join(', ')}"
+      process.exit 1
+
+    unless  commands.some(name)
+      console.error "Unknown command '#{name}'. Possible values: #{commands.join(', ')}."
+      process.exit 1
+
+    generator = require('./help')
+    generator = new generator()
+    generator[name]()
 
   cli.command /new\s?(.*)?/, ->
     name = cli.params.splats[0]
@@ -12,7 +31,7 @@ module.exports = ->
       console.error "Usage: `new :name`. Run `help` for details."
       process.exit(1)
 
-    generator = require('./project')
+    generator = require('../project')
     generator = new generator(name: name)
     generator.generate()
     generator.perform -> process.exit 0
@@ -23,15 +42,6 @@ module.exports = ->
     name   = params[1]
 
     generators = ['page', 'resource', 'widget', 'layout']
-
-    if entity == 'help'
-      console.log "Usage: `generate :entity :name`\n"
-      console.log "  Available generators are:"
-      console.log "  page        generate new page"
-      console.log "  resource    generate new resource"
-      console.log "  widget      generate new widget"
-      console.log "  layout      generate new layout"
-      process.exit 0
 
     if !entity? || !name?
       console.error "Usage: `generate :entity :name`. Run `help` for details."
@@ -45,7 +55,7 @@ module.exports = ->
       console.error "Failed: `source' directory not found. Are you in the root of project?"
       process.exit 1
 
-    generator = require("./#{entity}")
+    generator = require("../#{entity}")
     generator = new generator({name: name}, path.join(process.cwd(), 'source'))
     generator.generate()
     generator.perform -> process.exit 0

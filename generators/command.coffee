@@ -24,6 +24,15 @@ module.exports = ->
 
     generators = ['page', 'resource', 'widget', 'layout']
 
+    if entity == 'help'
+      console.log "Usage: `generate :entity :name`\n"
+      console.log "  Available generators are:"
+      console.log "  page        generate new page"
+      console.log "  resource    generate new resource"
+      console.log "  widget      generate new widget"
+      console.log "  layout      generate new layout"
+      process.exit 0
+
     if !entity? || !name?
       console.error "Usage: `generate :entity :name`. Run `help` for details."
       process.exit 1
@@ -40,6 +49,19 @@ module.exports = ->
     generator = new generator({name: name}, path.join(process.cwd(), 'source'))
     generator.generate()
     generator.perform -> process.exit 0
+
+  cli.command 'help', ->
+    console.log '\t\t\t     __________________________'
+    console.log '\t\t\t    /_    ____ ____ ____ __ __/'
+    console.log '\t\t\t   __/  /    /    / ___/  /  /'
+    console.log '\t\t\t  / /  / /  /  / /__  /  /  /'
+    console.log '\t\t\t /____/____/____/____/__   /'
+    console.log '\t\t\t/_________________________/\n'
+    console.log 'Usage: joosy COMMAND [ARGS]\n'
+    console.log 'Available commands are: \n'
+    console.log '  generate    Insert new entity in the application (short-cut alias "g")'
+    console.log '  new         Create a new application\n'
+    console.log 'Help is also available on per-command basis, use appropriate argument, Luke'
 
   cli.on 'notfound', (action) ->
     if action.length > 0

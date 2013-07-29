@@ -5,3 +5,4 @@ bower_components
 spec/*.html
 *.gem
 Gemfile.lock
+.idea/

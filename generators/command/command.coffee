@@ -1,20 +1,16 @@
 module.exports = ->
   Sugar = require 'sugar'
   cli   = require 'command-router'
-  meta  = require '../../../../package.json'
+  meta  = require '../../package.json'
   grunt = require 'grunt'
   path  = require 'path'
 
   cli.command /help\s?(.*)/, ->
     name = cli.params.splats[0]
-
     commands = ['new', 'generate']
+    name = 'banner' if  name == ''
 
-    if  name == ''
-      console.log "Usage: `help :command`. Possible values: #{commands.join(', ')}"
-      process.exit 1
-
-    unless  commands.some(name)
+    if  !commands.some(name) && name != 'banner'
       console.error "Unknown command '#{name}'. Possible values: #{commands.join(', ')}."
       process.exit 1
 
@@ -58,18 +54,6 @@ module.exports = ->
     generator.generate()
     generator.perform -> process.exit 0
 
-  cli.command 'help', ->
-    console.log '\t\t\t     __________________________'
-    console.log '\t\t\t    /_    ____ ____ ____ __ __/'
-    console.log '\t\t\t   __/  /    /    / ___/  /  /'
-    console.log '\t\t\t  / /  / /  /  / /__  /  /  /'
-    console.log '\t\t\t /____/____/____/____/__   /'
-    console.log '\t\t\t/_________________________/\n'
-    console.log 'Usage: joosy COMMAND [ARGS]\n'
-    console.log 'Available commands are: \n'
-    console.log '  generate    Insert new entity in the application (short-cut alias "g")'
-    console.log '  new         Create a new application\n'
-    console.log 'Help is also available on per-command basis, use appropriate argument, Luke'
 
   cli.on 'notfound', (action) ->
     if action.length > 0

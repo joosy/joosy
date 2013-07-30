@@ -35,8 +35,6 @@ class Joosy.Page extends Joosy.Module
   @include Joosy.Modules.TimeManager
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
-  @include Joosy.Modules.Page_Scrolling
-  @extend  Joosy.Modules.Page_Title
 
   halted: false
 
@@ -143,6 +141,9 @@ class Joosy.Page extends Joosy.Module
     #
     'fetch'
 
+  @include Joosy.Modules.Page_Scrolling
+  @extend  Joosy.Modules.Page_Title
+
   #
   # Constructor is very destructive (c), it calls bootstrap directly so use with caution.
   #
@@ -181,7 +182,6 @@ class Joosy.Page extends Joosy.Module
     @__delegateEvents()
     @__setupWidgets()
     @__runAfterLoads @params, @previous
-    @__performScrolling() if @__scrollElement
     @trigger 'loaded'
 
     Joosy.Modules.Log.debugAs @, "Page loaded"
@@ -227,8 +227,6 @@ class Joosy.Page extends Joosy.Module
   __bootstrap: (applicationContainer) ->
     Joosy.Modules.Log.debugAs @, "Boostraping page"
     @layout = @__getLayout(applicationContainer)
-
-    # @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
 
     if layoutChanged = @__newLayoutNeeded()
       currentHandler  = @layout

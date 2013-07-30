@@ -1561,7 +1561,7 @@
 
     Layout.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
 
-    Layout.registerSequencedFilters('beforePaint', 'paint', 'afterPaint', 'erase', 'fetch');
+    Layout.registerSequencedFilters('beforePaint', 'paint', 'erase', 'fetch');
 
     Layout.helper('page');
 
@@ -1625,7 +1625,7 @@
 (function() {
   Joosy.Modules.Page_Scrolling = {
     included: function() {
-      return this.scroll = function(element, options) {
+      this.scroll = function(element, options) {
         if (options == null) {
           options = {};
         }
@@ -1633,6 +1633,17 @@
         this.prototype.__scrollSpeed = options.speed || 500;
         return this.prototype.__scrollMargin = options.margin || 0;
       };
+      this.paint(function(container, complete) {
+        if (this.__scrollElement && this.__scrollSpeed !== 0) {
+          this.__fixHeight();
+        }
+        return complete();
+      });
+      return this.afterLoad(function() {
+        if (this.__scrollElement) {
+          return this.__performScrolling();
+        }
+      });
     },
     __performScrolling: function() {
       var scroll, _ref,
@@ -1699,10 +1710,6 @@
 
     Page.include(Joosy.Modules.Filters);
 
-    Page.include(Joosy.Modules.Page_Scrolling);
-
-    Page.extend(Joosy.Modules.Page_Title);
-
     Page.prototype.halted = false;
 
     Page.prototype.layout = false;
@@ -1722,6 +1729,10 @@
     Page.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
 
     Page.registerSequencedFilters('beforePaint', 'paint', 'erase', 'fetch');
+
+    Page.include(Joosy.Modules.Page_Scrolling);
+
+    Page.extend(Joosy.Modules.Page_Title);
 
     function Page(applicationContainer, params, previous) {
       this.params = params;
@@ -1746,9 +1757,6 @@
       this.__delegateEvents();
       this.__setupWidgets();
       this.__runAfterLoads(this.params, this.previous);
-      if (this.__scrollElement) {
-        this.__performScrolling();
-      }
       this.trigger('loaded');
       return Joosy.Modules.Log.debugAs(this, "Page loaded");
     };

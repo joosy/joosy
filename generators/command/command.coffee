@@ -1,9 +1,22 @@
 module.exports = ->
   Sugar = require 'sugar'
   cli   = require 'command-router'
-  meta  = require '../package.json'
+  meta  = require '../../package.json'
   grunt = require 'grunt'
   path  = require 'path'
+
+  cli.command /help\s?(.*)/, ->
+    name = cli.params.splats[0]
+    commands = ['new', 'generate']
+    name = 'banner' if  name == ''
+
+    if  !commands.some(name) && name != 'banner'
+      console.error "Unknown command '#{name}'. Possible values: #{commands.join(', ')}."
+      process.exit 1
+
+    generator = require('./help')
+    generator = new generator()
+    generator[name]()
 
   cli.command /new\s?(.*)?/, ->
     name = cli.params.splats[0]
@@ -12,7 +25,7 @@ module.exports = ->
       console.error "Usage: `new :name`. Run `help` for details."
       process.exit(1)
 
-    generator = require('./project')
+    generator = require('../project')
     generator = new generator(name: name)
     generator.generate()
     generator.perform -> process.exit 0
@@ -36,10 +49,11 @@ module.exports = ->
       console.error "Failed: `source' directory not found. Are you in the root of project?"
       process.exit 1
 
-    generator = require("./#{entity}")
+    generator = require("../#{entity}")
     generator = new generator({name: name}, path.join(process.cwd(), 'source'))
     generator.generate()
     generator.perform -> process.exit 0
+
 
   cli.on 'notfound', (action) ->
     if action.length > 0

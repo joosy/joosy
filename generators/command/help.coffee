@@ -1,15 +1,16 @@
-module.exports = class
+module.exports =
 
   generate: ->
     console.log "Usage: `generate :generator`\n"
-    console.log 'Possible generators are:'
+    console.log 'Runs one of the following generators to create something for you'
     console.log '  page         create new page'
     console.log '  resource     create new resource'
     console.log '  widget       create new widget'
     console.log '  layout       create new layout'
 
   new: ->
-    console.log 'Usage: `joosy new :name` - create a new application with given name'
+    console.log 'Usage: `joosy new :name` \n'
+    console.log 'Generates brand new Joosy application named :name (directory with the name of application will be created)'
 
   banner: ->
     console.log '\t\t\t     __________________________'

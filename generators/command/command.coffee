@@ -14,9 +14,8 @@ module.exports = ->
       console.error "Unknown command '#{name}'. Possible values: #{commands.join(', ')}."
       process.exit 1
 
-    generator = require('./help')
-    generator = new generator()
-    generator[name]()
+    helper = require('./help')
+    helper[name]()
 
   cli.command /new\s?(.*)?/, ->
     name = cli.params.splats[0]

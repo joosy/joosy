@@ -34,7 +34,6 @@ class Joosy.Layout extends Joosy.Module
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
 
-  @view 'default'
   @helper 'page'
 
   #

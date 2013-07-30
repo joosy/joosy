@@ -16,7 +16,7 @@
 # @see http://guides.joosy.ws/guides/blog/layouts-pages-and-routing.html
 #
 # @example Sample application page
-#   class @RumbaPage extends Joosy.Layout
+#   class @RumbaPage extends Joosy.Page
 #     @view 'rumba'
 #
 # @include Joosy.Modules.Log
@@ -171,13 +171,10 @@ class Joosy.Page extends Joosy.Module
   # @params [Joosy.Page] previous     Previous page to unload
   #
   constructor: (applicationContainer, @params, @previous) ->
-    @__layoutClass ||= ApplicationLayout
+    @__layoutClass = @__layoutClass || (if @__layoutClass != false then window.ApplicationLayout else null)
 
     unless @halted = !@__runBeforeLoads(@params, @previous)
-      if !@previous?.layout?.uid? || @previous?.__layoutClass != @__layoutClass
-        @__bootstrapLayout(applicationContainer)
-      else
-        @__bootstrap(applicationContainer)
+      @__bootstrap applicationContainer
 
   #
   # @see Joosy.Router.navigate
@@ -246,6 +243,18 @@ class Joosy.Page extends Joosy.Module
     else
       callback()
 
+  __newLayoutNeeded: ->
+    @__layoutClass? && (!@previous?.layout?.uid? || @previous?.__layoutClass != @__layoutClass)
+
+  __getLayout: (applicationContainer) ->
+    switch
+      when @__newLayoutNeeded()
+        new @__layoutClass applicationContainer, @params
+      when @__layoutClass
+        @previous.layout
+      else
+        null
+
   #
   # The single page (without layout reloading) bootstrap logic
   #
@@ -258,75 +267,52 @@ class Joosy.Page extends Joosy.Module
   #
   __bootstrap: (applicationContainer) ->
     Joosy.Modules.Log.debugAs @, "Boostraping page"
-    @layout = @previous.layout
 
-    callbacksParams = [@layout.content()]
+    @layout = @__getLayout(applicationContainer)
 
-    if @__scrollElement && @__scrollSpeed != 0
-      @__fixHeight()
+    @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
+
+    withLayout = @__newLayoutNeeded()
+
+    callbacksParams = switch
+      when withLayout
+        [@layout.container, this]
+      when @layout
+        [@layout.content()]
+      else
+        [applicationContainer]
 
     @wait "stageClear dataReceived", =>
       @previous?.__afterPaint?(callbacksParams)
-      @__callSyncedThrough this, '__paint', callbacksParams, =>
-        # Page HTML
-        @container = @layout.content()
-        @container.html @__renderDefault(@data || {}) if @__renderDefault?
+      @__callSyncedThrough (if withLayout then @layout else this), '__paint', callbacksParams, =>
 
-        # Loading
-        @__load()
-
-    @__callSyncedThrough @previous, '__erase', callbacksParams, =>
-      @previous?.__unload()
-      @__callSyncedThrough @, '__beforePaint', callbacksParams, =>
-        @trigger 'stageClear'
-
-    @__callSyncedThrough @, '__fetch', [], =>
-      Joosy.Modules.Log.debugAs @, "Fetch complete"
-      @trigger 'dataReceived'
-
-  #
-  # The page+layout bootstrap logic
-  #
-  # @example Hacky boot sequence description
-  #   previous::erase  \
-  #   previous::unload  \
-  #   beforePaint        \
-  #                       > paint
-  #   fetch             /
-  #
-  __bootstrapLayout: (applicationContainer) ->
-    Joosy.Modules.Log.debugAs @, "Boostraping page with layout"
-    @layout = new @__layoutClass(applicationContainer, @params)
-
-    callbacksParams = [@layout.container, this]
-
-    if @__scrollElement && @__scrollSpeed != 0
-      @__fixHeight()
-
-    @wait "stageClear dataReceived", =>
-      @__callSyncedThrough @layout, '__paint', callbacksParams, =>
         # Layout HTML
-        if @layout.__renderDefault?
+        if withLayout && @layout.__renderDefault?
           @layout.container.html @layout.__renderDefault(@layout.data || {})
 
         # Page HTML
-        @container = @layout.content()
+        @container = @layout?.content() || applicationContainer
         @container.html @__renderDefault(@data || {}) if @__renderDefault?
 
         # Loading
-        @layout.__load()
+        @layout.__load() if withLayout
         @__load()
 
-    @__callSyncedThrough @previous?.layout, '__erase', callbacksParams, =>
-      @previous?.layout?.__unload?()
+    @__callSyncedThrough (if withLayout then @previous?.layout else @previous), '__erase', callbacksParams, =>
+      @previous?.layout?.__unload?() if withLayout
       @previous?.__unload()
-      @__callSyncedThrough @layout, '__beforePaint', callbacksParams, =>
+      @__callSyncedThrough (if withLayout then @layout else @), '__beforePaint', callbacksParams, =>
         @trigger 'stageClear'
 
-    @__callSyncedThrough @layout, '__fetch', [], =>
+    loadPageData = =>
       @__callSyncedThrough @, '__fetch', [], =>
         Joosy.Modules.Log.debugAs @, "Fetch complete"
         @trigger 'dataReceived'
+
+    if withLayout
+      @__callSyncedThrough @layout, '__fetch', [], loadPageData
+    else
+      loadPageData()
 
 # AMD wrapper
 if define?.amd?

@@ -18,9 +18,6 @@ describe "Joosy.Layout", ->
     @layout.page()
     expect(@layout.content().selector).toEqual '#' + @layout.uid
 
-  it "has default view", ->
-    expect(@layout.__renderDefault instanceof Function).toBeTruthy()
-
   it "integrates with Router", ->
     target = sinon.stub Joosy.Router, 'navigate'
     @layout.navigate 'there'

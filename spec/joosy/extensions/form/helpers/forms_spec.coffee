@@ -47,7 +47,7 @@ describe "Joosy.Helpers.Form", ->
 
     it "renders formFor", ->
       callback = sinon.spy()
-      expect(h.formFor resource, callback).toMatch /<form id=".*"><\/form>/
+      expect(h.formFor resource, callback).toBeTag 'form', '', id: /.*/
       expect(callback.callCount).toEqual 1
       expect(callback.args[0][0].label?).toBeTruthy()
 

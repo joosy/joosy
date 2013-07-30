@@ -1527,8 +1527,6 @@
 
     Layout.include(Joosy.Modules.Filters);
 
-    Layout.view('default');
-
     Layout.helper('page');
 
     Layout.beforePaint = function(callback) {
@@ -1747,16 +1745,11 @@
     };
 
     function Page(applicationContainer, params, previous) {
-      var _ref, _ref1, _ref2;
       this.params = params;
       this.previous = previous;
-      this.__layoutClass || (this.__layoutClass = ApplicationLayout);
+      this.__layoutClass = this.__layoutClass || (this.__layoutClass !== false ? window.ApplicationLayout : null);
       if (!(this.halted = !this.__runBeforeLoads(this.params, this.previous))) {
-        if ((((_ref = this.previous) != null ? (_ref1 = _ref.layout) != null ? _ref1.uid : void 0 : void 0) == null) || ((_ref2 = this.previous) != null ? _ref2.__layoutClass : void 0) !== this.__layoutClass) {
-          this.__bootstrapLayout(applicationContainer);
-        } else {
-          this.__bootstrap(applicationContainer);
-        }
+        this.__bootstrap(applicationContainer);
       }
     }
 
@@ -1798,15 +1791,41 @@
       }
     };
 
+    Page.prototype.__newLayoutNeeded = function() {
+      var _ref, _ref1, _ref2;
+      return (this.__layoutClass != null) && ((((_ref = this.previous) != null ? (_ref1 = _ref.layout) != null ? _ref1.uid : void 0 : void 0) == null) || ((_ref2 = this.previous) != null ? _ref2.__layoutClass : void 0) !== this.__layoutClass);
+    };
+
+    Page.prototype.__getLayout = function(applicationContainer) {
+      switch (false) {
+        case !this.__newLayoutNeeded():
+          return new this.__layoutClass(applicationContainer, this.params);
+        case !this.__layoutClass:
+          return this.previous.layout;
+        default:
+          return null;
+      }
+    };
+
     Page.prototype.__bootstrap = function(applicationContainer) {
-      var callbacksParams,
+      var callbacksParams, loadPageData, withLayout, _ref,
         _this = this;
       Joosy.Modules.Log.debugAs(this, "Boostraping page");
-      this.layout = this.previous.layout;
-      callbacksParams = [this.layout.content()];
+      this.layout = this.__getLayout(applicationContainer);
       if (this.__scrollElement && this.__scrollSpeed !== 0) {
         this.__fixHeight();
       }
+      withLayout = this.__newLayoutNeeded();
+      callbacksParams = (function() {
+        switch (false) {
+          case !withLayout:
+            return [this.layout.container, this];
+          case !this.layout:
+            return [this.layout.content()];
+          default:
+            return [applicationContainer];
+        }
+      }).call(this);
       this.wait("stageClear dataReceived", function() {
         var _ref;
         if ((_ref = _this.previous) != null) {
@@ -1814,73 +1833,50 @@
             _ref.__afterPaint(callbacksParams);
           }
         }
-        return _this.__callSyncedThrough(_this, '__paint', callbacksParams, function() {
-          _this.container = _this.layout.content();
-          if (_this.__renderDefault != null) {
-            _this.container.html(_this.__renderDefault(_this.data || {}));
-          }
-          return _this.__load();
-        });
-      });
-      this.__callSyncedThrough(this.previous, '__erase', callbacksParams, function() {
-        var _ref;
-        if ((_ref = _this.previous) != null) {
-          _ref.__unload();
-        }
-        return _this.__callSyncedThrough(_this, '__beforePaint', callbacksParams, function() {
-          return _this.trigger('stageClear');
-        });
-      });
-      return this.__callSyncedThrough(this, '__fetch', [], function() {
-        Joosy.Modules.Log.debugAs(_this, "Fetch complete");
-        return _this.trigger('dataReceived');
-      });
-    };
-
-    Page.prototype.__bootstrapLayout = function(applicationContainer) {
-      var callbacksParams, _ref,
-        _this = this;
-      Joosy.Modules.Log.debugAs(this, "Boostraping page with layout");
-      this.layout = new this.__layoutClass(applicationContainer, this.params);
-      callbacksParams = [this.layout.container, this];
-      if (this.__scrollElement && this.__scrollSpeed !== 0) {
-        this.__fixHeight();
-      }
-      this.wait("stageClear dataReceived", function() {
-        return _this.__callSyncedThrough(_this.layout, '__paint', callbacksParams, function() {
-          if (_this.layout.__renderDefault != null) {
+        return _this.__callSyncedThrough((withLayout ? _this.layout : _this), '__paint', callbacksParams, function() {
+          var _ref1;
+          if (withLayout && (_this.layout.__renderDefault != null)) {
             _this.layout.container.html(_this.layout.__renderDefault(_this.layout.data || {}));
           }
-          _this.container = _this.layout.content();
+          _this.container = ((_ref1 = _this.layout) != null ? _ref1.content() : void 0) || applicationContainer;
           if (_this.__renderDefault != null) {
             _this.container.html(_this.__renderDefault(_this.data || {}));
           }
-          _this.layout.__load();
+          if (withLayout) {
+            _this.layout.__load();
+          }
           return _this.__load();
         });
       });
-      this.__callSyncedThrough((_ref = this.previous) != null ? _ref.layout : void 0, '__erase', callbacksParams, function() {
+      this.__callSyncedThrough((withLayout ? (_ref = this.previous) != null ? _ref.layout : void 0 : this.previous), '__erase', callbacksParams, function() {
         var _ref1, _ref2, _ref3;
-        if ((_ref1 = _this.previous) != null) {
-          if ((_ref2 = _ref1.layout) != null) {
-            if (typeof _ref2.__unload === "function") {
-              _ref2.__unload();
+        if (withLayout) {
+          if ((_ref1 = _this.previous) != null) {
+            if ((_ref2 = _ref1.layout) != null) {
+              if (typeof _ref2.__unload === "function") {
+                _ref2.__unload();
+              }
             }
           }
         }
         if ((_ref3 = _this.previous) != null) {
           _ref3.__unload();
         }
-        return _this.__callSyncedThrough(_this.layout, '__beforePaint', callbacksParams, function() {
+        return _this.__callSyncedThrough((withLayout ? _this.layout : _this), '__beforePaint', callbacksParams, function() {
           return _this.trigger('stageClear');
         });
       });
-      return this.__callSyncedThrough(this.layout, '__fetch', [], function() {
+      loadPageData = function() {
         return _this.__callSyncedThrough(_this, '__fetch', [], function() {
           Joosy.Modules.Log.debugAs(_this, "Fetch complete");
           return _this.trigger('dataReceived');
         });
-      });
+      };
+      if (withLayout) {
+        return this.__callSyncedThrough(this.layout, '__fetch', [], loadPageData);
+      } else {
+        return loadPageData();
+      }
     };
 
     return Page;

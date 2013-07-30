@@ -9,11 +9,9 @@ describe "Joosy.Page", ->
         @layout Layout
 
       sinon.stub @Page.prototype, '__bootstrap'
-      sinon.stub @Page.prototype, '__bootstrapLayout'
 
     afterEach ->
       @Page::__bootstrap.restore()
-      @Page::__bootstrapLayout.restore()
 
     it "has appropriate accessors", ->
       callbackNames = ['beforePaint', 'paint', 'afterPaint', 'erase']
@@ -48,34 +46,6 @@ describe "Joosy.Page", ->
       new @Page $('#application')
 
       expect(@Page::__bootstrap.callCount).toEqual 0
-      expect(@Page::__bootstrapLayout.callCount).toEqual 0
-
-    describe "layout switcher", ->
-
-      beforeEach ->
-        @page = new @Page $('#application')
-        @page.layout = new @Layout $('#application')
-
-      it "does not render when previous layout is the same", ->
-        new @Page $('#application'), {}, @page
-
-        expect(@Page::__bootstrap.callCount).toEqual 1
-        expect(@Page::__bootstrapLayout.callCount).toEqual 1
-
-      it "renders when previous layout is another class", ->
-        class Layout extends Joosy.Layout
-        class Page extends Joosy.Page
-          @layout Layout
-
-        ['__bootstrap', '__bootstrapLayout'].each (x) ->
-          sinon.stub Page.prototype, x
-
-        new Page $('#application'), {}, @page
-
-        expect(@Page::__bootstrap.callCount).toEqual 0
-        expect(@Page::__bootstrapLayout.callCount).toEqual 1
-        expect(Page::__bootstrap.callCount).toEqual 0
-        expect(Page::__bootstrapLayout.callCount).toEqual 1
 
     it "loads", ->
       page = new @Page $('#application')
@@ -92,6 +62,83 @@ describe "Joosy.Page", ->
         sinon.spy page, x
       page.__unload()
       expect(spies).toBeSequenced()
+
+
+    describe "layout switcher", ->
+
+      beforeEach ->
+        @page = new @Page $('#application')
+        @page.layout = new @Layout $('#application')
+
+      it "does not render when previous layout is the same", ->
+        new @Page $('#application'), {}, @page
+
+        expect(@Page::__bootstrap.callCount).toEqual 2
+
+      it "renders when previous layout is another class", ->
+        class Layout extends Joosy.Layout
+        class Page extends Joosy.Page
+          @layout Layout
+
+        sinon.stub Page.prototype, '__bootstrap'
+
+        new Page $('#application'), {}, @page
+
+        expect(@Page::__bootstrap.callCount).toEqual 1
+        expect(Page::__bootstrap.callCount).toEqual 1
+
+      describe 'when layout is not specified', ->
+        beforeEach ->
+          class @NoLayoutPage extends Joosy.Page
+
+        afterEach ->
+          window.ApplicationLayout = null
+
+        it "sets default layout if there is one", ->
+          window.ApplicationLayout = @Layout
+          page = new @NoLayoutPage $('#application')
+          expect(page.layout).toEqual jasmine.any(window.ApplicationLayout)
+
+        it "sets no layout if default layot is unavailable", ->
+          window.ApplicationLayout = null
+          page = new @NoLayoutPage $('#application')
+          expect(page.layout).toBeNull()
+
+      describe 'paint callbacks', ->
+        beforeEach ->
+          @CallbackLayout = class CallbackLayout extends Joosy.Layout
+            @paint (container, page, done) -> done()
+            @beforePaint (container, page, done) -> done()
+            @erase (container, page, done) -> done()
+            @fetch (done) -> done()
+
+          class @CallbackPage extends Joosy.Page
+            @layout CallbackLayout
+            @paint (container, done) -> done()
+            @beforePaint (container, done) -> done()
+            @erase (container, done) -> done()
+            @fetch (done) -> done()
+
+            constructor: (applicationContainer, @params, @previous) ->
+              ['__paint', '__beforePaint', '__fetch', '__erase'].each (x) =>
+                sinon.spy @, x
+              super
+
+        it 'calls only page callbacks when layout is not changed', ->
+          ['__paint', '__beforePaint', '__fetch', '__erase'].each (x) =>
+            sinon.spy @CallbackLayout.prototype, x
+
+          oldPage = new @CallbackPage $('#application')
+          newPage = new @CallbackPage $('#application'), {}, oldPage
+
+          ['__paint', '__beforePaint', '__fetch'].each (x) =>
+            expect(newPage[x].callCount).toEqual 1
+            expect(oldPage[x].callCount).toEqual 1
+            expect(newPage.layout[x].callCount).toEqual 1
+
+          expect(oldPage.__erase.callCount).toEqual 1
+
+
 
   describe "rendering", ->
 

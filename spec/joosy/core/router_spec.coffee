@@ -38,7 +38,7 @@ describe "Joosy.Router", ->
           @match '/page2/:more', to: Page
         @notFound to: spies.wildcard
 
-      expect(Joosy.Router.routes).toEqual 
+      expect(Joosy.Router.routes).toEqual
         '^/?/?$':
           to: spies.root
           as: 'root'
@@ -61,7 +61,7 @@ describe "Joosy.Router", ->
     it 'maps', ->
       Joosy.Router.map @map
 
-      expect(Joosy.Router.routes).toEqual 
+      expect(Joosy.Router.routes).toEqual
         '^/?/?$':
           to: @spies.root
           as: undefined
@@ -286,16 +286,15 @@ describe "Joosy.Router", ->
         href: '/base'
         class: 'zomg!'
 
-    if Zepto? # jQuery has a bug that doesn't allow automatic checking of this
-      it 'navigates', ->
-        sinon.stub Joosy.Router, 'navigate'
+    it 'navigates', ->
+      sinon.stub Joosy.Router, 'navigate'
 
-        @$ground.html """
-                      <a href='#' id='test1'></a>
-                      <a href='#' id='test2' data-joosy='true'></a>
-                      """
-        $('#test1').click()
-        $('#test2').click()
+      @$ground.html """
+                    <a href='#' id='test1'></a>
+                    <a href='#' id='test2' data-joosy='true'></a>
+                    """
+      $('#test1').click()
+      $('#test2').click()
 
-        expect(Joosy.Router.navigate.callCount).toEqual 1
-        Joosy.Router.navigate.restore()
+      expect(Joosy.Router.navigate.callCount).toEqual 1
+      Joosy.Router.navigate.restore()

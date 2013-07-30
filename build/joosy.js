@@ -1747,7 +1747,7 @@
     function Page(applicationContainer, params, previous) {
       this.params = params;
       this.previous = previous;
-      this.__layoutClass || (this.__layoutClass = (this.__layoutClass !== false ? window.ApplicationLayout : null));
+      this.__layoutClass = this.__layoutClass || (this.__layoutClass !== false ? window.ApplicationLayout : null);
       if (!(this.halted = !this.__runBeforeLoads(this.params, this.previous))) {
         this.__bootstrap(applicationContainer);
       }
@@ -1936,8 +1936,9 @@
       }
     });
 
-    $(window).on('click', 'a[data-joosy]', function(event) {
-      return Router.navigate(event.target.attributes.href);
+    $(document).on('click', 'a[data-joosy]', function(event) {
+      Router.navigate(event.target.getAttribute('href'));
+      return false;
     });
 
     Drawer = (function() {

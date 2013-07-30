@@ -34,8 +34,9 @@ class Joosy.Router extends Joosy.Module
     else
       window.history.loaded = true
 
-  $(window).on 'click', 'a[data-joosy]', (event) =>
-    @navigate event.target.attributes.href
+  $(document).on 'click', 'a[data-joosy]', (event) =>
+    @navigate event.target.getAttribute('href')
+    false
 
   #
   # Rails-like wrapper around internal raw routes representation

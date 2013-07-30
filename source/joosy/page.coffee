@@ -69,100 +69,79 @@ class Joosy.Page extends Joosy.Module
   @layout: (layoutClass) ->
     @::__layoutClass = layoutClass
 
-  #
-  # Sets the method which will controll the painting preparation proccess.
-  #
-  # This method will be called right ater previous page {Joosy.Page.erase} and in parallel with
-  #   page data fetching so you can use it to initiate preloader.
-  #
-  # @note Given method will be called with `complete` function as parameter. As soon as your
-  #   preparations are done you should call that function.
-  #
-  # @example Sample before painter
-  #   @beforePaint (container, complete) ->
-  #     if !@data # checks if parallel fetching finished
-  #       $('preloader').slideDown -> complete()
-  #
-  #
-  @beforePaint: (callback) ->
-    @::__beforePaint = callback
 
-  #
-  # Sets the method which will controll the painting proccess.
-  #
-  # This method will be called after fetching, erasing and beforePaint is complete.
-  # It should be used to setup appearance effects of page.
-  #
-  # @note Given method will be called with `complete` function as parameter. As soon as your
-  #   preparations are done you should call that function.
-  #
-  # @example Sample painter
-  #   @paint (container, complete) ->
-  #     @container.fadeIn -> complete()
-  #
-  @paint: (callback) ->
-    @::__paint = callback
+  @registerPlainFilters 'beforeLoad', 'afterLoad', 'afterUnload'
 
-  @afterPaint: (callback) ->
-    @::__afterPaint = callback
+  @registerSequencedFilters \
 
-  #
-  # Sets the method which will controll the erasing proccess.
-  #
-  # Use this method to setup hiding effect.
-  #
-  # @note Given method will be called with `complete` function as parameter. As soon as your
-  #   preparations are done you should call that function.
-  #
-  # @note This method will be caled _before_ unload routines so in theory you can
-  #   access page data from that. Think twice if you are doing it right though.
-  #
-  # @example Sample eraser
-  #   @erase (container, complete) ->
-  #     @container.fadeOut -> complete()
-  #
-  @erase: (callback) ->
-    @::__erase = callback
+    #
+    # @method .beforePaint(container, complete)
+    #
+    # Sets the method which will controll the painting preparation proccess.
+    #
+    # This method will be called right ater previous page {Joosy.Page.erase} and in parallel with
+    #   page data fetching so you can use it to initiate preloader.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @example Sample before painter
+    #   @beforePaint (container, complete) ->
+    #     if !@data # checks if parallel fetching finished
+    #       $('preloader').slideDown -> complete()
+    #
+    #
+    'beforePaint',
 
-  #
-  # Sets the method which will controll the data fetching proccess.
-  #
-  # @note Given method will be called with `complete` function as parameter. As soon as your
-  #   preparations are done you should call that function.
-  #
-  # @example Basic usage
-  #   @fetch (complete) ->
-  #     $.get '/rumbas', (@data) => complete()
-  #
-  @fetch: (callback) ->
-    @::__fetch = (complete) ->
-      @data = {}
-      callback.call this, =>
-        @dataFetched = true
-        complete()
+    #
+    # @method .paint(container, complete)
+    #
+    # Sets the method which will controll the painting proccess.
+    #
+    # This method will be called after fetching, erasing and beforePaint is complete.
+    # It should be used to setup appearance effects of page.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @example Sample painter
+    #   @paint (container, complete) ->
+    #     @container.fadeIn -> complete()
+    #
+    'paint',
 
-  #
-  # Sets the several separate methods that will fetch data in parallel.
-  #
-  # @note This will work through {Joosy.Modules.Events.synchronize}
-  #
-  # @example Basic usage
-  #   @fetchSynchronized (context) ->
-  #     context.do (done) ->
-  #       $.get '/rumbas', (data) =>
-  #         @data.rumbas = data
-  #         done()
-  #
-  #     context.do (done) ->
-  #       $.get '/kutuzkas', (data) =>
-  #         @data.kutuzkas = data
-  #         done()
-  #
-  @fetchSynchronized: (callback) ->
-    @::__fetch = (complete) ->
-      @synchronize (context) ->
-        context.after -> complete()
-        callback.call(this, context)
+    #
+    # @method .erase(container, complete)
+    #
+    # Sets the method which will controll the erasing proccess.
+    #
+    # Use this method to setup hiding effect.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @note This method will be caled _before_ unload routines so in theory you can
+    #   access page data from that. Think twice if you are doing it right though.
+    #
+    # @example Sample eraser
+    #   @erase (container, complete) ->
+    #     @container.fadeOut -> complete()
+    #
+    'erase',
+
+    #
+    # @method .fetch(complete)
+    #
+    # Sets the method which will controll the data fetching proccess.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @example Basic usage
+    #   @fetch (complete) ->
+    #     $.get '/rumbas', (@data) => complete()
+    #
+    'fetch'
 
   #
   # Constructor is very destructive (c), it calls bootstrap directly so use with caution.
@@ -223,26 +202,6 @@ class Joosy.Page extends Joosy.Module
     @__runAfterUnloads @params, @previous
     delete @previous
 
-  #
-  # Proxies callback through possible async wrapper.
-  #
-  # If wrapper is defined, it will be called with given callback as one of parameters.
-  # If wrapper is not defined callback will be called directly.
-  #
-  # @note Magic People Voodoo People
-  #
-  # @param [Object] entity        Object possibly containing wrapper method
-  # @param [String] receiver      String name of wrapper method inside entity
-  # @param [Hash] params          Params to send to wrapper, callback will be
-  #   attached as the last of them.
-  # @param [Function] callback    Callback to run
-  #
-  __callSyncedThrough: (entity, receiver, params, callback) ->
-    if entity?[receiver]?
-      entity[receiver].apply entity, params.clone().add(callback)
-    else
-      callback()
-
   __newLayoutNeeded: ->
     @__layoutClass? && (!@previous?.layout?.uid? || @previous?.__layoutClass != @__layoutClass)
 
@@ -267,27 +226,24 @@ class Joosy.Page extends Joosy.Module
   #
   __bootstrap: (applicationContainer) ->
     Joosy.Modules.Log.debugAs @, "Boostraping page"
-
     @layout = @__getLayout(applicationContainer)
 
-    @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
+    # @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
 
-    withLayout = @__newLayoutNeeded()
-
-    callbacksParams = switch
-      when withLayout
-        [@layout.container, this]
-      when @layout
-        [@layout.content()]
-      else
-        [applicationContainer]
+    if layoutChanged = @__newLayoutNeeded()
+      currentHandler  = @layout
+      previousHandler = @previous?.layout
+      filterParams    = [@layout.container, @]
+    else
+      currentHandler  = @
+      previousHandler = @previous
+      filterParams    = if @layout then [@layout.content()] else [applicationContainer]
 
     @wait "stageClear dataReceived", =>
-      @previous?.__afterPaint?(callbacksParams)
-      @__callSyncedThrough (if withLayout then @layout else this), '__paint', callbacksParams, =>
+      currentHandler.__runPaints filterParams, =>
 
         # Layout HTML
-        if withLayout && @layout.__renderDefault?
+        if layoutChanged && @layout?.__renderDefault?
           @layout.container.html @layout.__renderDefault(@layout.data || {})
 
         # Page HTML
@@ -295,22 +251,35 @@ class Joosy.Page extends Joosy.Module
         @container.html @__renderDefault(@data || {}) if @__renderDefault?
 
         # Loading
-        @layout.__load() if withLayout
+        @layout.__load() if layoutChanged
         @__load()
 
-    @__callSyncedThrough (if withLayout then @previous?.layout else @previous), '__erase', callbacksParams, =>
-      @previous?.layout?.__unload?() if withLayout
+    # Clearing stage
+    clearStage = =>
+      @previous?.layout?.__unload?() if layoutChanged
       @previous?.__unload()
-      @__callSyncedThrough (if withLayout then @layout else @), '__beforePaint', callbacksParams, =>
+      
+      currentHandler.__runBeforePaints filterParams, =>
         @trigger 'stageClear'
 
+    if previousHandler?
+      previousHandler.__runErases filterParams, clearStage
+    else
+      clearStage()
+
+    # Loading data required for new things
     loadPageData = =>
-      @__callSyncedThrough @, '__fetch', [], =>
+      @data = {}
+      @__runFetchs [], =>
+        @dataFetched = true
         Joosy.Modules.Log.debugAs @, "Fetch complete"
         @trigger 'dataReceived'
 
-    if withLayout
-      @__callSyncedThrough @layout, '__fetch', [], loadPageData
+    if layoutChanged
+      @layout.data = {}
+      @layout.__runFetchs [], =>
+        @layout.dataFetched = true
+        loadPageData()
     else
       loadPageData()
 

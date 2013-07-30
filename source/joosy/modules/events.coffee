@@ -90,9 +90,9 @@ Joosy.Modules.Events =
   #
   # @example Basic usage
   #   Joosy.synchronize (context) ->
-  #     contet.do (done) -> done()
-  #     contet.do (done) -> done()
-  #     content.after ->
+  #     context.do (done) -> done()
+  #     context.do (done) -> done()
+  #     context.after ->
   #       console.log 'Success!'
   #
   # @param [Function] block           Configuration block (see example)

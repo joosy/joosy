@@ -34,79 +34,73 @@ class Joosy.Layout extends Joosy.Module
   @include Joosy.Modules.WidgetsManager
   @include Joosy.Modules.Filters
 
+  @registerPlainFilters 'beforeLoad', 'afterLoad', 'afterUnload'
+
+  @registerSequencedFilters \
+    #
+    # Sets the method which will controll the painting preparation proccess.
+    #
+    # This method will be called right ater previous page {Joosy.Page.erase} and in parallel with
+    #   page data fetching so you can use it to initiate preloader.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @example Sample before painter
+    #   @beforePaint (container, complete) ->
+    #     if !@data # checks if parallel fetching finished
+    #       $('preloader').slideDown -> complete()
+    #
+    #
+    'beforePaint',
+
+    #
+    # Sets the method which will controll the painting proccess.
+    #
+    # This method will be called after fetching, erasing and beforePaint is complete.
+    # It should be used to setup appearance effects of page.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @example Sample painter
+    #   @paint (container, complete) ->
+    #     @container.fadeIn -> complete()
+    #
+    'paint',
+
+    #
+    # Sets the method which will controll the erasing proccess.
+    #
+    # Use this method to setup hiding effect.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @note This method will be caled _before_ unload routines so in theory you can
+    #   access page data from that. Think twice if you are doing it right though.
+    #
+    # @example Sample eraser
+    #   @erase (container, complete) ->
+    #     @container.fadeOut -> complete()
+    #
+    'erase',
+    #
+    # Sets the method which will controll the data fetching proccess.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @note You are strongly encouraged to NOT fetch anything with Layout!
+    #   Use {Joosy.Page.fetch}
+    #
+    # @example Basic usage
+    #   @fetch (complete) ->
+    #     $.get '/rumbas', (@data) => complete()
+    #
+    'fetch'
+
   @helper 'page'
-
-  #
-  # Sets the method which will controll the painting preparation proccess.
-  #
-  # This method will be called right ater previous layout {Joosy.Layout.erase} and in parallel with
-  #   layout data fetching so you can use it to initiate preloader.
-  #
-  # @note Given method will be called with `complete` function as parameter. As soon as your
-  #   preparations are done you should call that function.
-  #
-  # @example Sample before painter
-  #   @beforePaint (container, page, complete) ->
-  #     if !@data # checks if parallel fetching finished
-  #       $('preloader').slideDown -> complete()
-  #
-  #
-  @beforePaint: (callback) ->
-    @::__beforePaint = callback
-
-  #
-  # Sets the method which will controll the painting proccess.
-  #
-  # This method will be called after fetching, erasing and beforePaint is complete.
-  # It should be used to setup appearance effects of layout.
-  #
-  # @note Given method will be called with `complete` function as parameter. As soon as your
-  #   preparations are done you should call that function.
-  #
-  # @example Sample painter
-  #   @paint (container, page, complete) ->
-  #     @container.fadeIn -> complete()
-  #
-  @paint: (callback) ->
-    @::__paint = callback
-
-  #
-  # Sets the method which will controll the erasing proccess.
-  #
-  # Use this method to setup hiding effect.
-  #
-  # @note Given method will be called with `complete` function as parameter. As soon as your
-  #   preparations are done you should call that function.
-  #
-  # @note This method will be caled _before_ unload routines so in theory you can
-  #   access layout data from that. Think twice if you are doing it right though.
-  #
-  # @example Sample eraser
-  #   @erase (container, page, complete) ->
-  #     @container.fadeOut -> complete()
-  #
-  @erase: (callback) ->
-    @::__erase = callback
-
-  #
-  # Sets the method which will controll the data fetching proccess.
-  #
-  # @note Given method will be called with `complete` function as parameter. As soon as your
-  #   preparations are done you should call that function.
-  #
-  # @note You are strongly encouraged to NOT fetch anything with Layout!
-  #   Use {Joosy.Page.fetch}
-  #
-  # @example Basic usage
-  #   @fetch (complete) ->
-  #     $.get '/rumbas', (@data) => complete()
-  #
-  @fetch: (callback) ->
-    @::__fetch = (complete) ->
-      @data = {}
-      callback.call this, =>
-        @dataFetched = true
-        complete()
 
   #
   # Prefetched page data.

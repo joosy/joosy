@@ -23,23 +23,44 @@ Joosy.Modules.Filters =
   #     @__runAfterUnloads() # Runs filters registered as afterUnload
   #
   included: ->
-    ['beforeLoad', 'afterLoad', 'afterUnload'].each (filter) =>
+    @__registerFilterCollector = (filter) =>
       @[filter] = (callback) ->
         unless @::hasOwnProperty "__#{filter}s"
           @::["__#{filter}s"] = [].concat @.__super__["__#{filter}s"] || []
         @::["__#{filter}s"].push callback
 
+      filter.charAt(0).toUpperCase() + filter.slice(1)
 
-['beforeLoad', 'afterLoad', 'afterUnload'].each (filter) =>
-  camelized = filter.charAt(0).toUpperCase() + filter.slice(1);
+    @registerPlainFilters = (filters...) =>
+      filters.each (filter) =>
+        camelized = @__registerFilterCollector filter
 
-  Joosy.Modules.Filters["__run#{camelized}s"] = (opts...) ->
-    return true unless @["__#{filter}s"]
+        @::["__run#{camelized}s"] = (params...) ->
+          return true unless @["__#{filter}s"]
 
-    @["__#{filter}s"].reduce (flag, func) =>
-      func = @[func] unless Object.isFunction func
-      flag && func.apply(@, opts) != false
-    , true
+          @["__#{filter}s"].reduce (flag, callback) =>
+            callback = @[callback] unless Object.isFunction callback
+            flag && callback.apply(@, params) != false
+          , true
+
+    @registerSequencedFilters = (filters...) =>
+      filters.each (filter) =>
+        camelized = @__registerFilterCollector filter
+
+        @::["__run#{camelized}s"] = (params, callback) ->
+          return callback() unless @["__#{filter}s"]
+
+          runners  = @["__#{filter}s"]
+          filterer = @
+
+          if runners.length == 1
+            return runners[0].apply @, params.include(callback)
+
+          Joosy.synchronize (context) ->
+            runners.each (runner) ->
+              context.do (done) ->
+                runner.apply filterer, params.include(done)
+            context.after callback
 
 # AMD wrapper
 if define?.amd?

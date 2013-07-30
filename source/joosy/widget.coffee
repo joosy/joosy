@@ -32,6 +32,8 @@ class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.TimeManager
   @include Joosy.Modules.WidgetsManager
 
+  @registerPlainFilters 'beforeLoad', 'afterLoad', 'afterUnload'
+
   #
   # By default widget will not render on load
   #

@@ -4,12 +4,6 @@ describe "Joosy.Layout", ->
     class @Layout extends Joosy.Layout
     @layout = new @Layout $('#application')
 
-  it "has appropriate accessors", ->
-    callbackNames = ['beforePaint', 'paint', 'erase']
-    callbackNames.each (callbackName) =>
-      @Layout[callbackName] 'callback'
-      expect(@Layout::['__' + callbackName]).toEqual 'callback'
-
   it "generates uid", ->
     @layout.page()
     expect(@layout.uid).toBeDefined()

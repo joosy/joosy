@@ -14,11 +14,6 @@ describe "Joosy.Page", ->
       @Page::__bootstrap.restore()
 
     it "has appropriate accessors", ->
-      callbackNames = ['beforePaint', 'paint', 'afterPaint', 'erase']
-      callbackNames.each (callbackName) =>
-        @Page[callbackName] 'callback'
-        expect(@Page::['__' + callbackName]).toEqual 'callback'
-
       @Page.scroll '#here'
       expect(@Page::__scrollElement).toEqual '#here'
       expect(@Page::__scrollSpeed).toEqual 500
@@ -106,39 +101,48 @@ describe "Joosy.Page", ->
 
       describe 'paint callbacks', ->
         beforeEach ->
-          @CallbackLayout = class CallbackLayout extends Joosy.Layout
-            @paint (container, page, done) -> done()
-            @beforePaint (container, page, done) -> done()
-            @erase (container, page, done) -> done()
-            @fetch (done) -> done()
+          @spies = spies = {}
+
+          for term in ['page', 'layout']
+            for filter in ['paint', 'beforePaint', 'erase', 'fetch']
+              spies[term+'/'+filter] = sinon.spy()
+
+          CallbackLayout = class @CallbackLayout extends Joosy.Layout
+            @paint (container, page, done) -> spies['layout/paint'](); done()
+            @beforePaint (container, page, done) -> spies['layout/beforePaint'](); done()
+            @erase (container, page, done) -> spies['layout/erase'](); done()
+            @fetch (done) -> spies['layout/fetch'](); done()
 
           class @CallbackPage extends Joosy.Page
             @layout CallbackLayout
-            @paint (container, done) -> done()
-            @beforePaint (container, done) -> done()
-            @erase (container, done) -> done()
-            @fetch (done) -> done()
 
-            constructor: (applicationContainer, @params, @previous) ->
-              ['__paint', '__beforePaint', '__fetch', '__erase'].each (x) =>
-                sinon.spy @, x
-              super
+            @paint (container, done) -> spies['page/paint'](); done()
+            @beforePaint (container, done) -> spies['page/beforePaint'](); done()
+            @erase (container, done) -> spies['page/erase'](); done()
+            @fetch (done) -> spies['page/fetch'](); done()
 
-        it 'calls only page callbacks when layout is not changed', ->
-          ['__paint', '__beforePaint', '__fetch', '__erase'].each (x) =>
-            sinon.spy @CallbackLayout.prototype, x
-
+        it 'get called', ->
           oldPage = new @CallbackPage $('#application')
+
+          ['paint', 'beforePaint'].each (filter) =>
+            expect(@spies["layout/#{filter}"].callCount).toEqual 1
+            expect(@spies["page/#{filter}"].callCount).toEqual 0
+
+          expect(@spies['page/fetch'].callCount).toEqual 1
+          expect(@spies['layout/fetch'].callCount).toEqual 1
+          expect(@spies['page/erase'].callCount).toEqual 0
+          expect(@spies['layout/erase'].callCount).toEqual 0
+
           newPage = new @CallbackPage $('#application'), {}, oldPage
 
-          ['__paint', '__beforePaint', '__fetch'].each (x) =>
-            expect(newPage[x].callCount).toEqual 1
-            expect(oldPage[x].callCount).toEqual 1
-            expect(newPage.layout[x].callCount).toEqual 1
+          ['paint', 'beforePaint'].each (filter) =>
+            expect(@spies["layout/#{filter}"].callCount).toEqual 1
+            expect(@spies["page/#{filter}"].callCount).toEqual 1
 
-          expect(oldPage.__erase.callCount).toEqual 1
-
-
+          expect(@spies['page/fetch'].callCount).toEqual 2
+          expect(@spies['layout/fetch'].callCount).toEqual 1
+          expect(@spies['page/erase'].callCount).toEqual 1
+          expect(@spies['layout/erase'].callCount).toEqual 0
 
   describe "rendering", ->
 

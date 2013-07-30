@@ -1158,41 +1158,71 @@
 
 }).call(this);
 (function() {
-  var _this = this,
-    __slice = [].slice;
+  var __slice = [].slice;
 
   Joosy.Modules.Filters = {
     included: function() {
       var _this = this;
-      return ['beforeLoad', 'afterLoad', 'afterUnload'].each(function(filter) {
-        return _this[filter] = function(callback) {
+      this.__registerFilterCollector = function(filter) {
+        _this[filter] = function(callback) {
           if (!this.prototype.hasOwnProperty("__" + filter + "s")) {
             this.prototype["__" + filter + "s"] = [].concat(this.__super__["__" + filter + "s"] || []);
           }
           return this.prototype["__" + filter + "s"].push(callback);
         };
-      });
+        return filter.charAt(0).toUpperCase() + filter.slice(1);
+      };
+      this.registerPlainFilters = function() {
+        var filters;
+        filters = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        return filters.each(function(filter) {
+          var camelized;
+          camelized = _this.__registerFilterCollector(filter);
+          return _this.prototype["__run" + camelized + "s"] = function() {
+            var params,
+              _this = this;
+            params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+            if (!this["__" + filter + "s"]) {
+              return true;
+            }
+            return this["__" + filter + "s"].reduce(function(flag, callback) {
+              if (!Object.isFunction(callback)) {
+                callback = _this[callback];
+              }
+              return flag && callback.apply(_this, params) !== false;
+            }, true);
+          };
+        });
+      };
+      return this.registerSequencedFilters = function() {
+        var filters;
+        filters = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        return filters.each(function(filter) {
+          var camelized;
+          camelized = _this.__registerFilterCollector(filter);
+          return _this.prototype["__run" + camelized + "s"] = function(params, callback) {
+            var filterer, runners;
+            if (!this["__" + filter + "s"]) {
+              return callback();
+            }
+            runners = this["__" + filter + "s"];
+            filterer = this;
+            if (runners.length === 1) {
+              return runners[0].apply(this, params.include(callback));
+            }
+            return Joosy.synchronize(function(context) {
+              runners.each(function(runner) {
+                return context["do"](function(done) {
+                  return runner.apply(filterer, params.include(done));
+                });
+              });
+              return context.after(callback);
+            });
+          };
+        });
+      };
     }
   };
-
-  ['beforeLoad', 'afterLoad', 'afterUnload'].each(function(filter) {
-    var camelized;
-    camelized = filter.charAt(0).toUpperCase() + filter.slice(1);
-    return Joosy.Modules.Filters["__run" + camelized + "s"] = function() {
-      var opts,
-        _this = this;
-      opts = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      if (!this["__" + filter + "s"]) {
-        return true;
-      }
-      return this["__" + filter + "s"].reduce(function(flag, func) {
-        if (!Object.isFunction(func)) {
-          func = _this[func];
-        }
-        return flag && func.apply(_this, opts) !== false;
-      }, true);
-    };
-  });
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
     define('joosy/modules/filters', function() {
@@ -1365,6 +1395,8 @@
 
     Widget.include(Joosy.Modules.WidgetsManager);
 
+    Widget.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
+
     Widget.prototype.__renderDefault = false;
 
     Widget.prototype.data = false;
@@ -1527,30 +1559,11 @@
 
     Layout.include(Joosy.Modules.Filters);
 
+    Layout.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
+
+    Layout.registerSequencedFilters('beforePaint', 'paint', 'afterPaint', 'erase', 'fetch');
+
     Layout.helper('page');
-
-    Layout.beforePaint = function(callback) {
-      return this.prototype.__beforePaint = callback;
-    };
-
-    Layout.paint = function(callback) {
-      return this.prototype.__paint = callback;
-    };
-
-    Layout.erase = function(callback) {
-      return this.prototype.__erase = callback;
-    };
-
-    Layout.fetch = function(callback) {
-      return this.prototype.__fetch = function(complete) {
-        var _this = this;
-        this.data = {};
-        return callback.call(this, function() {
-          _this.dataFetched = true;
-          return complete();
-        });
-      };
-    };
 
     Layout.prototype.data = false;
 
@@ -1706,43 +1719,9 @@
       return this.prototype.__layoutClass = layoutClass;
     };
 
-    Page.beforePaint = function(callback) {
-      return this.prototype.__beforePaint = callback;
-    };
+    Page.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
 
-    Page.paint = function(callback) {
-      return this.prototype.__paint = callback;
-    };
-
-    Page.afterPaint = function(callback) {
-      return this.prototype.__afterPaint = callback;
-    };
-
-    Page.erase = function(callback) {
-      return this.prototype.__erase = callback;
-    };
-
-    Page.fetch = function(callback) {
-      return this.prototype.__fetch = function(complete) {
-        var _this = this;
-        this.data = {};
-        return callback.call(this, function() {
-          _this.dataFetched = true;
-          return complete();
-        });
-      };
-    };
-
-    Page.fetchSynchronized = function(callback) {
-      return this.prototype.__fetch = function(complete) {
-        return this.synchronize(function(context) {
-          context.after(function() {
-            return complete();
-          });
-          return callback.call(this, context);
-        });
-      };
-    };
+    Page.registerSequencedFilters('beforePaint', 'paint', 'erase', 'fetch');
 
     function Page(applicationContainer, params, previous) {
       this.params = params;
@@ -1783,14 +1762,6 @@
       return delete this.previous;
     };
 
-    Page.prototype.__callSyncedThrough = function(entity, receiver, params, callback) {
-      if ((entity != null ? entity[receiver] : void 0) != null) {
-        return entity[receiver].apply(entity, params.clone().add(callback));
-      } else {
-        return callback();
-      }
-    };
-
     Page.prototype.__newLayoutNeeded = function() {
       var _ref, _ref1, _ref2;
       return (this.__layoutClass != null) && ((((_ref = this.previous) != null ? (_ref1 = _ref.layout) != null ? _ref1.uid : void 0 : void 0) == null) || ((_ref2 = this.previous) != null ? _ref2.__layoutClass : void 0) !== this.__layoutClass);
@@ -1808,49 +1779,38 @@
     };
 
     Page.prototype.__bootstrap = function(applicationContainer) {
-      var callbacksParams, loadPageData, withLayout, _ref,
+      var clearStage, currentHandler, filterParams, layoutChanged, loadPageData, previousHandler, _ref,
         _this = this;
       Joosy.Modules.Log.debugAs(this, "Boostraping page");
       this.layout = this.__getLayout(applicationContainer);
-      if (this.__scrollElement && this.__scrollSpeed !== 0) {
-        this.__fixHeight();
+      if (layoutChanged = this.__newLayoutNeeded()) {
+        currentHandler = this.layout;
+        previousHandler = (_ref = this.previous) != null ? _ref.layout : void 0;
+        filterParams = [this.layout.container, this];
+      } else {
+        currentHandler = this;
+        previousHandler = this.previous;
+        filterParams = this.layout ? [this.layout.content()] : [applicationContainer];
       }
-      withLayout = this.__newLayoutNeeded();
-      callbacksParams = (function() {
-        switch (false) {
-          case !withLayout:
-            return [this.layout.container, this];
-          case !this.layout:
-            return [this.layout.content()];
-          default:
-            return [applicationContainer];
-        }
-      }).call(this);
       this.wait("stageClear dataReceived", function() {
-        var _ref;
-        if ((_ref = _this.previous) != null) {
-          if (typeof _ref.__afterPaint === "function") {
-            _ref.__afterPaint(callbacksParams);
-          }
-        }
-        return _this.__callSyncedThrough((withLayout ? _this.layout : _this), '__paint', callbacksParams, function() {
-          var _ref1;
-          if (withLayout && (_this.layout.__renderDefault != null)) {
+        return currentHandler.__runPaints(filterParams, function() {
+          var _ref1, _ref2;
+          if (layoutChanged && (((_ref1 = _this.layout) != null ? _ref1.__renderDefault : void 0) != null)) {
             _this.layout.container.html(_this.layout.__renderDefault(_this.layout.data || {}));
           }
-          _this.container = ((_ref1 = _this.layout) != null ? _ref1.content() : void 0) || applicationContainer;
+          _this.container = ((_ref2 = _this.layout) != null ? _ref2.content() : void 0) || applicationContainer;
           if (_this.__renderDefault != null) {
             _this.container.html(_this.__renderDefault(_this.data || {}));
           }
-          if (withLayout) {
+          if (layoutChanged) {
             _this.layout.__load();
           }
           return _this.__load();
         });
       });
-      this.__callSyncedThrough((withLayout ? (_ref = this.previous) != null ? _ref.layout : void 0 : this.previous), '__erase', callbacksParams, function() {
+      clearStage = function() {
         var _ref1, _ref2, _ref3;
-        if (withLayout) {
+        if (layoutChanged) {
           if ((_ref1 = _this.previous) != null) {
             if ((_ref2 = _ref1.layout) != null) {
               if (typeof _ref2.__unload === "function") {
@@ -1862,18 +1822,29 @@
         if ((_ref3 = _this.previous) != null) {
           _ref3.__unload();
         }
-        return _this.__callSyncedThrough((withLayout ? _this.layout : _this), '__beforePaint', callbacksParams, function() {
+        return currentHandler.__runBeforePaints(filterParams, function() {
           return _this.trigger('stageClear');
         });
-      });
+      };
+      if (previousHandler != null) {
+        previousHandler.__runErases(filterParams, clearStage);
+      } else {
+        clearStage();
+      }
       loadPageData = function() {
-        return _this.__callSyncedThrough(_this, '__fetch', [], function() {
+        _this.data = {};
+        return _this.__runFetchs([], function() {
+          _this.dataFetched = true;
           Joosy.Modules.Log.debugAs(_this, "Fetch complete");
           return _this.trigger('dataReceived');
         });
       };
-      if (withLayout) {
-        return this.__callSyncedThrough(this.layout, '__fetch', [], loadPageData);
+      if (layoutChanged) {
+        this.layout.data = {};
+        return this.layout.__runFetchs([], function() {
+          _this.layout.dataFetched = true;
+          return loadPageData();
+        });
       } else {
         return loadPageData();
       }

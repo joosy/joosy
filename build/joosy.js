@@ -1747,7 +1747,7 @@
     function Page(applicationContainer, params, previous) {
       this.params = params;
       this.previous = previous;
-      this.__layoutClass = this.__layoutClass || (this.__layoutClass !== false ? window.ApplicationLayout : null);
+      this.__layoutClass || (this.__layoutClass = (this.__layoutClass !== false ? window.ApplicationLayout : null));
       if (!(this.halted = !this.__runBeforeLoads(this.params, this.previous))) {
         this.__bootstrap(applicationContainer);
       }
@@ -1937,7 +1937,7 @@
     });
 
     $(window).on('click', 'a[data-joosy]', function(event) {
-      return Router.navigate(event.target.href);
+      return Router.navigate(event.target.attributes.href);
     });
 
     Drawer = (function() {
@@ -2028,18 +2028,19 @@
     };
 
     Router.setup = function(config, responder, respond) {
-      var _base, _base1,
+      var _base,
         _this = this;
       this.config = config;
       this.responder = responder;
       if (respond == null) {
         respond = true;
       }
-      (_base = this.config).prefix || (_base.prefix = '');
-      (_base1 = this.config).base || (_base1.base = '');
-      this.config.base = ('/' + this.config.base + '/').replace(/\/{2,}/g, '/');
       if (!history.pushState) {
         this.config.html5 = false;
+      }
+      (_base = this.config).prefix || (_base.prefix = '');
+      if (this.config.html5) {
+        this.config.prefix = ('/' + this.config.prefix + '/').replace(/\/{2,}/g, '/');
       }
       if (respond) {
         this.respond(this.canonizeLocation());
@@ -2076,7 +2077,7 @@
         if (path[0] === '/') {
           path = path.substr(1);
         }
-        path = this.config.base + path;
+        path = this.config.prefix + path;
       } else {
         if (path[0] === '#') {
           path = path.substr(1);
@@ -2095,9 +2096,9 @@
 
     Router.canonizeLocation = function() {
       if (this.config.html5) {
-        return location.pathname.replace(RegExp("^" + (RegExp.escape(this.config.base)) + "?"), '/') + location.search;
+        return location.pathname.replace(RegExp("^" + (RegExp.escape(this.config.prefix)) + "?"), '/') + location.search;
       } else {
-        return location.hash.replace(RegExp("^\\#(" + this.prefix + ")?\\/?"), '/');
+        return location.hash.replace(RegExp("^\\#(" + this.config.prefix + ")?\\/?"), '/');
       }
     };
 
@@ -2170,7 +2171,7 @@
           }
         }
         if (Joosy.Router.config.html5) {
-          return "" + Joosy.Router.config.base + result;
+          return "" + Joosy.Router.config.prefix + result;
         } else {
           return "#" + Joosy.Router.config.prefix + result;
         }

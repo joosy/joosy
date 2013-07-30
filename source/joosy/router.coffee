@@ -7,7 +7,7 @@
 # Router. Reacts on URI change event and loads proper pages
 #
 # Internal storage rules:
-#   * HTML5 Base option is stored with both leading and trailing slashes
+#   * HTML5 Prefix option is stored with both leading and trailing slashes
 #   * Helpers pathes are stored without leading trailing slash
 #   * Route matchers declare leading and trailing slashes as optional
 #
@@ -35,7 +35,7 @@ class Joosy.Router extends Joosy.Module
       window.history.loaded = true
 
   $(window).on 'click', 'a[data-joosy]', (event) =>
-    @navigate event.target.href
+    @navigate event.target.attributes.href
 
   #
   # Rails-like wrapper around internal raw routes representation
@@ -61,11 +61,11 @@ class Joosy.Router extends Joosy.Module
           as = @__alias + options.as.charAt(0).toUpperCase() + options.as.slice(1)
         else
           as = options.as
-      
+
       route = @__namespace + route
 
       Joosy.Router.compileRoute route, options.to, as
-    
+
     #
     # Shortcut to match "/"
     #
@@ -75,7 +75,7 @@ class Joosy.Router extends Joosy.Module
     #
     root: (options={}) ->
       @match "/", to: options.to, as: options.as || 'root'
-      
+
     #
     # Routes the 404
     #
@@ -83,7 +83,7 @@ class Joosy.Router extends Joosy.Module
     #
     notFound: (options={}) ->
       @match 404, to: options.to
-   
+
     #
     # Namespaces a match route
     #
@@ -124,10 +124,9 @@ class Joosy.Router extends Joosy.Module
   # Inits the routing system and loads the current route
   #
   @setup: (@config, @responder, respond=true) ->
-    @config.prefix ||= ''
-    @config.base   ||= ''
-    @config.base     = ('/'+@config.base+'/').replace(/\/{2,}/g, '/')
     @config.html5    = false unless history.pushState
+    @config.prefix ||= ''
+    @config.prefix   = ('/'+@config.prefix+'/').replace(/\/{2,}/g, '/') if @config.html5
 
     @respond @canonizeLocation() if respond
 
@@ -170,7 +169,7 @@ class Joosy.Router extends Joosy.Module
 
     if @config.html5
       path = path.substr(1) if path[0] == '/'
-      path = @config.base+path
+      path = @config.prefix+path
     else
       path = path.substr(1) if path[0] == '#'
 
@@ -191,9 +190,9 @@ class Joosy.Router extends Joosy.Module
   #
   @canonizeLocation: ->
     if @config.html5
-      location.pathname.replace(///^#{RegExp.escape @config.base}?///, '/')+location.search
+      location.pathname.replace(///^#{RegExp.escape @config.prefix}?///, '/')+location.search
     else
-      location.hash.replace ///^\#(#{@prefix})?\/?///, '/'
+      location.hash.replace ///^\#(#{@config.prefix})?\/?///, '/'
 
   #
   # Compiles one single route
@@ -222,7 +221,7 @@ class Joosy.Router extends Joosy.Module
       str.substr 2
 
     @routes ||= {}
-    @routes[matcher] = 
+    @routes[matcher] =
       to: to,
       capture: params
       as: as
@@ -270,7 +269,7 @@ class Joosy.Router extends Joosy.Module
         result = result.replace(param.substr(1), options[param.substr(2)])
 
       if Joosy.Router.config.html5
-        "#{Joosy.Router.config.base}#{result}"
+        "#{Joosy.Router.config.prefix}#{result}"
       else
         "##{Joosy.Router.config.prefix}#{result}"
 

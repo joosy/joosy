@@ -519,6 +519,14 @@
         _ref.unbind().off();
       }
       return this.container = $();
+    },
+    __loadData: function(done) {
+      var _this = this;
+      this.data = {};
+      return this.__runFetchs([], function() {
+        _this.dataFetched = true;
+        return done();
+      });
     }
   };
 
@@ -1840,19 +1848,13 @@
         clearStage();
       }
       loadPageData = function() {
-        _this.data = {};
-        return _this.__runFetchs([], function() {
-          _this.dataFetched = true;
+        return _this.__loadData(function() {
           Joosy.Modules.Log.debugAs(_this, "Fetch complete");
           return _this.trigger('dataReceived');
         });
       };
       if (layoutChanged) {
-        this.layout.data = {};
-        return this.layout.__runFetchs([], function() {
-          _this.layout.dataFetched = true;
-          return loadPageData();
-        });
+        return this.layout.__loadData(loadPageData);
       } else {
         return loadPageData();
       }

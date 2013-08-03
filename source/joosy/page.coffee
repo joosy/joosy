@@ -256,7 +256,7 @@ class Joosy.Page extends Joosy.Module
     clearStage = =>
       @previous?.layout?.__unload?() if layoutChanged
       @previous?.__unload()
-      
+
       currentHandler.__runBeforePaints filterParams, =>
         @trigger 'stageClear'
 
@@ -265,19 +265,13 @@ class Joosy.Page extends Joosy.Module
     else
       clearStage()
 
-    # Loading data required for new things
     loadPageData = =>
-      @data = {}
-      @__runFetchs [], =>
-        @dataFetched = true
+      @__loadData =>
         Joosy.Modules.Log.debugAs @, "Fetch complete"
         @trigger 'dataReceived'
 
     if layoutChanged
-      @layout.data = {}
-      @layout.__runFetchs [], =>
-        @layout.dataFetched = true
-        loadPageData()
+      @layout.__loadData loadPageData
     else
       loadPageData()
 

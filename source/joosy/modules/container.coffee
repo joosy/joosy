@@ -128,6 +128,16 @@ Joosy.Modules.Container =
     @container?.unbind().off()
     @container = $()
 
+
+  # This is not clearly related for container management
+  # But it will be later common for all containers
+  # See https://github.com/joosy/joosy/issues/102
+  __loadData: (done) ->
+      @data = {}
+      @__runFetchs [], =>
+        @dataFetched = true
+        done()
+
 # AMD wrapper
 if define?.amd?
   define 'joosy/modules/container', -> Joosy.Modules.Container

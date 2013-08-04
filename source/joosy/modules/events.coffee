@@ -1,4 +1,10 @@
 #= require joosy/joosy
+#= require_tree ../events
+
+class SynchronizationContext
+  constructor:    -> @actions = []
+  do: (action)    -> @actions.push action
+  after: (@after) ->
 
 #
 # Basic events implementation
@@ -15,7 +21,7 @@ Joosy.Modules.Events =
   # @param [Hash] options               Options
   #
   wait: (name, events, callback) ->
-    @__oneShotEvents ||= {}
+    @__oneShotEvents = {} unless @hasOwnProperty('__oneShotEvents')
 
     # unnamed binding
     if Object.isFunction(events)
@@ -38,7 +44,7 @@ Joosy.Modules.Events =
   # @param [Function] target            Name of waiter to unbind
   #
   unwait: (target) ->
-    delete @__oneShotEvents[target] if @__oneShotEvents?
+    delete @__oneShotEvents[target] if @hasOwnProperty '__oneShotEvents'
 
   #
   # Binds action to run each time any of given event was triggered
@@ -48,7 +54,7 @@ Joosy.Modules.Events =
   # @param [Hash] options               Options
   #
   bind: (name, events, callback) ->
-    @__boundEvents ||= {}
+    @__boundEvents = {} unless @hasOwnProperty '__boundEvents'
 
     # unnamed binding
     if Object.isFunction(events)
@@ -71,7 +77,7 @@ Joosy.Modules.Events =
   # @param [Function] target            Name of bind to unbind
   #
   unbind: (target) ->
-    delete @__boundEvents[target] if @__boundEvents?
+    delete @__boundEvents[target] if @hasOwnProperty '__boundEvents'
 
   #
   # Triggers event for {bind} and {wait}
@@ -87,7 +93,7 @@ Joosy.Modules.Events =
     else
       remember = false
 
-    if @__oneShotEvents
+    if @hasOwnProperty '__oneShotEvents'
       fire = []
       for name, [events, callback] of @__oneShotEvents
         events.remove event
@@ -98,20 +104,20 @@ Joosy.Modules.Events =
         delete @__oneShotEvents[name]
         callback data...
 
-    if @__boundEvents
+    if @hasOwnProperty '__boundEvents'
       for name, [events, callback] of @__boundEvents
         if events.any event
           callback data...
 
     if remember
-      @__triggeredEvents ||= {}
+      @__triggeredEvents = {} unless @hasOwnProperty '__triggeredEvents'
       @__triggeredEvents[event] = true
 
   #
   # Runs set of callbacks finializing with result callback
   #
   # @example Basic usage
-  #   Joosy.synchronize (context) ->
+  #   @synchronize (context) ->
   #     context.do (done) -> done()
   #     context.do (done) -> done()
   #     context.after ->
@@ -120,16 +126,18 @@ Joosy.Modules.Events =
   # @param [Function] block           Configuration block (see example)
   #
   synchronize: (block) ->
-    context = new Joosy.Events.SynchronizationContext(@)
-    block.call(@, context)
+    context = new SynchronizationContext
+    counter = 0
 
-    if context.expectations.length == 0
+    block(context)
+
+    if context.actions.length == 0
       context.after.call(@)
     else
-      @wait context.expectations, => context.after.call(@)
-      context.actions.each (data) =>
-        data[0].call @, =>
-          @trigger data[1]
+      context.actions.each (action) =>
+        action.call @, ->
+          if ++counter >= context.actions.length
+            context.after.call(@) 
 
   __splitEvents: (events) ->
     if Object.isString events
@@ -138,72 +146,10 @@ Joosy.Modules.Events =
       else
         events = events.trim().split /\s+/
 
-    if @__triggeredEvents?
+    if @hasOwnProperty '__triggeredEvents'
       events = events.findAll (e) => !@__triggeredEvents[e]
 
     events
-
-#
-# Events namespace
-#
-# Creates unified collection of bindings to a particular instance
-# that can be unbinded alltogether
-#
-# @example
-#   namespace = Joosy.Events.Namespace(something)
-#
-#   namespace.bind 'event1', ->
-#   namespace.bind 'event2', ->
-#   namespace.unbind() # unbinds both bindings
-#
-class Joosy.Events.Namespace
-  #
-  # @param [Object] @parent         Any instance that can trigger events
-  #
-  constructor: (@parent) ->
-    @bindings = []
-
-  bind: (args...) -> @bindings.push @parent.bind(args...)
-  unbind: ->
-    @parent.unbind b for b in @bindings
-    @bindings = []
-
-#
-# Internal representation of {Joosy.Modules.Events.synchronize} context
-#
-# @see Joosy.Modules.Events.synchronize
-#
-class Joosy.Events.SynchronizationContext
-  @uid = 0
-
-  constructor: (@parent) ->
-    @expectations = []
-    @actions = []
-
-  #
-  # Internal simple counter to separate given synchronization actions
-  #
-  uid: ->
-    @constructor.uid += 1
-
-  #
-  # Registeres another async function that should be synchronized
-  #
-  # @param [Function] action        `(Function) -> null` to call.
-  #   Should call given function to mark itself complete.
-  #
-  do: (action) ->
-    event = "synchro-#{@uid()}"
-    @expectations.push event
-    @actions.push [action, event]
-
-  #
-  # Registers finalizer: the action that will be called when all do-functions
-  #   marked themselves as complete.
-  #
-  # @param [Function] after       Function to call.
-  #
-  after: (@after) ->
 
 # AMD wrapper
 if define?.amd?

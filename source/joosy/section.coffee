@@ -183,7 +183,7 @@ class Joosy.Section extends Joosy.Module
   __fetch: (nestingMap) ->
     @data = {}
 
-    Joosy.synchronize (context) =>
+    @synchronize (context) =>
       Object.each nestingMap, (selector, section) ->
         section.instance.__fetch(section.nested)
 

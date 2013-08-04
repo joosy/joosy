@@ -216,124 +216,6 @@
 (function() {
   var __slice = [].slice;
 
-  Joosy.Modules.Events = {
-    wait: function(name, events, callback) {
-      this.__oneShotEvents || (this.__oneShotEvents = {});
-      if (Object.isFunction(events)) {
-        callback = events;
-        events = name;
-        name = Object.keys(this.__oneShotEvents).length.toString();
-      }
-      events = this.__splitEvents(events);
-      if (events.length > 0) {
-        this.__oneShotEvents[name] = [events, callback];
-      } else {
-        callback();
-      }
-      return name;
-    },
-    unwait: function(target) {
-      if (this.__oneShotEvents != null) {
-        return delete this.__oneShotEvents[target];
-      }
-    },
-    bind: function(name, events, callback) {
-      this.__boundEvents || (this.__boundEvents = {});
-      if (Object.isFunction(events)) {
-        callback = events;
-        events = name;
-        name = Object.keys(this.__boundEvents).length.toString();
-      }
-      events = this.__splitEvents(events);
-      if (events.length > 0) {
-        this.__boundEvents[name] = [events, callback];
-      } else {
-        callback();
-      }
-      return name;
-    },
-    unbind: function(target) {
-      if (this.__boundEvents != null) {
-        return delete this.__boundEvents[target];
-      }
-    },
-    trigger: function() {
-      var callback, data, event, events, fire, name, remember, _ref, _ref1, _ref2, _ref3,
-        _this = this;
-      event = arguments[0], data = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
-      Joosy.Modules.Log.debugAs(this, "Event " + event + " triggered");
-      if (Object.isObject(event)) {
-        remember = event.remember;
-        event = event.name;
-      } else {
-        remember = false;
-      }
-      if (this.__oneShotEvents) {
-        fire = [];
-        _ref = this.__oneShotEvents;
-        for (name in _ref) {
-          _ref1 = _ref[name], events = _ref1[0], callback = _ref1[1];
-          events.remove(event);
-          if (events.length === 0) {
-            fire.push(name);
-          }
-        }
-        fire.each(function(name) {
-          callback = _this.__oneShotEvents[name][1];
-          delete _this.__oneShotEvents[name];
-          return callback.apply(null, data);
-        });
-      }
-      if (this.__boundEvents) {
-        _ref2 = this.__boundEvents;
-        for (name in _ref2) {
-          _ref3 = _ref2[name], events = _ref3[0], callback = _ref3[1];
-          if (events.any(event)) {
-            callback.apply(null, data);
-          }
-        }
-      }
-      if (remember) {
-        this.__triggeredEvents || (this.__triggeredEvents = {});
-        return this.__triggeredEvents[event] = true;
-      }
-    },
-    synchronize: function(block) {
-      var context,
-        _this = this;
-      context = new Joosy.Events.SynchronizationContext(this);
-      block.call(this, context);
-      if (context.expectations.length === 0) {
-        return context.after.call(this);
-      } else {
-        this.wait(context.expectations, function() {
-          return context.after.call(_this);
-        });
-        return context.actions.each(function(data) {
-          return data[0].call(_this, function() {
-            return _this.trigger(data[1]);
-          });
-        });
-      }
-    },
-    __splitEvents: function(events) {
-      var _this = this;
-      if (Object.isString(events)) {
-        if (events.isBlank()) {
-          events = [];
-        } else {
-          events = events.trim().split(/\s+/);
-        }
-      }
-      if (this.__triggeredEvents != null) {
-        events = events.findAll(function(e) {
-          return !_this.__triggeredEvents[e];
-        });
-      }
-      return events;
-    }
-  };
-
   Joosy.Events.Namespace = (function() {
     function Namespace(parent) {
       this.parent = parent;
@@ -360,24 +242,18 @@
 
   })();
 
-  Joosy.Events.SynchronizationContext = (function() {
-    SynchronizationContext.uid = 0;
+}).call(this);
+(function() {
+  var SynchronizationContext,
+    __slice = [].slice;
 
-    function SynchronizationContext(parent) {
-      this.parent = parent;
-      this.expectations = [];
+  SynchronizationContext = (function() {
+    function SynchronizationContext() {
       this.actions = [];
     }
 
-    SynchronizationContext.prototype.uid = function() {
-      return this.constructor.uid += 1;
-    };
-
     SynchronizationContext.prototype["do"] = function(action) {
-      var event;
-      event = "synchro-" + (this.uid());
-      this.expectations.push(event);
-      return this.actions.push([action, event]);
+      return this.actions.push(action);
     };
 
     SynchronizationContext.prototype.after = function(after) {
@@ -387,6 +263,130 @@
     return SynchronizationContext;
 
   })();
+
+  Joosy.Modules.Events = {
+    wait: function(name, events, callback) {
+      if (!this.hasOwnProperty('__oneShotEvents')) {
+        this.__oneShotEvents = {};
+      }
+      if (Object.isFunction(events)) {
+        callback = events;
+        events = name;
+        name = Object.keys(this.__oneShotEvents).length.toString();
+      }
+      events = this.__splitEvents(events);
+      if (events.length > 0) {
+        this.__oneShotEvents[name] = [events, callback];
+      } else {
+        callback();
+      }
+      return name;
+    },
+    unwait: function(target) {
+      if (this.hasOwnProperty('__oneShotEvents')) {
+        return delete this.__oneShotEvents[target];
+      }
+    },
+    bind: function(name, events, callback) {
+      if (!this.hasOwnProperty('__boundEvents')) {
+        this.__boundEvents = {};
+      }
+      if (Object.isFunction(events)) {
+        callback = events;
+        events = name;
+        name = Object.keys(this.__boundEvents).length.toString();
+      }
+      events = this.__splitEvents(events);
+      if (events.length > 0) {
+        this.__boundEvents[name] = [events, callback];
+      } else {
+        callback();
+      }
+      return name;
+    },
+    unbind: function(target) {
+      if (this.hasOwnProperty('__boundEvents')) {
+        return delete this.__boundEvents[target];
+      }
+    },
+    trigger: function() {
+      var callback, data, event, events, fire, name, remember, _ref, _ref1, _ref2, _ref3,
+        _this = this;
+      event = arguments[0], data = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+      Joosy.Modules.Log.debugAs(this, "Event " + event + " triggered");
+      if (Object.isObject(event)) {
+        remember = event.remember;
+        event = event.name;
+      } else {
+        remember = false;
+      }
+      if (this.hasOwnProperty('__oneShotEvents')) {
+        fire = [];
+        _ref = this.__oneShotEvents;
+        for (name in _ref) {
+          _ref1 = _ref[name], events = _ref1[0], callback = _ref1[1];
+          events.remove(event);
+          if (events.length === 0) {
+            fire.push(name);
+          }
+        }
+        fire.each(function(name) {
+          callback = _this.__oneShotEvents[name][1];
+          delete _this.__oneShotEvents[name];
+          return callback.apply(null, data);
+        });
+      }
+      if (this.hasOwnProperty('__boundEvents')) {
+        _ref2 = this.__boundEvents;
+        for (name in _ref2) {
+          _ref3 = _ref2[name], events = _ref3[0], callback = _ref3[1];
+          if (events.any(event)) {
+            callback.apply(null, data);
+          }
+        }
+      }
+      if (remember) {
+        if (!this.hasOwnProperty('__triggeredEvents')) {
+          this.__triggeredEvents = {};
+        }
+        return this.__triggeredEvents[event] = true;
+      }
+    },
+    synchronize: function(block) {
+      var context, counter,
+        _this = this;
+      context = new SynchronizationContext;
+      counter = 0;
+      block(context);
+      if (context.actions.length === 0) {
+        return context.after.call(this);
+      } else {
+        return context.actions.each(function(action) {
+          return action.call(_this, function() {
+            if (++counter >= context.actions.length) {
+              return context.after.call(this);
+            }
+          });
+        });
+      }
+    },
+    __splitEvents: function(events) {
+      var _this = this;
+      if (Object.isString(events)) {
+        if (events.isBlank()) {
+          events = [];
+        } else {
+          events = events.trim().split(/\s+/);
+        }
+      }
+      if (this.hasOwnProperty('__triggeredEvents')) {
+        events = events.findAll(function(e) {
+          return !_this.__triggeredEvents[e];
+        });
+      }
+      return events;
+    }
+  };
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
     define('joosy/modules/events', function() {
@@ -1360,7 +1360,7 @@
     Section.prototype.__fetch = function(nestingMap) {
       var _this = this;
       this.data = {};
-      return Joosy.synchronize(function(context) {
+      return this.synchronize(function(context) {
         Object.each(nestingMap, function(selector, section) {
           section.instance.__fetch(section.nested);
           if (!section.instance.__independent) {

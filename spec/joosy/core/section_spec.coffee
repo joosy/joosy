@@ -209,6 +209,20 @@ describe "Joosy.Section", ->
 
       describe 'independent', ->
 
+        it 'loads independent children synchronously if they managed to fetch', ->
+          @A.fetch (complete) -> setTimeout complete, 100
+
+          @C.fetch (complete) -> setTimeout complete, 0
+          @C.independent()          
+
+          runs ->
+            @a.__bootstrap @nestingMap, @$ground
+
+          waits 100
+
+          runs ->
+            expect(@$ground.html()).toEqualHTML '<div id="b"><div id="c"><div id="e">E</div><div id="f">F</div></div><div id="d">D</div></div>'
+
         it 'loads whole dependency tree', ->
           @C.fetch (complete) -> setTimeout complete, 0
           @C.independent()

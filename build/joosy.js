@@ -2500,7 +2500,7 @@
           selector = _this.__extractSelector(selector);
           $container = $(selector, _this.$container);
         }
-        if (!section.instance.__independent || ((_ref = section.instance.__triggeredEvents) != null ? _ref['section:fetched:self'] : void 0)) {
+        if (!section.instance.__independent || ((_ref = section.instance.__triggeredEvents) != null ? _ref['section:fetched'] : void 0)) {
           return section.instance.__paint(section.nested, $container);
         } else {
           return section.instance.__bootstrap(section.nested, $container, false);

@@ -129,7 +129,7 @@ class Joosy.Section extends Joosy.Module
         selector   = @__extractSelector(selector)
         $container = $(selector, @$container)
 
-      if !section.instance.__independent || section.instance.__triggeredEvents?['section:fetched:self']
+      if !section.instance.__independent || section.instance.__triggeredEvents?['section:fetched']
         section.instance.__paint section.nested, $container
       else
         section.instance.__bootstrap section.nested, $container, false

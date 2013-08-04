@@ -7,7 +7,7 @@
 #
 # @mixin
 #
-Joosy.Modules.Container =
+Joosy.Modules.DOM =
   eventSplitter: /^(\S+)\s*(.*)$/
 
   included: ->
@@ -140,4 +140,4 @@ Joosy.Modules.Container =
 
 # AMD wrapper
 if define?.amd?
-  define 'joosy/modules/container', -> Joosy.Modules.Container
+  define 'joosy/modules/dom', -> Joosy.Modules.DOM

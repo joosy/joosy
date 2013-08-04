@@ -3,7 +3,7 @@
 #= require joosy/widget
 #= require joosy/modules/log
 #= require joosy/modules/events
-#= require joosy/modules/container
+#= require joosy/modules/dom
 #= require joosy/modules/renderer
 #= require joosy/modules/time_manager
 #= require joosy/modules/widgets_manager
@@ -21,7 +21,7 @@
 #
 # @include Joosy.Modules.Log
 # @include Joosy.Modules.Events
-# @include Joosy.Modules.Container
+# @include Joosy.Modules.DOM
 # @include Joosy.Modules.Renderer
 # @include Joosy.Modules.TimeManager
 # @include Joosy.Modules.WidgetsManager
@@ -30,7 +30,7 @@
 class Joosy.Page extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
-  @include Joosy.Modules.Container
+  @include Joosy.Modules.DOM
   @include Joosy.Modules.Renderer
   @include Joosy.Modules.TimeManager
   @include Joosy.Modules.WidgetsManager
@@ -172,8 +172,8 @@ class Joosy.Page extends Joosy.Module
   #
   # Page bootstrap proccess
   #
-  #   * {Joosy.Modules.Container.__assignElements}
-  #   * {Joosy.Modules.Container.__delegateEvents}
+  #   * {Joosy.Modules.DOM.__assignElements}
+  #   * {Joosy.Modules.DOM.__delegateEvents}
   #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
   #   * Scrolling
   #
@@ -189,7 +189,7 @@ class Joosy.Page extends Joosy.Module
   #
   # Page destruction proccess.
   #
-  #   * {Joosy.Modules.Container.__clearContainer}
+  #   * {Joosy.Modules.DOM.__clearContainer}
   #   * {Joosy.Modules.TimeManager.__clearTime}
   #   * {Joosy.Modules.WidgetsManager.__unloadWidgets}
   #   * {Joosy.Modules.Renderer.__removeMetamorphs}

@@ -1,7 +1,7 @@
 #= require joosy/joosy
 #= require joosy/modules/log
 #= require joosy/modules/events
-#= require joosy/modules/container
+#= require joosy/modules/dom
 #= require joosy/modules/renderer
 #= require joosy/modules/filters
 #= require joosy/modules/time_manager
@@ -10,15 +10,13 @@
 #
 # Base class for all of your Joosy Layouts.
 #
-# @todo Add link to the 5th chapter of guides here.
-#
 # @example Sample widget
 #   class @FooWidget extends Joosy.Widget
 #     @view 'foo'
 #
 # @include Joosy.Modules.Log
 # @include Joosy.Modules.Events
-# @include Joosy.Modules.Container
+# @include Joosy.Modules.DOM
 # @include Joosy.Modules.Renderer
 # @include Joosy.Modules.Filters
 # @include Joosy.Modules.TimeManager
@@ -26,7 +24,7 @@
 class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
-  @include Joosy.Modules.Container
+  @include Joosy.Modules.DOM
   @include Joosy.Modules.Renderer
   @include Joosy.Modules.Filters
   @include Joosy.Modules.TimeManager
@@ -62,8 +60,8 @@ class Joosy.Widget extends Joosy.Module
   # Widget bootstrap proccess
   #
   #   * Rendering (if required)
-  #   * {Joosy.Modules.Container.__assignElements}
-  #   * {Joosy.Modules.Container.__delegateEvents}
+  #   * {Joosy.Modules.DOM.__assignElements}
+  #   * {Joosy.Modules.DOM.__delegateEvents}
   #
   # @param [Joosy.Page, Joosy.Layout]     Page or Layout to attach to
   # @param [jQuery] container             Container to attach to
@@ -82,7 +80,7 @@ class Joosy.Widget extends Joosy.Module
   #
   # Layout destruction proccess.
   #
-  #   * {Joosy.Modules.Container.__clearContainer}
+  #   * {Joosy.Modules.DOM.__clearContainer}
   #   * {Joosy.Modules.TimeManager.__clearTime}
   #   * {Joosy.Modules.Renderer.__removeMetamorphs}
   #

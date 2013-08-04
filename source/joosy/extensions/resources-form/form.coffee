@@ -17,10 +17,10 @@
 #
 # @include Joosy.Modules.Log
 # @include Joosy.Modules.Events
-# @include Joosy.Modules.Container
+# @include Joosy.Modules.DOM
 #
 class Joosy.Form extends Joosy.Module
-  @include Joosy.Modules.Container
+  @include Joosy.Modules.DOM
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
 

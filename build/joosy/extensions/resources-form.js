@@ -5,7 +5,7 @@
   Joosy.Form = (function(_super) {
     __extends(Form, _super);
 
-    Form.include(Joosy.Modules.Container);
+    Form.include(Joosy.Modules.DOM);
 
     Form.include(Joosy.Modules.Log);
 

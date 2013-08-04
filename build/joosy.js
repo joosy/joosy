@@ -420,7 +420,7 @@
 
 }).call(this);
 (function() {
-  Joosy.Modules.Container = {
+  Joosy.Modules.DOM = {
     eventSplitter: /^(\S+)\s*(.*)$/,
     included: function() {
       this.mapElements = function(map) {
@@ -531,8 +531,8 @@
   };
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/modules/container', function() {
-      return Joosy.Modules.Container;
+    define('joosy/modules/dom', function() {
+      return Joosy.Modules.DOM;
     });
   }
 
@@ -1393,7 +1393,7 @@
 
     Widget.include(Joosy.Modules.Events);
 
-    Widget.include(Joosy.Modules.Container);
+    Widget.include(Joosy.Modules.DOM);
 
     Widget.include(Joosy.Modules.Renderer);
 
@@ -1557,7 +1557,7 @@
 
     Layout.include(Joosy.Modules.Events);
 
-    Layout.include(Joosy.Modules.Container);
+    Layout.include(Joosy.Modules.DOM);
 
     Layout.include(Joosy.Modules.Renderer);
 
@@ -1708,7 +1708,7 @@
 
     Page.include(Joosy.Modules.Events);
 
-    Page.include(Joosy.Modules.Container);
+    Page.include(Joosy.Modules.DOM);
 
     Page.include(Joosy.Modules.Renderer);
 

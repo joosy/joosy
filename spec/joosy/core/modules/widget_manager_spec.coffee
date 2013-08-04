@@ -2,7 +2,7 @@ describe "Joosy.Modules.WidgetsManager", ->
 
   beforeEach ->
     class @Manager extends Joosy.Module
-      @include Joosy.Modules.Container
+      @include Joosy.Modules.DOM
       @include Joosy.Modules.WidgetsManager
 
     class @Widget extends Joosy.Widget

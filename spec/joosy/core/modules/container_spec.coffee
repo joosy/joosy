@@ -1,11 +1,11 @@
-describe "Joosy.Modules.Container", ->
+describe "Joosy.Modules.DOM", ->
 
   beforeEach ->
     @$ground.seed()
     container = @$ground.find('#application')
 
-    class @Container extends Joosy.Module
-      @include Joosy.Modules.Container
+    class @DOM extends Joosy.Module
+      @include Joosy.Modules.DOM
 
       @mapElements
         posts: '.post'
@@ -15,18 +15,18 @@ describe "Joosy.Modules.Container", ->
         footer: '.footer'
 
       @mapEvents
-        'test': 'onContainerTest'
+        'test': 'onDOMTest'
 
       container: container
 
   describe "elements assigner", ->
 
     beforeEach ->
-      @container = new @Container
+      @container = new @DOM
       @container.__assignElements()
 
     it "declares", ->
-      class A extends @Container
+      class A extends @DOM
         @mapElements
           first: 'first'
           second: 'second'
@@ -46,7 +46,7 @@ describe "Joosy.Modules.Container", ->
         third: 'third'
         footer: '.footer'
 
-      expect((new @Container).__elements).toEqual Object.extended
+      expect((new @DOM).__elements).toEqual Object.extended
         posts: '.post'
         footer: '.footer'
         content: 
@@ -92,7 +92,7 @@ describe "Joosy.Modules.Container", ->
   describe "events delegator", ->
 
     it "declares", ->
-      class A extends @Container
+      class A extends @DOM
         @mapEvents
           'test .post': 'callback2'
           'custom' : 'method'
@@ -103,24 +103,24 @@ describe "Joosy.Modules.Container", ->
           'custom' : 'overrided'
 
       expect((new B).__events).toEqual Object.extended
-        'test': 'onContainerTest'
+        'test': 'onDOMTest'
         'test .post': 'callback2'
         'test $footer': 'onFooterTest'
         'custom' : 'overrided'
 
-      expect((new @Container).__events).toEqual Object.extended
-        'test': 'onContainerTest'
+      expect((new @DOM).__events).toEqual Object.extended
+        'test': 'onDOMTest'
 
     it "delegates", ->
       callbacks = 1.upto(3).map -> sinon.spy()
 
-      @Container.mapEvents
+      @DOM.mapEvents
         'test .post': callbacks[2]
         'test $footer': 'onFooterTest'
-      @Container::onContainerTest = callbacks[0]
-      @Container::onFooterTest = callbacks[1]
+      @DOM::onDOMTest = callbacks[0]
+      @DOM::onFooterTest = callbacks[1]
 
-      container = new @Container
+      container = new @DOM
       container.__assignElements()
       container.__delegateEvents()
 

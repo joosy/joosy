@@ -24,7 +24,7 @@ describe "Joosy", ->
     expect(Object.keys(require.s.contexts._.registry).sortBy()).toEqual [
       'joosy/application',
       'joosy/layout',
-      'joosy/modules/container',
+      'joosy/modules/dom',
       'joosy/modules/events',
       'joosy/modules/filters',
       'joosy/modules/log',

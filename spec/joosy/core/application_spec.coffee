@@ -21,24 +21,120 @@ describe "Joosy.Application", ->
     expect(Joosy.Application.config.router.html5).toEqual true
     expect(Joosy.Application.config.router.base).toEqual ''
 
-  it "manages pages", ->
-    spy = sinon.spy()
+  describe "page changer", ->
+    beforeEach ->
+      Joosy.Application.initialize @$ground
 
-    class Page1 extends Joosy.Page
-      constructor: spy
+      class @Layout extends Joosy.Layout
+        @view (locals) -> locals.page 'div'
 
-    class Page2 extends Joosy.Page
-      constructor: spy
+      class @Page extends Joosy.Page
+        @view -> "page"
 
-    Joosy.Application.setCurrentPage(Page1, {foo: 'bar'})
+    it "sets page to clean ground", ->
+      Joosy.Application.changePage(@Page, {foo: 'bar'})
+      expect(Joosy.Application.page instanceof @Page).toBeTruthy()
+      expect(Joosy.Application.page.params).toEqual foo: 'bar'
+      expect(@$ground.html()).toEqual 'page'
 
-    expect(Joosy.Application.page instanceof Page1).toBeTruthy()
-    expect(spy.callCount).toEqual 1
-    expect(spy.args[0]).toEqual [Joosy.Application.content(), {foo: 'bar'}, undefined]
+    it "changes from page to page", ->
+      Joosy.Application.changePage(@Page, {foo: 'bar'})
+      expect(@$ground.html()).toEqual 'page'
+      page = Joosy.Application.page
 
-    Joosy.Application.setCurrentPage(Page2, {bar: 'baz'})
+      Joosy.Application.changePage(@Page, {foo: 'bar'})
+      expect(@$ground.html()).toEqual 'page'
+      expect(Joosy.Application.page.previous).toEqual page
 
-    expect(Joosy.Application.page instanceof Page2).toBeTruthy()
-    expect(spy.callCount).toEqual 2
-    expect(spy.args[1][1]).toEqual {bar: 'baz'}
-    expect(spy.args[1][2] instanceof Page1).toBeTruthy()
+    it "sets layouted page to clean ground", ->
+      @Page.layout @Layout
+
+      Joosy.Application.changePage(@Page, {foo: 'bar'})
+      expect(Joosy.Application.page instanceof @Page).toBeTruthy()
+      expect(Joosy.Application.page.params).toEqual foo: 'bar'
+      expect(Joosy.Application.page.layout.params).toEqual foo: 'bar'
+      expect(@$ground.html()).toBeTag 'div', 'page', id: /__joosy\d+/
+
+    it "changes from layouted page to layouted page", ->
+      @Page.layout @Layout
+
+      Joosy.Application.changePage(@Page, {foo: 'bar'})
+      expect(@$ground.html()).toBeTag 'div', 'page', id: /__joosy\d+/
+      page   = Joosy.Application.page
+      layout = page.layout
+
+      Joosy.Application.changePage(@Page, {foo: 'bar'})
+      expect(@$ground.html()).toBeTag 'div', 'page', id: /__joosy\d+/
+      expect(Joosy.Application.page.previous).toEqual page
+      expect(Joosy.Application.page.layout).toEqual layout
+
+    it "changes from layouted page to page", ->
+      @Page.layout @Layout
+
+      Joosy.Application.changePage(@Page, {foo: 'bar'})
+      expect(@$ground.html()).toBeTag 'div', 'page', id: /__joosy\d+/
+      page   = Joosy.Application.page
+      layout = page.layout
+
+      class Page extends Joosy.Page
+        @view -> "page"
+
+      Joosy.Application.changePage(Page, {foo: 'bar'})
+      expect(@$ground.html()).toEqual 'page'
+      expect(Joosy.Application.page.previous).toEqual layout
+      expect(Joosy.Application.page.layout).toBeUndefined()
+
+    it "passes @data to @view", ->
+      class Layout extends Joosy.Layout
+        @fetch (complete) ->
+          expect(@data).toEqual {}
+          @data.foo = 'bar'
+          complete()
+
+        @view (locals) ->
+          expect(locals.foo).toEqual 'bar'
+
+      class Page extends Joosy.Page
+        @layout Layout
+
+        @fetch (complete) ->
+          expect(@data).toEqual {}
+          @data.foo = 'bar'
+          complete()
+
+        @view (locals) ->
+          expect(locals.foo).toEqual 'bar'
+
+      Joosy.Application.changePage Page
+
+    it "hooks", ->
+      spies = []
+      11.times -> spies.push sinon.spy()
+
+      class Layout extends Joosy.Layout
+        @beforePaint (complete) -> spies[0](); complete()
+        @fetch       (complete) -> spies[2](); complete()
+        @paint       (complete) -> spies[3](); complete()
+
+        @view spies[4]
+
+      class PageA extends Joosy.Page
+        @layout Layout
+
+        @fetch       (complete) -> spies[1](); complete()
+        @erase       (complete) -> spies[6](); complete()
+        @view spies[5]
+
+      class PageB extends Joosy.Page
+        @layout Layout
+
+        @beforePaint (complete) -> spies[7](); complete()
+        @fetch       (complete) -> spies[8](); complete()
+        @paint       (complete) -> spies[9](); complete()
+
+        @view spies[10]
+
+      Joosy.Application.changePage PageA
+      Joosy.Application.changePage PageB
+
+      expect(spies).toBeSequenced()

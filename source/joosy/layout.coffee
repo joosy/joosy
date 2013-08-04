@@ -1,124 +1,22 @@
 #= require joosy/joosy
+#= require joosy/section
 #= require joosy/widget
-#= require joosy/modules/log
-#= require joosy/modules/events
-#= require joosy/modules/dom
-#= require joosy/modules/renderer
-#= require joosy/modules/time_manager
 #= require joosy/modules/widgets_manager
-#= require joosy/modules/filters
 #= require joosy/helpers/view
 
 #
-# Base class for all of your Joosy Layouts.
-# @see http://guides.joosy.ws/guides/layouts-pages-and-routing.html
+# Base class for all Joosy Layouts.
 #
 # @example Sample application layout
 #   class @ApplicationLayout extends Joosy.Layout
 #     @view 'application'
 #
-# @include Joosy.Modules.Log
-# @include Joosy.Modules.Events
-# @include Joosy.Modules.DOM
-# @include Joosy.Modules.Renderer
-# @include Joosy.Modules.TimeManager
 # @include Joosy.Modules.WidgetsManager
-# @include Joosy.Modules.Filters
 #
-class Joosy.Layout extends Joosy.Module
-  @include Joosy.Modules.Log
-  @include Joosy.Modules.Events
-  @include Joosy.Modules.DOM
-  @include Joosy.Modules.Renderer
-  @include Joosy.Modules.TimeManager
+class Joosy.Layout extends Joosy.Section
   @include Joosy.Modules.WidgetsManager
-  @include Joosy.Modules.Filters
-
-  @registerPlainFilters 'beforeLoad', 'afterLoad', 'afterUnload'
-
-  @registerSequencedFilters \
-    #
-    # Sets the method which will controll the painting preparation proccess.
-    #
-    # This method will be called right ater previous page {Joosy.Page.erase} and in parallel with
-    #   page data fetching so you can use it to initiate preloader.
-    #
-    # @note Given method will be called with `complete` function as parameter. As soon as your
-    #   preparations are done you should call that function.
-    #
-    # @example Sample before painter
-    #   @beforePaint (container, complete) ->
-    #     if !@data # checks if parallel fetching finished
-    #       $('preloader').slideDown -> complete()
-    #
-    #
-    'beforePaint',
-
-    #
-    # Sets the method which will controll the painting proccess.
-    #
-    # This method will be called after fetching, erasing and beforePaint is complete.
-    # It should be used to setup appearance effects of page.
-    #
-    # @note Given method will be called with `complete` function as parameter. As soon as your
-    #   preparations are done you should call that function.
-    #
-    # @example Sample painter
-    #   @paint (container, complete) ->
-    #     @$container.fadeIn -> complete()
-    #
-    'paint',
-
-    #
-    # Sets the method which will controll the erasing proccess.
-    #
-    # Use this method to setup hiding effect.
-    #
-    # @note Given method will be called with `complete` function as parameter. As soon as your
-    #   preparations are done you should call that function.
-    #
-    # @note This method will be caled _before_ unload routines so in theory you can
-    #   access page data from that. Think twice if you are doing it right though.
-    #
-    # @example Sample eraser
-    #   @erase (container, complete) ->
-    #     @$container.fadeOut -> complete()
-    #
-    'erase',
-    #
-    # Sets the method which will controll the data fetching proccess.
-    #
-    # @note Given method will be called with `complete` function as parameter. As soon as your
-    #   preparations are done you should call that function.
-    #
-    # @note You are strongly encouraged to NOT fetch anything with Layout!
-    #   Use {Joosy.Page.fetch}
-    #
-    # @example Basic usage
-    #   @fetch (complete) ->
-    #     $.get '/rumbas', (@data) => complete()
-    #
-    'fetch'
 
   @helper 'page'
-
-  #
-  # Prefetched page data.
-  #
-  data: false
-  dataFetched: false
-
-  #
-  # @param [Hash] params              List of route params
-  #
-  constructor: (@$container, @params) ->
-    @uid = Joosy.uid()
-
-  #
-  # @see Joosy.Router.navigate
-  #
-  navigate: ->
-    Joosy.Router?.navigate arguments...
 
   #
   # This is required by {Joosy.Modules.Renderer}
@@ -126,6 +24,23 @@ class Joosy.Layout extends Joosy.Module
   #
   __renderSection: ->
     'layouts'
+
+  __nestingMap: (page) ->
+    map = {}
+    map["##{@uid}"] =
+      instance: page
+      nested: page.__nestingMap()
+
+    map
+
+  __bootstrapDefault: (page, applicationContainer) ->
+    @__bootstrap @__nestingMap(page), applicationContainer
+
+  #
+  # @param [Hash] params              List of route params
+  #
+  constructor: (@params, @previous) ->
+    @uid = Joosy.uid()
 
   #
   # Layout bootstrap proccess.

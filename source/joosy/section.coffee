@@ -1,4 +1,5 @@
 #= require joosy/joosy
+#= require joosy/modules/log
 #= require joosy/modules/events
 #= require joosy/modules/dom
 #= require joosy/modules/renderer
@@ -32,6 +33,7 @@
 # 6. A starts paint on itself and injects HTML into DOM.
 # 7. C repeats steps 2-7 using itself as a base
 #
+# @include Joosy.Modules.Log
 # @include Joosy.Modules.Events
 # @include Joosy.Modules.DOM
 # @include Joosy.Modules.Renderer
@@ -39,6 +41,7 @@
 # @include Joosy.Modules.Filters
 #
 class Joosy.Section extends Joosy.Module
+  @include Joosy.Modules.Log
   @include Joosy.Modules.Events
   @include Joosy.Modules.DOM
   @include Joosy.Modules.Renderer
@@ -161,10 +164,10 @@ class Joosy.Section extends Joosy.Module
   # @param [jQuery] $container              DOM container to inject into
   # @param [boolean] fetch                  Boolean flag used to avoid double fetch during recursion
   #
-  __bootstrap: (nestingMap, $container, fetch=true) ->
+  __bootstrap: (nestingMap, @$container, fetch=true) ->
     @wait 'section:fetched section:erased', =>
       @__runPaints [], =>
-        @__paint nestingMap, $container
+        @__paint nestingMap, @$container
 
     @__erase()
     @__fetch(nestingMap) if fetch
@@ -212,7 +215,7 @@ class Joosy.Section extends Joosy.Module
   # Builds HTML of section and its dependent nestings and injects it into DOM
   #
   __paint: (nestingMap, @$container) ->
-    @$container.html @__renderDefault?()
+    @$container.html @__renderDefault?(@data || {})
 
     Object.each nestingMap, (selector, section) =>
       if selector == '$container'
@@ -245,3 +248,9 @@ class Joosy.Section extends Joosy.Module
     @__removeMetamorphs()
     @__runAfterUnloads()
     delete @previous
+
+  #
+  # @see Joosy.Router.navigate
+  #
+  navigate: ->
+    Joosy.Router?.navigate arguments...

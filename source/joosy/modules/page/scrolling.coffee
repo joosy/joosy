@@ -19,7 +19,7 @@ Joosy.Modules.Page_Scrolling =
       @::__scrollSpeed = options.speed || 500
       @::__scrollMargin = options.margin || 0
 
-    @paint (container, complete) ->
+    @paint (complete) ->
       @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
       complete()
 

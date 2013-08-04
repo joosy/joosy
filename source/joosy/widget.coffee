@@ -1,53 +1,18 @@
 #= require joosy/joosy
-#= require joosy/modules/log
-#= require joosy/modules/events
-#= require joosy/modules/dom
-#= require joosy/modules/renderer
-#= require joosy/modules/filters
-#= require joosy/modules/time_manager
+#= require joosy/section
 #= require joosy/modules/widgets_manager
 
 #
-# Base class for all of your Joosy Layouts.
+# Base class for all Joosy Widgets.
 #
 # @example Sample widget
 #   class @FooWidget extends Joosy.Widget
 #     @view 'foo'
 #
-# @include Joosy.Modules.Log
-# @include Joosy.Modules.Events
-# @include Joosy.Modules.DOM
-# @include Joosy.Modules.Renderer
-# @include Joosy.Modules.Filters
-# @include Joosy.Modules.TimeManager
+# @include Joosy.Modules.WidgetsManager
 #
-class Joosy.Widget extends Joosy.Module
-  @include Joosy.Modules.Log
-  @include Joosy.Modules.Events
-  @include Joosy.Modules.DOM
-  @include Joosy.Modules.Renderer
-  @include Joosy.Modules.Filters
-  @include Joosy.Modules.TimeManager
+class Joosy.Widget extends Joosy.Section
   @include Joosy.Modules.WidgetsManager
-
-  @registerPlainFilters 'beforeLoad', 'afterLoad', 'afterUnload'
-
-  #
-  # By default widget will not render on load
-  #
-  __renderDefault: false
-
-  #
-  # Initial data that will be passed to view on load
-  # False (and not {}) by default to have a chance to check if data was loaded
-  #
-  data: false
-
-  #
-  # Proxy to Joosy.Router.navigate
-  #
-  navigate: ->
-    Joosy.Router?.navigate arguments...
 
   #
   # This is required by {Joosy.Modules.Renderer}

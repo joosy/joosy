@@ -1185,6 +1185,56 @@
 
 }).call(this);
 (function() {
+  Joosy.Modules.TimeManager = {
+    setTimeout: function(timeout, action) {
+      var timer,
+        _this = this;
+      this.__timeouts || (this.__timeouts = []);
+      timer = window.setTimeout((function() {
+        return action();
+      }), timeout);
+      this.__timeouts.push(timer);
+      return timer;
+    },
+    setInterval: function(delay, action) {
+      var timer,
+        _this = this;
+      this.__intervals || (this.__intervals = []);
+      timer = window.setInterval((function() {
+        return action();
+      }), delay);
+      this.__intervals.push(timer);
+      return timer;
+    },
+    __clearTime: function() {
+      var entry, _i, _j, _len, _len1, _ref, _ref1, _results;
+      if (this.__intervals) {
+        _ref = this.__intervals;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          entry = _ref[_i];
+          window.clearInterval(entry);
+        }
+      }
+      if (this.__timeouts) {
+        _ref1 = this.__timeouts;
+        _results = [];
+        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+          entry = _ref1[_j];
+          _results.push(window.clearTimeout(entry));
+        }
+        return _results;
+      }
+    }
+  };
+
+  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
+    define('joosy/modules/time_manager', function() {
+      return Joosy.Modules.TimeManager;
+    });
+  }
+
+}).call(this);
+(function() {
   var __slice = [].slice;
 
   Joosy.Modules.Filters = {
@@ -1259,53 +1309,143 @@
 
 }).call(this);
 (function() {
-  Joosy.Modules.TimeManager = {
-    setTimeout: function(timeout, action) {
-      var timer,
-        _this = this;
-      this.__timeouts || (this.__timeouts = []);
-      timer = window.setTimeout((function() {
-        return action();
-      }), timeout);
-      this.__timeouts.push(timer);
-      return timer;
-    },
-    setInterval: function(delay, action) {
-      var timer,
-        _this = this;
-      this.__intervals || (this.__intervals = []);
-      timer = window.setInterval((function() {
-        return action();
-      }), delay);
-      this.__intervals.push(timer);
-      return timer;
-    },
-    __clearTime: function() {
-      var entry, _i, _j, _len, _len1, _ref, _ref1, _results;
-      if (this.__intervals) {
-        _ref = this.__intervals;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          entry = _ref[_i];
-          window.clearInterval(entry);
-        }
-      }
-      if (this.__timeouts) {
-        _ref1 = this.__timeouts;
-        _results = [];
-        for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-          entry = _ref1[_j];
-          _results.push(window.clearTimeout(entry));
-        }
-        return _results;
-      }
-    }
-  };
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/modules/time_manager', function() {
-      return Joosy.Modules.TimeManager;
-    });
-  }
+  Joosy.Section = (function(_super) {
+    __extends(Section, _super);
+
+    Section.include(Joosy.Modules.Log);
+
+    Section.include(Joosy.Modules.Events);
+
+    Section.include(Joosy.Modules.DOM);
+
+    Section.include(Joosy.Modules.Renderer);
+
+    Section.include(Joosy.Modules.TimeManager);
+
+    Section.include(Joosy.Modules.Filters);
+
+    Section.independent = function() {
+      return this.prototype.__independent = true;
+    };
+
+    Section.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
+
+    Section.registerSequencedFilters('beforePaint', 'paint', 'erase', 'fetch');
+
+    function Section(params, previous) {
+      this.params = params;
+      this.previous = previous;
+    }
+
+    Section.prototype.__bootstrap = function(nestingMap, $container, fetch) {
+      var _this = this;
+      this.$container = $container;
+      if (fetch == null) {
+        fetch = true;
+      }
+      this.wait('section:fetched section:erased', function() {
+        return _this.__runPaints([], function() {
+          return _this.__paint(nestingMap, _this.$container);
+        });
+      });
+      this.__erase();
+      if (fetch) {
+        return this.__fetch(nestingMap);
+      }
+    };
+
+    Section.prototype.__fetch = function(nestingMap) {
+      var _this = this;
+      this.data = {};
+      return Joosy.synchronize(function(context) {
+        Object.each(nestingMap, function(selector, section) {
+          section.instance.__fetch(section.nested);
+          if (!section.instance.__independent) {
+            return context["do"](function(done) {
+              return section.instance.wait('section:fetched', done);
+            });
+          }
+        });
+        context["do"](function(done) {
+          return _this.__runFetchs([], done);
+        });
+        return context.after(function() {
+          return _this.trigger({
+            name: 'section:fetched',
+            remember: true
+          });
+        });
+      });
+    };
+
+    Section.prototype.__erase = function() {
+      var _this = this;
+      if (this.previous != null) {
+        return this.previous.__runErases([], function() {
+          _this.previous.__unload();
+          return _this.__runBeforePaints([], function() {
+            return _this.trigger({
+              name: 'section:erased',
+              remember: true
+            });
+          });
+        });
+      } else {
+        return this.__runBeforePaints([], function() {
+          return _this.trigger({
+            name: 'section:erased',
+            remember: true
+          });
+        });
+      }
+    };
+
+    Section.prototype.__paint = function(nestingMap, $container) {
+      var _this = this;
+      this.$container = $container;
+      this.$container.html(typeof this.__renderDefault === "function" ? this.__renderDefault(this.data || {}) : void 0);
+      Object.each(nestingMap, function(selector, section) {
+        var _ref;
+        if (selector === '$container') {
+          $container = _this.$container;
+        } else {
+          selector = _this.__extractSelector(selector);
+          $container = $(selector, _this.$container);
+        }
+        if (!section.instance.__independent || ((_ref = section.instance.__triggeredEvents) != null ? _ref['section:fetched'] : void 0)) {
+          return section.instance.__paint(section.nested, $container);
+        } else {
+          return section.instance.__bootstrap(section.nested, $container, false);
+        }
+      });
+      return this.__load();
+    };
+
+    Section.prototype.__load = function() {
+      this.__assignElements();
+      this.__delegateEvents();
+      return this.__runAfterLoads();
+    };
+
+    Section.prototype.__unload = function() {
+      this.__clearContainer();
+      this.__clearTime();
+      this.__removeMetamorphs();
+      this.__runAfterUnloads();
+      return delete this.previous;
+    };
+
+    Section.prototype.navigate = function() {
+      var _ref;
+      return (_ref = Joosy.Router) != null ? _ref.navigate.apply(_ref, arguments) : void 0;
+    };
+
+    return Section;
+
+  })(Joosy.Module);
 
 }).call(this);
 (function() {
@@ -1408,30 +1548,7 @@
       return _ref;
     }
 
-    Widget.include(Joosy.Modules.Log);
-
-    Widget.include(Joosy.Modules.Events);
-
-    Widget.include(Joosy.Modules.DOM);
-
-    Widget.include(Joosy.Modules.Renderer);
-
-    Widget.include(Joosy.Modules.Filters);
-
-    Widget.include(Joosy.Modules.TimeManager);
-
     Widget.include(Joosy.Modules.WidgetsManager);
-
-    Widget.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
-
-    Widget.prototype.__renderDefault = false;
-
-    Widget.prototype.data = false;
-
-    Widget.prototype.navigate = function() {
-      var _ref1;
-      return (_ref1 = Joosy.Router) != null ? _ref1.navigate.apply(_ref1, arguments) : void 0;
-    };
 
     Widget.prototype.__renderSection = function() {
       return 'widgets';
@@ -1464,7 +1581,7 @@
 
     return Widget;
 
-  })(Joosy.Module);
+  })(Joosy.Section);
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
     define('joosy/widget', function() {
@@ -1572,44 +1689,33 @@
   Joosy.Layout = (function(_super) {
     __extends(Layout, _super);
 
-    Layout.include(Joosy.Modules.Log);
-
-    Layout.include(Joosy.Modules.Events);
-
-    Layout.include(Joosy.Modules.DOM);
-
-    Layout.include(Joosy.Modules.Renderer);
-
-    Layout.include(Joosy.Modules.TimeManager);
-
     Layout.include(Joosy.Modules.WidgetsManager);
 
-    Layout.include(Joosy.Modules.Filters);
-
-    Layout.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
-
-    Layout.registerSequencedFilters('beforePaint', 'paint', 'erase', 'fetch');
-
     Layout.helper('page');
-
-    Layout.prototype.data = false;
-
-    Layout.prototype.dataFetched = false;
-
-    function Layout($container, params) {
-      this.$container = $container;
-      this.params = params;
-      this.uid = Joosy.uid();
-    }
-
-    Layout.prototype.navigate = function() {
-      var _ref;
-      return (_ref = Joosy.Router) != null ? _ref.navigate.apply(_ref, arguments) : void 0;
-    };
 
     Layout.prototype.__renderSection = function() {
       return 'layouts';
     };
+
+    Layout.prototype.__nestingMap = function(page) {
+      var map;
+      map = {};
+      map["#" + this.uid] = {
+        instance: page,
+        nested: page.__nestingMap()
+      };
+      return map;
+    };
+
+    Layout.prototype.__bootstrapDefault = function(page, applicationContainer) {
+      return this.__bootstrap(this.__nestingMap(page), applicationContainer);
+    };
+
+    function Layout(params, previous) {
+      this.params = params;
+      this.previous = previous;
+      this.uid = Joosy.uid();
+    }
 
     Layout.prototype.__load = function() {
       this.__assignElements();
@@ -1640,7 +1746,7 @@
 
     return Layout;
 
-  })(Joosy.Module);
+  })(Joosy.Section);
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
     define('joosy/layout', function() {
@@ -1660,7 +1766,7 @@
         this.prototype.__scrollSpeed = options.speed || 500;
         return this.prototype.__scrollMargin = options.margin || 0;
       };
-      this.paint(function(container, complete) {
+      this.paint(function(complete) {
         if (this.__scrollElement && this.__scrollSpeed !== 0) {
           this.__fixHeight();
         }
@@ -1723,61 +1829,48 @@
   Joosy.Page = (function(_super) {
     __extends(Page, _super);
 
-    Page.include(Joosy.Modules.Log);
-
-    Page.include(Joosy.Modules.Events);
-
-    Page.include(Joosy.Modules.DOM);
-
-    Page.include(Joosy.Modules.Renderer);
-
-    Page.include(Joosy.Modules.TimeManager);
-
     Page.include(Joosy.Modules.WidgetsManager);
-
-    Page.include(Joosy.Modules.Filters);
-
-    Page.prototype.halted = false;
-
-    Page.prototype.layout = false;
-
-    Page.prototype.previous = false;
-
-    Page.prototype.params = false;
-
-    Page.prototype.data = false;
-
-    Page.prototype.dataFetched = false;
 
     Page.layout = function(layoutClass) {
       return this.prototype.__layoutClass = layoutClass;
     };
 
-    Page.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
-
-    Page.registerSequencedFilters('beforePaint', 'paint', 'erase', 'fetch');
-
     Page.include(Joosy.Modules.Page_Scrolling);
 
     Page.extend(Joosy.Modules.Page_Title);
 
-    function Page(applicationContainer, params, previous) {
-      this.params = params;
-      this.previous = previous;
-      this.__layoutClass = this.__layoutClass || (this.__layoutClass !== false ? window.ApplicationLayout : null);
-      if (!(this.halted = !this.__runBeforeLoads(this.params, this.previous))) {
-        this.__bootstrap(applicationContainer);
-      }
-    }
-
-    Page.prototype.navigate = function() {
-      var _ref;
-      return (_ref = Joosy.Router) != null ? _ref.navigate.apply(_ref, arguments) : void 0;
-    };
-
     Page.prototype.__renderSection = function() {
       return 'pages';
     };
+
+    Page.prototype.__nestingMap = function() {
+      return {};
+    };
+
+    Page.prototype.__bootstrapDefault = function(applicationContainer) {
+      var _ref;
+      return this.__bootstrap(this.__nestingMap(), ((_ref = this.layout) != null ? _ref.content() : void 0) || applicationContainer);
+    };
+
+    function Page(params, previous) {
+      var _ref;
+      this.params = params;
+      this.previous = previous;
+      this.layoutShouldChange = ((_ref = this.previous) != null ? _ref.__layoutClass : void 0) !== this.__layoutClass;
+      this.halted = !this.__runBeforeLoads(this.params, this.previous);
+      this.layout = (function() {
+        var _ref1, _ref2;
+        switch (false) {
+          case !(this.layoutShouldChange && this.__layoutClass):
+            return new this.__layoutClass(params, (_ref1 = this.previous) != null ? _ref1.layout : void 0);
+          case !!this.layoutShouldChange:
+            return (_ref2 = this.previous) != null ? _ref2.layout : void 0;
+        }
+      }).call(this);
+      if (this.layoutShouldChange && !this.layout) {
+        this.previous = this.previous.layout;
+      }
+    }
 
     Page.prototype.__load = function() {
       this.__assignElements();
@@ -1797,91 +1890,9 @@
       return delete this.previous;
     };
 
-    Page.prototype.__newLayoutNeeded = function() {
-      var _ref, _ref1, _ref2;
-      return (this.__layoutClass != null) && ((((_ref = this.previous) != null ? (_ref1 = _ref.layout) != null ? _ref1.uid : void 0 : void 0) == null) || ((_ref2 = this.previous) != null ? _ref2.__layoutClass : void 0) !== this.__layoutClass);
-    };
-
-    Page.prototype.__getLayout = function(applicationContainer) {
-      switch (false) {
-        case !this.__newLayoutNeeded():
-          return new this.__layoutClass(applicationContainer, this.params);
-        case !this.__layoutClass:
-          return this.previous.layout;
-        default:
-          return null;
-      }
-    };
-
-    Page.prototype.__bootstrap = function(applicationContainer) {
-      var clearStage, currentHandler, filterParams, layoutChanged, loadPageData, previousHandler, _ref,
-        _this = this;
-      Joosy.Modules.Log.debugAs(this, "Boostraping page");
-      this.layout = this.__getLayout(applicationContainer);
-      if (layoutChanged = this.__newLayoutNeeded()) {
-        currentHandler = this.layout;
-        previousHandler = (_ref = this.previous) != null ? _ref.layout : void 0;
-        filterParams = [this.layout.$container, this];
-      } else {
-        currentHandler = this;
-        previousHandler = this.previous;
-        filterParams = this.layout ? [this.layout.content()] : [applicationContainer];
-      }
-      this.wait("stageClear dataReceived", function() {
-        return currentHandler.__runPaints(filterParams, function() {
-          var _ref1, _ref2;
-          if (layoutChanged && (((_ref1 = _this.layout) != null ? _ref1.__renderDefault : void 0) != null)) {
-            _this.layout.$container.html(_this.layout.__renderDefault(_this.layout.data || {}));
-          }
-          _this.$container = ((_ref2 = _this.layout) != null ? _ref2.content() : void 0) || applicationContainer;
-          if (_this.__renderDefault != null) {
-            _this.$container.html(_this.__renderDefault(_this.data || {}));
-          }
-          if (layoutChanged) {
-            _this.layout.__load();
-          }
-          return _this.__load();
-        });
-      });
-      clearStage = function() {
-        var _ref1, _ref2, _ref3;
-        if (layoutChanged) {
-          if ((_ref1 = _this.previous) != null) {
-            if ((_ref2 = _ref1.layout) != null) {
-              if (typeof _ref2.__unload === "function") {
-                _ref2.__unload();
-              }
-            }
-          }
-        }
-        if ((_ref3 = _this.previous) != null) {
-          _ref3.__unload();
-        }
-        return currentHandler.__runBeforePaints(filterParams, function() {
-          return _this.trigger('stageClear');
-        });
-      };
-      if (previousHandler != null) {
-        previousHandler.__runErases(filterParams, clearStage);
-      } else {
-        clearStage();
-      }
-      loadPageData = function() {
-        return _this.__loadData(function() {
-          Joosy.Modules.Log.debugAs(_this, "Fetch complete");
-          return _this.trigger('dataReceived');
-        });
-      };
-      if (layoutChanged) {
-        return this.layout.__loadData(loadPageData);
-      } else {
-        return loadPageData();
-      }
-    };
-
     return Page;
 
-  })(Joosy.Module);
+  })(Joosy.Section);
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
     define('joosy/page', function() {
@@ -2397,138 +2408,6 @@
 
 }).call(this);
 (function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Joosy.Section = (function(_super) {
-    __extends(Section, _super);
-
-    Section.include(Joosy.Modules.Events);
-
-    Section.include(Joosy.Modules.DOM);
-
-    Section.include(Joosy.Modules.Renderer);
-
-    Section.include(Joosy.Modules.TimeManager);
-
-    Section.include(Joosy.Modules.Filters);
-
-    Section.independent = function() {
-      return this.prototype.__independent = true;
-    };
-
-    Section.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
-
-    Section.registerSequencedFilters('beforePaint', 'paint', 'erase', 'fetch');
-
-    function Section(params, previous) {
-      this.params = params;
-      this.previous = previous;
-    }
-
-    Section.prototype.__bootstrap = function(nestingMap, $container, fetch) {
-      var _this = this;
-      if (fetch == null) {
-        fetch = true;
-      }
-      this.wait('section:fetched section:erased', function() {
-        return _this.__runPaints([], function() {
-          return _this.__paint(nestingMap, $container);
-        });
-      });
-      this.__erase();
-      if (fetch) {
-        return this.__fetch(nestingMap);
-      }
-    };
-
-    Section.prototype.__fetch = function(nestingMap) {
-      var _this = this;
-      this.data = {};
-      return Joosy.synchronize(function(context) {
-        Object.each(nestingMap, function(selector, section) {
-          section.instance.__fetch(section.nested);
-          if (!section.instance.__independent) {
-            return context["do"](function(done) {
-              return section.instance.wait('section:fetched', done);
-            });
-          }
-        });
-        context["do"](function(done) {
-          return _this.__runFetchs([], done);
-        });
-        return context.after(function() {
-          return _this.trigger({
-            name: 'section:fetched',
-            remember: true
-          });
-        });
-      });
-    };
-
-    Section.prototype.__erase = function() {
-      var _this = this;
-      if (this.previous != null) {
-        return this.previous.__runErases([], function() {
-          _this.previous.__unload();
-          return _this.__runBeforePaints([], function() {
-            return _this.trigger({
-              name: 'section:erased',
-              remember: true
-            });
-          });
-        });
-      } else {
-        return this.__runBeforePaints([], function() {
-          return _this.trigger({
-            name: 'section:erased',
-            remember: true
-          });
-        });
-      }
-    };
-
-    Section.prototype.__paint = function(nestingMap, $container) {
-      var _this = this;
-      this.$container = $container;
-      this.$container.html(typeof this.__renderDefault === "function" ? this.__renderDefault() : void 0);
-      Object.each(nestingMap, function(selector, section) {
-        var _ref;
-        if (selector === '$container') {
-          $container = _this.$container;
-        } else {
-          selector = _this.__extractSelector(selector);
-          $container = $(selector, _this.$container);
-        }
-        if (!section.instance.__independent || ((_ref = section.instance.__triggeredEvents) != null ? _ref['section:fetched'] : void 0)) {
-          return section.instance.__paint(section.nested, $container);
-        } else {
-          return section.instance.__bootstrap(section.nested, $container, false);
-        }
-      });
-      return this.__load();
-    };
-
-    Section.prototype.__load = function() {
-      this.__assignElements();
-      this.__delegateEvents();
-      return this.__runAfterLoads(this.params, this.previous);
-    };
-
-    Section.prototype.__unload = function() {
-      this.__clearContainer();
-      this.__clearTime();
-      this.__removeMetamorphs();
-      this.__runAfterUnloads(this.params, this.previous);
-      return delete this.previous;
-    };
-
-    return Section;
-
-  })(Joosy.Module);
-
-}).call(this);
-(function() {
   Joosy.Application = {
     Pages: {},
     Layouts: {},
@@ -2563,7 +2442,7 @@
       Joosy.debug(this.config.debug);
       Joosy.Router.setup(this.config.router, function(action, params) {
         if (Joosy.Module.hasAncestor(action, Joosy.Page)) {
-          return _this.setCurrentPage(action, params);
+          return _this.changePage(action, params);
         } else if (Object.isFunction(action)) {
           return action(params);
         } else {
@@ -2591,16 +2470,17 @@
     content: function() {
       return $(this.selector);
     },
-    setCurrentPage: function(page, params) {
-      var attempt,
-        _this = this;
+    changePage: function(page, params) {
+      var attempt;
       this.loading = true;
-      attempt = new page(this.content(), params, this.page);
+      attempt = new page(params, this.page);
       if (!attempt.halted) {
-        this.page = attempt;
-        return this.page.wait('loaded', function() {
-          return _this.loading = false;
-        });
+        if (attempt.layoutShouldChange && attempt.layout) {
+          attempt.layout.__bootstrapDefault(attempt, Joosy.Application.content());
+        } else {
+          attempt.__bootstrapDefault(Joosy.Application.content());
+        }
+        return this.page = attempt;
       }
     }
   };

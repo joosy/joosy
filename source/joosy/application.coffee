@@ -46,7 +46,7 @@ Joosy.Application =
 
     Joosy.Router.setup @config.router, (action, params) =>
       if Joosy.Module.hasAncestor action, Joosy.Page
-        @setCurrentPage action, params
+        @changePage action, params
       else if Object.isFunction(action)
         action(params)
       else
@@ -80,14 +80,17 @@ Joosy.Application =
   # @param [Joosy.Page] page      The class (not object) of page to load
   # @param [Object] params        Hash of page params
   #
-  setCurrentPage: (page, params) ->
+  changePage: (page, params) ->
     @loading = true
-    attempt = new page @content(), params, @page
+    attempt  = new page params, @page
 
     unless attempt.halted
+      if attempt.layoutShouldChange && attempt.layout
+        attempt.layout.__bootstrapDefault attempt, Joosy.Application.content()
+      else
+        attempt.__bootstrapDefault Joosy.Application.content()
+
       @page = attempt
-      @page.wait 'loaded', =>
-        @loading = false
 
 # AMD wrapper
 if define?.amd?

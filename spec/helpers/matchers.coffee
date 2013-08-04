@@ -29,6 +29,12 @@ beforeEach ->
 
       return true
 
+    toEqualHTML: (string) ->
+      html     = @actual.replace(/>\s+</g, '><')
+      @message = -> "Expected '#{html}' to equal '#{string}'"
+
+      html == string
+
     #
     # Checks the exact equality of tag including attributes and content
     # with the posibility to check attributes values by regexp

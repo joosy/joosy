@@ -40,11 +40,6 @@ describe "Joosy.Modules.Events", ->
 
         expect(@callback.callCount).toEqual 0
 
-      it "recognizes invalid arguments", ->
-        expect(=> @eventer.wait '', @callback).toThrow()
-        expect(=> @eventer.wait '    ', @callback).toThrow()
-        expect(=> @eventer.wait [], @callback).toThrow()
-
     describe "binder", ->
 
       it "fires", ->
@@ -75,10 +70,22 @@ describe "Joosy.Modules.Events", ->
 
         expect(@callback.callCount).toEqual 0
 
-      it "recognizes invalid arguments", ->
-        expect(=> @eventer.bind '', @callback).toThrow()
-        expect(=> @eventer.bind '    ', @callback).toThrow()
-        expect(=> @eventer.bind [], @callback).toThrow()
+    describe 'remember', ->
+
+      it 'binds', ->
+        @eventer.trigger name: 'e1', remember: true
+        @eventer.bind 'e1 e2', @callback
+        @eventer.trigger 'e1', @callback
+        @eventer.trigger 'e2', @callback
+
+        expect(@callback.callCount).toEqual 1
+
+      it 'waits', ->
+        @eventer.trigger name: 'e1', remember: true
+        @eventer.wait 'e1 e2', @callback
+        @eventer.trigger 'e2', @callback
+
+        expect(@callback.callCount).toEqual 1
 
     it "allows simultaneous usage", ->
       3.times (i) => @eventer.bind "event#{i}", @callback

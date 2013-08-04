@@ -3,6 +3,7 @@
 #= require_tree ./templaters
 #= require_tree ./resources
 #= require_tree ./helpers
+#= require joosy/section
 
 #
 # Joosy Application container

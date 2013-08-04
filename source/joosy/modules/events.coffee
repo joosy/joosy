@@ -23,7 +23,13 @@ Joosy.Modules.Events =
       events   = name
       name     = Object.keys(@__oneShotEvents).length.toString()
 
-    @__oneShotEvents[name] = [@__splitEvents(events), callback]
+    events = @__splitEvents(events)
+
+    if events.length > 0
+      @__oneShotEvents[name] = [events, callback]
+    else
+      callback()
+
     name
 
   #
@@ -50,7 +56,13 @@ Joosy.Modules.Events =
       events   = name
       name     = Object.keys(@__boundEvents).length.toString()
 
-    @__boundEvents[name] = [@__splitEvents(events), callback]
+    events = @__splitEvents(events)
+
+    if events.length > 0
+      @__boundEvents[name] = [events, callback]
+    else
+      callback()
+
     name
 
   #
@@ -69,6 +81,12 @@ Joosy.Modules.Events =
   trigger: (event, data...) ->
     Joosy.Modules.Log.debugAs @, "Event #{event} triggered"
 
+    if Object.isObject event
+      remember = event.remember
+      event    = event.name
+    else
+      remember = false
+
     if @__oneShotEvents
       fire = []
       for name, [events, callback] of @__oneShotEvents
@@ -84,6 +102,10 @@ Joosy.Modules.Events =
       for name, [events, callback] of @__boundEvents
         if events.any event
           callback data...
+
+    if remember
+      @__triggeredEvents ||= {}
+      @__triggeredEvents[event] = true
 
   #
   # Runs set of callbacks finializing with result callback
@@ -116,8 +138,8 @@ Joosy.Modules.Events =
       else
         events = events.trim().split /\s+/
 
-    unless Object.isArray(events) && events.length > 0
-      throw new Error "#{Joosy.Module.__className @}> bind invalid events: #{events}"
+    if @__triggeredEvents?
+      events = events.findAll (e) => !@__triggeredEvents[e]
 
     events
 

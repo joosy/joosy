@@ -224,7 +224,12 @@
         events = name;
         name = Object.keys(this.__oneShotEvents).length.toString();
       }
-      this.__oneShotEvents[name] = [this.__splitEvents(events), callback];
+      events = this.__splitEvents(events);
+      if (events.length > 0) {
+        this.__oneShotEvents[name] = [events, callback];
+      } else {
+        callback();
+      }
       return name;
     },
     unwait: function(target) {
@@ -239,7 +244,12 @@
         events = name;
         name = Object.keys(this.__boundEvents).length.toString();
       }
-      this.__boundEvents[name] = [this.__splitEvents(events), callback];
+      events = this.__splitEvents(events);
+      if (events.length > 0) {
+        this.__boundEvents[name] = [events, callback];
+      } else {
+        callback();
+      }
       return name;
     },
     unbind: function(target) {
@@ -248,10 +258,16 @@
       }
     },
     trigger: function() {
-      var callback, data, event, events, fire, name, _ref, _ref1, _ref2, _ref3, _results,
+      var callback, data, event, events, fire, name, remember, _ref, _ref1, _ref2, _ref3,
         _this = this;
       event = arguments[0], data = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       Joosy.Modules.Log.debugAs(this, "Event " + event + " triggered");
+      if (Object.isObject(event)) {
+        remember = event.remember;
+        event = event.name;
+      } else {
+        remember = false;
+      }
       if (this.__oneShotEvents) {
         fire = [];
         _ref = this.__oneShotEvents;
@@ -270,16 +286,16 @@
       }
       if (this.__boundEvents) {
         _ref2 = this.__boundEvents;
-        _results = [];
         for (name in _ref2) {
           _ref3 = _ref2[name], events = _ref3[0], callback = _ref3[1];
           if (events.any(event)) {
-            _results.push(callback.apply(null, data));
-          } else {
-            _results.push(void 0);
+            callback.apply(null, data);
           }
         }
-        return _results;
+      }
+      if (remember) {
+        this.__triggeredEvents || (this.__triggeredEvents = {});
+        return this.__triggeredEvents[event] = true;
       }
     },
     synchronize: function(block) {
@@ -301,6 +317,7 @@
       }
     },
     __splitEvents: function(events) {
+      var _this = this;
       if (Object.isString(events)) {
         if (events.isBlank()) {
           events = [];
@@ -308,8 +325,10 @@
           events = events.trim().split(/\s+/);
         }
       }
-      if (!(Object.isArray(events) && events.length > 0)) {
-        throw new Error("" + (Joosy.Module.__className(this)) + "> bind invalid events: " + events);
+      if (this.__triggeredEvents != null) {
+        events = events.findAll(function(e) {
+          return !_this.__triggeredEvents[e];
+        });
       }
       return events;
     }
@@ -2375,6 +2394,138 @@
       return this.tag(tag, options);
     };
   });
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Joosy.Section = (function(_super) {
+    __extends(Section, _super);
+
+    Section.include(Joosy.Modules.Events);
+
+    Section.include(Joosy.Modules.DOM);
+
+    Section.include(Joosy.Modules.Renderer);
+
+    Section.include(Joosy.Modules.TimeManager);
+
+    Section.include(Joosy.Modules.Filters);
+
+    Section.independent = function() {
+      return this.prototype.__independent = true;
+    };
+
+    Section.registerPlainFilters('beforeLoad', 'afterLoad', 'afterUnload');
+
+    Section.registerSequencedFilters('beforePaint', 'paint', 'erase', 'fetch');
+
+    function Section(params, previous) {
+      this.params = params;
+      this.previous = previous;
+    }
+
+    Section.prototype.__bootstrap = function(nestingMap, $container, fetch) {
+      var _this = this;
+      if (fetch == null) {
+        fetch = true;
+      }
+      this.wait('section:fetched section:erased', function() {
+        return _this.__runPaints([], function() {
+          return _this.__paint(nestingMap, $container);
+        });
+      });
+      this.__erase();
+      if (fetch) {
+        return this.__fetch(nestingMap);
+      }
+    };
+
+    Section.prototype.__fetch = function(nestingMap) {
+      var _this = this;
+      this.data = {};
+      return Joosy.synchronize(function(context) {
+        Object.each(nestingMap, function(selector, section) {
+          section.instance.__fetch(section.nested);
+          if (!section.instance.__independent) {
+            return context["do"](function(done) {
+              return section.instance.wait('section:fetched', done);
+            });
+          }
+        });
+        context["do"](function(done) {
+          return _this.__runFetchs([], done);
+        });
+        return context.after(function() {
+          return _this.trigger({
+            name: 'section:fetched',
+            remember: true
+          });
+        });
+      });
+    };
+
+    Section.prototype.__erase = function() {
+      var _this = this;
+      if (this.previous != null) {
+        return this.previous.__runErases([], function() {
+          _this.previous.__unload();
+          return _this.__runBeforePaints([], function() {
+            return _this.trigger({
+              name: 'section:erased',
+              remember: true
+            });
+          });
+        });
+      } else {
+        return this.__runBeforePaints([], function() {
+          return _this.trigger({
+            name: 'section:erased',
+            remember: true
+          });
+        });
+      }
+    };
+
+    Section.prototype.__paint = function(nestingMap, $container) {
+      var _this = this;
+      this.$container = $container;
+      this.$container.html(typeof this.__renderDefault === "function" ? this.__renderDefault() : void 0);
+      Object.each(nestingMap, function(selector, section) {
+        var _ref;
+        if (selector === '$container') {
+          $container = _this.$container;
+        } else {
+          selector = _this.__extractSelector(selector);
+          $container = $(selector, _this.$container);
+        }
+        if (!section.instance.__independent || ((_ref = section.instance.__triggeredEvents) != null ? _ref['section:fetched:self'] : void 0)) {
+          return section.instance.__paint(section.nested, $container);
+        } else {
+          return section.instance.__bootstrap(section.nested, $container, false);
+        }
+      });
+      return this.__load();
+    };
+
+    Section.prototype.__load = function() {
+      this.__assignElements();
+      this.__delegateEvents();
+      return this.__runAfterLoads(this.params, this.previous);
+    };
+
+    Section.prototype.__unload = function() {
+      this.__clearContainer();
+      this.__clearTime();
+      this.__removeMetamorphs();
+      this.__runAfterUnloads(this.params, this.previous);
+      return delete this.previous;
+    };
+
+    return Section;
+
+  })(Joosy.Module);
 
 }).call(this);
 (function() {

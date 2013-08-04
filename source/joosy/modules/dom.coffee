@@ -3,7 +3,7 @@
 #
 # DOM container handling, DOM elements and DOM events bindings
 #
-# @note Requires implementor to contain DOM node at @container propert
+# @note Requires implementor to contain DOM node at @$container propert
 #
 # @mixin
 #
@@ -41,7 +41,7 @@ Joosy.Modules.DOM =
       Object.merge @::__events, map
 
   $: (selector) ->
-    $(selector, @container)
+    $(selector, @$container)
 
   #
   # Converts '$...' notation to selector from 'elements'
@@ -116,17 +116,17 @@ Joosy.Modules.DOM =
       selector   = @__extractSelector match[2]
 
       if selector == ""
-        @container.bind eventName, callback
+        @$container.bind eventName, callback
         Joosy.Modules.Log.debugAs @, "#{eventName} binded on container"
       else if selector == undefined
         throw new Error "Unknown element #{match[2]} in #{Joosy.Module.__className @constructor} (maybe typo?)"
       else
-        @container.on eventName, selector, callback
+        @$container.on eventName, selector, callback
         Joosy.Modules.Log.debugAs @, "#{eventName} binded on #{selector}"
 
   __clearContainer: ->
-    @container?.unbind().off()
-    @container = $()
+    @$container?.unbind().off()
+    @$container = $()
 
 
   # This is not clearly related for container management

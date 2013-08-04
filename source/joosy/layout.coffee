@@ -65,7 +65,7 @@ class Joosy.Layout extends Joosy.Module
     #
     # @example Sample painter
     #   @paint (container, complete) ->
-    #     @container.fadeIn -> complete()
+    #     @$container.fadeIn -> complete()
     #
     'paint',
 
@@ -82,7 +82,7 @@ class Joosy.Layout extends Joosy.Module
     #
     # @example Sample eraser
     #   @erase (container, complete) ->
-    #     @container.fadeOut -> complete()
+    #     @$container.fadeOut -> complete()
     #
     'erase',
     #
@@ -111,7 +111,7 @@ class Joosy.Layout extends Joosy.Module
   #
   # @param [Hash] params              List of route params
   #
-  constructor: (@container, @params) ->
+  constructor: (@$container, @params) ->
     @uid = Joosy.uid()
 
   #

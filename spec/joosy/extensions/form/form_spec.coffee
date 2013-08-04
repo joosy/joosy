@@ -54,7 +54,7 @@ describe "Joosy.Form", ->
 
     it "should properly act with options", ->
       formWithProperties = new Joosy.Form @nudeForm, invalidationClass: 'fluffy'
-      expect(formWithProperties.container).toEqual @nudeForm
+      expect(formWithProperties.$container).toEqual @nudeForm
       expect(formWithProperties.invalidationClass).toEqual 'fluffy'
       expect(formWithProperties.$fields().length).toEqual 5
 
@@ -62,7 +62,7 @@ describe "Joosy.Form", ->
 
     it "should properly act with callback", ->
       formWithCallback = new Joosy.Form @putForm, callback=sinon.spy()
-      expect(formWithCallback.container).toEqual @putForm
+      expect(formWithCallback.$container).toEqual @putForm
       expect(formWithCallback.invalidationClass).toEqual 'field_with_errors'
       expect(formWithCallback.success).toBe callback
       expect(formWithCallback.$fields().length).toEqual 2
@@ -107,15 +107,15 @@ describe "Joosy.Form", ->
       expect(@nudeForm.$fields()[3].checked).toEqual false
       expect(@nudeForm.$fields()[4].value).toEqual 'zxc'
       expect(@nudeForm.$fields()[4].checked).toEqual true
-      expect(@nudeForm.container.attr('method').toLowerCase()).toEqual 'post'
-      expect(@nudeForm.container.attr 'action').toEqual '/tests/1'
+      expect(@nudeForm.$container.attr('method').toLowerCase()).toEqual 'post'
+      expect(@nudeForm.$container.attr 'action').toEqual '/tests/1'
       expect(@nudeForm.__resource).toEqual @resource
 
     it "should fill form with camelized properties", ->
       @putForm.fill @resource
       expect(@putForm.$fields()[0].value).toEqual 'baz'
-      expect(@putForm.container.attr('method').toLowerCase()).toEqual 'post'
-      expect(@putForm.container.attr 'action').toEqual '/tests/1'
+      expect(@putForm.$container.attr('method').toLowerCase()).toEqual 'post'
+      expect(@putForm.$container.attr 'action').toEqual '/tests/1'
 
     it "should fill form with any properties", ->
       @exactForm.fill @resource
@@ -133,13 +133,13 @@ describe "Joosy.Form", ->
         action: @resource.memberPath(from: 'calculate')
       expect(@nudeForm.$fields()[0].value).toEqual 'foo'
       expect(@nudeForm.$fields()[1].value).toEqual 'bar'
-      expect(@nudeForm.container.attr 'action').toEqual '/tests/1/calculate'
+      expect(@nudeForm.$container.attr 'action').toEqual '/tests/1/calculate'
 
       resource = @Test.build 'someId'
 
       @nudeForm.fill resource,
         action: resource.memberPath(from: 'calculate')
-      expect(@nudeForm.container.attr 'action').toEqual '/tests/someId/calculate'
+      expect(@nudeForm.$container.attr 'action').toEqual '/tests/someId/calculate'
 
     it "should handle field name properly", ->
       expect(@nudeForm.concatFieldName 'resource', 'key').toEqual 'resource[key]'
@@ -189,14 +189,14 @@ describe "Joosy.Form", ->
       it 'should allow multiple submit', ->
         @nudeForm = new Joosy.Form @nudeForm
         3.times =>
-          @nudeForm.container.submit()
+          @nudeForm.$container.submit()
         expect(@requests.length).toEqual 3
 
       it 'should optionally prevent multiple submit', ->
         @nudeForm = new Joosy.Form @nudeForm, debounce: true
         [200, 404, 500].each (code) =>
           3.times =>
-            @nudeForm.container.submit()
+            @nudeForm.$container.submit()
           expect(@requests.length).toEqual 1
           @requests[0].respond(code, {}, '{}')
           expect(@requests.length).toEqual 1
@@ -213,13 +213,13 @@ describe "Joosy.Form", ->
       it 'should optionally allow multiple submit', ->
         @nudeForm = new Joosy.Form @nudeForm, debounce: false
         3.times =>
-          @nudeForm.container.submit()
+          @nudeForm.$container.submit()
         expect(@requests.length).toEqual 3
 
       it 'should prevent multiple submit', ->
         @nudeForm = new Joosy.Form @nudeForm
         3.times =>
-          @nudeForm.container.submit()
+          @nudeForm.$container.submit()
         expect(@requests.length).toEqual 1
 
   describe "Callbacks", ->
@@ -227,7 +227,7 @@ describe "Joosy.Form", ->
     beforeEach ->
       @nudeForm = new Joosy.Form @nudeForm, @spy=sinon.spy()
       @nudeForm.fill @resource
-      @nudeForm.container.submit()
+      @nudeForm.$container.submit()
       @target = @server.requests.last()
 
     it "should trigger 'success'", ->
@@ -260,7 +260,7 @@ describe "Joosy.Form", ->
     it "should clear fields before another submit", ->
       @target.respond 422, 'Content-Type': 'application/json', '{"foo": "error!"}'
       expect($(@nudeForm.$fields()[0]).attr 'class').toEqual 'field_with_errors'
-      @nudeForm.container.submit()
+      @nudeForm.$container.submit()
       expect($(@nudeForm.$fields()[0]).attr 'class').toNotEqual 'field_with_errors'
 
     it "should trigger 'before' and do default action if it returns true", ->
@@ -268,7 +268,7 @@ describe "Joosy.Form", ->
       expect($(@nudeForm.$fields()[0]).attr 'class').toEqual 'field_with_errors'
       @nudeForm.before = sinon.spy ->
         true
-      @nudeForm.container.submit()
+      @nudeForm.$container.submit()
       expect($(@nudeForm.$fields()[0]).attr 'class').toNotEqual 'field_with_errors'
       expect(@nudeForm.before.callCount).toEqual 1
 
@@ -277,7 +277,7 @@ describe "Joosy.Form", ->
       expect($(@nudeForm.$fields()[0]).attr 'class').toEqual 'field_with_errors'
       @nudeForm.before = sinon.spy ->
         false
-      @nudeForm.container.submit()
+      @nudeForm.$container.submit()
       expect($(@nudeForm.$fields()[0]).attr 'class').toEqual 'field_with_errors'
       expect(@nudeForm.before.callCount).toEqual 1
 

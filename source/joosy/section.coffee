@@ -43,8 +43,8 @@ class Joosy.Section extends Joosy.Module
     #   preparations are done you should call that function.
     #
     # @example Sample painter
-    #   @paint (container, complete) ->
-    #     @container.fadeIn -> complete()
+    #   @paint (complete) ->
+    #     @$container.fadeIn -> complete()
     #
     'paint',
 
@@ -62,8 +62,8 @@ class Joosy.Section extends Joosy.Module
     #   access page data from that. Think twice if you are doing it right though.
     #
     # @example Sample eraser
-    #   @erase (container, complete) ->
-    #     @container.fadeOut -> complete()
+    #   @erase (complete) ->
+    #     @$container.fadeOut -> complete()
     #
     'erase',
 

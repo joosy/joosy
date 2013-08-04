@@ -104,7 +104,7 @@ class Joosy.Page extends Joosy.Module
     #
     # @example Sample painter
     #   @paint (container, complete) ->
-    #     @container.fadeIn -> complete()
+    #     @$container.fadeIn -> complete()
     #
     'paint',
 
@@ -123,7 +123,7 @@ class Joosy.Page extends Joosy.Module
     #
     # @example Sample eraser
     #   @erase (container, complete) ->
-    #     @container.fadeOut -> complete()
+    #     @$container.fadeOut -> complete()
     #
     'erase',
 
@@ -231,7 +231,7 @@ class Joosy.Page extends Joosy.Module
     if layoutChanged = @__newLayoutNeeded()
       currentHandler  = @layout
       previousHandler = @previous?.layout
-      filterParams    = [@layout.container, @]
+      filterParams    = [@layout.$container, @]
     else
       currentHandler  = @
       previousHandler = @previous
@@ -242,11 +242,11 @@ class Joosy.Page extends Joosy.Module
 
         # Layout HTML
         if layoutChanged && @layout?.__renderDefault?
-          @layout.container.html @layout.__renderDefault(@layout.data || {})
+          @layout.$container.html @layout.__renderDefault(@layout.data || {})
 
         # Page HTML
-        @container = @layout?.content() || applicationContainer
-        @container.html @__renderDefault(@data || {}) if @__renderDefault?
+        @$container = @layout?.content() || applicationContainer
+        @$container.html @__renderDefault(@data || {}) if @__renderDefault?
 
         # Loading
         @layout.__load() if layoutChanged

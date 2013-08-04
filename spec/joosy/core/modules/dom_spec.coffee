@@ -17,13 +17,13 @@ describe "Joosy.Modules.DOM", ->
       @mapEvents
         'test': 'onDOMTest'
 
-      container: container
+      $container: container
 
   describe "elements assigner", ->
 
     beforeEach ->
-      @container = new @DOM
-      @container.__assignElements()
+      @dom = new @DOM
+      @dom.__assignElements()
 
     it "declares", ->
       class A extends @DOM
@@ -56,38 +56,38 @@ describe "Joosy.Modules.DOM", ->
     describe "selector resolvance", ->
 
       it "works for plane selectors", ->
-        expect(@container.__extractSelector '$footer').toEqual '.footer'
+        expect(@dom.__extractSelector '$footer').toEqual '.footer'
 
       it "works for deep selectors", ->
-        expect(@container.__extractSelector '$content.$post1').toEqual '#post1'
+        expect(@dom.__extractSelector '$content.$post1').toEqual '#post1'
 
       it "works for plane extended selectors", ->
-        expect(@container.__extractSelector '$footer tr').toEqual '.footer tr'
+        expect(@dom.__extractSelector '$footer tr').toEqual '.footer tr'
 
       it "works for deep extended selectors", ->
-        expect(@container.__extractSelector '$footer $content.$post1').toEqual '.footer #post1'
+        expect(@dom.__extractSelector '$footer $content.$post1').toEqual '.footer #post1'
 
     it "assigns", ->
-      target = @container.$footer().get 0
+      target = @dom.$footer().get 0
       expect(target).toBeTruthy()
-      expect(target).toBe $('.footer', @container.container).get 0
-      expect(target).toBe @container.$('.footer').get 0
+      expect(target).toBe $('.footer', @dom.$container).get 0
+      expect(target).toBe @dom.$('.footer').get 0
 
     it "assigns nesteds", ->
-      expect(@container.$content.$post1().get 0).toBe $('#post1').get 0
+      expect(@dom.$content.$post1().get 0).toBe $('#post1').get 0
 
     it "filters assignation", ->
-      target = @container.$posts('#post1').get 0
+      target = @dom.$posts('#post1').get 0
       expect(target).toBeTruthy()
-      expect(target).toBe $('#post1', @container.container).get 0
+      expect(target).toBe $('#post1', @dom.$container).get 0
 
     it "respects container boundaries", ->
       @$ground.prepend('<div class="footer" />')  # out of container
 
-      target = @container.$footer().get 0
+      target = @dom.$footer().get 0
       expect(target).toBeTruthy()
-      expect(target).toBe $('.footer', @container.container).get 0
-      expect(target).toBe @container.$('.footer').get 0
+      expect(target).toBe $('.footer', @dom.$container).get 0
+      expect(target).toBe @dom.$('.footer').get 0
 
   describe "events delegator", ->
 
@@ -120,13 +120,13 @@ describe "Joosy.Modules.DOM", ->
       @DOM::onDOMTest = callbacks[0]
       @DOM::onFooterTest = callbacks[1]
 
-      container = new @DOM
-      container.__assignElements()
-      container.__delegateEvents()
+      dom = new @DOM
+      dom.__assignElements()
+      dom.__delegateEvents()
 
-      container.container.trigger 'test'
-      $('.footer', container.container).trigger 'test'
-      $('.post', container.container).trigger 'test'
+      dom.$container.trigger 'test'
+      $('.footer', dom.$container).trigger 'test'
+      $('.post', dom.$container).trigger 'test'
 
       expect(callbacks[0].callCount).toEqual 5
       expect(callbacks[1].callCount).toEqual 1

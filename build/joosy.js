@@ -456,7 +456,7 @@
       };
     },
     $: function(selector) {
-      return $(selector, this.container);
+      return $(selector, this.$container);
     },
     __extractSelector: function(selector) {
       var _this = this;
@@ -522,22 +522,22 @@
         eventName = match[1];
         selector = _this.__extractSelector(match[2]);
         if (selector === "") {
-          _this.container.bind(eventName, callback);
+          _this.$container.bind(eventName, callback);
           return Joosy.Modules.Log.debugAs(_this, "" + eventName + " binded on container");
         } else if (selector === void 0) {
           throw new Error("Unknown element " + match[2] + " in " + (Joosy.Module.__className(_this.constructor)) + " (maybe typo?)");
         } else {
-          _this.container.on(eventName, selector, callback);
+          _this.$container.on(eventName, selector, callback);
           return Joosy.Modules.Log.debugAs(_this, "" + eventName + " binded on " + selector);
         }
       });
     },
     __clearContainer: function() {
       var _ref;
-      if ((_ref = this.container) != null) {
+      if ((_ref = this.$container) != null) {
         _ref.unbind().off();
       }
-      return this.container = $();
+      return this.$container = $();
     },
     __loadData: function(done) {
       var _this = this;
@@ -1343,12 +1343,12 @@
       Object.each(this.__widgets, function(selector, widget) {
         var activeSelector;
         if (selector === '$container') {
-          activeSelector = _this.container;
+          activeSelector = _this.$container;
         } else {
           if (_this.__extractSelector != null) {
             selector = _this.__extractSelector(selector);
           }
-          activeSelector = $(selector, _this.container);
+          activeSelector = $(selector, _this.$container);
         }
         registered[selector] = Object.extended();
         return activeSelector.each(function(index, elem) {
@@ -1437,15 +1437,15 @@
       return 'widgets';
     };
 
-    Widget.prototype.__load = function(parent, container, render) {
+    Widget.prototype.__load = function(parent, $container, render) {
       this.parent = parent;
-      this.container = container;
+      this.$container = $container;
       if (render == null) {
         render = true;
       }
       this.__runBeforeLoads();
       if (render && this.__renderDefault) {
-        this.container.html(this.__renderDefault(this.data || {}));
+        this.$container.html(this.__renderDefault(this.data || {}));
       }
       this.__assignElements();
       this.__delegateEvents();
@@ -1596,8 +1596,8 @@
 
     Layout.prototype.dataFetched = false;
 
-    function Layout(container, params) {
-      this.container = container;
+    function Layout($container, params) {
+      this.$container = $container;
       this.params = params;
       this.uid = Joosy.uid();
     }
@@ -1821,7 +1821,7 @@
       if (layoutChanged = this.__newLayoutNeeded()) {
         currentHandler = this.layout;
         previousHandler = (_ref = this.previous) != null ? _ref.layout : void 0;
-        filterParams = [this.layout.container, this];
+        filterParams = [this.layout.$container, this];
       } else {
         currentHandler = this;
         previousHandler = this.previous;
@@ -1831,11 +1831,11 @@
         return currentHandler.__runPaints(filterParams, function() {
           var _ref1, _ref2;
           if (layoutChanged && (((_ref1 = _this.layout) != null ? _ref1.__renderDefault : void 0) != null)) {
-            _this.layout.container.html(_this.layout.__renderDefault(_this.layout.data || {}));
+            _this.layout.$container.html(_this.layout.__renderDefault(_this.layout.data || {}));
           }
-          _this.container = ((_ref2 = _this.layout) != null ? _ref2.content() : void 0) || applicationContainer;
+          _this.$container = ((_ref2 = _this.layout) != null ? _ref2.content() : void 0) || applicationContainer;
           if (_this.__renderDefault != null) {
-            _this.container.html(_this.__renderDefault(_this.data || {}));
+            _this.$container.html(_this.__renderDefault(_this.data || {}));
           }
           if (layoutChanged) {
             _this.layout.__load();

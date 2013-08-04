@@ -53,7 +53,7 @@ class Joosy.Form extends Joosy.Module
   #
   @submit: (form, options={}) ->
     form = new @(form, options)
-    form.container.submit()
+    form.$container.submit()
     form.unbind()
     null
 
@@ -101,18 +101,18 @@ class Joosy.Form extends Joosy.Module
       Object.each options, (key, value) =>
         @[key] = value
 
-    @container = $(form)
-    return if @container.length == 0
+    @$container = $(form)
+    return if @$container.length == 0
 
     @__assignElements()
     @__delegateEvents()
 
-    method = @container.get(0).getAttribute('method')?.toLowerCase()
+    method = @$container.get(0).getAttribute('method')?.toLowerCase()
     if method && !['get', 'post'].any method
       @__markMethod method
-      @container.attr 'method', 'POST'
+      @$container.attr 'method', 'POST'
 
-    @container.ajaxForm
+    @$container.ajaxForm
       dataType: 'json'
       beforeSend: =>
         return false if @__debounce arguments...
@@ -141,8 +141,8 @@ class Joosy.Form extends Joosy.Module
       delete @resource
 
     if @action?
-      @container.attr 'action', @action
-      @container.attr 'method', 'POST'
+      @$container.attr 'action', @action
+      @$container.attr 'method', 'POST'
 
     if @method?
       @__markMethod @method
@@ -151,7 +151,7 @@ class Joosy.Form extends Joosy.Module
   # Resets form submit behavior to default
   #
   unbind: ->
-    @container.unbind('submit').find('input:submit,input:image,button:submit').unbind('click')
+    @$container.unbind('submit').find('input:submit,input:image,button:submit').unbind('click')
 
   #
   # Links current form with given resource and sets values of form inputs from with it.
@@ -202,19 +202,19 @@ class Joosy.Form extends Joosy.Module
 
     filler data, resource.__entityName || options.resourceName
 
-    $('input[name=_method]', @container).remove()
+    $('input[name=_method]', @$container).remove()
     @__markMethod(options?.method || 'PUT') if resource.id()
 
     url = options?.action || (if resource.id()? then resource.memberPath() else resource.collectionPath())
 
-    @container.attr 'action', url
-    @container.attr 'method', 'POST'
+    @$container.attr 'action', url
+    @$container.attr 'method', 'POST'
 
   #
   # Submit the HTML Form
   #
   submit: ->
-    @container.submit()
+    @$container.submit()
 
   #
   # Serializes form into query string.
@@ -224,7 +224,7 @@ class Joosy.Form extends Joosy.Module
   # @return [String]
   #
   serialize: (skipMethod=true) ->
-    data = @container.serialize()
+    data = @$container.serialize()
     data = data.replace /\&?\_method\=put/i, '' if skipMethod
 
     data
@@ -306,7 +306,7 @@ class Joosy.Form extends Joosy.Module
       name: '_method'
       value: method
     )
-    @container.append method
+    @$container.append method
 
   #
   # Prepares server response for default error handler

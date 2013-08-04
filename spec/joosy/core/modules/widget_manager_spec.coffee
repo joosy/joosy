@@ -71,7 +71,7 @@ describe "Joosy.Modules.WidgetsManager", ->
         '$footer': Joosy.Widget
         '.post': sinon.stub().returns new @Widget
 
-      @manager.container = $('#application')
+      @manager.$container = $('#application')
       @manager.__assignElements()
       @manager.__setupWidgets()
 
@@ -87,7 +87,7 @@ describe "Joosy.Modules.WidgetsManager", ->
         '#post1': @Widget
         '#widget1': (i) => new @Widget i
 
-      @manager.container = $('#application')
+      @manager.$container = $('#application')
       @manager.__setupWidgets()
 
       expect(@$ground.find('#post1').html()).toEqual 'fluffy'

@@ -51,10 +51,10 @@ Joosy.Modules.WidgetsManager =
 
     Object.each @__widgets, (selector, widget) =>
       if selector == '$container'
-        activeSelector = @container
+        activeSelector = @$container
       else
         selector = @__extractSelector(selector) if @__extractSelector?
-        activeSelector = $(selector, @container)
+        activeSelector = $(selector, @$container)
 
       registered[selector] = Object.extended()
 

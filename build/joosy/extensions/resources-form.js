@@ -24,7 +24,7 @@
         options = {};
       }
       form = new this(form, options);
-      form.container.submit();
+      form.$container.submit();
       form.unbind();
       return null;
     };
@@ -50,18 +50,18 @@
           return _this[key] = value;
         });
       }
-      this.container = $(form);
-      if (this.container.length === 0) {
+      this.$container = $(form);
+      if (this.$container.length === 0) {
         return;
       }
       this.__assignElements();
       this.__delegateEvents();
-      method = (_ref = this.container.get(0).getAttribute('method')) != null ? _ref.toLowerCase() : void 0;
+      method = (_ref = this.$container.get(0).getAttribute('method')) != null ? _ref.toLowerCase() : void 0;
       if (method && !['get', 'post'].any(method)) {
         this.__markMethod(method);
-        this.container.attr('method', 'POST');
+        this.$container.attr('method', 'POST');
       }
-      this.container.ajaxForm({
+      this.$container.ajaxForm({
         dataType: 'json',
         beforeSend: function() {
           if (_this.__debounce.apply(_this, arguments)) {
@@ -100,8 +100,8 @@
         delete this.resource;
       }
       if (this.action != null) {
-        this.container.attr('action', this.action);
-        this.container.attr('method', 'POST');
+        this.$container.attr('action', this.action);
+        this.$container.attr('method', 'POST');
       }
       if (this.method != null) {
         this.__markMethod(this.method);
@@ -109,7 +109,7 @@
     }
 
     Form.prototype.unbind = function() {
-      return this.container.unbind('submit').find('input:submit,input:image,button:submit').unbind('click');
+      return this.$container.unbind('submit').find('input:submit,input:image,button:submit').unbind('click');
     };
 
     Form.prototype.fill = function(resource, options) {
@@ -165,17 +165,17 @@
         return delete data.__joosy_form_filler_lock;
       };
       filler(data, resource.__entityName || options.resourceName);
-      $('input[name=_method]', this.container).remove();
+      $('input[name=_method]', this.$container).remove();
       if (resource.id()) {
         this.__markMethod((options != null ? options.method : void 0) || 'PUT');
       }
       url = (options != null ? options.action : void 0) || (resource.id() != null ? resource.memberPath() : resource.collectionPath());
-      this.container.attr('action', url);
-      return this.container.attr('method', 'POST');
+      this.$container.attr('action', url);
+      return this.$container.attr('method', 'POST');
     };
 
     Form.prototype.submit = function() {
-      return this.container.submit();
+      return this.$container.submit();
     };
 
     Form.prototype.serialize = function(skipMethod) {
@@ -183,7 +183,7 @@
       if (skipMethod == null) {
         skipMethod = true;
       }
-      data = this.container.serialize();
+      data = this.$container.serialize();
       if (skipMethod) {
         data = data.replace(/\&?\_method\=put/i, '');
       }
@@ -259,7 +259,7 @@
         name: '_method',
         value: method
       });
-      return this.container.append(method);
+      return this.$container.append(method);
     };
 
     Form.prototype.__stringifyErrors = function(errors) {

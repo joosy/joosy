@@ -279,7 +279,7 @@ class Joosy.Resource.Generic extends Joosy.Module
     @data = {} unless @hasOwnProperty 'data'
 
     Joosy.Module.merge @data, @__prepareData(data)
-
+    @data = Object.extended(@data)
     @trigger 'changed' if notify
 
     null

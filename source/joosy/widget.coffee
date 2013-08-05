@@ -1,18 +1,222 @@
 #= require joosy/joosy
-#= require joosy/section
-#= require joosy/modules/widgets_manager
+#= require joosy/modules/log
+#= require joosy/modules/events
+#= require joosy/modules/dom
+#= require joosy/modules/renderer
+#= require joosy/modules/time_manager
+#= require joosy/modules/filters
 
 #
 # Base class for all Joosy Widgets.
 #
-# @example Sample widget
-#   class @FooWidget extends Joosy.Widget
-#     @view 'foo'
+# Joosy expects you to perceive your actual application as a tree of widgets. Internally all high-level
+# containers like {Layout} and {Page} are inheriting from Widget. Widget contains logic for:
 #
-# @include Joosy.Modules.WidgetsManager
+#   * Recursive nesting (widgets can contain widgets, etc.)
+#   * Loading and Unloading flows (proper initializations, destructions and replacements)
+#   * Filtering (afterLoad, beforeLoad and the family of paint filters)
 #
-class Joosy.Widget extends Joosy.Section
-  @include Joosy.Modules.WidgetsManager
+# During the bootstrap, widgets can take either dependent or independent strategy. Dependent widgets form
+# "dependent chains" that will be rendered together (HTML will be injected into DOM atomically). Such chains
+# use paint filters of the top elements. Independent widgets on the other hand load on their own behalf and
+# use their own paint filters. To understand this better, here is the sample:
+# 
+# Let's say we have 4 widgets A, B, C and D nested into each other:
+#
+# A is the root widget
+# B is nested into A. It does not define itself as an independent and therefore defaults to dependent rendering
+# C is nested into B. It defines itself as an independent children
+# D is nested into C. It does not define itself as an independent and therefore defaults to dependent rendering
+#
+# Then total chain of asynchronous callbacks goes with the following scenario.
+# 
+# 1. A collects all the fetches from the whole tree recursively and starts them in parallel.
+# 2. A runs erase on the previous same-level widget (attribute `@previos`) if one is given.
+# 3. A runs beforePaint on itself when 2 is done.
+# 4. A waits for step 3 and all fetches of containers in recursive dependency chain (equal to B) to complete.
+# 5. A builds resulting HTML using:
+#   * HTML of dependency chain (B)
+#   * HTML of independent containers that are ready to be rendered (their own recursive dependency chain is fetched completely).
+# 5. A forks every independent container that was not rendered (C).
+# 6. A starts paint on itself and injects HTML into DOM.
+# 7. C repeats steps 2-7 using itself as a base and D as its own recursive dependency chain
+#
+# @include Joosy.Modules.Log
+# @include Joosy.Modules.Events
+# @include Joosy.Modules.DOM
+# @include Joosy.Modules.Renderer
+# @include Joosy.Modules.TimeManager
+# @include Joosy.Modules.Filters
+#
+class Joosy.Widget extends Joosy.Module
+  @include Joosy.Modules.Log
+  @include Joosy.Modules.Events
+  @include Joosy.Modules.DOM
+  @include Joosy.Modules.Renderer
+  @include Joosy.Modules.TimeManager
+  @include Joosy.Modules.Filters
+
+  #
+  # Extends widgets mapping
+  #
+  # Pass either widget class or instance as a value. Given lambdas are evaluated.
+  #
+  # @example
+  #   @mapWidgets
+  #     '.selector1': Widget1
+  #     '.selector2': -> @widget = new Widget2
+  #
+  @mapWidgets: (map) ->
+    unless @::hasOwnProperty "__widgets"
+      @::__widgets = Object.clone(@.__super__.__widgets) || {}
+    Object.merge @::__widgets, map
+
+  #
+  # Declares widget as indepent changing the way it behaves during the bootstrap
+  #
+  @independent: ->
+    @::__independent = true
+
+  @registerPlainFilters \
+    #
+    # @method .beforeLoad(callback)
+    #
+    # Initialization hook that runs in the very begining of bootstrap process.
+    # Call it multiple times to attach several hooks.
+    #
+    'beforeLoad',
+
+    #
+    # @method .afterLoad(callback)
+    #
+    # Hook that runs after the section was properly loaded and injected into DOM.
+    # Call it multiple times to attach several hooks.
+    #
+    'afterLoad',
+
+    #
+    # @method .beforeUnload(callback)
+    #
+    # Hook that finalizes section desctruction.
+    # Call it multiple times to attach several hooks.
+    #
+    'afterUnload'
+
+  @registerSequencedFilters \
+
+    #
+    # @method .beforePaint(callback)
+    #
+    # Sets the method which will controll the painting preparation proccess.
+    #
+    # This method will be called right ater previous section erase and in parallel with
+    #   new data fetching so you can use it to initiate preloader.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @example Sample before painter
+    #   @beforePaint (complete) ->
+    #     @$preloader.slideDown -> complete()
+    #
+    #
+    'beforePaint',
+
+    #
+    # @method .paint(callback)
+    #
+    # Sets the method which will controll the painting proccess.
+    #
+    # This method will be called after fetching, erasing and beforePaint is complete.
+    # It should be used to setup appearance effects of page.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @example Sample painter
+    #   @paint (complete) ->
+    #     @$container.fadeIn -> complete()
+    #
+    'paint',
+
+    #
+    # @method .erase(callback)
+    #
+    # Sets the method which will controll the erasing proccess.
+    #
+    # Use this method to setup hiding effect.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @note This method will be caled _before_ unload routines so in theory you can
+    #   access page data from that. Think twice if you are doing it right though.
+    #
+    # @example Sample eraser
+    #   @erase (complete) ->
+    #     @$container.fadeOut -> complete()
+    #
+    'erase',
+
+    #
+    # @method .fetch(callback)
+    #
+    # Sets the method which will controll the data fetching proccess.
+    #
+    # @note Given method will be called with `complete` function as parameter. As soon as your
+    #   preparations are done you should call that function.
+    #
+    # @example Basic usage
+    #   @fetch (complete) ->
+    #     $.get '/rumbas', (@data) => complete()
+    #
+    'fetch'
+
+  #
+  # @param [Hash] params              Arbitrary parameters
+  # @param [Joosy.Layout] previous    Same-level widget to replace
+  #
+  constructor: (@params, @previous) ->
+
+  #
+  # Registeres and runs widget inside specified container
+  #
+  # @param [DOM] container              jQuery or direct dom node object
+  # @param [Joosy.Widget] widget        Class or object of Joosy.Widget to register
+  #
+  registerWidget: ($container, widget) ->
+    if Object.isString $container
+      $container = @__normalizeSelector($container)
+
+    widget = @__normalizeWidget(widget)
+    widget.__bootstrapDefault $container
+
+    @__nestedSections ||= []
+    @__nestedSections.push widget
+
+    widget
+
+  #
+  # Unregisteres and destroys widget
+  #
+  # @param [Joosy.Widget] widget          Object of Joosy.Widget to unregister
+  #
+  unregisterWidget: (widget) ->
+    widget.__unload()
+
+    @__nestedSections.splice @__nestedSections.indexOf(widget), 1
+
+  replaceWidget: (widget, replacement) ->
+    replacement = @__normalizeWidget(replacement)
+    replacement.previous = widget
+
+    replacement.__bootstrapDefault widget.$container
+
+  #
+  # @see Joosy.Router.navigate
+  #
+  navigate: ->
+    Joosy.Router?.navigate arguments...
 
   #
   # This is required by {Joosy.Modules.Renderer}
@@ -22,39 +226,159 @@ class Joosy.Widget extends Joosy.Section
     'widgets'
 
   #
-  # Widget bootstrap proccess
+  # Collects statically registered widgets to form default nesting map
   #
-  #   * Rendering (if required)
-  #   * {Joosy.Modules.DOM.__assignElements}
-  #   * {Joosy.Modules.DOM.__delegateEvents}
+  __nestingMap: ->
+    map = {}
+
+    for selector, widget of @__widgets
+      widget = @__normalizeWidget(widget)
+
+      map[selector] =
+        instance: widget
+        nested: widget.__nestingMap()
+
+    map
+
   #
-  # @param [Joosy.Page, Joosy.Layout]     Page or Layout to attach to
-  # @param [jQuery] container             Container to attach to
+  # Shortcut for default bootstrap using statically registered widgets
   #
-  __load: (@parent, @$container, render=true) ->
-    @__runBeforeLoads()
-    if render && @__renderDefault
-      @$container.html @__renderDefault(@data || {})
+  # @param [jQuery] $container                 DOM container to inject to
+  #
+  __bootstrapDefault: ($container) ->
+    @__bootstrap @__nestingMap(), $container
+
+  #
+  # Bootstraps the section with given nestings at given container
+  #
+  # @example
+  #   nestingMap =
+  #     '#page':
+  #       instance: page
+  #       nested:
+  #         '#widget1': {instance: widget1}
+  #
+  #   layout.__bootstrap nestingMap, Joosy.Application.content()
+  #
+  # @param [Object] nestingMap              Map of nested sections to bootstrap
+  # @param [jQuery] $container              DOM container to inject into
+  # @param [boolean] fetch                  Boolean flag used to avoid double fetch during recursion
+  #
+  __bootstrap: (nestingMap, @$container, fetch=true) ->
+    @wait 'section:fetched section:erased', =>
+      @__runPaints [], =>
+        @__paint nestingMap, @$container
+
+    @__erase()
+    @__fetch(nestingMap) if fetch
+
+  #
+  # Recursively starts fetching for the whole nested tree. As soon as fetching is done, section
+  # triggers rememberable event 'section:fetched'
+  #
+  # Section can be considered fetched if (and triggers event when):
+  #   * Its fetchers are complete
+  #   * All the fetchers of all dependent nestings are complete
+  #
+  __fetch: (nestingMap) ->
+    @data = {}
+
+    @synchronize (context) =>
+      Object.each nestingMap, (selector, section) ->
+        section.instance.__fetch(section.nested)
+
+        if !section.instance.__independent
+          context.do (done) ->
+            section.instance.wait 'section:fetched', done
+
+      context.do (done) =>
+        @__runFetchs [], done
+
+      context.after =>
+        @trigger name: 'section:fetched', remember: true
+
+  #
+  # Runs erasing chain for the previous section and beforePaints for current
+  #
+  __erase: ->
+    if @previous?
+      @previous.__runErases [], =>
+        @previous.__unload()
+
+        @__runBeforePaints [], =>
+          @trigger name: 'section:erased', remember: true
+    else
+      @__runBeforePaints [], =>
+        @trigger name: 'section:erased', remember: true
+
+  #
+  # Builds HTML of section and its dependent nestings and injects it into DOM
+  #
+  __paint: (nestingMap, @$container) ->
+    @__nestedSections = []
+    @$container.html @__renderDefault?(@data || {})
+
+    Object.each nestingMap, (selector, section) =>
+      @__nestedSections.push section.instance
+
+      $container = @__normalizeSelector(selector)
+
+      if !section.instance.__independent || section.instance.__triggeredEvents?['section:fetched']
+        section.instance.__paint section.nested, $container
+      else
+        section.instance.__bootstrap section.nested, $container, false
+
+    @__load()
+
+  #
+  # Initializes section that was injected into DOM
+  #
+  __load: ->
     @__assignElements()
     @__delegateEvents()
-    @__setupWidgets()
     @__runAfterLoads()
 
-    this
-
   #
-  # Layout destruction proccess.
-  #
-  #   * {Joosy.Modules.DOM.__clearContainer}
-  #   * {Joosy.Modules.TimeManager.__clearTime}
-  #   * {Joosy.Modules.Renderer.__removeMetamorphs}
+  # Deinitializes section that is preparing to be removed from DOM
   #
   __unload: ->
+    section.__unload() for section in @__nestedSections
+    delete @__nestedSections
+
     @__clearContainer()
     @__clearTime()
-    @__unloadWidgets()
     @__removeMetamorphs()
     @__runAfterUnloads()
+    delete @previous
+
+  #
+  # Normalizes selector and returns jQuery wrap
+  #
+  # Selector can be one of:
+  #
+  #   * $container - gets raw main container
+  #   * $elem      - attempts to get values from {Joosy.Modules.DOM} mappings
+  #   * .selector  - raw CSS selectors pass as-is
+  #
+  __normalizeSelector: (selector) ->
+    if selector == '$container'
+      @$container
+    else
+      $container = $(@__extractSelector(selector), @$container)
+
+  #
+  # Normalizes widget descrpition to its instance
+  #
+  # Besides already being instance it cann be either class or lambda
+  #
+  __normalizeWidget: (widget) ->
+    if Object.isFunction(widget)
+      widget = widget()
+
+    if Joosy.Module.hasAncestor widget, Joosy.Widget
+      widget = new widget
+
+    widget
 
 # AMD wrapper
 if define?.amd?

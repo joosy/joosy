@@ -107,7 +107,7 @@ describe "Joosy.Application", ->
 
       Joosy.Application.changePage Page
 
-    it "hooks", ->
+    it "sequences paint hooks", ->
       spies = []
       11.times -> spies.push sinon.spy()
 

@@ -3,7 +3,6 @@
 #= require_tree ./templaters
 #= require_tree ./resources
 #= require_tree ./helpers
-#= require joosy/section
 
 #
 # Joosy Application container
@@ -81,14 +80,13 @@ Joosy.Application =
   # @param [Object] params        Hash of page params
   #
   changePage: (page, params) ->
-    @loading = true
-    attempt  = new page params, @page
+    attempt = new page params, @page
 
     unless attempt.halted
       if attempt.layoutShouldChange && attempt.layout
-        attempt.layout.__bootstrapDefault attempt, Joosy.Application.content()
+        attempt.layout.__bootstrapDefault attempt, @content()
       else
-        attempt.__bootstrapDefault Joosy.Application.content()
+        attempt.__bootstrapDefault @content()
 
       @page = attempt
 

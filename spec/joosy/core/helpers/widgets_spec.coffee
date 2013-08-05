@@ -1,4 +1,4 @@
-describe "Joosy.Helpers.Widgets", ->
+xit "Joosy.Helpers.Widgets", ->
 
   beforeEach ->
     @$ground.seed()

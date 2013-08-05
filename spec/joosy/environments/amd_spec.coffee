@@ -30,7 +30,6 @@ describe "Joosy", ->
       'joosy/modules/log',
       'joosy/modules/renderer',
       'joosy/modules/time_manager',
-      'joosy/modules/widgets_manager',
       'joosy/page',
       'joosy/resources/watcher',
       'joosy/router',

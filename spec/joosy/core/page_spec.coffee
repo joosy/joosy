@@ -41,19 +41,3 @@ describe "Joosy.Page", ->
       new @Page $('#application')
 
       expect(@Page::__bootstrap.callCount).toEqual 0
-
-    it "loads", ->
-      page = new @Page $('#application')
-
-      spies = ['__assignElements', '__delegateEvents', '__setupWidgets', '__runAfterLoads'].map (x) ->
-        sinon.spy page, x
-      page.__load()
-      expect(spies).toBeSequenced()
-
-    it "unloads", ->
-      page = new @Page $('#application')
-
-      spies = ['__clearTime', '__unloadWidgets', '__removeMetamorphs', '__runAfterUnloads'].map (x) ->
-        sinon.spy page, x
-      page.__unload()
-      expect(spies).toBeSequenced()

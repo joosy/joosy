@@ -1,7 +1,5 @@
 #= require joosy/joosy
-#= require joosy/section
 #= require joosy/widget
-#= require joosy/modules/widgets_manager
 #= require joosy/helpers/view
 
 #
@@ -11,12 +9,37 @@
 #   class @ApplicationLayout extends Joosy.Layout
 #     @view 'application'
 #
-# @include Joosy.Modules.WidgetsManager
-#
-class Joosy.Layout extends Joosy.Section
-  @include Joosy.Modules.WidgetsManager
-
+class Joosy.Layout extends Joosy.Widget
   @helper 'page'
+
+  #
+  # @param [Hash] params              Route params
+  # @param [Joosy.Layout] previous    Layout to replace on load
+  #
+  constructor: (@params, @previous) ->
+    @uid = Joosy.uid()
+
+  #
+  # Helper that outputs container tag for the page
+  #
+  # @param [String]  name             Tag name
+  # @param [Object]  options          Tag attributes
+  #
+  page: (tag, options={}) ->
+    options.id = @uid
+    Joosy.Helpers.Application.tag tag, options
+
+  #
+  # Gets DOM element that should be used as container for nested Page
+  #
+  # @return [jQuery]
+  #
+  content: ->
+    $("##{@uid}")
+
+  ######
+  ###### Widget extensions
+  ######
 
   #
   # This is required by {Joosy.Modules.Renderer}
@@ -25,65 +48,25 @@ class Joosy.Layout extends Joosy.Section
   __renderSection: ->
     'layouts'
 
+  #
+  # Extends list of registered nested widgets with page
+  #
   __nestingMap: (page) ->
-    map = {}
+    map = super()
     map["##{@uid}"] =
       instance: page
       nested: page.__nestingMap()
 
     map
 
+  #
+  # Adds page as first argument to default bootstrap
+  #
+  # @param [Joosy.Page] page                  Page to inject
+  # @param [jQuery] applicationContainer      The base container for the application to paint at
+  #
   __bootstrapDefault: (page, applicationContainer) ->
     @__bootstrap @__nestingMap(page), applicationContainer
-
-  #
-  # @param [Hash] params              List of route params
-  #
-  constructor: (@params, @previous) ->
-    @uid = Joosy.uid()
-
-  #
-  # Layout bootstrap proccess.
-  #
-  #   * {Joosy.Modules.DOM.__assignElements}
-  #   * {Joosy.Modules.DOM.__delegateEvents}
-  #   * {Joosy.Modules.WidgetsManager.__setupWidgets}
-  #
-  __load: ->
-    @__assignElements()
-    @__delegateEvents()
-    @__setupWidgets()
-    @__runAfterLoads()
-
-  #
-  # Layout destruction proccess.
-  #
-  #   * {Joosy.Modules.DOM.__clearContainer}
-  #   * {Joosy.Modules.TimeManager.__clearTime}
-  #   * {Joosy.Modules.WidgetsManager.__unloadWidgets}
-  #   * {Joosy.Modules.Renderer.__removeMetamorphs}
-  #
-  __unload: ->
-    @__clearContainer()
-    @__clearTime()
-    @__unloadWidgets()
-    @__removeMetamorphs()
-    @__runAfterUnloads()
-
-  #
-  # Helpers that outputs container for the page
-  #
-  page: (tag, options={}) ->
-    options.id = @uid
-    Joosy.Helpers.Application.tag tag, options
-
-  #
-  # Gets layout element.
-  #
-  # @return [jQuery]
-  #
-  content: ->
-    $("##{@uid}")
 
 # AMD wrapper
 if define?.amd?

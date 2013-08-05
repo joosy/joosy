@@ -1509,7 +1509,7 @@
     };
 
     Widget.prototype.__normalizeWidget = function(widget) {
-      if (Object.isFunction(widget)) {
+      if (Object.isFunction(widget) && !widget.prototype) {
         widget = widget();
       }
       if (Joosy.Module.hasAncestor(widget, Joosy.Widget)) {

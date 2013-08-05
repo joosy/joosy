@@ -1,4 +1,4 @@
-xit "Joosy.Helpers.Widgets", ->
+describe "Joosy.Helpers.Widgets", ->
 
   beforeEach ->
     @$ground.seed()
@@ -7,15 +7,12 @@ xit "Joosy.Helpers.Widgets", ->
     class @Widget extends Joosy.Widget
       @view -> "test"
 
-    # Least possible configuration capable of using helper
-    class @Renderer extends Joosy.Module
-      @include Joosy.Modules.Renderer
-      @include Joosy.Modules.TimeManager
-      @include Joosy.Modules.WidgetsManager
+    class @Renderer extends Joosy.Page
 
     @renderer = new @Renderer
     @widget   = new @Widget
-    @template = (context) => context.widget 'div', @widget
+    @template = (context) =>
+      context.widget 'div', @widget
 
   it "renders widget tag", ->
     runs ->

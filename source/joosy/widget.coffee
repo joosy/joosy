@@ -372,7 +372,7 @@ class Joosy.Widget extends Joosy.Module
   # Besides already being instance it cann be either class or lambda
   #
   __normalizeWidget: (widget) ->
-    if Object.isFunction(widget)
+    if Object.isFunction(widget) && !widget.prototype
       widget = widget()
 
     if Joosy.Module.hasAncestor widget, Joosy.Widget

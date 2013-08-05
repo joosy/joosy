@@ -1764,7 +1764,7 @@
       this.params = params;
       this.previous = previous;
       this.layoutShouldChange = ((_ref = this.previous) != null ? _ref.__layoutClass : void 0) !== this.__layoutClass;
-      this.halted = !this.__runBeforeLoads(this.params, this.previous);
+      this.halted = !this.__runBeforeLoads();
       this.layout = (function() {
         var _ref1, _ref2;
         switch (false) {

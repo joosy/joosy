@@ -151,7 +151,7 @@
     };
 
     Base.prototype.knownAttributes = function() {
-      return this.data.keys();
+      return Object.keys(this.data);
     };
 
     Base.prototype.load = function(data) {

@@ -193,7 +193,7 @@ class Joosy.Resource.Generic extends Joosy.Module
     @data[@__primaryKey]
 
   knownAttributes: ->
-    @data.keys()
+    Object.keys @data
 
   #
   # Set the resource data manually

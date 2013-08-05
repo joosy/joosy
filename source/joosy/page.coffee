@@ -33,7 +33,7 @@ class Joosy.Page extends Joosy.Widget
   constructor: (@params, @previous) ->
     @layoutShouldChange = @previous?.__layoutClass != @__layoutClass
 
-    @halted = !@__runBeforeLoads(@params, @previous)
+    @halted = !@__runBeforeLoads()
     @layout = switch
       when @layoutShouldChange && @__layoutClass
         new @__layoutClass(params, @previous?.layout)

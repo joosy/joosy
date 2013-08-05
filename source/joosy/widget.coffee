@@ -318,6 +318,8 @@ class Joosy.Widget extends Joosy.Module
     @__nestedSections = []
     @$container.html @__renderDefault?(@data || {})
 
+    @__load()
+
     Object.each nestingMap, (selector, section) =>
       @__nestedSections.push section.instance
 
@@ -327,8 +329,6 @@ class Joosy.Widget extends Joosy.Module
         section.instance.__paint section.nested, $container
       else
         section.instance.__bootstrap section.nested, $container, false
-
-    @__load()
 
   #
   # Initializes section that was injected into DOM
@@ -364,7 +364,7 @@ class Joosy.Widget extends Joosy.Module
     if selector == '$container'
       @$container
     else
-      $container = $(@__extractSelector(selector), @$container)
+      $(@__extractSelector(selector), @$container)
 
   #
   # Normalizes widget descrpition to its instance
@@ -372,8 +372,8 @@ class Joosy.Widget extends Joosy.Module
   # Besides already being instance it cann be either class or lambda
   #
   __normalizeWidget: (widget) ->
-    if Object.isFunction(widget) && !widget.prototype
-      widget = widget()
+    if Object.isFunction(widget) && !Joosy.Module.hasAncestor(widget, Joosy.Widget)
+      widget = widget.call(@)
 
     if Joosy.Module.hasAncestor widget, Joosy.Widget
       widget = new widget

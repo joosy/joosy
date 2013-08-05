@@ -130,7 +130,7 @@ describe "Joosy.Widget", ->
         """
 
         @mapWidgets
-          '#c': C
+          '#c': -> C
 
       class @A extends Joosy.Widget
         @view """

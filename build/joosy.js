@@ -124,16 +124,17 @@
     };
 
     Module.hasAncestor = function(what, klass) {
-      var _ref, _ref1;
+      var _ref;
       if (!((what != null) && (klass != null))) {
         return false;
       }
-      _ref = [what.prototype, klass.prototype], what = _ref[0], klass = _ref[1];
+      what = what.prototype;
+      klass = klass.prototype;
       while (what) {
         if (what === klass) {
           return true;
         }
-        what = (_ref1 = what.constructor) != null ? _ref1.__super__ : void 0;
+        what = (_ref = what.constructor) != null ? _ref.__super__ : void 0;
       }
       return false;
     };
@@ -1465,7 +1466,8 @@
       this.$container = $container;
       this.__nestedSections = [];
       this.$container.html(typeof this.__renderDefault === "function" ? this.__renderDefault(this.data || {}) : void 0);
-      Object.each(nestingMap, function(selector, section) {
+      this.__load();
+      return Object.each(nestingMap, function(selector, section) {
         var _ref;
         _this.__nestedSections.push(section.instance);
         $container = _this.__normalizeSelector(selector);
@@ -1475,7 +1477,6 @@
           return section.instance.__bootstrap(section.nested, $container, false);
         }
       });
-      return this.__load();
     };
 
     Widget.prototype.__load = function() {
@@ -1500,17 +1501,16 @@
     };
 
     Widget.prototype.__normalizeSelector = function(selector) {
-      var $container;
       if (selector === '$container') {
         return this.$container;
       } else {
-        return $container = $(this.__extractSelector(selector), this.$container);
+        return $(this.__extractSelector(selector), this.$container);
       }
     };
 
     Widget.prototype.__normalizeWidget = function(widget) {
-      if (Object.isFunction(widget) && !widget.prototype) {
-        widget = widget();
+      if (Object.isFunction(widget) && !Joosy.Module.hasAncestor(widget, Joosy.Widget)) {
+        widget = widget.call(this);
       }
       if (Joosy.Module.hasAncestor(widget, Joosy.Widget)) {
         widget = new widget;

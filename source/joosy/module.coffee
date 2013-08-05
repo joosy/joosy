@@ -43,7 +43,8 @@ class Joosy.Module
     unless what? && klass?
       return false
 
-    [what, klass] = [what.prototype, klass.prototype]
+    what  = what.prototype
+    klass = klass.prototype
 
     while what
       if what == klass

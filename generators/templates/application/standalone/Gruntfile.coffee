@@ -15,7 +15,10 @@ module.exports = (grunt) ->
       # config: require('./config.json')
 
       # Setup built-in development proxy to workaround Cross-Origin
-      # proxy: [ {'/joosy': 'http://joosy.ws'} ]
+      # server:
+      #   proxy: [
+      #     {src: '/joosy', dest: 'http://joosy.ws'}
+      #   ]
 
       assets:
         application:

@@ -18,6 +18,7 @@ Joosy.Application =
   loading: true
 
   config:
+    test:     false
     debug:    false
     templater:
       prefix: ''
@@ -39,6 +40,8 @@ Joosy.Application =
 
     Object.merge @config, window.JoosyEnvironment, true if window.JoosyEnvironment?
     Object.merge @config, options, true
+
+    @forceSandbox() if @config.test
 
     Joosy.templater new Joosy.Templaters.JST(@config.templater)
     Joosy.debug @config.debug
@@ -89,6 +92,14 @@ Joosy.Application =
         attempt.__bootstrapDefault @content()
 
       @page = attempt
+
+  forceSandbox: ->
+    sandbox   = Joosy.uid()
+    @selector = "##{sandbox}"
+    $('body').append $('<div/>').attr('id', sandbox).css
+      height:   '0px'
+      width:    '0px'
+      overflow: 'hidden'
 
 # AMD wrapper
 if define?.amd?

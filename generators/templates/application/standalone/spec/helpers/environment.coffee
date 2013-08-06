@@ -1,0 +1,2 @@
+window.JoosyEnvironment =
+  test: true

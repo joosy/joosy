@@ -24,6 +24,15 @@ class ProjectStandalone extends @Base
     @copy ['application', 'standalone', 'source', 'stylesheets', 'application.styl'],
                                        ['source', 'stylesheets', 'application.styl']
 
+    @copy ['application', 'standalone', 'tasks', 'spec.coffee'],
+                                       ['tasks', 'spec.coffee']
+
+    @copy ['application', 'standalone', 'spec', 'helpers', 'environment.coffee'],
+                                       ['spec', 'helpers', 'environment.coffee']
+
+    @copy ['application', 'standalone', 'spec', 'application_spec.coffee'],
+                                       ['spec', 'application_spec.coffee']
+
     @template ['application', 'standalone', 'bower.json'],   ['bower.json'],
       application: @options.name
     @template ['application', 'standalone', 'package.json'], ['package.json'],

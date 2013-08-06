@@ -2313,6 +2313,7 @@
     initialized: false,
     loading: true,
     config: {
+      test: false,
       debug: false,
       templater: {
         prefix: ''
@@ -2336,6 +2337,9 @@
         Object.merge(this.config, window.JoosyEnvironment, true);
       }
       Object.merge(this.config, options, true);
+      if (this.config.test) {
+        this.forceSandbox();
+      }
       Joosy.templater(new Joosy.Templaters.JST(this.config.templater));
       Joosy.debug(this.config.debug);
       Joosy.Router.setup(this.config.router, function(action, params) {
@@ -2379,6 +2383,16 @@
         }
         return this.page = attempt;
       }
+    },
+    forceSandbox: function() {
+      var sandbox;
+      sandbox = Joosy.uid();
+      this.selector = "#" + sandbox;
+      return $('body').append($('<div/>').attr('id', sandbox).css({
+        height: '0px',
+        width: '0px',
+        overflow: 'hidden'
+      }));
     }
   };
 

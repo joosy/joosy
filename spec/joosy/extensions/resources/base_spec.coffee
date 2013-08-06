@@ -51,34 +51,6 @@ describe "Joosy.Resources.Base", ->
     @resource 'another.deep.value', 'banana strikes back'
     expect(@resource 'another.deep').toEqual value: 'banana strikes back'
 
-  describe '@at', ->
-    # clone won't be instanceof Fluffy in IE
-    #expect(clone.build({}) instanceof Fluffy).toBeTruthy()
-
-    beforeEach ->
-      class @Fluffy extends Joosy.Resources.Base
-        @entity 'fluffy'
-
-    it 'returns base class child', ->
-      clone = @Fluffy.at 'rumbas'
-      expect(Joosy.Module.hasAncestor clone, @Fluffy).toBeTruthy()
-
-    it 'accepts string', ->
-      clone = @Fluffy.at 'rumbas'
-      expect(clone.__source).toEqual '/rumbas'
-
-    it 'accepts another resource instance', ->
-      clone = @Fluffy.at Test.build(1)
-      expect(clone.__source).toEqual '/tests/1/fluffies'
-
-    it 'accepts array', ->
-      clone = @Fluffy.at ['rumbas', Test.build(1), 'salsas']
-      expect(clone.__source).toEqual '/rumbas/tests/1/salsas'
-
-    it 'accepts sequential attributes', ->
-      clone = @Fluffy.at 'rumbas', 'salsas', Test.build(1)
-      expect(clone.__source).toEqual '/rumbas/salsas/tests/1/fluffies'
-
   it "triggers 'changed' right", ->
     callback = sinon.spy()
     @resource.bind 'changed', callback

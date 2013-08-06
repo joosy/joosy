@@ -7,6 +7,44 @@
 class Joosy.Resources.REST extends Joosy.Resources.Base
 
   #
+  # Sets default base url for fetching and modifiing resources
+  #
+  # @note can be omitted if url equals pluralized @entity
+  #   i.e. 'comment' entity name => '/comments' url
+  #
+  # @param [String] primary     Name of the field
+  #
+  @source: (location) ->
+    @__source = location
+
+  #
+  # Creates the proxy of current resource binded as a child of given entity
+  #
+  @at: (args...) ->
+    #
+    # Class inheritance used to create proxy
+    #
+    # @private
+    #
+    class Clone extends this
+
+    if args.length == 1 && Object.isArray(args[0])
+      @at(args[0]...)
+    else
+      Clone.__source = args.reduce (path, arg) ->
+        path += if arg instanceof Joosy.Resources.Base
+          arg.memberPath()
+        else
+          arg.replace(/^\/?/, '/')
+
+      , ''
+
+      if @::__entityName && args[args.length - 1] instanceof Joosy.Resources.Base
+        Clone.__source += '/' + @::__entityName.pluralize()
+
+      Clone
+
+  #
   # Implements `@collection` default behavior.
   # Changes the default fallback to Joosy.Resources.RESTCollection.
   #

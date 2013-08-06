@@ -57,36 +57,6 @@ class Joosy.Resources.Base extends Joosy.Module
   #
   @primaryKey: (primaryKey) -> @::__primaryKey = primaryKey
 
-  @source: (location) ->
-    @__source = location
-
-  #
-  # Creates the proxy of current resource binded as a child of given entity
-  #
-  @at: (args...) ->
-    #
-    # Class inheritance used to create proxy
-    #
-    # @private
-    #
-    class Clone extends this
-
-    if args.length == 1 && Object.isArray(args[0])
-      @at(args[0]...)
-    else
-      Clone.__source = args.reduce (path, arg) ->
-        path += if arg instanceof Joosy.Resources.Base
-          arg.memberPath()
-        else
-          arg.replace(/^\/?/, '/')
-
-      , ''
-
-      if @::__entityName && args[args.length - 1] instanceof Joosy.Resources.Base
-        Clone.__source += '/' + @::__entityName.pluralize()
-
-      Clone
-
   #
   # Sets the entity text name:
   #   required to do some magic like skipping the root node.

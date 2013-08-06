@@ -28,6 +28,34 @@ describe "Joosy.Resources.REST", ->
     expect(target.url).toMatch url
     target.respond 200, 'Content-Type': 'application/json', data
 
+  describe '@at', ->
+    # clone won't be instanceof Fluffy in IE
+    #expect(clone.build({}) instanceof Fluffy).toBeTruthy()
+
+    beforeEach ->
+      class @Test extends Joosy.Resources.REST
+        @entity 'test'
+
+    it 'returns base class child', ->
+      clone = @Test.at 'rumbas'
+      expect(Joosy.Module.hasAncestor clone, @Test).toBeTruthy()
+
+    it 'accepts string', ->
+      clone = @Test.at 'rumbas'
+      expect(clone.__source).toEqual '/rumbas'
+
+    it 'accepts another resource instance', ->
+      clone = @Test.at Fluffy.build(1)
+      expect(clone.__source).toEqual '/fluffies/1/tests'
+
+    it 'accepts array', ->
+      clone = @Test.at ['rumbas', Fluffy.build(1), 'salsas']
+      expect(clone.__source).toEqual '/rumbas/fluffies/1/salsas'
+
+    it 'accepts sequential attributes', ->
+      clone = @Test.at 'rumbas', 'salsas', Fluffy.build(1)
+      expect(clone.__source).toEqual '/rumbas/salsas/fluffies/1/tests'
+
   it "build base path", ->
     parent = FluffyParent.build 1
     grandParent = FluffyParent.build 666

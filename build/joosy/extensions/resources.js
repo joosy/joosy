@@ -1,7 +1,6 @@
 (function() {
   var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __slice = [].slice;
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Joosy.Resources.Base = (function(_super) {
     __extends(Base, _super);
@@ -27,37 +26,6 @@
 
     Base.primaryKey = function(primaryKey) {
       return this.prototype.__primaryKey = primaryKey;
-    };
-
-    Base.source = function(location) {
-      return this.__source = location;
-    };
-
-    Base.at = function() {
-      var Clone, args, _ref;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      Clone = (function(_super1) {
-        __extends(Clone, _super1);
-
-        function Clone() {
-          _ref = Clone.__super__.constructor.apply(this, arguments);
-          return _ref;
-        }
-
-        return Clone;
-
-      })(this);
-      if (args.length === 1 && Object.isArray(args[0])) {
-        return this.at.apply(this, args[0]);
-      } else {
-        Clone.__source = args.reduce(function(path, arg) {
-          return path += arg instanceof Joosy.Resources.Base ? arg.memberPath() : arg.replace(/^\/?/, '/');
-        }, '');
-        if (this.prototype.__entityName && args[args.length - 1] instanceof Joosy.Resources.Base) {
-          Clone.__source += '/' + this.prototype.__entityName.pluralize();
-        }
-        return Clone;
-      }
     };
 
     Base.entity = function(name) {
@@ -402,7 +370,8 @@
 (function() {
   var _ref,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __slice = [].slice;
 
   Joosy.Resources.REST = (function(_super) {
     __extends(REST, _super);
@@ -411,6 +380,37 @@
       _ref = REST.__super__.constructor.apply(this, arguments);
       return _ref;
     }
+
+    REST.source = function(location) {
+      return this.__source = location;
+    };
+
+    REST.at = function() {
+      var Clone, args, _ref1;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      Clone = (function(_super1) {
+        __extends(Clone, _super1);
+
+        function Clone() {
+          _ref1 = Clone.__super__.constructor.apply(this, arguments);
+          return _ref1;
+        }
+
+        return Clone;
+
+      })(this);
+      if (args.length === 1 && Object.isArray(args[0])) {
+        return this.at.apply(this, args[0]);
+      } else {
+        Clone.__source = args.reduce(function(path, arg) {
+          return path += arg instanceof Joosy.Resources.Base ? arg.memberPath() : arg.replace(/^\/?/, '/');
+        }, '');
+        if (this.prototype.__entityName && args[args.length - 1] instanceof Joosy.Resources.Base) {
+          Clone.__source += '/' + this.prototype.__entityName.pluralize();
+        }
+        return Clone;
+      }
+    };
 
     REST.prototype.__collection = function() {
       var named;

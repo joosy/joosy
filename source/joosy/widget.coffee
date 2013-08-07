@@ -52,6 +52,57 @@
 #
 # 7. C repeats steps 2-7 using itself as a base and D as its own recursive dependency chain
 #
+# @method .beforeLoad(callback)
+#   Initialization hook that runs in the very begining of bootstrap process.
+#   Call it multiple times to attach several hooks.
+#
+# @method .afterLoad(callback)
+#   Hook that runs after the section was properly loaded and injected into DOM.
+#   Call it multiple times to attach several hooks.
+#
+# @method .beforeUnload(callback)
+#   Hook that finalizes section desctruction.
+#   Call it multiple times to attach several hooks.
+#
+# @method .fetch(callback)
+#   Sets the method which will controll the data fetching proccess.
+#   @note Given method will be called with `complete` function as parameter. As soon as your
+#     preparations are done you should call that function.
+#   @example Basic usage
+#     @fetch (complete) ->
+#       $.get '/rumbas', (@data) => complete()
+#
+# @method .beforePaint(callback)
+#   Sets the method which will controll the painting preparation proccess.
+#   This method will be called right ater previous section erase and in parallel with
+#     new data fetching so you can use it to initiate preloader.
+#   @note Given method will be called with `complete` function as parameter. As soon as your
+#     preparations are done you should call that function.
+#   @example Sample before painter
+#     @beforePaint (complete) ->
+#       @$preloader.slideDown -> complete()
+#
+# @method .paint(callback)
+#   Sets the method which will controll the painting proccess.
+#   This method will be called after fetching, erasing and beforePaint is complete.
+#   It should be used to setup appearance effects of page.
+#   @note Given method will be called with `complete` function as parameter. As soon as your
+#     preparations are done you should call that function.
+#   @example Sample painter
+#     @paint (complete) ->
+#       @$container.fadeIn -> complete()
+#
+# @method .erase(callback)
+#   Sets the method which will controll the erasing proccess.
+#   Use this method to setup hiding effect.
+#   @note Given method will be called with `complete` function as parameter. As soon as your
+#     preparations are done you should call that function.
+#   @note This method will be caled _before_ unload routines so in theory you can
+#     access page data from that. Think twice if you are doing it right though.
+#   @example Sample eraser
+#     @erase (complete) ->
+#       @$container.fadeOut -> complete()
+#
 # @include Joosy.Modules.Log
 # @include Joosy.Modules.Events
 # @include Joosy.Modules.DOM
@@ -88,100 +139,9 @@ class Joosy.Widget extends Joosy.Module
   @independent: ->
     @::__independent = true
 
-  @registerPlainFilters \
-    #
-    # @method .beforeLoad(callback)
-    #
-    # Initialization hook that runs in the very begining of bootstrap process.
-    # Call it multiple times to attach several hooks.
-    #
-    'beforeLoad',
+  @registerPlainFilters 'beforeLoad', 'afterLoad', 'afterUnload'
 
-    #
-    # @method .afterLoad(callback)
-    #
-    # Hook that runs after the section was properly loaded and injected into DOM.
-    # Call it multiple times to attach several hooks.
-    #
-    'afterLoad',
-
-    #
-    # @method .beforeUnload(callback)
-    #
-    # Hook that finalizes section desctruction.
-    # Call it multiple times to attach several hooks.
-    #
-    'afterUnload'
-
-  @registerSequencedFilters \
-
-    #
-    # @method .beforePaint(callback)
-    #
-    # Sets the method which will controll the painting preparation proccess.
-    #
-    # This method will be called right ater previous section erase and in parallel with
-    #   new data fetching so you can use it to initiate preloader.
-    #
-    # @note Given method will be called with `complete` function as parameter. As soon as your
-    #   preparations are done you should call that function.
-    #
-    # @example Sample before painter
-    #   @beforePaint (complete) ->
-    #     @$preloader.slideDown -> complete()
-    #
-    #
-    'beforePaint',
-
-    #
-    # @method .paint(callback)
-    #
-    # Sets the method which will controll the painting proccess.
-    #
-    # This method will be called after fetching, erasing and beforePaint is complete.
-    # It should be used to setup appearance effects of page.
-    #
-    # @note Given method will be called with `complete` function as parameter. As soon as your
-    #   preparations are done you should call that function.
-    #
-    # @example Sample painter
-    #   @paint (complete) ->
-    #     @$container.fadeIn -> complete()
-    #
-    'paint',
-
-    #
-    # @method .erase(callback)
-    #
-    # Sets the method which will controll the erasing proccess.
-    #
-    # Use this method to setup hiding effect.
-    #
-    # @note Given method will be called with `complete` function as parameter. As soon as your
-    #   preparations are done you should call that function.
-    #
-    # @note This method will be caled _before_ unload routines so in theory you can
-    #   access page data from that. Think twice if you are doing it right though.
-    #
-    # @example Sample eraser
-    #   @erase (complete) ->
-    #     @$container.fadeOut -> complete()
-    #
-    'erase',
-
-    #
-    # @method .fetch(callback)
-    #
-    # Sets the method which will controll the data fetching proccess.
-    #
-    # @note Given method will be called with `complete` function as parameter. As soon as your
-    #   preparations are done you should call that function.
-    #
-    # @example Basic usage
-    #   @fetch (complete) ->
-    #     $.get '/rumbas', (@data) => complete()
-    #
-    'fetch'
+  @registerSequencedFilters 'beforePaint', 'paint', 'erase', 'fetch'
 
   #
   # @param [Hash] params              Arbitrary parameters

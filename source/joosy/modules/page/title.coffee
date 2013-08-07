@@ -1,3 +1,4 @@
+# @mixin
 Joosy.Modules.Page_Title =
 
   #

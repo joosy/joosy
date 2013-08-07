@@ -7,21 +7,20 @@
 # Router. Reacts on URI change event and loads proper pages
 #
 # Internal storage rules:
-#   * HTML5 Prefix option is stored with both leading and trailing slashes
-#   * Helpers pathes are stored without leading trailing slash
-#   * Route matchers declare leading and trailing slashes as optional
 #
-# Example:
+#  * HTML5 Prefix option is stored with both leading and trailing slashes
+#  * Helpers pathes are stored without leading trailing slash
+#  * Route matchers declare leading and trailing slashes as optional
+#
+# @example
 #   Joosy.Router.map
-#     404             : (path) -> alert "Page '#{path}' was not found :("
+#     404             : (path) -> alert "Page was not found :("
 #     '/'             : Welcome.IndexPage
 #     '/resources'    :
 #     '/'             : Resource.IndexPage
 #     '/:id'          : Resource.ShowPage
 #     '/:id/edit'     : Resource.EditPage
 #     '/new'          : Resource.EditPage
-#
-# @mixin
 #
 class Joosy.Router extends Joosy.Module
   @extend Joosy.Modules.Events

@@ -12,6 +12,7 @@ Joosy.Modules.TimeManager =
   #
   # @param [Integer] timeout          Miliseconds to wait
   # @param [Function] action          Action to run on timeout
+  # @return [Integer]                 Timer
   #
   setTimeout: (timeout, action) ->
     @__timeouts ||= []
@@ -26,6 +27,7 @@ Joosy.Modules.TimeManager =
   #
   # @param [Integer] delay            Miliseconds between runs
   # @param [Function] action          Action to run
+  # @return [Integer]                 Timer
   #
   setInterval: (delay, action) ->
     @__intervals ||= []
@@ -34,6 +36,22 @@ Joosy.Modules.TimeManager =
     @__intervals.push timer
 
     timer
+
+  #
+  # Clears tmeout preventing callback from execution
+  #
+  # @param [Integer] timer            Timer
+  #
+  clearTimeout: (timer) ->
+    window.clearTimeout timer
+
+  #
+  # Clears inteval preventing callback from execution
+  #
+  # @param [Integer] timer            Timer
+  #
+  clearInterval: (timer) ->
+    window.clearInterval timer
 
   #
   # Drops all registered timeouts and intervals for this object

@@ -1199,6 +1199,12 @@
       this.__intervals.push(timer);
       return timer;
     },
+    clearTimeout: function(timer) {
+      return window.clearTimeout(timer);
+    },
+    clearInterval: function(timer) {
+      return window.clearInterval(timer);
+    },
     __clearTime: function() {
       var entry, _i, _j, _len, _len1, _ref, _ref1, _results;
       if (this.__intervals) {

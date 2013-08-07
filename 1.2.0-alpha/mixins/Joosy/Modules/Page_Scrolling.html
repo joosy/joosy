@@ -19,7 +19,7 @@
     &raquo;
     <span class='title'>Modules</span>
     &raquo;
-    <span class='title'>Log</span>
+    <span class='title'>Page_Scrolling</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -111,111 +111,100 @@
     <div id='content'>
       <h1>
         Mixin:
-        Joosy.Modules.Log
+        Joosy.Modules.Page_Scrolling
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>source&#47;joosy&#47;modules&#47;log.coffee</td>
+          <td>source&#47;joosy&#47;modules&#47;page&#47;scrolling.coffee</td>
         </tr>
         <tr>
           <td>Included in:</td>
           <td>
-                        <a href='../../../classes/Joosy/Resources/Base.html'>Joosy.Resources.Base</a>,
-                        <a href='../../../classes/Joosy/Resources/RESTCollection.html'>Joosy.Resources.RESTCollection</a>,
-                        <a href='../../../classes/Joosy/Form.html'>Joosy.Form</a>,
-            <a href='../../../classes/Joosy/Widget.html'>Joosy.Widget</a>
+            <a href='../../../classes/Joosy/Page.html'>Joosy.Page</a>
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Wrappers for console.log</p>
-</div>
-<div class='tags'>
-</div>
       <h2>Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#log-mixin'>
-        ? (void) <strong>log</strong>(args...)
+      <a href='#included-mixin'>
+        ? (void) <strong>included</strong>()
       </a>
     </span>
     <span class='desc'>
-      Checks if console is available and proxies given arguments directly to <code>console.log</code>
+      
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#debug-mixin'>
-        ? (void) <strong>debug</strong>(args...)
+      <a href='#__performScrolling-mixin'>
+        ? (void) <strong>__performScrolling</strong>()
       </a>
     </span>
     <span class='desc'>
-      Runs <code>log</code> if debug is active
+      Scrolls page to stored positions
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#debugAs-mixin'>
-        ? (void) <strong>debugAs</strong>(context, string, args...)
+      <a href='#__fixHeight-mixin'>
+        ? (void) <strong>__fixHeight</strong>()
       </a>
     </span>
     <span class='desc'>
-      Logs given message wrapping it with description of given object (class name)
+      Freezes the page height through $(html).
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__releaseHeight-mixin'>
+        ? (void) <strong>__releaseHeight</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Undo {#__fixHeight}
     </span>
   </li>
 </ul>
       <h2>Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='log-mixin'>
-      ? (void) <strong>log</strong>(args...)
+    <p class='signature' id='included-mixin'>
+      ? (void) <strong>included</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__performScrolling-mixin'>
+      ? (void) <strong>__performScrolling</strong>()
     </p>
     <div class='docstring'>
-  <p>Checks if console is available and proxies given arguments directly to <code>console.log</code></p>
+  <p>Scrolls page to stored positions</p>
 </div>
 <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='debug-mixin'>
-      ? (void) <strong>debug</strong>(args...)
+    <p class='signature' id='__fixHeight-mixin'>
+      ? (void) <strong>__fixHeight</strong>()
     </p>
     <div class='docstring'>
-  <p>Runs <code>log</code> if debug is active</p>
+  <p>Freezes the page height through $(html).</p><p>Required to implement better {Joosy.Page.scroll} behavior.</p>
 </div>
 <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='debugAs-mixin'>
-      ? (void) <strong>debugAs</strong>(context, string, args...)
+    <p class='signature' id='__releaseHeight-mixin'>
+      ? (void) <strong>__releaseHeight</strong>()
     </p>
     <div class='docstring'>
-  <p>Logs given message wrapping it with description of given object (class name)</p>
+  <p>Undo {#__fixHeight}</p>
 </div>
 <div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>context</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>The class required to be described in log message</span>
-    </li>
-    <li>
-      <span class='name'>string</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Message to log</span>
-    </li>
-  </ul>
 </div>
   </div>
 </div>

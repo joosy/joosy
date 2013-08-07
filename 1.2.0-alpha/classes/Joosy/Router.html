@@ -125,14 +125,26 @@
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Router. Reacts on URI change event and loads proper pages</p><p>Internal storage rules: <em> HTML5 Prefix option is stored with both leading and trailing slashes </em> Helpers pathes are stored without leading trailing slash * Route matchers declare leading and trailing slashes as optional</p><p>Example: Joosy.Router.map
-    404             : (path) -&gt; alert &quot;Page &#39;#{path}&#39; was not found :(&quot;
-    &#39;/&#39;             : Welcome.IndexPage
-    &#39;/resources&#39;    :
-    &#39;/&#39;             : Resource.IndexPage
-    &#39;/:id&#39;          : Resource.ShowPage
-    &#39;/:id/edit&#39;     : Resource.EditPage
-    &#39;/new&#39;          : Resource.EditPage</p>
+  <p>Router. Reacts on URI change event and loads proper pages</p><p>Internal storage rules:</p><ul>
+<li>HTML5 Prefix option is stored with both leading and trailing slashes</li>
+<li>Helpers pathes are stored without leading trailing slash</li>
+<li>Route matchers declare leading and trailing slashes as optional</li>
+</ul>
+
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffee'>Joosy.Router.map
+  404             : (path) -&gt; alert &quot;Page was not found :(&quot;
+  &#39;&#47;&#39;             : Welcome.IndexPage
+  &#39;&#47;resources&#39;    :
+  &#39;&#47;&#39;             : Resource.IndexPage
+  &#39;&#47;:id&#39;          : Resource.ShowPage
+  &#39;&#47;:id&#47;edit&#39;     : Resource.EditPage
+  &#39;&#47;new&#39;          : Resource.EditPage</code></pre>
+  </div>
 </div>
 <div class='tags'>
 </div>
@@ -506,7 +518,7 @@ Set <code>false</code> to make router react on all modifications.</p>
     </div>
     <div id='footer'>
   Generated on
-  Wed Aug 07 2013 18:05:46 GMT+0700 (ICT)
+  Wed Aug 07 2013 18:09:40 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

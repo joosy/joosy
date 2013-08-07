@@ -16,10 +16,6 @@ class Joosy.Module
   #   Remember: minifcation will rename your classes. Therefore it
   #   is only intended for development debugging purposes.
   #
-  # @note Go @jashkenas Go! Give us https://github.com/jashkenas/coffee-script/issues/2052.
-  #   Please go vote for this feature if you are reading this. It will
-  #   give us ability to eleminate a lot of boilerplate for you.
-  #
   # @return [String]
   #
   @__className: (klass) ->

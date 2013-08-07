@@ -539,14 +539,6 @@
         _ref.unbind().off();
       }
       return this.$container = $();
-    },
-    __loadData: function(done) {
-      var _this = this;
-      this.data = {};
-      return this.__runFetchs([], function() {
-        _this.dataFetched = true;
-        return done();
-      });
     }
   };
 
@@ -2306,13 +2298,20 @@
 
 }).call(this);
 (function() {
-  Joosy.Application = {
-    Pages: {},
-    Layouts: {},
-    Controls: {},
-    initialized: false,
-    loading: true,
-    config: {
+  Joosy.Application = (function() {
+    function Application() {}
+
+    Application.Pages = {};
+
+    Application.Layouts = {};
+
+    Application.Controls = {};
+
+    Application.initialized = false;
+
+    Application.loading = true;
+
+    Application.config = {
       test: false,
       debug: false,
       templater: {
@@ -2323,8 +2322,9 @@
         base: '',
         prefix: ''
       }
-    },
-    initialize: function(selector, options) {
+    };
+
+    Application.initialize = function(selector, options) {
       var _this = this;
       this.selector = selector;
       if (options == null) {
@@ -2352,8 +2352,9 @@
         }
       });
       return this.initialized = true;
-    },
-    reset: function() {
+    };
+
+    Application.reset = function() {
       var _ref;
       Joosy.Router.reset();
       Joosy.templater(false);
@@ -2364,15 +2365,13 @@
       delete this.page;
       this.loading = true;
       return this.initialized = false;
-    },
-    navigate: function() {
-      var _ref;
-      return (_ref = this.router).navigate.apply(_ref, arguments);
-    },
-    content: function() {
+    };
+
+    Application.content = function() {
       return $(this.selector);
-    },
-    changePage: function(page, params) {
+    };
+
+    Application.changePage = function(page, params) {
       var attempt;
       attempt = new page(params, this.page);
       if (!attempt.halted) {
@@ -2383,8 +2382,9 @@
         }
         return this.page = attempt;
       }
-    },
-    forceSandbox: function() {
+    };
+
+    Application.forceSandbox = function() {
       var sandbox;
       sandbox = Joosy.uid();
       this.selector = "#" + sandbox;
@@ -2393,8 +2393,11 @@
         width: '0px',
         overflow: 'hidden'
       }));
-    }
-  };
+    };
+
+    return Application;
+
+  })();
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
     define('joosy/application', function() {

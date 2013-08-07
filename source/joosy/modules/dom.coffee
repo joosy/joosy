@@ -47,6 +47,7 @@ Joosy.Modules.DOM =
   # Converts '$...' notation to selector from 'elements'
   #
   # @param [String] selector            Selector to convert
+  # @private
   #
   __extractSelector: (selector) ->
     selector = selector.replace /(\$[A-z0-9\.\$]+)/g, (path) =>
@@ -63,6 +64,7 @@ Joosy.Modules.DOM =
   #
   # Assigns elements defined in 'elements'
   #
+  # @private
   # @example Sample elements
   #   @mapElements
   #     foo: '.foo'
@@ -85,6 +87,8 @@ Joosy.Modules.DOM =
   #
   # Wraps actual element closures. Required to clear context to avoid circular reference
   #
+  # @private
+  #
   __wrapElement: (value) ->
     (filter) =>
       return @$(value) unless filter
@@ -93,6 +97,7 @@ Joosy.Modules.DOM =
   #
   # Binds events defined in 'events' to container
   #
+  # @private
   # @example Sample events
   #   @mapEvents
   #     'click': -> # this will raise on container click
@@ -124,19 +129,11 @@ Joosy.Modules.DOM =
         @$container.on eventName, selector, callback
         Joosy.Modules.Log.debugAs @, "#{eventName} binded on #{selector}"
 
+  # @private
   __clearContainer: ->
     @$container?.unbind().off()
     @$container = $()
 
-
-  # This is not clearly related for container management
-  # But it will be later common for all containers
-  # See https://github.com/joosy/joosy/issues/102
-  __loadData: (done) ->
-      @data = {}
-      @__runFetchs [], =>
-        @dataFetched = true
-        done()
 
 # AMD wrapper
 if define?.amd?

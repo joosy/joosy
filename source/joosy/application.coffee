@@ -7,17 +7,15 @@
 #
 # Joosy Application container
 #
-# @mixin
-#
-Joosy.Application =
-  Pages: {}
-  Layouts: {}
-  Controls: {}
+class Joosy.Application
+  @Pages: {}
+  @Layouts: {}
+  @Controls: {}
 
-  initialized: false
-  loading: true
+  @initialized: false
+  @loading: true
 
-  config:
+  @config:
     test:     false
     debug:    false
     templater:
@@ -34,7 +32,7 @@ Joosy.Application =
   # @param [String] selector    jQuery-compatible selector of root application element
   # @param [Object] options
   #
-  initialize: (@selector, options={}) ->
+  @initialize: (@selector, options={}) ->
     if @initialized
       throw new Error 'Attempted to initialize Application twice'
 
@@ -56,7 +54,10 @@ Joosy.Application =
 
     @initialized = true
 
-  reset: ->
+  #
+  # Shuts down current application and clears state
+  #
+  @reset: ->
     Joosy.Router.reset()
     Joosy.templater false
     Joosy.debug false
@@ -67,13 +68,10 @@ Joosy.Application =
     @loading = true
     @initialized = false
 
-  navigate: ->
-    @router.navigate arguments...
-
   #
   # Gets current application root node
   #
-  content: ->
+  @content: ->
     $(@selector)
 
   #
@@ -82,7 +80,7 @@ Joosy.Application =
   # @param [Joosy.Page] page      The class (not object) of page to load
   # @param [Object] params        Hash of page params
   #
-  changePage: (page, params) ->
+  @changePage: (page, params) ->
     attempt = new page params, @page
 
     unless attempt.halted
@@ -93,7 +91,8 @@ Joosy.Application =
 
       @page = attempt
 
-  forceSandbox: ->
+  # @private
+  @forceSandbox: ->
     sandbox   = Joosy.uid()
     @selector = "##{sandbox}"
     $('body').append $('<div/>').attr('id', sandbox).css

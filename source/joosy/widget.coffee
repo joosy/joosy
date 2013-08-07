@@ -10,11 +10,13 @@
 # Base class for all Joosy Widgets.
 #
 # Joosy expects you to perceive your actual application as a tree of widgets. Internally all high-level
-# containers like {Layout} and {Page} are inheriting from Widget. Widget contains logic for:
+# containers like {Joosy.Layout} and {Joosy.Page} are inheriting from Widget. Widget contains logic for:
 #
-#   * Recursive nesting (widgets can contain widgets, etc.)
-#   * Loading and Unloading flows (proper initializations, destructions and replacements)
-#   * Filtering (afterLoad, beforeLoad and the family of paint filters)
+#  * Recursive nesting (widgets can contain widgets, etc.)
+#
+#  * Loading and Unloading flows (proper initializations, destructions and replacements)
+#
+#  * Filtering (afterLoad, beforeLoad and the family of paint filters)
 #
 # During the bootstrap, widgets can take either dependent or independent strategy. Dependent widgets form
 # "dependent chains" that will be rendered together (HTML will be injected into DOM atomically). Such chains
@@ -31,14 +33,23 @@
 # Then total chain of asynchronous callbacks goes with the following scenario.
 # 
 # 1. A collects all the fetches from the whole tree recursively and starts them in parallel.
-# 2. A runs erase on the previous same-level widget (attribute `@previos`) if one is given.
+#
+# 2. A runs erase on the previous same-level widget (attribute `@previous`) if one is given.
+#
 # 3. A runs beforePaint on itself when 2 is done.
+#
 # 4. A waits for step 3 and all fetches of containers in recursive dependency chain (equal to B) to complete.
+#
 # 5. A builds resulting HTML using:
+#
 #   * HTML of dependency chain (B)
+#
 #   * HTML of independent containers that are ready to be rendered (their own recursive dependency chain is fetched completely).
+#
 # 5. A forks every independent container that was not rendered (C).
+#
 # 6. A starts paint on itself and injects HTML into DOM.
+#
 # 7. C repeats steps 2-7 using itself as a base and D as its own recursive dependency chain
 #
 # @include Joosy.Modules.Log
@@ -253,10 +264,10 @@ class Joosy.Widget extends Joosy.Module
   #
   # @example
   #   nestingMap =
-  #     '#page':
+  #     '.page':
   #       instance: page
   #       nested:
-  #         '#widget1': {instance: widget1}
+  #         '.widget1': {instance: widget1}
   #
   #   layout.__bootstrap nestingMap, Joosy.Application.content()
   #

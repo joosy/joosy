@@ -7,3 +7,4 @@ spec/*.html
 Gemfile.lock
 .idea/
 doc
+doc.tmp

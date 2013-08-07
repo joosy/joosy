@@ -27,8 +27,8 @@ class Joosy.Page extends Joosy.Widget
   @extend  Joosy.Modules.Page_Title
 
   #
-  # @params [Hash] params             Route params
-  # @params [Joosy.Page] previous     Previous page to unload
+  # @param [Hash] params             Route params
+  # @param [Joosy.Page] previous     Previous page to unload
   #
   constructor: (@params, @previous) ->
     @layoutShouldChange = @previous?.__layoutClass != @__layoutClass

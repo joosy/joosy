@@ -4,6 +4,7 @@
 # Creates unified collection of bindings to a particular instance
 # that can be unbinded alltogether
 #
+# @see Joosy.Modules.Events
 # @example
 #   namespace = Joosy.Events.Namespace(something)
 #

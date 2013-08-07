@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <link rel='stylesheet' href='assets/codo.css' type='text/css'>
+  <script src='assets/codo.js'></script>
+  <script src='assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path=''></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='README.md.html' title='Joosy'>Joosy</a>
+    &raquo;
+    <a href='class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>README.md</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='mixin_list.html'>Mixins</a>
+      <a id='file_list_link' href='file_list.html'>Files</a>
+      <a id='method_list_link' href='method_list.html'>Methods</a>
+      <a id='extra_list_link' href='extra_list.html'>Extras</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-E</span>
+        Extras list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <nav class='toc'>
+        <p class='title'>
+          <a class='hide_toc' href='#'>
+            <strong>Table of Contents</strong>
+          </a>
+          <small>
+            (<a class='float_toc' href='#'>left</a>)
+          </small>
+        </p>
+      </nav>
+      <div id='filecontents'>
+        <h1>Joosy 1.2: Feather</h1><p><img src="http://f.cl.ly/items/2N2J453J2B353F1A0t0I/joocy1.1.png" alt="Joosy"></p><p>Joosy is a javascript framework. Being a harmonious extensions to Rails it introduces everything you like about backend right to your browser. Ready conventions set, extensive CoffeeScript, HAML support, Helpers, seamless backend integration, automatic code generation and more.</p><p><a href="http://badge.fury.io/js/joosy"><img src="https://badge.fury.io/js/joosy.png" alt="NPM version"></a>
+<a href="https://travis-ci.org/joosy/joosy"><img src="https://travis-ci.org/joosy/joosy.png" alt="Build Status"></a>
+<a href="https://gemnasium.com/joosy/joosy"><img src="https://gemnasium.com/joosy/joosy.png" alt="Dependency Status"></a></p><hr>
+<h2>WARNING!!!</h2><p>Master branch is currently totally incompatible with the stable 1.1 and 1.0 branches. 1.2 features
+total restructuring of the way we build the gem and the way you are supposed to include it.</p><p>To keep things working please use either</p><pre><code class="lang-ruby">  gem &#39;joosy&#39;, &#39;~&gt; 1.1.1&#39;</code></pre><p>or</p><pre><code class="lang-ruby">  gem &#39;joosy&#39;, github: &#39;joosy/joosy&#39;, branch: &#39;1.1&#39;</code></pre><p><a href="http://guides.joosy.ws/">Guides</a> and <a href="http://api.joosy.ws/">API</a> are also bound to 1.1 branch.
+Again – make sure you use proper gem versions.</p><h3>Whatever! I&#39;m ninja!</h3><p>Below in this README you will find new installation instructions. They are still very likely
+to change or work not as expected while 1.2 branch is still early alpha.</p><p>Keep track on what&#39;s going on at the <a href="https://github.com/joosy/joosy/wiki#12-feather">Wiki</a></p><hr>
+<h2>What is Joosy</h2><p>Joosy allows you to create web apps which work completely in the browser. So that, it helps you to relocate all your Rails Views to the client side. It also helps you with managing the growing quantity of JS code. On another hand, it makes your backend to have exactly one function – to be a simple REST provider. That leads to easier development support and improves the scalability greatly.</p><p>Besides Rails, Joosy is based on top of <a href="http://coffeescript.org/">CoffeeScript</a>, <a href="http://jquery.com/">jQuery</a> and <a href="http://sugarjs.com/">Sugar.js</a> in role of ActiveSupport.</p><p>Finally, Joosy boosts your development drastically. Just like the Rails framework does.</p><h3>Jump in with Rails</h3><p>Add Joosy gem to your Gemfile:</p><pre><code class="lang-ruby">  gem &#39;joosy-rails&#39;, &#39;~&gt; 1.0.0&#39;</code></pre><p>Use built-in generator to seed a basic application:</p><pre><code>rails g joosy:application</code></pre><p>Make sure to remove <code>public/index.html</code> and you are ready to go with <a href="http://localhost:3000/">localhost:3000</a>. The main application code can be found at <code>app/assets/javascripts</code> directory. HTML canvas of the application is at <code>app/views/layouts/joosy.html.erb</code>.</p><h3>Jump in with Sinatra</h3>
+<h3>Standalone application</h3><p>Make sure you have Node.js installed. Install joosy package globally to start with:</p><pre><code>npm install joosy -g</code></pre><p>Now run basic application generator with the following command:</p><pre><code>joosy new dummy</code></pre><p>The main application code will appear at <code>source</code> directory. <code>stylesheets</code> is for Stylus-based styles and the main canvas of page is defined at <code>source/index.haml</code>. Now you can <code>grunt joosy:server</code> to start development server at <a href="http://localhost:4000/">localhost:4000</a>.</p><p>To generate assets statically prior to the deployment run:</p><pre><code>grunt joosy:compile</code></pre><p>You assets are at <code>public/</code> directory, enjoy!</p><h2>Hacking</h2>
+<ul>
+<li>Ensure you have Node.js available on your system</li>
+<li>Clone the project</li>
+<li>Run <code>npm install</code> to get required Node modules</li>
+<li>Run <code>bower install</code> to get required JS components</li>
+<li>Run <code>grunt test</code> to run specs once</li>
+<li>Run <code>grunt</code> to watch sources (automatic changes compilations) and run test-server (get your browser to <a href="http://localhost:8888/">http://localhost:8888/</a>)</li>
+</ul><p>While current repository is at the same time NPM package, Ruby gem and Bower component, – the main Core
+environment is Node.js.</p><h2>Maintainers</h2>
+<ul>
+<li>Boris Staal, <a href="http://staal.io">@inossidabile</a></li>
+<li>Andrew Shaydurov, <a href="http://twitter.com/ImGearHead">@ImGearHead</a></li>
+<li>Alexander Pavlenko, <a href="http://twitter.com/alerticus">@alerticus</a></li>
+</ul>
+<h2>License</h2><p>Copyright 2011-2013 <a href="http://staal.io">Boris Staal</a></p><p>It is free software, and may be redistributed under the terms of MIT license.</p>
+      </div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Wed Aug 07 2013 16:58:14 GMT+0700 (ICT)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.7.0
+  (Node.js v0.10.5).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

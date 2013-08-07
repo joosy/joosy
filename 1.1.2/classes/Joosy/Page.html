@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Joosy API</title>
+  <link rel='stylesheet' href='../../assets/codo.css' type='text/css'>
+  <script src='../../assets/codo.js'></script>
+  <script src='../../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Page</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../../file_list.html'>Files</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Joosy.Page
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>app/assets/javascripts/joosy/core/page.js.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Includes:</td>
+          <td>
+                        <a href="../../mixins/Joosy/Modules/Log.html">Joosy.Modules.Log</a>,
+                        <a href="../../mixins/Joosy/Modules/Events.html">Joosy.Modules.Events</a>,
+                        <a href="../../mixins/Joosy/Modules/Container.html">Joosy.Modules.Container</a>,
+                        <a href="../../mixins/Joosy/Modules/Renderer.html">Joosy.Modules.Renderer</a>,
+                        <a href="../../mixins/Joosy/Modules/TimeManager.html">Joosy.Modules.TimeManager</a>,
+                        <a href="../../mixins/Joosy/Modules/WidgetsManager.html">Joosy.Modules.WidgetsManager</a>,
+            <a href="../../mixins/Joosy/Modules/Filters.html">Joosy.Modules.Filters</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base class for all of your Joosy Pages. </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample application page
+    </h4>
+    <pre><code class='coffee'>class @RumbaPage extends Joosy.Layout
+  @view &apos;rumba&apos;</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='http://guides.joosy.ws/guides/blog/layouts-pages-and-routing.html'>http://guides.joosy.ws/guides/blog/layouts-pages-and-routing.html</a>
+    </li>
+  </ul>
+</div>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#layout-class'>
+        + (void) <strong>layout</strong>(layoutClass)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets layout for current page
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#beforePaint-class'>
+        + (void) <strong>beforePaint</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the painting preparation proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#paint-class'>
+        + (void) <strong>paint</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the painting proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#afterPaint-class'>
+        + (void) <strong>afterPaint</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#erase-class'>
+        + (void) <strong>erase</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the erasing proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#fetch-class'>
+        + (void) <strong>fetch</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the data fetching proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#fetchSynchronized-class'>
+        + (void) <strong>fetchSynchronized</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the several separate methods that will fetch data in parallel.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#scroll-class'>
+        + (void) <strong>scroll</strong>(element, options = {})
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the position where page will be scrolled to after load.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#title-class'>
+        + (void) <strong>title</strong>(title, separator = ' / ')
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the page HTML title.
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#__performScrolling-instance'>
+        - (void) <strong>__performScrolling</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Scrolls page to stored positions
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(params, previous)
+      </a>
+    </span>
+    <span class='constructor note title'>Constructor</span>
+    <span class='desc'>
+      Constructor is very destructive (c), it calls bootstrap directly so use with caution.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#navigate-instance'>
+        - (void) <strong>navigate</strong>(args...)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__renderSection-instance'>
+        - (void) <strong>__renderSection</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      This is required by <a href='../../modules/Joosy/Modules/Renderer.html'>Joosy.Modules.Renderer</a> Sets the base template dir to app_name/templates/pages
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__fixHeight-instance'>
+        - (void) <strong>__fixHeight</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Freezes the page height through $(html).
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__releaseHeight-instance'>
+        - (void) <strong>__releaseHeight</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Undo <a href='../../classes/Joosy/Page.html#__fixHeight-instance'>#__fixHeight</a>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__load-instance'>
+        - (void) <strong>__load</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Page bootstrap proccess * <a href='../../modules/Joosy/Modules/Container.html#refreshElements-class'>Joosy.Modules.Container.refreshElements</a> * <a href='../../modules/Joosy/Modules/Container.html#__delegateEvents-class'>Joosy.Modules.Container.__delegateEvents</a> * <a href='../../modules/Joosy/Modules/WidgetsManager.html#__setupWidgets-class'>Joosy.Modules.WidgetsManager.__setupWidgets</a> * Scrolling
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__unload-instance'>
+        - (void) <strong>__unload</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Page destruction proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__callSyncedThrough-instance'>
+        - (void) <strong>__callSyncedThrough</strong>(entity, receiver, params, callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Proxies callback through possible async wrapper.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__bootstrap-instance'>
+        - (void) <strong>__bootstrap</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      The single page (without layout reloading) bootstrap logic
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__bootstrapLayout-instance'>
+        - (void) <strong>__bootstrapLayout</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      The page+layout bootstrap logic
+    </span>
+  </li>
+</ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods inherited from
+        <a href="../../classes/Joosy/Module.html">Joosy.Module</a>
+      </h3>
+      <p class='inherited'>
+                <a href="../../classes/Joosy/Module.html#__className-class">.__className</a>,
+                <a href="../../classes/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>,
+                <a href="../../classes/Joosy/Module.html#alias-class">.alias</a>,
+                <a href="../../classes/Joosy/Module.html#aliasStatic-class">.aliasStatic</a>,
+                <a href="../../classes/Joosy/Module.html#merge-class">.merge</a>,
+                <a href="../../classes/Joosy/Module.html#include-class">.include</a>,
+        <a href="../../classes/Joosy/Module.html#extend-class">.extend</a>
+      </p>
+      <h2>
+        <small>Included Method Summary</small>
+      </h2>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/Log.html">Joosy.Modules.Log</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/Log.html#log-mixin">#log</a>,
+                <a href="../../mixins/Joosy/Modules/Log.html#debug-mixin">#debug</a>,
+        <a href="../../mixins/Joosy/Modules/Log.html#debugAs-mixin">#debugAs</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/Events.html">Joosy.Modules.Events</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/Events.html#wait-mixin">#wait</a>,
+                <a href="../../mixins/Joosy/Modules/Events.html#bind-mixin">#bind</a>,
+                <a href="../../mixins/Joosy/Modules/Events.html#unbind-mixin">#unbind</a>,
+                <a href="../../mixins/Joosy/Modules/Events.html#trigger-mixin">#trigger</a>,
+        <a href="../../mixins/Joosy/Modules/Events.html#synchronize-mixin">#synchronize</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/Container.html">Joosy.Modules.Container</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/Container.html#onRefresh-mixin">#onRefresh</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#$-mixin">#$</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#refreshElements-mixin">#refreshElements</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#reloadContainer-mixin">#reloadContainer</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#swapContainer-mixin">#swapContainer</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#__collectElements-mixin">#__collectElements</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#__collectEvents-mixin">#__collectEvents</a>,
+                <a href="../../mixins/Joosy/Modules/Container.html#__extractSelector-mixin">#__extractSelector</a>,
+        <a href="../../mixins/Joosy/Modules/Container.html#__delegateEvents-mixin">#__delegateEvents</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/Renderer.html">Joosy.Modules.Renderer</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__renderer-mixin">#__renderer</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#included-mixin">#included</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__instantiateHelpers-mixin">#__instantiateHelpers</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__proxifyHelpers-mixin">#__proxifyHelpers</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#render-mixin">#render</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#renderDynamic-mixin">#renderDynamic</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__render-mixin">#__render</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__renderingStackElement-mixin">#__renderingStackElement</a>,
+                <a href="../../mixins/Joosy/Modules/Renderer.html#__renderingStackChildFor-mixin">#__renderingStackChildFor</a>,
+        <a href="../../mixins/Joosy/Modules/Renderer.html#__removeMetamorphs-mixin">#__removeMetamorphs</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/TimeManager.html">Joosy.Modules.TimeManager</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/TimeManager.html#setTimeout-mixin">#setTimeout</a>,
+                <a href="../../mixins/Joosy/Modules/TimeManager.html#setInterval-mixin">#setInterval</a>,
+        <a href="../../mixins/Joosy/Modules/TimeManager.html#__clearTime-mixin">#__clearTime</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/WidgetsManager.html">Joosy.Modules.WidgetsManager</a>
+      </h3>
+      <p class='included'>
+                <a href="../../mixins/Joosy/Modules/WidgetsManager.html#registerWidget-mixin">#registerWidget</a>,
+                <a href="../../mixins/Joosy/Modules/WidgetsManager.html#unregisterWidget-mixin">#unregisterWidget</a>,
+                <a href="../../mixins/Joosy/Modules/WidgetsManager.html#__collectWidgets-mixin">#__collectWidgets</a>,
+                <a href="../../mixins/Joosy/Modules/WidgetsManager.html#__setupWidgets-mixin">#__setupWidgets</a>,
+        <a href="../../mixins/Joosy/Modules/WidgetsManager.html#__unloadWidgets-mixin">#__unloadWidgets</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../mixins/Joosy/Modules/Filters.html">Joosy.Modules.Filters</a>
+      </h3>
+      <p class='included'>
+        <a href="../../mixins/Joosy/Modules/Filters.html#included-mixin">#included</a>
+      </p>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='layout-class'>
+      + (void) <strong>layout</strong>(layoutClass)
+    </p>
+    <div class='docstring'>
+  <p>Sets layout for current page </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>layoutClass</span>
+      <span class='type'>
+        (<tt>Class</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Layout to use</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='beforePaint-class'>
+      + (void) <strong>beforePaint</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the painting preparation proccess. </p> <p>This method will be called right ater previous page <a href='../../classes/Joosy/Page.html#erase-class'>Joosy.Page.erase</a> and in parallel with page data fetching so you can use it to initiate preloader. </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample before painter
+    </h4>
+    <pre><code class='coffee'>@beforePaint (complete) -&gt;
+  if !@data # checks if parallel fetching finished
+    $(&apos;preloader&apos;).slideDown -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='paint-class'>
+      + (void) <strong>paint</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the painting proccess. </p> <p>This method will be called after fetching, erasing and beforePaint is complete. It should be used to setup appearance effects of page. </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample painter
+    </h4>
+    <pre><code class='coffee'>@paint (complete) -&gt;
+  @container.fadeIn -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='afterPaint-class'>
+      + (void) <strong>afterPaint</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <div class='note todo'>
+    <strong>TODO:</strong>
+    Does anybody have idea why we could need this method? Looks like something should be removed from here and bootstrap proccess.
+  </div>
+  
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='erase-class'>
+      + (void) <strong>erase</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <div class='note'>
+    <strong>Note:</strong>
+    This method will be caled _before_ unload routines so in theory you can access page data from that. Think twice if you are doing it right though.
+  </div>
+  <p>Sets the method which will controll the erasing proccess. </p> <p>Use this method to setup hiding effect. </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample eraser
+    </h4>
+    <pre><code class='coffee'>@erase (complete) -&gt;
+  @container.fadeOut -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='fetch-class'>
+      + (void) <strong>fetch</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with `complete` function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the data fetching proccess. </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>@fetch (complete) -&gt;
+  $.get &apos;/rumbas&apos;, (@data) =&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='fetchSynchronized-class'>
+      + (void) <strong>fetchSynchronized</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    This will work through <a href='../../modules/Joosy/Modules/Events.html#synchronize-class'>Joosy.Modules.Events.synchronize</a>
+  </div>
+  <p>Sets the several separate methods that will fetch data in parallel. </p> <pre><code>context.do (done) -&gt;   $.get &#39;/kutuzkas&#39;, (data) =&gt;     @data.kutuzkas = data     done()</code></pre> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>@fetchSynchronized (context) -&gt;
+  context.do (done) -&gt;
+    $.get &apos;/rumbas&apos;, (data) =&gt;
+      @data.rumbas = data
+      done()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='scroll-class'>
+      + (void) <strong>scroll</strong>(element, options = {})
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    If you use animated scroll joosy will atempt to temporarily fix the height of your document while scrolling to prevent jump effect.
+  </div>
+  <p>Sets the position where page will be scrolled to after load. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>element</span>
+      <span class='type'>
+        (<tt>jQuery</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Element to scroll to</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>speed</span>
+      <span class='type'>
+        (<tt>Integer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Sets the animation duration (500 is default)</span>
+    </li>
+    <li>
+      <span class='name'>margin</span>
+      <span class='type'>
+        (<tt>Integer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Defines the margin from element position. Can be negative.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='title-class'>
+      + (void) <strong>title</strong>(title, separator = ' / ')
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Title will be reverted on unload.
+  </div>
+  <p>Sets the page HTML title. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>title</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Title to set.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(params, previous)
+    </p>
+    <div class='docstring'>
+  <p>Constructor is very destructive (c), it calls bootstrap directly so use with caution. </p> <p>@params [Hash] params             Route params @params [Joosy.Page] previous     Previous page to unload </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='__performScrolling-instance'>
+      - (void) <strong>__performScrolling</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Scrolls page to stored positions </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='navigate-instance'>
+      - (void) <strong>navigate</strong>(args...)
+    </p>
+    <div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='../../modules/Joosy/Router.html#navigate-class'>Joosy.Router.navigate</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__renderSection-instance'>
+      - (void) <strong>__renderSection</strong>()
+    </p>
+    <div class='docstring'>
+  <p>This is required by <a href='../../modules/Joosy/Modules/Renderer.html'>Joosy.Modules.Renderer</a> Sets the base template dir to app_name/templates/pages </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__fixHeight-instance'>
+      - (void) <strong>__fixHeight</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Freezes the page height through $(html). </p> <p>Required to implement better <a href='../../classes/Joosy/Page.html#scroll-class'>Joosy.Page.scroll</a> behavior. </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__releaseHeight-instance'>
+      - (void) <strong>__releaseHeight</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Undo <a href='../../classes/Joosy/Page.html#__fixHeight-instance'>#__fixHeight</a> </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__load-instance'>
+      - (void) <strong>__load</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Page bootstrap proccess </p> <ul> <li><a href='../../modules/Joosy/Modules/Container.html#refreshElements-class'>Joosy.Modules.Container.refreshElements</a></li> <li><a href='../../modules/Joosy/Modules/Container.html#__delegateEvents-class'>Joosy.Modules.Container.__delegateEvents</a></li> <li><a href='../../modules/Joosy/Modules/WidgetsManager.html#__setupWidgets-class'>Joosy.Modules.WidgetsManager.__setupWidgets</a></li> <li>Scrolling</li> </ul> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__unload-instance'>
+      - (void) <strong>__unload</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Page destruction proccess. </p> <ul> <li><a href='../../modules/Joosy/Modules/TimeManager.html#__clearTime-class'>Joosy.Modules.TimeManager.__clearTime</a></li> <li><a href='../../modules/Joosy/Modules/WidgetsManager.html#__unloadWidgets-class'>Joosy.Modules.WidgetsManager.__unloadWidgets</a></li> <li><a href='../../modules/Joosy/Modules/Renderer.html#__removeMetamorphs-class'>Joosy.Modules.Renderer.__removeMetamorphs</a></li> </ul> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__callSyncedThrough-instance'>
+      - (void) <strong>__callSyncedThrough</strong>(entity, receiver, params, callback)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Magic People Voodoo People
+  </div>
+  <p>Proxies callback through possible async wrapper. </p> <p>If wrapper is defined, it will be called with given callback as one of parameters. If wrapper is not defined callback will be called directly. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>entity</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Object possibly containing wrapper method</span>
+    </li>
+    <li>
+      <span class='name'>receiver</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>String name of wrapper method inside entity</span>
+    </li>
+    <li>
+      <span class='name'>params</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Params to send to wrapper, callback will be attached as the last of them.</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Callback to run</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__bootstrap-instance'>
+      - (void) <strong>__bootstrap</strong>()
+    </p>
+    <div class='docstring'>
+  <p>The single page (without layout reloading) bootstrap logic </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Hacky boot sequence description
+    </h4>
+    <pre><code class='coffee'>previous::erase  \
+previous::unload  \
+beforePaint        \
+                    &gt; paint
+fetch             /</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__bootstrapLayout-instance'>
+      - (void) <strong>__bootstrapLayout</strong>()
+    </p>
+    <div class='docstring'>
+  <p>The page+layout bootstrap logic </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Hacky boot sequence description
+    </h4>
+    <pre><code class='coffee'>previous::erase  \
+previous::unload  \
+beforePaint        \
+                    &gt; paint
+fetch             /</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Mon Jun 04 2012 22:41:19 GMT+0400 (MSK)
+  by
+  <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v0.7.1
+  (Node.js v0.6.8).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http=//twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https=//mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

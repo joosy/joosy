@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Joosy API</title>
+  <link rel='stylesheet' href='../../assets/codo.css' type='text/css'>
+  <script src='../../assets/codo.js'></script>
+  <script src='../../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Router</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../../file_list.html'>Files</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Mixin:
+        Joosy.Router
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>app/assets/javascripts/joosy/core/router.js.coffee</td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Router. Reacts on a hash change event and loads proper pages </p> <p>Example: Joosy.Router.map     404             : (path) -&gt; alert &quot;Page &#39;#{path}&#39; was not found :(&quot;     &#39;/&#39;             : Welcome.IndexPage     &#39;/resources&#39;    :     &#39;/&#39;           : Resource.IndexPage     &#39;/:id&#39;        : Resource.ShowPage     &#39;/:id/edit&#39;   : Resource.EditPage     &#39;/new&#39;        : Resource.EditPage </p> 
+</div>
+<div class='tags'>
+</div>
+      <h2>Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#restrict-mixin'>
+        ? (void) <strong>restrict</strong>(restrictPattern)
+      </a>
+    </span>
+    <span class='desc'>
+      Set the restriction pattern.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#reset-mixin'>
+        ? (void) <strong>reset</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Clears the routes
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#map-mixin'>
+        ? (void) <strong>map</strong>(routes)
+      </a>
+    </span>
+    <span class='desc'>
+      Registers the set of raw routes This method will only store routes and will not make them act immediately Routes get registered only once at system initialization during #__setupRoutes call
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#navigate-mixin'>
+        ? (void) <strong>navigate</strong>(to, options = {})
+      </a>
+    </span>
+    <span class='desc'>
+      Changes current hash with shebang (#!) and therefore triggers new route loading to be loaded
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__setupRoutes-mixin'>
+        ? (void) <strong>__setupRoutes</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Inits the routing system and loads the current route Binds the window hashchange event and therefore should only be called once during system startup
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__prepareRoutes-mixin'>
+        ? (void) <strong>__prepareRoutes</strong>(routes, namespace = '')
+      </a>
+    </span>
+    <span class='desc'>
+      Compiles routes to map object Object will contain regexp string as key and lambda/Page to load as value
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__prepareRoute-mixin'>
+        ? (void) <strong>__prepareRoute</strong>(path, response)
+      </a>
+    </span>
+    <span class='desc'>
+      Compiles one single route
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__respondRoute-mixin'>
+        ? (void) <strong>__respondRoute</strong>(hash)
+      </a>
+    </span>
+    <span class='desc'>
+      Searches the corresponding route through compiled routes
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__paramsFromRouteMatch-mixin'>
+        ? (void) <strong>__paramsFromRouteMatch</strong>(vals, route)
+      </a>
+    </span>
+    <span class='desc'>
+      Collects params from route placeholders (/foo/:placeholder) @returns [Object] Hash of params
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__paramsFromQueryArray-mixin'>
+        ? (void) <strong>__paramsFromQueryArray</strong>(queryArray)
+      </a>
+    </span>
+    <span class='desc'>
+      Collects params from query routes (/foo/&a=b) @returns [Object] Hash of params
+    </span>
+  </li>
+</ul>
+      <h2>Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='restrict-mixin'>
+      ? (void) <strong>restrict</strong>(restrictPattern)
+    </p>
+    <div class='docstring'>
+  <p>Set the restriction pattern. If the requested url does not match this it will not load. Set <code>false</code> to avoid check. </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='reset-mixin'>
+      ? (void) <strong>reset</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Clears the routes </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='map-mixin'>
+      ? (void) <strong>map</strong>(routes)
+    </p>
+    <div class='docstring'>
+  <p>Registers the set of raw routes This method will only store routes and will not make them act immediately Routes get registered only once at system initialization during #__setupRoutes call </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>routes</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Set of routes in inner format (see class description)</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='navigate-mixin'>
+      ? (void) <strong>navigate</strong>(to, options = {})
+    </p>
+    <div class='docstring'>
+  <p>Changes current hash with shebang (#!) and therefore triggers new route loading to be loaded </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>to</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Route to navigate to</span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>respond</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>If false just changes hash without responding</span>
+    </li>
+    <li>
+      <span class='name'>replaceState</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>If true uses replaces history entry instead of adding. Works only in browsers supporting history.pushState</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__setupRoutes-mixin'>
+      ? (void) <strong>__setupRoutes</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Inits the routing system and loads the current route Binds the window hashchange event and therefore should only be called once during system startup </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__prepareRoutes-mixin'>
+      ? (void) <strong>__prepareRoutes</strong>(routes, namespace = '')
+    </p>
+    <div class='docstring'>
+  <p>Compiles routes to map object Object will contain regexp string as key and lambda/Page to load as value </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>routes</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Raw routes to prepare</span>
+    </li>
+    <li>
+      <span class='name'>namespace</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Inner cursor for recursion</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__prepareRoute-mixin'>
+      ? (void) <strong>__prepareRoute</strong>(path, response)
+    </p>
+    <div class='docstring'>
+  <p>Compiles one single route </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>path</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Full path from raw route</span>
+    </li>
+    <li>
+      <span class='name'>response</span>
+      <span class='type'>
+        (<tt><a href='../../classes/Joosy/Page.html'>Joosy.Page</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Page that should be loaded at this route</span>
+    </li>
+    <li>
+      <span class='name'>response</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Lambda to call at this route</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__respondRoute-mixin'>
+      ? (void) <strong>__respondRoute</strong>(hash)
+    </p>
+    <div class='docstring'>
+  <p>Searches the corresponding route through compiled routes </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>hash</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Hash value to search route for</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__paramsFromRouteMatch-mixin'>
+      ? (void) <strong>__paramsFromRouteMatch</strong>(vals, route)
+    </p>
+    <div class='docstring'>
+  <p>Collects params from route placeholders (/foo/:placeholder) </p> <p>@returns [Object]           Hash of params </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>vals</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Array of value gathered by regexp</span>
+    </li>
+    <li>
+      <span class='name'>route</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Compiled route</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__paramsFromQueryArray-mixin'>
+      ? (void) <strong>__paramsFromQueryArray</strong>(queryArray)
+    </p>
+    <div class='docstring'>
+  <p>Collects params from query routes (/foo/&amp;a=b) </p> <p>@returns [Object]           Hash of params </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>queryArray</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Array of query string split by '&' sign</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Mon Jun 04 2012 22:41:19 GMT+0400 (MSK)
+  by
+  <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v0.7.1
+  (Node.js v0.6.8).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http=//twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https=//mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

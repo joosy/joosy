@@ -1,13 +1,186 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title>Joosy API</title>
-  <link rel='stylesheet' href='assets/codo.css' type='text/css'>
-  <script src='assets/codo.js'></script>
-  <script src='assets/search_data.js'></script>
-</head>
-  <frameset cols='20%, *'>
-    <frame name='list' src='class_list.html'></frame>
-    <frame name='main' src='README.md.html'></frame>
-  </frameset>
+    <meta content='IE=8' http-equiv='X-UA-Compatible'>
+    <meta charset='utf-8'>
+    <link href='/favicon.ico' rel='shortcut icon'>
+    <title>Joosy: API Documentation</title>
+    <script type="text/javascript" src="versions.js"></script>
+    <link rel="stylesheet" href="file:///Users/inossidabile/Repos/joosy-website/build/assets/application.css">
+  </head>
+  <body>
+    <div class='topbar'>
+      <div class='topbar_wrap'>
+        <table cellpadding='0' cellspacing='0'>
+          <tbody>
+            <tr>
+              <td>
+                <a href='http://www.joosy.ws'>
+                  Joosy
+                </a>
+              </td>
+              <td class='disabled'>
+                <a href='#'>
+                  Download
+                </a>
+              </td>
+              <td>
+                <a href='http://guides.joosy.ws'>
+                  Guides
+                </a>
+              </td>
+              <td class='active'>
+                <a href='/'>
+                  API
+                </a>
+              </td>
+              <td>
+                <a href='http://sample.joosy.ws/routes.js.coffee.html'>
+                  Annotated sample
+                </a>
+              </td>
+              <td class='disabled'>
+                <a href='#'>
+                  Screencasts
+                </a>
+              </td>
+              <td>
+                <a href='http://github.com/joosy/joosy/issues'>
+                  Bugs
+                </a>
+              </td>
+              <td class='disabled'>
+                <a href='#'>
+                  Community
+                </a>
+              </td>
+              <td>
+                <div class='twitter'>
+                  <a href="https://twitter.com/joosy_web" class="twitter-follow-button" data-show-count="false" data-show-screen-name="false">Follow @joosy_web</a>
+                  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class='content'>
+      <header>
+        <div class='container'>
+          <img src='http://joosy.ws/assets/joosy.png' class='logo'>
+          <h1>
+            API Documentation
+          </h1>
+          <span style="display: block; float: right; margin-top: 25px; font-size: 17px; color: white">
+            Choose version from the list
+          </span>
+        </div>
+      </header>
+
+      <section class='main' style="text-align: center">
+
+        <span style="display: block; font-size: 30px; line-height: 30px; margin-bottom: 25px;">
+          <strong>
+            Current stable version:
+            <script>
+              document.write(
+                '<a href="'+versions.stable.version+'/index.html" style="color: #00700d">'+versions.stable.version+'</a>'
+              );
+            </script>
+          </strong>
+          <span style='color: gray; font-size: 0.8em'>
+            <script>
+              document.write(
+                '('+versions.stable.date+')'
+              );
+            </script>
+          </span>
+        </span>
+
+        <span style="display: block; font-size: 30px; line-height: 30px; margin-bottom: 25px;">
+          <strong>
+            Latest edge version:
+            <script>
+              document.write(
+                '<a href="'+versions.edge.version+'/index.html" style="color: #700007">'+versions.edge.version+'</a>'
+              );
+            </script>
+          </strong>
+          <span style='color: gray; font-size: 0.8em'>
+            <script>
+              document.write(
+                '('+versions.edge.date+')'
+              );
+            </script>
+          </span>
+        </span>
+
+        <hr />
+
+        <h2 style="display: block; font-size: 20px; line-height: 20px; margin-bottom: 15px; margin-top: 25px;">
+          Other available versions:
+        </h2>
+
+        <script>
+          for (var i = 0; i < versions.versions.length; i++) {
+            var version = versions.versions[i];
+
+            document.write('<div>');
+            document.write('<a href="'+version.version+'/index.html" style="font-weight: bold">'+version.version+'</a>');
+            document.write('<span style="color: gray"> &mdash; '+version.date+'</span>');
+            document.write('</div>');
+          }
+        </script>
+      <section>
+    </div>
+
+    <div class='footer'>
+      <div class='ftr_wrap'>
+        <div class='left'>
+          <p>
+            <strong>
+              Copyright 2012-2013,
+              <a href='http://staal.io'>
+                Boris Staal
+              </a>
+            </strong>
+            <br>
+            <small>
+              <span>
+                Hosted at
+              </span><a href='http://pages.github.com'>Github Pages</a>,
+              <span>
+                generated with
+              </span><a href='https://github.com/netzpirat/codo'>Codo</a></small>
+          </p>
+        </div>
+        <div class='right'>
+          <p>
+            Want to improve something on docs?
+            <br><a href='https://github.com/joosy/joosy'>Pull requests</a><span>
+              are very welcome!
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <a href='https://github.com/joosy/joosy'>
+      <img alt='Fork me on GitHub' src='https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png' style='position: absolute; top: 0; right: 0; border: 0;'>
+    </a>
+    <script>
+      var _gauges = _gauges || [];
+      (function() {
+        var t   = document.createElement('script');
+        t.type  = 'text/javascript';
+        t.async = true;
+        t.id    = 'gauges-tracker';
+        t.setAttribute('data-site-id', '4fccaa07613f5d4efe000007');
+        t.src = '//secure.gaug.es/track.js';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(t, s);
+      })();
+    </script>
+  </body>
 </html>

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Joosy API</title>
+  <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
+  <script src='../../../assets/codo.js'></script>
+  <script src='../../../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Resource</span>
+    &raquo;
+    <span class='title'>Collection</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../../method_list.html'>Methods</a>
+      <a id='file_list_link' href='../../../file_list.html'>Files</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Joosy.Resource.Collection
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>app/assets/javascripts/joosy/core/resource/collection.js.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href="../../../classes/Joosy/Module.html">Joosy.Module</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Includes:</td>
+          <td>
+            <a href="../../../mixins/Joosy/Modules/Events.html">Joosy.Modules.Events</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    You should not use Collection directly. It will be automatically created by things like <a href='../../../classes/Joosy/Resource/Generic.html#map-class'>Joosy.Resource.Generic.map</a>  or <a href='../../../classes/Joosy/Resource/REST.html#find-class'>Joosy.Resource.REST.find</a>.
+  </div>
+  <p>Basic collection of Resources. Turns JSON array into array of Resources and manages them. </p> 
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic sample
+    </h4>
+    <pre><code class='coffee'>class R extends Joosy.Resource.Generic
+  @entity &apos;r&apos;
+  
+collection = new Joosy.Resource.Collection(R)
+  
+collection.load [{foo: &apos;bar&apos;}, {foo: &apos;baz&apos;}]
+collection.each (resource) -&gt;
+  resource(&apos;foo&apos;)</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+      <h2>Direct Known Subclasses</h2>
+      <p class='children'>
+        <a href="../../../classes/Joosy/Resource/RESTCollection.html">Joosy.Resource.RESTCollection</a>
+      </p>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#beforeLoad-class'>
+        + (void) <strong>beforeLoad</strong>(action)
+      </a>
+    </span>
+    <span class='desc'>
+      Allows to modify data before it gets stored
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#model-class'>
+        + (void) <strong>model</strong>(model)
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the default model for collection
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(model = false)
+      </a>
+    </span>
+    <span class='constructor note title'>Constructor</span>
+    <span class='desc'>
+      If model param was empty it will fallback to `@model` If both param and `@model` were empty it will throw an exception.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#load-instance'>
+        - (Joosy.Resource.Collection) <strong>load</strong>(entities, notify = true)
+      </a>
+    </span>
+    <span class='desc'>
+      Clears the storage and attempts to import given array If hash was given will seek for moodel name camelized and pluralized.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#modelize-instance'>
+        - (void) <strong>modelize</strong>(collection)
+      </a>
+    </span>
+    <span class='desc'>
+      Turns Objects array into array of Resources
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#each-instance'>
+        - (void) <strong>each</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      Calls callback for each Resource inside Collection
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#size-instance'>
+        - (void) <strong>size</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Returns number of Resources inside Collection
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#find-instance'>
+        - (Joosy.Resource.Generic) <strong>find</strong>(description)
+      </a>
+    </span>
+    <span class='desc'>
+      Gets first resource matching description (see Sugar.js Array#find)
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#findById-instance'>
+        - (Joosy.Resource.Generic) <strong>findById</strong>(id)
+      </a>
+    </span>
+    <span class='desc'>
+      Gets resource by id
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#at-instance'>
+        - (Joosy.Resource.Generic) <strong>at</strong>(i)
+      </a>
+    </span>
+    <span class='desc'>
+      Gets resource by its index inside collection
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#remove-instance'>
+        - (Joosy.Resource.Generic) <strong>remove</strong>(target, notify = true)
+      </a>
+    </span>
+    <span class='desc'>
+      Removes resource from collection by its index or by === comparison
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#add-instance'>
+        - (Joosy.Resource.Generic) <strong>add</strong>(element, index = false, notify = true)
+      </a>
+    </span>
+    <span class='desc'>
+      Adds resource to collection to given index or to the end
+    </span>
+  </li>
+</ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods inherited from
+        <a href="../../../classes/Joosy/Module.html">Joosy.Module</a>
+      </h3>
+      <p class='inherited'>
+                <a href="../../../classes/Joosy/Module.html#__className-class">.__className</a>,
+                <a href="../../../classes/Joosy/Module.html#hasAncestor-class">.hasAncestor</a>,
+                <a href="../../../classes/Joosy/Module.html#alias-class">.alias</a>,
+                <a href="../../../classes/Joosy/Module.html#aliasStatic-class">.aliasStatic</a>,
+                <a href="../../../classes/Joosy/Module.html#merge-class">.merge</a>,
+                <a href="../../../classes/Joosy/Module.html#include-class">.include</a>,
+        <a href="../../../classes/Joosy/Module.html#extend-class">.extend</a>
+      </p>
+      <h2>
+        <small>Included Method Summary</small>
+      </h2>
+      <h3 class='included'>
+        Methods included from
+        <a href="../../../mixins/Joosy/Modules/Events.html">Joosy.Modules.Events</a>
+      </h3>
+      <p class='included'>
+                <a href="../../../mixins/Joosy/Modules/Events.html#wait-mixin">#wait</a>,
+                <a href="../../../mixins/Joosy/Modules/Events.html#bind-mixin">#bind</a>,
+                <a href="../../../mixins/Joosy/Modules/Events.html#unbind-mixin">#unbind</a>,
+                <a href="../../../mixins/Joosy/Modules/Events.html#trigger-mixin">#trigger</a>,
+        <a href="../../../mixins/Joosy/Modules/Events.html#synchronize-mixin">#synchronize</a>
+      </p>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='beforeLoad-class'>
+      + (void) <strong>beforeLoad</strong>(action)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Supposed to be used in descendants
+  </div>
+  <p>Allows to modify data before it gets stored </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>action</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>`(Object) -> Object` to call</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='model-class'>
+      + (void) <strong>model</strong>(model)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Supposed to be used in descendants
+  </div>
+  <p>Sets the default model for collection </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>model</span>
+      <span class='type'>
+        (<tt>Class</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Model class</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(model = false)
+    </p>
+    <div class='docstring'>
+  <p>If model param was empty it will fallback to <code>@model</code> If both param and <code>@model</code> were empty it will throw an exception. </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>model</span>
+      <span class='type'>
+        (<tt>Class</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resource class which this collection will handle</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='load-instance'>
+      - (Joosy.Resource.Collection) <strong>load</strong>(entities, notify = true)
+    </p>
+    <div class='docstring'>
+  <p>Clears the storage and attempts to import given array </p> <pre><code>                                  If hash was given will seek for moodel name camelized and pluralized.</code></pre> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>entities</span>
+      <span class='type'>
+        (<tt>Array, Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Array of entities to import.</span>
+    </li>
+    <li>
+      <span class='name'>notify</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Indicates whether to trigger 'changed' event</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'>
+        (<tt><a href='../../../classes/Joosy/Resource/Collection.html'>Joosy.Resource.Collection</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Returns self.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='modelize-instance'>
+      - (void) <strong>modelize</strong>(collection)
+    </p>
+    <div class='docstring'>
+  <p>Turns Objects array into array of Resources </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>collection</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Array of Objects</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='each-instance'>
+      - (void) <strong>each</strong>(callback)
+    </p>
+    <div class='docstring'>
+  <p>Calls callback for each Resource inside Collection </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>`(mixed) -> mixed` to call for each Resource in collection</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='size-instance'>
+      - (void) <strong>size</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Returns number of Resources inside Collection </p> 
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='find-instance'>
+      - (Joosy.Resource.Generic) <strong>find</strong>(description)
+    </p>
+    <div class='docstring'>
+  <p>Gets first resource matching description (see Sugar.js Array#find) </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>description</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Callback matcher</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'>
+        (<tt><a href='../../../classes/Joosy/Resource/Generic.html'>Joosy.Resource.Generic</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'></span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='findById-instance'>
+      - (Joosy.Resource.Generic) <strong>findById</strong>(id)
+    </p>
+    <div class='docstring'>
+  <p>Gets resource by id </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>id</span>
+      <span class='type'>
+        (<tt>Integer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Id to find</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'>
+        (<tt><a href='../../../classes/Joosy/Resource/Generic.html'>Joosy.Resource.Generic</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'></span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='at-instance'>
+      - (Joosy.Resource.Generic) <strong>at</strong>(i)
+    </p>
+    <div class='docstring'>
+  <p>Gets resource by its index inside collection </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>i</span>
+      <span class='type'>
+        (<tt>Integer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Index</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'>
+        (<tt><a href='../../../classes/Joosy/Resource/Generic.html'>Joosy.Resource.Generic</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'></span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='remove-instance'>
+      - (Joosy.Resource.Generic) <strong>remove</strong>(target, notify = true)
+    </p>
+    <div class='docstring'>
+  <p>Removes resource from collection by its index or by === comparison </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>target</span>
+      <span class='type'>
+        (<tt>Integer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Index</span>
+    </li>
+    <li>
+      <span class='name'>target</span>
+      <span class='type'>
+        (<tt>Resource</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resource by itself</span>
+    </li>
+    <li>
+      <span class='name'>notify</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Indicates whether to trigger 'changed' event</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'>
+        (<tt><a href='../../../classes/Joosy/Resource/Generic.html'>Joosy.Resource.Generic</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Removed element</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='add-instance'>
+      - (Joosy.Resource.Generic) <strong>add</strong>(element, index = false, notify = true)
+    </p>
+    <div class='docstring'>
+  <p>Adds resource to collection to given index or to the end </p> 
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>element</span>
+      <span class='type'>
+        (<tt>Resource</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resource to add</span>
+    </li>
+    <li>
+      <span class='name'>index</span>
+      <span class='type'>
+        (<tt>Integer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Index to add to. If omited will be pushed to the end</span>
+    </li>
+    <li>
+      <span class='name'>notify</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Indicates whether to trigger 'changed' event</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'>
+        (<tt><a href='../../../classes/Joosy/Resource/Generic.html'>Joosy.Resource.Generic</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Added element</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Mon Jun 04 2012 22:41:19 GMT+0400 (MSK)
+  by
+  <a href='https=//github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v0.7.1
+  (Node.js v0.6.8).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http=//twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https=//mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

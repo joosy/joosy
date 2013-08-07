@@ -137,22 +137,29 @@
       <h2>Overview</h2>
       <div class='docstring'>
   <p>Base class for all Joosy Widgets.</p><p>Joosy expects you to perceive your actual application as a tree of widgets. Internally all high-level
-containers like {Layout} and {Page} are inheriting from Widget. Widget contains logic for:
- <em> Recursive nesting (widgets can contain widgets, etc.) </em> Loading and Unloading flows (proper initializations, destructions and replacements) * Filtering (afterLoad, beforeLoad and the family of paint filters)</p><p>During the bootstrap, widgets can take either dependent or independent strategy. Dependent widgets form
+containers like <a href='../../classes/Joosy/Layout.html'>Joosy.Layout</a> and <a href='../../classes/Joosy/Page.html'>Joosy.Page</a> are inheriting from Widget. Widget contains logic for:</p><ul>
+<li><p>Recursive nesting (widgets can contain widgets, etc.)</p></li>
+<li><p>Loading and Unloading flows (proper initializations, destructions and replacements)</p></li>
+<li><p>Filtering (afterLoad, beforeLoad and the family of paint filters)</p></li>
+</ul><p>During the bootstrap, widgets can take either dependent or independent strategy. Dependent widgets form
 &quot;dependent chains&quot; that will be rendered together (HTML will be injected into DOM atomically). Such chains
 use paint filters of the top elements. Independent widgets on the other hand load on their own behalf and
 use their own paint filters. To understand this better, here is the sample:</p><p>Let&#39;s say we have 4 widgets A, B, C and D nested into each other:</p><p>A is the root widget
 B is nested into A. It does not define itself as an independent and therefore defaults to dependent rendering
 C is nested into B. It defines itself as an independent children
 D is nested into C. It does not define itself as an independent and therefore defaults to dependent rendering</p><p>Then total chain of asynchronous callbacks goes with the following scenario.</p><ol>
-<li>A collects all the fetches from the whole tree recursively and starts them in parallel.</li>
-<li>A runs erase on the previous same-level widget (attribute <code>@previos</code>) if one is given.</li>
-<li>A runs beforePaint on itself when 2 is done.</li>
-<li>A waits for step 3 and all fetches of containers in recursive dependency chain (equal to B) to complete.</li>
-<li>A builds resulting HTML using: <em> HTML of dependency chain (B) </em> HTML of independent containers that are ready to be rendered (their own recursive dependency chain is fetched completely).</li>
-<li>A forks every independent container that was not rendered (C).</li>
-<li>A starts paint on itself and injects HTML into DOM.</li>
-<li>C repeats steps 2-7 using itself as a base and D as its own recursive dependency chain</li>
+<li><p>A collects all the fetches from the whole tree recursively and starts them in parallel.</p></li>
+<li><p>A runs erase on the previous same-level widget (attribute <code>@previous</code>) if one is given.</p></li>
+<li><p>A runs beforePaint on itself when 2 is done.</p></li>
+<li><p>A waits for step 3 and all fetches of containers in recursive dependency chain (equal to B) to complete.</p></li>
+<li><p>A builds resulting HTML using:</p><ul>
+<li>HTML of dependency chain (B)</li>
+<li>HTML of independent containers that are ready to be rendered (their own recursive dependency chain is fetched completely).</li>
+</ul>
+</li>
+<li><p>A forks every independent container that was not rendered (C).</p></li>
+<li><p>A starts paint on itself and injects HTML into DOM.</p></li>
+<li><p>C repeats steps 2-7 using itself as a base and D as its own recursive dependency chain</p></li>
 </ol>
 
 </div>
@@ -402,8 +409,7 @@ D is nested into C. It does not define itself as an independent and therefore de
                 <a href='../../mixins/Joosy/Modules/DOM.html#__assignElements-mixin'>#__assignElements</a>,
                 <a href='../../mixins/Joosy/Modules/DOM.html#__wrapElement-mixin'>#__wrapElement</a>,
                 <a href='../../mixins/Joosy/Modules/DOM.html#__delegateEvents-mixin'>#__delegateEvents</a>,
-                <a href='../../mixins/Joosy/Modules/DOM.html#__clearContainer-mixin'>#__clearContainer</a>,
-        <a href='../../mixins/Joosy/Modules/DOM.html#__loadData-mixin'>#__loadData</a>
+        <a href='../../mixins/Joosy/Modules/DOM.html#__clearContainer-mixin'>#__clearContainer</a>
       </p>
       <h3 class='included'>
         Methods included from
@@ -624,10 +630,10 @@ Sets the base template dir to app_name/templates/widgets</p>
       
     </h4>
     <pre><code class='coffee'>nestingMap =
-  &#39;#page&#39;:
+  &#39;.page&#39;:
     instance: page
     nested:
-      &#39;#widget1&#39;: {instance: widget1}
+      &#39;.widget1&#39;: {instance: widget1}
 
 layout.__bootstrap nestingMap, Joosy.Application.content()</code></pre>
   </div>
@@ -738,7 +744,7 @@ triggers rememberable event &#39;section:fetched&#39;</p><p>Section can be consi
     </div>
     <div id='footer'>
   Generated on
-  Wed Aug 07 2013 17:31:40 GMT+0700 (ICT)
+  Wed Aug 07 2013 17:50:13 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

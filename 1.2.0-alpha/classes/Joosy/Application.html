@@ -108,7 +108,7 @@
 </div>
     <div id='content'>
       <h1>
-        Mixin:
+        Class:
         Joosy.Application
       </h1>
       <table class='box'>
@@ -123,12 +123,12 @@
 </div>
 <div class='tags'>
 </div>
-      <h2>Method Summary</h2>
+      <h2>Class Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#initialize-mixin'>
-        ? (void) <strong>initialize</strong>(selector, options = {})
+      <a href='#initialize-class'>
+        + (void) <strong>initialize</strong>(selector, options = {})
       </a>
     </span>
     <span class='desc'>
@@ -137,28 +137,18 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#reset-mixin'>
-        ? (void) <strong>reset</strong>()
+      <a href='#reset-class'>
+        + (void) <strong>reset</strong>()
       </a>
     </span>
     <span class='desc'>
-      
+      Shuts down current application and clears state
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#navigate-mixin'>
-        ? (void) <strong>navigate</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#content-mixin'>
-        ? (void) <strong>content</strong>()
+      <a href='#content-class'>
+        + (void) <strong>content</strong>()
       </a>
     </span>
     <span class='desc'>
@@ -167,30 +157,20 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#changePage-mixin'>
-        ? (void) <strong>changePage</strong>(page, params)
+      <a href='#changePage-class'>
+        + (void) <strong>changePage</strong>(page, params)
       </a>
     </span>
     <span class='desc'>
       Switches to given page
     </span>
   </li>
-  <li>
-    <span class='signature'>
-      <a href='#forceSandbox-mixin'>
-        ? (void) <strong>forceSandbox</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
 </ul>
-      <h2>Method Details</h2>
+      <h2>Class Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='initialize-mixin'>
-      ? (void) <strong>initialize</strong>(selector, options = {})
+    <p class='signature' id='initialize-class'>
+      + (void) <strong>initialize</strong>(selector, options = {})
     </p>
     <div class='docstring'>
   <p>Starts Joosy application by binding to element and bootstraping routes</p>
@@ -224,22 +204,18 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='reset-mixin'>
-      ? (void) <strong>reset</strong>()
+    <p class='signature' id='reset-class'>
+      + (void) <strong>reset</strong>()
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Shuts down current application and clears state</p>
+</div>
+<div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='navigate-mixin'>
-      ? (void) <strong>navigate</strong>()
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='content-mixin'>
-      ? (void) <strong>content</strong>()
+    <p class='signature' id='content-class'>
+      + (void) <strong>content</strong>()
     </p>
     <div class='docstring'>
   <p>Gets current application root node</p>
@@ -248,8 +224,8 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='changePage-mixin'>
-      ? (void) <strong>changePage</strong>(page, params)
+    <p class='signature' id='changePage-class'>
+      + (void) <strong>changePage</strong>(page, params)
     </p>
     <div class='docstring'>
   <p>Switches to given page</p>
@@ -276,18 +252,11 @@
   </ul>
 </div>
   </div>
-  <div class='method_details'>
-    <p class='signature' id='forceSandbox-mixin'>
-      ? (void) <strong>forceSandbox</strong>()
-    </p>
-    <div class='tags'>
-</div>
-  </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Wed Aug 07 2013 17:31:40 GMT+0700 (ICT)
+  Wed Aug 07 2013 17:50:13 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

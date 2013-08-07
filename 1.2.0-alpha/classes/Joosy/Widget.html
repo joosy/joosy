@@ -174,6 +174,76 @@ D is nested into C. It does not define itself as an independent and therefore de
       <ul class='summary'>
   <li>
     <span class='signature'>
+      <a href='#beforeLoad-class'>
+        + (void) <strong>beforeLoad</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Initialization hook that runs in the very begining of bootstrap process.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#afterLoad-class'>
+        + (void) <strong>afterLoad</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Hook that runs after the section was properly loaded and injected into DOM.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#beforeUnload-class'>
+        + (void) <strong>beforeUnload</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Hook that finalizes section desctruction.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#fetch-class'>
+        + (void) <strong>fetch</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the data fetching proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#beforePaint-class'>
+        + (void) <strong>beforePaint</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the painting preparation proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#paint-class'>
+        + (void) <strong>paint</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the painting proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#erase-class'>
+        + (void) <strong>erase</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the erasing proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#mapWidgets-class'>
         + (void) <strong>mapWidgets</strong>(map)
       </a>
@@ -445,6 +515,135 @@ D is nested into C. It does not define itself as an independent and therefore de
       </p>
       <h2>Class Method Details</h2>
       <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='beforeLoad-class'>
+      + (void) <strong>beforeLoad</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Initialization hook that runs in the very begining of bootstrap process.
+Call it multiple times to attach several hooks.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='afterLoad-class'>
+      + (void) <strong>afterLoad</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Hook that runs after the section was properly loaded and injected into DOM.
+Call it multiple times to attach several hooks.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='beforeUnload-class'>
+      + (void) <strong>beforeUnload</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Hook that finalizes section desctruction.
+Call it multiple times to attach several hooks.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='fetch-class'>
+      + (void) <strong>fetch</strong>()
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with <code>complete</code> function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the data fetching proccess.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>@fetch (complete) -&gt;
+  $.get &#39;&#47;rumbas&#39;, (@data) =&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='beforePaint-class'>
+      + (void) <strong>beforePaint</strong>()
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with <code>complete</code> function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the painting preparation proccess.
+This method will be called right ater previous section erase and in parallel with new data fetching so you can use it to initiate preloader.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample before painter
+    </h4>
+    <pre><code class='coffee'>@beforePaint (complete) -&gt;
+  @$preloader.slideDown -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='paint-class'>
+      + (void) <strong>paint</strong>()
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with <code>complete</code> function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the painting proccess.
+This method will be called after fetching, erasing and beforePaint is complete.
+It should be used to setup appearance effects of page.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample painter
+    </h4>
+    <pre><code class='coffee'>@paint (complete) -&gt;
+  @$container.fadeIn -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='erase-class'>
+      + (void) <strong>erase</strong>()
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with <code>complete</code> function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <div class='note'>
+    <strong>Note:</strong>
+    This method will be caled <em>before</em> unload routines so in theory you can access page data from that. Think twice if you are doing it right though.
+  </div>
+  <p>Sets the method which will controll the erasing proccess.
+Use this method to setup hiding effect.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample eraser
+    </h4>
+    <pre><code class='coffee'>@erase (complete) -&gt;
+  @$container.fadeOut -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
   <div class='method_details'>
     <p class='signature' id='mapWidgets-class'>
       + (void) <strong>mapWidgets</strong>(map)
@@ -744,7 +943,7 @@ triggers rememberable event &#39;section:fetched&#39;</p><p>Section can be consi
     </div>
     <div id='footer'>
   Generated on
-  Wed Aug 07 2013 17:50:13 GMT+0700 (ICT)
+  Wed Aug 07 2013 18:05:46 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

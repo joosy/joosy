@@ -1,6 +1,7 @@
 #= require joosy/joosy
 #= require_tree ../events
 
+# @private
 class SynchronizationContext
   constructor:    -> @actions = []
   do: (action)    -> @actions.push action

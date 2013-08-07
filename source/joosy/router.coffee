@@ -40,6 +40,7 @@ class Joosy.Router extends Joosy.Module
 
   #
   # Rails-like wrapper around internal raw routes representation
+  # @private
   #
   class Drawer
     @run: (block, namespace='', alias='') ->

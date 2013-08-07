@@ -6,3 +6,4 @@ spec/*.html
 *.gem
 Gemfile.lock
 .idea/
+doc

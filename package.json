@@ -24,11 +24,10 @@
     "command-router": "0.0.5",
     "resolve": "~0.4.0",
     "ejs": "~0.8.4",
-    "commander": "~2.0.0",
     "commander": "~1.2.0",
     "colors": "~0.6.0-1",
     "grunt": "~0.4.1",
-    "mincer": "0.5.2",
+    "mincer": ">= 0.5.5",
     "connect": "~2.7.11",
     "haml-coffee": "~1.11.1",
     "proxy-middleware": "~0.4.0",
@@ -42,6 +41,7 @@
     "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-connect": "~0.3.0",
     "grunt-coffeelint": "0.0.6",
-    "grunt-release": "~0.3.5"
+    "grunt-release": "~0.3.5",
+    "semver": "~2.1.0"
   }
 }

@@ -3,6 +3,7 @@ module.exports = (grunt) ->
   Sugar  = require 'sugar'
   Mincer = require 'mincer'
   FS     = require 'fs'
+  semver = require 'semver'
 
   #
   # Locations
@@ -135,7 +136,30 @@ module.exports = (grunt) ->
           locations.source.extensions(x).build
 
   #
-  # Tasks
+  # Preparations
+  #
+  grunt.registerTask 'prepare', ->
+    complete = @async()
+
+    base = process.cwd()
+    git = (args, callback) ->
+      grunt.util.spawn {cmd: "git", args: args, opts: {stdio: [0,1,2]}}, callback
+
+    if grunt.file.exists 'doc'
+      grunt.fatal "Documentation directory exists. Please remove it"
+
+    git ["clone", "git@github.com:joosy/joosy.git", "doc"], (error, result) ->
+      grunt.fatal "Erorr cloning repo" if error
+      process.chdir 'doc'
+
+      git ["checkout", "gh-pages"], (error, result) ->
+        grunt.fatal "Erorr checking branch out" if error
+
+        process.chdir base
+        complete()
+
+  #
+  # Builders
   #
   grunt.registerMultiTask 'mince', ->
     Mincer.CoffeeEngine.configure bare: false
@@ -156,6 +180,44 @@ module.exports = (grunt) ->
     bower.version = meta.version
     FS.writeFileSync 'bower.json', JSON.stringify(bower, null, 2)
 
+  #
+  # Documentation
+  #
+  grunt.registerTask 'doc', ->
+    complete = @async()
+    version = require('./package.json').version.split('-')[0]
+    destination = "doc/#{version}"
+    args = ['source', '--output-dir', destination]
+
+    git = (args, callback) ->
+      grunt.util.spawn {cmd: "git", args: args, opts: {stdio: [0,1,2], cwd: 'doc'}}, callback
+
+    git ['pull'], (error, result) ->
+      grunt.fatal "Error pulling from git" if error
+
+      grunt.file.delete destination if grunt.file.exists destination
+      grunt.util.spawn {cmd: "codo", args: args, opts: {stdio: [0,1,2]}}, (error, result) ->
+        grunt.fatal "Error generating docs" if error
+
+        versions = []
+        for version in grunt.file.expand({cwd: 'doc'}, '*')
+          versions.push version if semver.valid(version)
+        console.log versions.sort semver.rcompare
+
+        # git ['add', '-A'], (error, result) ->
+        #   grunt.fatal "Error adding files" if error
+
+        #   git ['commit', '-m', "Updated at #{new Date}"], (error, result) ->
+        #     grunt.fatal "Error commiting" if error
+
+        #     git ['push', 'origin', 'gh-pages'], (error, result) ->
+        #       grunt.fatal "Error pushing" if error
+        #       complete()
+
+
+  #
+  # Publishing
+  #
   grunt.registerTask 'publish:ensureCommits', ->
     complete = @async()
 
@@ -184,4 +246,4 @@ module.exports = (grunt) ->
         grunt.file.delete gem
         complete(true)
 
-  grunt.registerTask 'publish', ['test', 'publish:ensureCommits', 'release', 'publish:gem']
+  grunt.registerTask 'publish', ['test', 'publish:ensureCommits', 'doc', 'release', 'publish:gem']

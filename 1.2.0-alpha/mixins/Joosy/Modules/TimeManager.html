@@ -136,7 +136,7 @@
   <li>
     <span class='signature'>
       <a href='#setTimeout-mixin'>
-        ? (void) <strong>setTimeout</strong>(timeout, action)
+        ? (Integer) <strong>setTimeout</strong>(timeout, action)
       </a>
     </span>
     <span class='desc'>
@@ -146,11 +146,31 @@
   <li>
     <span class='signature'>
       <a href='#setInterval-mixin'>
-        ? (void) <strong>setInterval</strong>(delay, action)
+        ? (Integer) <strong>setInterval</strong>(delay, action)
       </a>
     </span>
     <span class='desc'>
       Registeres interval for current object
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#clearTimeout-mixin'>
+        ? (void) <strong>clearTimeout</strong>(timer)
+      </a>
+    </span>
+    <span class='desc'>
+      Clears tmeout preventing callback from execution
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#clearInterval-mixin'>
+        ? (void) <strong>clearInterval</strong>(timer)
+      </a>
+    </span>
+    <span class='desc'>
+      Clears inteval preventing callback from execution
     </span>
   </li>
   <li>
@@ -168,7 +188,7 @@
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='setTimeout-mixin'>
-      ? (void) <strong>setTimeout</strong>(timeout, action)
+      ? (Integer) <strong>setTimeout</strong>(timeout, action)
     </p>
     <div class='docstring'>
   <p>Registeres timeout for current object</p>
@@ -193,11 +213,20 @@
       <span class='desc'>Action to run on timeout</span>
     </li>
   </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Integer</tt>)
+      &mdash;
+      <span class='desc'>Timer</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='setInterval-mixin'>
-      ? (void) <strong>setInterval</strong>(delay, action)
+      ? (Integer) <strong>setInterval</strong>(delay, action)
     </p>
     <div class='docstring'>
   <p>Registeres interval for current object</p>
@@ -222,6 +251,57 @@
       <span class='desc'>Action to run</span>
     </li>
   </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Integer</tt>)
+      &mdash;
+      <span class='desc'>Timer</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='clearTimeout-mixin'>
+      ? (void) <strong>clearTimeout</strong>(timer)
+    </p>
+    <div class='docstring'>
+  <p>Clears tmeout preventing callback from execution</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>timer</span>
+      <span class='type'>
+        (<tt>Integer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Timer</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='clearInterval-mixin'>
+      ? (void) <strong>clearInterval</strong>(timer)
+    </p>
+    <div class='docstring'>
+  <p>Clears inteval preventing callback from execution</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>timer</span>
+      <span class='type'>
+        (<tt>Integer</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Timer</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -238,7 +318,7 @@
     </div>
     <div id='footer'>
   Generated on
-  Wed Aug 07 2013 18:09:40 GMT+0700 (ICT)
+  Wed Aug 07 2013 21:35:11 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

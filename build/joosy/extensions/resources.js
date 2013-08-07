@@ -428,10 +428,13 @@
       }, '');
     };
 
-    REST.basePath = function(options) {
+    REST.collectionPath = function(options) {
       var path;
       if (options == null) {
         options = {};
+      }
+      if (options.url) {
+        return options.url;
       }
       if ((this.__source != null) && (options.parent == null)) {
         path = this.__source;
@@ -447,41 +450,6 @@
       if (options.parent != null) {
         path = this.__parentsPath(Object.isArray(options.parent) ? options.parent : [options.parent]) + path;
       }
-      return path;
-    };
-
-    REST.prototype.basePath = function(options) {
-      if (options == null) {
-        options = {};
-      }
-      return this.constructor.basePath(options);
-    };
-
-    REST.memberPath = function(id, options) {
-      var path;
-      if (options == null) {
-        options = {};
-      }
-      path = this.basePath(options) + ("/" + id);
-      if (options.from != null) {
-        path += "/" + options.from;
-      }
-      return path;
-    };
-
-    REST.prototype.memberPath = function(options) {
-      if (options == null) {
-        options = {};
-      }
-      return this.constructor.memberPath(this.id(), options);
-    };
-
-    REST.collectionPath = function(options) {
-      var path;
-      if (options == null) {
-        options = {};
-      }
-      path = this.basePath(options);
       if (options.from != null) {
         path += "/" + options.from;
       }
@@ -493,6 +461,31 @@
         options = {};
       }
       return this.constructor.collectionPath(options);
+    };
+
+    REST.memberPath = function(id, options) {
+      var from, path;
+      if (options == null) {
+        options = {};
+      }
+      if (options.url) {
+        return options.url;
+      }
+      from = options.from;
+      path = this.collectionPath(Object.merge(options, {
+        from: void 0
+      })) + ("/" + id);
+      if (from != null) {
+        path += "/" + from;
+      }
+      return path;
+    };
+
+    REST.prototype.memberPath = function(options) {
+      if (options == null) {
+        options = {};
+      }
+      return this.constructor.memberPath(this.id(), options);
     };
 
     REST.get = function(options, callback) {

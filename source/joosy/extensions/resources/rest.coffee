@@ -69,14 +69,16 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     , ''
 
   #
-  # Builds base path
+  # Builds collection path
   #
   # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
   #
   # @example Basic usage
-  #   Resource.basePath() # /resources
+  #   Resource.collectionPath() # /resources/
   #
-  @basePath: (options={}) ->
+  @collectionPath: (options={}) ->
+    return options.url if options.url
+
     if @__source? && !options.parent?
       path = @__source
     else
@@ -87,15 +89,17 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     if options.parent?
       path = @__parentsPath(if Object.isArray(options.parent) then options.parent else [options.parent]) + path
 
+    path += "/#{options.from}" if options.from?
+
     path
 
   #
-  # Builds base path
+  # Builds collection path
   #
-  # @see Joosy.Resources.REST.basePath
+  # @see Joosy.Resources.REST.collectionPath
   #
-  basePath: (options={}) ->
-    @constructor.basePath options
+  collectionPath: (options={}) ->
+    @constructor.collectionPath options
 
   #
   # Builds member path based on the given id.
@@ -107,8 +111,11 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #   Resource.memberPath(1, from: 'foo') # /resources/1/foo
   #
   @memberPath: (id, options={}) ->
-    path  = @basePath(options) + "/#{id}"
-    path += "/#{options.from}" if options.from?
+    return options.url if options.url
+
+    from = options.from
+    path  = @collectionPath(Object.merge(options, from: undefined)) + "/#{id}"
+    path += "/#{from}" if from?
     path
 
   #
@@ -121,27 +128,6 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   memberPath: (options={}) ->
     @constructor.memberPath @id(), options
-
-  #
-  # Builds collection path
-  #
-  # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
-  #
-  # @example Basic usage
-  #   Resource.collectionPath() # /resources/
-  #
-  @collectionPath: (options={}) ->
-    path = @basePath(options)
-    path += "/#{options.from}" if options.from?
-    path
-
-  #
-  # Builds collection path
-  #
-  # @see Joosy.Resources.REST.collectionPath
-  #
-  collectionPath: (options={}) ->
-    @constructor.collectionPath options
 
   #
   # Sends the GET query using collectionPath.

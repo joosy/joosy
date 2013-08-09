@@ -339,7 +339,7 @@ D is nested into C. It does not define itself as an independent and therefore de
   <li>
     <span class='signature'>
       <a href='#__bootstrapDefault-instance'>
-        - (void) <strong>__bootstrapDefault</strong>($container)
+        - (void) <strong>__bootstrapDefault</strong>(parent, $container)
       </a>
     </span>
     <span class='desc'>
@@ -349,7 +349,7 @@ D is nested into C. It does not define itself as an independent and therefore de
   <li>
     <span class='signature'>
       <a href='#__bootstrap-instance'>
-        - (void) <strong>__bootstrap</strong>(nestingMap, $container, fetch = true)
+        - (void) <strong>__bootstrap</strong>(parent, nestingMap, $container, fetch = true)
       </a>
     </span>
     <span class='desc'>
@@ -369,7 +369,7 @@ D is nested into C. It does not define itself as an independent and therefore de
   <li>
     <span class='signature'>
       <a href='#__erase-instance'>
-        - (void) <strong>__erase</strong>()
+        - (void) <strong>__erase</strong>(parent)
       </a>
     </span>
     <span class='desc'>
@@ -379,7 +379,7 @@ D is nested into C. It does not define itself as an independent and therefore de
   <li>
     <span class='signature'>
       <a href='#__paint-instance'>
-        - (void) <strong>__paint</strong>(nestingMap, $container)
+        - (void) <strong>__paint</strong>(parent, nestingMap, $container)
       </a>
     </span>
     <span class='desc'>
@@ -399,7 +399,7 @@ D is nested into C. It does not define itself as an independent and therefore de
   <li>
     <span class='signature'>
       <a href='#__unload-instance'>
-        - (void) <strong>__unload</strong>()
+        - (void) <strong>__unload</strong>(modifyParent = true)
       </a>
     </span>
     <span class='desc'>
@@ -800,7 +800,7 @@ Sets the base template dir to app_name/templates/widgets</p>
   </div>
   <div class='method_details'>
     <p class='signature' id='__bootstrapDefault-instance'>
-      - (void) <strong>__bootstrapDefault</strong>($container)
+      - (void) <strong>__bootstrapDefault</strong>(parent, $container)
     </p>
     <div class='docstring'>
   <p>Shortcut for default bootstrap using statically registered widgets</p>
@@ -821,7 +821,7 @@ Sets the base template dir to app_name/templates/widgets</p>
   </div>
   <div class='method_details'>
     <p class='signature' id='__bootstrap-instance'>
-      - (void) <strong>__bootstrap</strong>(nestingMap, $container, fetch = true)
+      - (void) <strong>__bootstrap</strong>(parent, nestingMap, $container, fetch = true)
     </p>
     <div class='docstring'>
   <p>Bootstraps the section with given nestings at given container</p>
@@ -882,7 +882,7 @@ triggers rememberable event &#39;section:fetched&#39;</p><p>Section can be consi
   </div>
   <div class='method_details'>
     <p class='signature' id='__erase-instance'>
-      - (void) <strong>__erase</strong>()
+      - (void) <strong>__erase</strong>(parent)
     </p>
     <div class='docstring'>
   <p>Runs erasing chain for the previous section and beforePaints for current</p>
@@ -892,7 +892,7 @@ triggers rememberable event &#39;section:fetched&#39;</p><p>Section can be consi
   </div>
   <div class='method_details'>
     <p class='signature' id='__paint-instance'>
-      - (void) <strong>__paint</strong>(nestingMap, $container)
+      - (void) <strong>__paint</strong>(parent, nestingMap, $container)
     </p>
     <div class='docstring'>
   <p>Builds HTML of section and its dependent nestings and injects it into DOM</p>
@@ -912,7 +912,7 @@ triggers rememberable event &#39;section:fetched&#39;</p><p>Section can be consi
   </div>
   <div class='method_details'>
     <p class='signature' id='__unload-instance'>
-      - (void) <strong>__unload</strong>()
+      - (void) <strong>__unload</strong>(modifyParent = true)
     </p>
     <div class='docstring'>
   <p>Deinitializes section that is preparing to be removed from DOM</p>
@@ -945,7 +945,7 @@ triggers rememberable event &#39;section:fetched&#39;</p><p>Section can be consi
     </div>
     <div id='footer'>
   Generated on
-  Fri Aug 09 2013 18:19:22 GMT+0700 (ICT)
+  Sat Aug 10 2013 00:09:35 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

@@ -4,6 +4,7 @@ Path       = require 'path'
 
 module.exports = class
   constructor: (@options) ->
+    @options.enableHTML5  = true
     @options.dependencies = """
                             #= require jquery/jquery.js
                             #= require jquery-form/jquery.form.js

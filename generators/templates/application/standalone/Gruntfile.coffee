@@ -22,17 +22,18 @@ module.exports = (grunt) ->
 
       assets:
         application:
-          src: 'application.coffee'
+          src:  'application.coffee'
           dest: 'public/assets/application.js'
         styles:
-          src: 'application.styl'
+          src:  'application.styl'
           dest: 'public/assets/application.css'
       haml:
         application:
-          path: '/'
-          src: 'index.haml'
-          dest: 'public/index.html'
-          url: ['/', '/index.html']
+          path:  '/'
+          src:   'index.haml'
+          dest:  'public/index.html'
+          url:   '/'
+          greedy: true
 
     uglify:
       application:
@@ -50,7 +51,7 @@ module.exports = (grunt) ->
         options: 
           keepRunner: true
           outfile: 'spec/application.html'
-          specs: '.grunt/spec/*_spec.js'
+          specs:   '.grunt/spec/*_spec.js'
           helpers: '.grunt/spec/helpers/environment.js'
 
   #

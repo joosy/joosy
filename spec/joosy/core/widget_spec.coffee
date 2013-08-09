@@ -62,7 +62,7 @@ describe "Joosy.Widget", ->
             '#subcontent': {instance: @d}
 
     it 'calls paint callbacks', ->
-      @a.__bootstrap @nestingMap, @$ground
+      @a.__bootstrap null, @nestingMap, @$ground
 
       expect(@spies["a/paint"].callCount).toEqual 1
       expect(@spies["b/paint"].callCount).toEqual 0
@@ -77,7 +77,7 @@ describe "Joosy.Widget", ->
       expect(@spies['b/erase'].callCount).toEqual 0
       expect(@spies['c/erase'].callCount).toEqual 0
 
-      @c.__bootstrap {}, $('#content', @$ground)
+      @c.__bootstrap null, {}, $('#content', @$ground)
 
       ['paint', 'beforePaint'].each (filter) =>
         expect(@spies["a/#{filter}"].callCount).toEqual 1
@@ -92,7 +92,7 @@ describe "Joosy.Widget", ->
       expect(@spies['c/erase'].callCount).toEqual 0
 
     it 'calls load/unload callbacks', ->
-      @a.__bootstrap @nestingMap, @$ground
+      @a.__bootstrap null, @nestingMap, @$ground
 
       expect(@a.__load.callCount).toEqual 1
       expect(@b.__load.callCount).toEqual 1
@@ -103,7 +103,7 @@ describe "Joosy.Widget", ->
       expect(@c.__unload.callCount).toEqual 0
       expect(@d.__unload.callCount).toEqual 0
 
-      @c.__bootstrap {}, $('#content', @$ground)
+      @c.__bootstrap @a, {}, $('#content', @$ground)
 
       expect(@a.__load.callCount).toEqual 1
       expect(@b.__load.callCount).toEqual 1
@@ -112,6 +112,16 @@ describe "Joosy.Widget", ->
       expect(@a.__unload.callCount).toEqual 0
       expect(@b.__unload.callCount).toEqual 1
       expect(@c.__unload.callCount).toEqual 0
+      expect(@d.__unload.callCount).toEqual 1
+
+      @a.__unload()
+      expect(@a.__load.callCount).toEqual 1
+      expect(@b.__load.callCount).toEqual 1
+      expect(@c.__load.callCount).toEqual 1
+      expect(@d.__load.callCount).toEqual 1
+      expect(@a.__unload.callCount).toEqual 1
+      expect(@b.__unload.callCount).toEqual 1
+      expect(@c.__unload.callCount).toEqual 1
       expect(@d.__unload.callCount).toEqual 1
 
   describe 'widgets manager', ->
@@ -141,7 +151,7 @@ describe "Joosy.Widget", ->
           '#b': B
 
     it 'bootstraps registered widgets', ->
-      (new @A).__bootstrapDefault @$ground
+      (new @A).__bootstrapDefault null, @$ground
       expect(@$ground.html()).toEqualHTML '<div id="b"><div id="c">C</div></div>'
 
     it 'bootstraps registered independent widgets', ->
@@ -149,7 +159,7 @@ describe "Joosy.Widget", ->
       @C.independent()
 
       runs ->
-        (new @A).__bootstrapDefault @$ground
+        (new @A).__bootstrapDefault null, @$ground
         expect(@$ground.html()).toEqualHTML '<div id="b"><div id="c"></div></div>'
 
       waits 0
@@ -159,22 +169,24 @@ describe "Joosy.Widget", ->
 
     it 'registeres widgets on the fly', ->
       a = new @A
-      a.__bootstrapDefault @$ground
+      a.__bootstrapDefault null, @$ground
       expect(@$ground.html()).toEqualHTML '<div id="b"><div id="c">C</div></div>'
 
-      a.registerWidget '#b', @D
+      d = a.registerWidget '#b', @D
+      expect(d.parent).toEqual a
 
       expect(@$ground.html()).toEqualHTML '<div id="b">D</div>'
 
     it 'replaces widget', ->
       a = new @A
-      a.__bootstrapDefault @$ground
+      a.__bootstrapDefault null, @$ground
       expect(@$ground.html()).toEqualHTML '<div id="b"><div id="c">C</div></div>'
 
       d = a.registerWidget '#b', @D
       sinon.spy d, '__unload'
 
-      a.replaceWidget d, @C
+      c = a.replaceWidget d, @C
+      expect(c.parent).toEqual a
       expect(@$ground.html()).toEqualHTML '<div id="b">C</div>'
       expect(d.__unload.callCount).toEqual 1
 
@@ -283,11 +295,11 @@ describe "Joosy.Widget", ->
       describe 'dependent', ->
 
         it 'loads when no nesting defined', ->
-          @f.__bootstrap @nestingMap, @$ground
+          @f.__bootstrap null, @nestingMap, @$ground
           expect(@$ground.html()).toEqual 'F'
 
         it 'loads whole dependency tree synchronously', ->
-          @a.__bootstrap @nestingMap, @$ground
+          @a.__bootstrap null, @nestingMap, @$ground
           expect(@$ground.html()).toEqualHTML '<div id="b"><div id="c"><div id="e">E</div><div id="f">F</div></div><div id="d">D</div></div>'
 
         it 'loads whole dependency tree asynchronously', ->
@@ -295,7 +307,7 @@ describe "Joosy.Widget", ->
           @B.fetch (complete) -> setTimeout complete, 100
 
           runs ->
-            @a.__bootstrap @nestingMap, @$ground
+            @a.__bootstrap null, @nestingMap, @$ground
             expect(@$ground.html()).toEqualHTML ''
 
           waits 0
@@ -312,7 +324,7 @@ describe "Joosy.Widget", ->
           @C.fetch (complete) -> setTimeout complete, 0
           @C.independent()
 
-          @a.__bootstrap @nestingMap, @$ground
+          @a.__bootstrap null, @nestingMap, @$ground
           expect(@$ground.html()).toEqualHTML '<div id="b"><div id="c"></div><div id="d">D</div></div>'
 
       describe 'independent', ->
@@ -324,7 +336,7 @@ describe "Joosy.Widget", ->
           @C.independent()          
 
           runs ->
-            @a.__bootstrap @nestingMap, @$ground
+            @a.__bootstrap null, @nestingMap, @$ground
 
           waits 100
 
@@ -339,7 +351,7 @@ describe "Joosy.Widget", ->
           @E.independent()
 
           runs ->
-            @a.__bootstrap @nestingMap, @$ground
+            @a.__bootstrap null, @nestingMap, @$ground
             expect(@$ground.html()).toEqualHTML '<div id="b"><div id="c"></div><div id="d">D</div></div>'
 
           waits 0
@@ -361,7 +373,7 @@ describe "Joosy.Widget", ->
           @E.fetch (complete) -> setTimeout complete, 100
 
           runs ->
-            @a.__bootstrap @nestingMap, @$ground
+            @a.__bootstrap null, @nestingMap, @$ground
             expect(@$ground.html()).toEqualHTML '<div id="b"></div>'
 
           waits 0

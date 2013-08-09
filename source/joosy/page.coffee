@@ -61,7 +61,7 @@ class Joosy.Page extends Joosy.Widget
   # as a fallback for cases when no Layout has been set
   #
   __bootstrapDefault: (applicationContainer) ->
-    @__bootstrap @__nestingMap(), @layout?.content() || applicationContainer
+    @__bootstrap @layout, @__nestingMap(), @layout?.content() || applicationContainer
 
 # AMD wrapper
 if define?.amd?

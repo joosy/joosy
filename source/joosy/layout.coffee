@@ -66,7 +66,7 @@ class Joosy.Layout extends Joosy.Widget
   # @param [jQuery] applicationContainer      The base container for the application to paint at
   #
   __bootstrapDefault: (page, applicationContainer) ->
-    @__bootstrap @__nestingMap(page), applicationContainer
+    @__bootstrap null, @__nestingMap(page), applicationContainer
 
 # AMD wrapper
 if define?.amd?

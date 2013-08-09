@@ -160,10 +160,7 @@ class Joosy.Widget extends Joosy.Module
       $container = @__normalizeSelector($container)
 
     widget = @__normalizeWidget(widget)
-    widget.__bootstrapDefault $container
-
-    @__nestedSections ||= []
-    @__nestedSections.push widget
+    widget.__bootstrapDefault @, $container
 
     widget
 
@@ -175,13 +172,12 @@ class Joosy.Widget extends Joosy.Module
   unregisterWidget: (widget) ->
     widget.__unload()
 
-    @__nestedSections.splice @__nestedSections.indexOf(widget), 1
-
   replaceWidget: (widget, replacement) ->
     replacement = @__normalizeWidget(replacement)
     replacement.previous = widget
 
-    replacement.__bootstrapDefault widget.$container
+    replacement.__bootstrapDefault @, widget.$container
+    replacement
 
   #
   # @see Joosy.Router.navigate
@@ -216,8 +212,8 @@ class Joosy.Widget extends Joosy.Module
   #
   # @param [jQuery] $container                 DOM container to inject to
   #
-  __bootstrapDefault: ($container) ->
-    @__bootstrap @__nestingMap(), $container
+  __bootstrapDefault: (parent, $container) ->
+    @__bootstrap parent, @__nestingMap(), $container
 
   #
   # Bootstraps the section with given nestings at given container
@@ -235,10 +231,10 @@ class Joosy.Widget extends Joosy.Module
   # @param [jQuery] $container              DOM container to inject into
   # @param [boolean] fetch                  Boolean flag used to avoid double fetch during recursion
   #
-  __bootstrap: (nestingMap, @$container, fetch=true) ->
+  __bootstrap: (parent, nestingMap, @$container, fetch=true) ->
     @wait 'section:fetched section:erased', =>
       @__runPaints [], =>
-        @__paint nestingMap, @$container
+        @__paint parent, nestingMap, @$container
 
     @__erase()
     @__fetch(nestingMap) if fetch
@@ -271,7 +267,7 @@ class Joosy.Widget extends Joosy.Module
   #
   # Runs erasing chain for the previous section and beforePaints for current
   #
-  __erase: ->
+  __erase: (parent) ->
     if @previous?
       @previous.__runErases [], =>
         @previous.__unload()
@@ -285,26 +281,28 @@ class Joosy.Widget extends Joosy.Module
   #
   # Builds HTML of section and its dependent nestings and injects it into DOM
   #
-  __paint: (nestingMap, @$container) ->
+  __paint: (@parent, nestingMap, @$container) ->
     @__nestedSections = []
     @$container.html @__renderDefault?(@data || {})
 
     @__load()
 
     Object.each nestingMap, (selector, section) =>
-      @__nestedSections.push section.instance
-
       $container = @__normalizeSelector(selector)
 
       if !section.instance.__independent || section.instance.__triggeredEvents?['section:fetched']
-        section.instance.__paint section.nested, $container
+        section.instance.__paint @, section.nested, $container
       else
-        section.instance.__bootstrap section.nested, $container, false
+        section.instance.__bootstrap @, section.nested, $container, false
 
   #
   # Initializes section that was injected into DOM
   #
   __load: ->
+    if @parent
+      @parent.__nestedSections ||= []
+      @parent.__nestedSections.push @
+
     @__assignElements()
     @__delegateEvents()
     @__runAfterLoads()
@@ -312,15 +310,21 @@ class Joosy.Widget extends Joosy.Module
   #
   # Deinitializes section that is preparing to be removed from DOM
   #
-  __unload: ->
-    section.__unload() for section in @__nestedSections
-    delete @__nestedSections
+  __unload: (modifyParent=true) ->
+    if @__nestedSections
+      section.__unload(false) for section in @__nestedSections
+      delete @__nestedSections
 
     @__clearContainer()
     @__clearTime()
     @__removeMetamorphs()
     @__runAfterUnloads()
+
+    if @parent && modifyParent
+      @parent.__nestedSections.splice @parent.__nestedSections.indexOf(@), 1
+
     delete @previous
+    delete @parent
 
   #
   # Normalizes selector and returns jQuery wrap

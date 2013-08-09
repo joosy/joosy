@@ -111,13 +111,13 @@ module.exports = (grunt) ->
         console.log "=> Serving assets from #{path}"
 
       serveHAML: (server, map) ->
-        serve = (urls, template, partials) ->
+        serve = (urls, greedy, template, partials) ->
           urls = [urls] unless Object.isArray(urls)
 
           for url in urls
             do (url) ->
               server.use url, (req, res, next) ->
-                if req.originalUrl == url
+                if greedy && req.originalUrl.startsWith(url) || req.originalUrl == url
                   res.end grunt.joosy.haml.compile(template, partials)
                   console.log "Served #{url} (#{template})"
                 else
@@ -127,13 +127,14 @@ module.exports = (grunt) ->
         for entry in map
           do (entry) ->
             unless entry.expand
-              serve(entry.url, Path.join(paths.haml, entry.src), entry.partials)
+              serve(entry.url, entry.greedy, Path.join(paths.haml, entry.src), entry.partials)
             else
               files = grunt.joosy.helpers.expandFiles(paths.haml, entry)
 
               for file in files.list
                 serve(
                   entry.url(file),
+                  entry.greedy,
                   Path.join(files.cwd, file.src),
                   entry.partials
                 )
@@ -198,9 +199,9 @@ module.exports = (grunt) ->
     
     grunt.joosy.server.start 4000, (server) ->
       grunt.joosy.server.serveAssets server
-      grunt.joosy.server.serveHAML server, grunt.joosy.helpers.normalizeFiles('joosy.haml')
       grunt.joosy.server.serveProxied server, grunt.config.get('joosy.server.proxy')
       grunt.joosy.server.serveStatic server
+      grunt.joosy.server.serveHAML server, grunt.joosy.helpers.normalizeFiles('joosy.haml')
 
   grunt.registerTask 'joosy:server:production', ->
     @async()

@@ -534,10 +534,7 @@
       });
     },
     __clearContainer: function() {
-      var _ref;
-      if ((_ref = this.$container) != null) {
-        _ref.unbind().off();
-      }
+      this.$container.unbind().off();
       return this.$container = $();
     }
   };
@@ -1351,21 +1348,19 @@
         $container = this.__normalizeSelector($container);
       }
       widget = this.__normalizeWidget(widget);
-      widget.__bootstrapDefault($container);
-      this.__nestedSections || (this.__nestedSections = []);
-      this.__nestedSections.push(widget);
+      widget.__bootstrapDefault(this, $container);
       return widget;
     };
 
     Widget.prototype.unregisterWidget = function(widget) {
-      widget.__unload();
-      return this.__nestedSections.splice(this.__nestedSections.indexOf(widget), 1);
+      return widget.__unload();
     };
 
     Widget.prototype.replaceWidget = function(widget, replacement) {
       replacement = this.__normalizeWidget(replacement);
       replacement.previous = widget;
-      return replacement.__bootstrapDefault(widget.$container);
+      replacement.__bootstrapDefault(this, widget.$container);
+      return replacement;
     };
 
     Widget.prototype.navigate = function() {
@@ -1392,11 +1387,11 @@
       return map;
     };
 
-    Widget.prototype.__bootstrapDefault = function($container) {
-      return this.__bootstrap(this.__nestingMap(), $container);
+    Widget.prototype.__bootstrapDefault = function(parent, $container) {
+      return this.__bootstrap(parent, this.__nestingMap(), $container);
     };
 
-    Widget.prototype.__bootstrap = function(nestingMap, $container, fetch) {
+    Widget.prototype.__bootstrap = function(parent, nestingMap, $container, fetch) {
       var _this = this;
       this.$container = $container;
       if (fetch == null) {
@@ -1404,7 +1399,7 @@
       }
       this.wait('section:fetched section:erased', function() {
         return _this.__runPaints([], function() {
-          return _this.__paint(nestingMap, _this.$container);
+          return _this.__paint(parent, nestingMap, _this.$container);
         });
       });
       this.__erase();
@@ -1437,7 +1432,7 @@
       });
     };
 
-    Widget.prototype.__erase = function() {
+    Widget.prototype.__erase = function(parent) {
       var _this = this;
       if (this.previous != null) {
         return this.previous.__runErases([], function() {
@@ -1459,43 +1454,57 @@
       }
     };
 
-    Widget.prototype.__paint = function(nestingMap, $container) {
+    Widget.prototype.__paint = function(parent, nestingMap, $container) {
       var _this = this;
+      this.parent = parent;
       this.$container = $container;
       this.__nestedSections = [];
       this.$container.html(typeof this.__renderDefault === "function" ? this.__renderDefault(this.data || {}) : void 0);
       this.__load();
       return Object.each(nestingMap, function(selector, section) {
         var _ref;
-        _this.__nestedSections.push(section.instance);
         $container = _this.__normalizeSelector(selector);
         if (!section.instance.__independent || ((_ref = section.instance.__triggeredEvents) != null ? _ref['section:fetched'] : void 0)) {
-          return section.instance.__paint(section.nested, $container);
+          return section.instance.__paint(_this, section.nested, $container);
         } else {
-          return section.instance.__bootstrap(section.nested, $container, false);
+          return section.instance.__bootstrap(_this, section.nested, $container, false);
         }
       });
     };
 
     Widget.prototype.__load = function() {
+      var _base;
+      if (this.parent) {
+        (_base = this.parent).__nestedSections || (_base.__nestedSections = []);
+        this.parent.__nestedSections.push(this);
+      }
       this.__assignElements();
       this.__delegateEvents();
       return this.__runAfterLoads();
     };
 
-    Widget.prototype.__unload = function() {
+    Widget.prototype.__unload = function(modifyParent) {
       var section, _i, _len, _ref;
-      _ref = this.__nestedSections;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        section = _ref[_i];
-        section.__unload();
+      if (modifyParent == null) {
+        modifyParent = true;
       }
-      delete this.__nestedSections;
+      if (this.__nestedSections) {
+        _ref = this.__nestedSections;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          section = _ref[_i];
+          section.__unload(false);
+        }
+        delete this.__nestedSections;
+      }
       this.__clearContainer();
       this.__clearTime();
       this.__removeMetamorphs();
       this.__runAfterUnloads();
-      return delete this.previous;
+      if (this.parent && modifyParent) {
+        this.parent.__nestedSections.splice(this.parent.__nestedSections.indexOf(this), 1);
+      }
+      delete this.previous;
+      return delete this.parent;
     };
 
     Widget.prototype.__normalizeSelector = function(selector) {
@@ -1661,7 +1670,7 @@
     };
 
     Layout.prototype.__bootstrapDefault = function(page, applicationContainer) {
-      return this.__bootstrap(this.__nestingMap(page), applicationContainer);
+      return this.__bootstrap(null, this.__nestingMap(page), applicationContainer);
     };
 
     return Layout;
@@ -1783,7 +1792,7 @@
 
     Page.prototype.__bootstrapDefault = function(applicationContainer) {
       var _ref;
-      return this.__bootstrap(this.__nestingMap(), ((_ref = this.layout) != null ? _ref.content() : void 0) || applicationContainer);
+      return this.__bootstrap(this.layout, this.__nestingMap(), ((_ref = this.layout) != null ? _ref.content() : void 0) || applicationContainer);
     };
 
     return Page;
@@ -1808,6 +1817,11 @@
       }
       if (tagOptions == null) {
         tagOptions = {};
+      }
+      if (Object.isFunction(tagOptions)) {
+        url = name;
+        tagOptions = url;
+        name = tagOptions();
       }
       return Joosy.Helpers.Application.contentTag('a', name, Joosy.Module.merge(tagOptions, {
         'data-joosy': true,
@@ -1844,8 +1858,8 @@
     });
 
     $(document).on('click', 'a[data-joosy]', function(event) {
-      Router.navigate(event.target.getAttribute('href'));
-      return false;
+      event.preventDefault();
+      return Joosy.Router.navigate(this.getAttribute('href'));
     });
 
     Drawer = (function() {

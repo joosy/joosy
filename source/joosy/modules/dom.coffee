@@ -131,7 +131,7 @@ Joosy.Modules.DOM =
 
   # @private
   __clearContainer: ->
-    @$container?.unbind().off()
+    @$container.unbind().off()
     @$container = $()
 
 

@@ -40,8 +40,8 @@ Joosy.Modules.DOM =
         @::__events = Object.clone(@.__super__.__events) || {}
       Object.merge @::__events, map
 
-  $: (selector) ->
-    $(selector, @$container)
+  $: (selector, context) ->
+    $(selector, context || @$container)
 
   #
   # Converts '$...' notation to selector from 'elements'

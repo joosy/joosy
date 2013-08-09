@@ -76,8 +76,8 @@ describe "Joosy.Modules.DOM", ->
     it "assigns nesteds", ->
       expect(@dom.$content.$post1().get 0).toBe $('#post1').get 0
 
-    it "filters assignation", ->
-      target = @dom.$posts('#post1').get 0
+    it "changes assignation context", ->
+      target = @dom.$posts(@dom.$container).get 0
       expect(target).toBeTruthy()
       expect(target).toBe $('#post1', @dom.$container).get 0
 

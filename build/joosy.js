@@ -456,8 +456,8 @@
         return Object.merge(this.prototype.__events, map);
       };
     },
-    $: function(selector) {
-      return $(selector, this.$container);
+    $: function(selector, context) {
+      return $(selector, context || this.$container);
     },
     __extractSelector: function(selector) {
       var _this = this;

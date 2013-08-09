@@ -172,12 +172,12 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#basePath-class'>
-        + (void) <strong>basePath</strong>(options = {})
+      <a href='#collectionPath-class'>
+        + (void) <strong>collectionPath</strong>(options = {})
       </a>
     </span>
     <span class='desc'>
-      Builds base path
+      Builds collection path
     </span>
   </li>
   <li>
@@ -188,16 +188,6 @@
     </span>
     <span class='desc'>
       Builds member path based on the given id.
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#collectionPath-class'>
-        + (void) <strong>collectionPath</strong>(options = {})
-      </a>
-    </span>
-    <span class='desc'>
-      Builds collection path
     </span>
   </li>
   <li>
@@ -275,12 +265,12 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#basePath-instance'>
-        - (void) <strong>basePath</strong>(options = {})
+      <a href='#collectionPath-instance'>
+        - (void) <strong>collectionPath</strong>(options = {})
       </a>
     </span>
     <span class='desc'>
-      Builds base path
+      Builds collection path
     </span>
   </li>
   <li>
@@ -291,16 +281,6 @@
     </span>
     <span class='desc'>
       Builds member path
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#collectionPath-instance'>
-        - (void) <strong>collectionPath</strong>(options = {})
-      </a>
-    </span>
-    <span class='desc'>
-      Builds collection path
     </span>
   </li>
   <li>
@@ -485,17 +465,17 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='basePath-class'>
-      + (void) <strong>basePath</strong>(options = {})
+    <p class='signature' id='collectionPath-class'>
+      + (void) <strong>collectionPath</strong>(options = {})
     </p>
     <div class='docstring'>
-  <p>Builds base path</p>
+  <p>Builds collection path</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
       Basic usage
     </h4>
-    <pre><code class='coffee'>Resource.basePath() # &#47;resources</code></pre>
+    <pre><code class='coffee'>Resource.collectionPath() # &#47;resources&#47;</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -537,34 +517,6 @@
       &mdash;
       <span class='desc'>ID of entity to build member path for</span>
     </li>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>See <a href='../../../classes/Joosy/Resources/REST.html#find-class'>Joosy.Resources.REST.find</a> for possible options</span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='collectionPath-class'>
-      + (void) <strong>collectionPath</strong>(options = {})
-    </p>
-    <div class='docstring'>
-  <p>Builds collection path</p>
-  <div class='examples'>
-    <h3>Examples:</h3>
-    <h4>
-      Basic usage
-    </h4>
-    <pre><code class='coffee'>Resource.collectionPath() # &#47;resources&#47;</code></pre>
-  </div>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
     <li>
       <span class='name'>options</span>
       <span class='type'>
@@ -825,17 +777,17 @@ Changes the default fallback to Joosy.Resources.RESTCollection.</p>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='basePath-instance'>
-      - (void) <strong>basePath</strong>(options = {})
+    <p class='signature' id='collectionPath-instance'>
+      - (void) <strong>collectionPath</strong>(options = {})
     </p>
     <div class='docstring'>
-  <p>Builds base path</p>
+  <p>Builds collection path</p>
 </div>
 <div class='tags'>
   <h3>See also:</h3>
   <ul class='see'>
     <li>
-      <a href='../../../classes/Joosy/Resources/REST.html#basePath-class'>Joosy.Resources.REST.basePath</a>
+      <a href='../../../classes/Joosy/Resources/REST.html#collectionPath-class'>Joosy.Resources.REST.collectionPath</a>
     </li>
   </ul>
 </div>
@@ -864,22 +816,6 @@ Changes the default fallback to Joosy.Resources.RESTCollection.</p>
       </span>
       &mdash;
       <span class='desc'>See <a href='../../../classes/Joosy/Resources/REST.html#find-class'>Joosy.Resources.REST.find</a> for possible options</span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='collectionPath-instance'>
-      - (void) <strong>collectionPath</strong>(options = {})
-    </p>
-    <div class='docstring'>
-  <p>Builds collection path</p>
-</div>
-<div class='tags'>
-  <h3>See also:</h3>
-  <ul class='see'>
-    <li>
-      <a href='../../../classes/Joosy/Resources/REST.html#collectionPath-class'>Joosy.Resources.REST.collectionPath</a>
     </li>
   </ul>
 </div>
@@ -1069,7 +1005,7 @@ Callback will get parsed JSON object as a parameter.</p>
     </div>
     <div id='footer'>
   Generated on
-  Wed Aug 07 2013 21:35:11 GMT+0700 (ICT)
+  Fri Aug 09 2013 17:59:23 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

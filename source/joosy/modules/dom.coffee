@@ -90,9 +90,9 @@ Joosy.Modules.DOM =
   # @private
   #
   __wrapElement: (value) ->
-    (filter) =>
-      return @$(value) unless filter
-      return @$(value).filter(filter)
+    (context) =>
+      return @$(value) unless context
+      return @$(value, context)
 
   #
   # Binds events defined in 'events' to container

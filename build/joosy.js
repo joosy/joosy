@@ -496,11 +496,11 @@
     },
     __wrapElement: function(value) {
       var _this = this;
-      return function(filter) {
-        if (!filter) {
+      return function(context) {
+        if (!context) {
           return _this.$(value);
         }
-        return _this.$(value).filter(filter);
+        return _this.$(value, context);
       };
     },
     __delegateEvents: function() {

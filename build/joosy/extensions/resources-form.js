@@ -132,7 +132,7 @@
         Object.each(data, function(property, val) {
           var entity, i, input, key, _i, _len, _ref, _results;
           key = _this.concatFieldName(scope, property);
-          input = _this.$fields("[name='" + key + "']:not(:file),[name='" + (key.underscore()) + "']:not(:file),[name='" + (key.camelize(false)) + "']:not(:file)");
+          input = _this.$fields().filter("[name='" + key + "']:not(:file),[name='" + (key.underscore()) + "']:not(:file),[name='" + (key.camelize(false)) + "']:not(:file)");
           if (input.length > 0) {
             if (input.is(':checkbox')) {
               if (val) {
@@ -247,7 +247,7 @@
     };
 
     Form.prototype.findField = function(field) {
-      return this.$fields("[name='" + field + "']");
+      return this.$fields().filter("[name='" + field + "']");
     };
 
     Form.prototype.__markMethod = function(method) {

@@ -84,35 +84,19 @@ describe "Joosy.Resources.REST", ->
       expect(clone.memberPath()).toEqual '/rumbas/salsas/fluffies/1/tests/1'
 
   describe '@memberPath', ->
-    beforeEach ->
-      @parent = FluffyParent.build 1
-      @grandParent = FluffyParent.build 666
-
     it 'builds member path', ->
       expect(Fluffy.memberPath 1).toEqual '/fluffies/1'
 
-    it 'builds member path with single parent', ->
-      expect(Fluffy.memberPath 1, parent: @parent).toEqual '/fluffy_parents/1/fluffies/1'
-
-    it 'builds member path with array parent', ->
-      expect(Fluffy.memberPath 1, parent: [@grandParent, @parent]).toEqual '/fluffy_parents/666/fluffy_parents/1/fluffies/1'
-
-    it 'builds member path with parent and from', ->
-      expect(Fluffy.memberPath 1, parent: @parent, from: 'test').toEqual '/fluffy_parents/1/fluffies/1/test'
-
-    it 'builds member path with parent, from and params', ->
-      expect(Fluffy.memberPath 1, parent: @parent, from: 'test', params: {foo: 'bar'}).toEqual '/fluffy_parents/1/fluffies/1/test'
+    it 'builds member path with from', ->
+      expect(Fluffy.memberPath 1, from: 'test').toEqual '/fluffies/1/test'
 
 
-  it "builds collection path", ->
-    parent = FluffyParent.build 1
-    grandParent = FluffyParent.build 666
+  describe '@collectionPath', ->
+    it 'builds collection path', ->
+      expect(Fluffy.collectionPath()).toEqual '/fluffies'
 
-    expect(Fluffy.collectionPath()).toEqual '/fluffies'
-    expect(Fluffy.collectionPath parent: parent).toEqual '/fluffy_parents/1/fluffies'
-    expect(Fluffy.collectionPath parent: [grandParent, parent]).toEqual '/fluffy_parents/666/fluffy_parents/1/fluffies'
-    expect(Fluffy.collectionPath parent: parent, from: 'test').toEqual '/fluffy_parents/1/fluffies/test'
-    expect(Fluffy.collectionPath parent: parent, from: 'test', params: {foo: 'bar'}).toEqual '/fluffy_parents/1/fluffies/test'
+    it 'builds collection path with from', ->
+      expect(Fluffy.collectionPath from: 'test').toEqual '/fluffies/test'
 
   describe '@find(:id)', ->
     rawData = '{"fluffy": {"id": 1, "name": "test1"}}'
@@ -132,11 +116,6 @@ describe "Joosy.Resources.REST", ->
     it "gets item with from", ->
       resource = Fluffy.find 1, {from: 'action'}, @callback
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/1\/action\?_=\d+/, rawData
-      expect(@callback.callCount).toEqual 1
-
-    it "gets item with from and parent", ->
-      resource = Fluffy.find 1, {parent: FluffyParent.build(1), from: 'action'}, @callback
-      checkAndRespond @server.requests[0], 'GET', /^\/fluffy_parents\/1\/fluffies\/1\/action\?_=\d+/, rawData
       expect(@callback.callCount).toEqual 1
 
     it "gets item with params", ->
@@ -172,11 +151,6 @@ describe "Joosy.Resources.REST", ->
     it "gets collection with from", ->
       resource = Fluffy.find 'all', {from: 'action'}, @callback
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/action\?_=\d+/, rawData
-      expect(@callback.callCount).toEqual 1
-
-    it "gets collection with from and parent", ->
-      resource = Fluffy.find 'all', {parent: FluffyParent.build(1), from: 'action'}, @callback
-      checkAndRespond @server.requests[0], 'GET', /^\/fluffy_parents\/1\/fluffies\/action\?_=\d+/, rawData
       expect(@callback.callCount).toEqual 1
 
     it "gets collection with params", ->

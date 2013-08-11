@@ -46,7 +46,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Array] args      Array of parent entities. Can be a string or another REST resource.
   #
   # @example Basic usage
-  #   Comment.build(1).at(['admin', @blog, @post]).memberPath # => '/admin/blogs/555/posts/666/comments/1'
+  #   Comment.build(1).at(['admin', @blog, @post]).memberPath() # => '/admin/blogs/555/posts/666/comments/1'
   #
   # @note accepts both array notation (comment.at(['admin', @blog, @post])) and args notation (comment.at('admin', @blog, @post))
   #
@@ -74,22 +74,6 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     if window[named] then window[named] else Joosy.Resources.RESTCollection
 
   #
-  # Builds parents part of member path based on parents array
-  #
-  # @param [Array] parents      Array of parents
-  #
-  # @example Basic usage
-  #   Resource.__parentsPath([otherResource, '/bars/1']) # /other_resources/1/bars/1
-  #
-  @__parentsPath: (parents) ->
-    parents.reduce (path, parent) ->
-      path += if Joosy.Module.hasAncestor parent.constructor, Joosy.Resources.REST
-        parent.memberPath()
-      else
-        parent
-    , ''
-
-  #
   # Builds collection path
   #
   # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
@@ -100,15 +84,12 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   @collectionPath: (options={}, source=@__source) ->
     return options.url if options.url
 
-    if source && !options.parent
+    if source
       path = source
     else
       path = '/'
       path += @__namespace__.map((s)-> s.toLowerCase()).join('/') + '/' if @__namespace__.length > 0
       path += @::__entityName.pluralize()
-
-    if options.parent
-      path = @__parentsPath(if Object.isArray(options.parent) then options.parent else [options.parent]) + path
 
     path += "/#{options.from}" if options.from
 
@@ -272,10 +253,6 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Function] callback    Resulting callback
   #   (will receive retrieved Collection/Resource)
   #
-  # @option options [Joosy.Resources.REST] parent            Sets the given resource as a base path
-  #   i.e. /parents/1/resources
-  # @option options [String] parent                         Sets the given staring as a base path
-  #   i.e. /trololo/resources
   # @option options [String] from                           Adds the given string as a last path element
   #   i.e. /resources/trololo
   # @option options [String] url                            Sets url for request instead of generated

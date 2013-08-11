@@ -441,12 +441,6 @@
       }
     };
 
-    REST.__parentsPath = function(parents) {
-      return parents.reduce(function(path, parent) {
-        return path += Joosy.Module.hasAncestor(parent.constructor, Joosy.Resources.REST) ? parent.memberPath() : parent;
-      }, '');
-    };
-
     REST.collectionPath = function(options, source) {
       var path;
       if (options == null) {
@@ -458,7 +452,7 @@
       if (options.url) {
         return options.url;
       }
-      if (source && !options.parent) {
+      if (source) {
         path = source;
       } else {
         path = '/';
@@ -468,9 +462,6 @@
           }).join('/') + '/';
         }
         path += this.prototype.__entityName.pluralize();
-      }
-      if (options.parent) {
-        path = this.__parentsPath(Object.isArray(options.parent) ? options.parent : [options.parent]) + path;
       }
       if (options.from) {
         path += "/" + options.from;

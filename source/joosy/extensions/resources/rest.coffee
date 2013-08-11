@@ -20,29 +20,50 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # Creates the proxy of current resource binded as a child of given entity
   #
+  # @param [Array] args      Array of parent entities. Can be a string or another REST resource.
+  #
+  # @example Basic usage
+  #   Comment.at(['admin', @blog, @post]).collectionPath() # => '/admin/blogs/555/posts/666/comments'
+  #
+  # @note accepts both array notation (Comment.at(['admin', @blog, @post])) and args notation (Comment.at('admin', @blog, @post))
+  #
   @at: (args...) ->
-    #
-    # Class inheritance used to create proxy
-    #
-    # @private
-    #
-    class Clone extends this
-
     if args.length == 1 && Object.isArray(args[0])
       @at(args[0]...)
     else
-      Clone.__source = args.reduce (path, arg) ->
-        path += if arg instanceof Joosy.Resources.Base
+      class Clone extends this
+        @__source = args.reduce (path, arg) ->
+          path += if arg instanceof Joosy.Resources.REST
+            arg.memberPath()
+          else
+            arg.replace(/^\/?/, '/')
+        , ''
+        @__source += '/' + @::__entityName.pluralize()
+
+  #
+  # Creates the proxy of current resource instance binded as a child of given entity
+  #
+  # @param [Array] args      Array of parent entities. Can be a string or another REST resource.
+  #
+  # @example Basic usage
+  #   Comment.build(1).at(['admin', @blog, @post]).memberPath # => '/admin/blogs/555/posts/666/comments/1'
+  #
+  # @note accepts both array notation (comment.at(['admin', @blog, @post])) and args notation (comment.at('admin', @blog, @post))
+  #
+  at: (args...) ->
+    if args.length == 1 && Object.isArray(args[0])
+      @at(args[0]...)
+    else
+      clone = @constructor.__makeShim(@)
+      clone.__source = args.reduce (path, arg) ->
+        path += if arg instanceof Joosy.Resources.REST
           arg.memberPath()
         else
           arg.replace(/^\/?/, '/')
-
       , ''
+      clone.__source += '/' + @__entityName.pluralize()
+      clone
 
-      if @::__entityName && args[args.length - 1] instanceof Joosy.Resources.Base
-        Clone.__source += '/' + @::__entityName.pluralize()
-
-      Clone
 
   #
   # Implements `@collection` default behavior.
@@ -76,20 +97,20 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @example Basic usage
   #   Resource.collectionPath() # /resources/
   #
-  @collectionPath: (options={}) ->
+  @collectionPath: (options={}, source=@__source) ->
     return options.url if options.url
 
-    if @__source? && !options.parent?
-      path = @__source
+    if source && !options.parent
+      path = source
     else
       path = '/'
       path += @__namespace__.map((s)-> s.toLowerCase()).join('/') + '/' if @__namespace__.length > 0
       path += @::__entityName.pluralize()
 
-    if options.parent?
+    if options.parent
       path = @__parentsPath(if Object.isArray(options.parent) then options.parent else [options.parent]) + path
 
-    path += "/#{options.from}" if options.from?
+    path += "/#{options.from}" if options.from
 
     path
 
@@ -99,7 +120,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @see Joosy.Resources.REST.collectionPath
   #
   collectionPath: (options={}) ->
-    @constructor.collectionPath options
+    @constructor.collectionPath options, @__source
 
   #
   # Builds member path based on the given id.
@@ -110,11 +131,11 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @example Basic usage
   #   Resource.memberPath(1, from: 'foo') # /resources/1/foo
   #
-  @memberPath: (id, options={}) ->
+  @memberPath: (id, options={}, source=@__source) ->
     return options.url if options.url
 
-    from = options.from
-    path  = @collectionPath(Object.merge(options, from: undefined)) + "/#{id}"
+    from  = options.from
+    path  = @collectionPath(Object.merge(options, from: undefined), source) + "/#{id}"
     path += "/#{from}" if from?
     path
 
@@ -127,7 +148,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #   resource.memberPath(from: 'foo') # /resources/1/foo
   #
   memberPath: (options={}) ->
-    @constructor.memberPath @id(), options
+    @constructor.memberPath @id(), options, @__source
 
   #
   # Sends the GET query using collectionPath.
@@ -257,6 +278,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #   i.e. /trololo/resources
   # @option options [String] from                           Adds the given string as a last path element
   #   i.e. /resources/trololo
+  # @option options [String] url                            Sets url for request instead of generated
+  #   i.e. /some/custom/url
   # @option options [Hash] params                           Passes the given params to the query
   #
   @find: (where, options={}, callback=false) ->

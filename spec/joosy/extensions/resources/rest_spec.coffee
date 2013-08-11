@@ -38,23 +38,50 @@ describe "Joosy.Resources.REST", ->
 
     it 'returns base class child', ->
       clone = @Test.at 'rumbas'
-      expect(Joosy.Module.hasAncestor clone, @Test).toBeTruthy()
+      expect(Joosy.Module.hasAncestor(clone, @Test)).toBeTruthy()
 
     it 'accepts string', ->
       clone = @Test.at 'rumbas'
-      expect(clone.__source).toEqual '/rumbas'
+      expect(clone.collectionPath()).toEqual '/rumbas/tests'
 
     it 'accepts another resource instance', ->
       clone = @Test.at Fluffy.build(1)
-      expect(clone.__source).toEqual '/fluffies/1/tests'
+      expect(clone.collectionPath()).toEqual '/fluffies/1/tests'
 
     it 'accepts array', ->
       clone = @Test.at ['rumbas', Fluffy.build(1), 'salsas']
-      expect(clone.__source).toEqual '/rumbas/fluffies/1/salsas'
+      expect(clone.collectionPath()).toEqual '/rumbas/fluffies/1/salsas/tests'
 
     it 'accepts sequential attributes', ->
       clone = @Test.at 'rumbas', 'salsas', Fluffy.build(1)
-      expect(clone.__source).toEqual '/rumbas/salsas/fluffies/1/tests'
+      expect(clone.collectionPath()).toEqual '/rumbas/salsas/fluffies/1/tests'
+
+  describe '::at', ->
+    beforeEach ->
+      class @Test extends Joosy.Resources.REST
+        @entity 'test'
+
+    it 'returns base class instance', ->
+      original = @Test.build id: 1, name: 'foobar'
+      clone    = original.at 'rumbas'
+      expect(clone instanceof @Test).toBeTruthy()
+      expect(clone.data).toEqual original.data
+
+    it 'accepts string', ->
+      clone = @Test.build(1).at('rumbas')
+      expect(clone.memberPath()).toEqual '/rumbas/tests/1'
+
+    it 'accepts another resource instance', ->
+      clone = @Test.build(1).at(Fluffy.build(1))
+      expect(clone.memberPath()).toEqual '/fluffies/1/tests/1'
+
+    it 'accepts array', ->
+      clone = @Test.build(1).at ['rumbas', Fluffy.build(1), 'salsas']
+      expect(clone.memberPath()).toEqual '/rumbas/fluffies/1/salsas/tests/1'
+
+    it 'accepts sequential attributes', ->
+      clone = @Test.build(1).at 'rumbas', 'salsas', Fluffy.build(1)
+      expect(clone.memberPath()).toEqual '/rumbas/salsas/fluffies/1/tests/1'
 
   describe '@memberPath', ->
     beforeEach ->
@@ -127,7 +154,7 @@ describe "Joosy.Resources.REST", ->
         expect(resource).toBe cbResource
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/1\?_=\d+/, rawData
 
-  describe '@find(\'all\')', ->
+  describe "@find('all')", ->
     rawData = '{"page": 42, "fluffies": [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]}'
 
     beforeEach ->

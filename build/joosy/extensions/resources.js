@@ -67,26 +67,14 @@
     };
 
     Base.build = function(data) {
-      var id, key, klass, shim, value, _base, _base1, _ref;
+      var id, klass, shim, _base, _base1;
       if (data == null) {
         data = {};
       }
       klass = this.prototype.__entityName;
       (_base = Joosy.Resources.Base).identity || (_base.identity = {});
       (_base1 = Joosy.Resources.Base.identity)[klass] || (_base1[klass] = {});
-      shim = function() {
-        return shim.__call.apply(shim, arguments);
-      };
-      if (shim.__proto__) {
-        shim.__proto__ = this.prototype;
-      } else {
-        _ref = this.prototype;
-        for (key in _ref) {
-          value = _ref[key];
-          shim[key] = value;
-        }
-      }
-      shim.constructor = this;
+      shim = this.__makeShim(this.prototype);
       if (Object.isNumber(data) || Object.isString(data)) {
         id = data;
         data = {};
@@ -104,6 +92,23 @@
       } else {
         this.apply(shim, [data]);
       }
+      return shim;
+    };
+
+    Base.__makeShim = function(proto) {
+      var key, shim, value;
+      shim = function() {
+        return shim.__call.apply(shim, arguments);
+      };
+      if (shim.__proto__) {
+        shim.__proto__ = proto;
+      } else {
+        for (key in proto) {
+          value = proto[key];
+          shim[key] = value;
+        }
+      }
+      shim.constructor = this;
       return shim;
     };
 
@@ -388,27 +393,41 @@
     REST.at = function() {
       var Clone, args, _ref1;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      Clone = (function(_super1) {
-        __extends(Clone, _super1);
-
-        function Clone() {
-          _ref1 = Clone.__super__.constructor.apply(this, arguments);
-          return _ref1;
-        }
-
-        return Clone;
-
-      })(this);
       if (args.length === 1 && Object.isArray(args[0])) {
         return this.at.apply(this, args[0]);
       } else {
-        Clone.__source = args.reduce(function(path, arg) {
-          return path += arg instanceof Joosy.Resources.Base ? arg.memberPath() : arg.replace(/^\/?/, '/');
+        return Clone = (function(_super1) {
+          __extends(Clone, _super1);
+
+          function Clone() {
+            _ref1 = Clone.__super__.constructor.apply(this, arguments);
+            return _ref1;
+          }
+
+          Clone.__source = args.reduce(function(path, arg) {
+            return path += arg instanceof Joosy.Resources.REST ? arg.memberPath() : arg.replace(/^\/?/, '/');
+          }, '');
+
+          Clone.__source += '/' + Clone.prototype.__entityName.pluralize();
+
+          return Clone;
+
+        })(this);
+      }
+    };
+
+    REST.prototype.at = function() {
+      var args, clone;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      if (args.length === 1 && Object.isArray(args[0])) {
+        return this.at.apply(this, args[0]);
+      } else {
+        clone = this.constructor.__makeShim(this);
+        clone.__source = args.reduce(function(path, arg) {
+          return path += arg instanceof Joosy.Resources.REST ? arg.memberPath() : arg.replace(/^\/?/, '/');
         }, '');
-        if (this.prototype.__entityName && args[args.length - 1] instanceof Joosy.Resources.Base) {
-          Clone.__source += '/' + this.prototype.__entityName.pluralize();
-        }
-        return Clone;
+        clone.__source += '/' + this.__entityName.pluralize();
+        return clone;
       }
     };
 
@@ -428,16 +447,19 @@
       }, '');
     };
 
-    REST.collectionPath = function(options) {
+    REST.collectionPath = function(options, source) {
       var path;
       if (options == null) {
         options = {};
       }
+      if (source == null) {
+        source = this.__source;
+      }
       if (options.url) {
         return options.url;
       }
-      if ((this.__source != null) && (options.parent == null)) {
-        path = this.__source;
+      if (source && !options.parent) {
+        path = source;
       } else {
         path = '/';
         if (this.__namespace__.length > 0) {
@@ -447,10 +469,10 @@
         }
         path += this.prototype.__entityName.pluralize();
       }
-      if (options.parent != null) {
+      if (options.parent) {
         path = this.__parentsPath(Object.isArray(options.parent) ? options.parent : [options.parent]) + path;
       }
-      if (options.from != null) {
+      if (options.from) {
         path += "/" + options.from;
       }
       return path;
@@ -460,13 +482,16 @@
       if (options == null) {
         options = {};
       }
-      return this.constructor.collectionPath(options);
+      return this.constructor.collectionPath(options, this.__source);
     };
 
-    REST.memberPath = function(id, options) {
+    REST.memberPath = function(id, options, source) {
       var from, path;
       if (options == null) {
         options = {};
+      }
+      if (source == null) {
+        source = this.__source;
       }
       if (options.url) {
         return options.url;
@@ -474,7 +499,7 @@
       from = options.from;
       path = this.collectionPath(Object.merge(options, {
         from: void 0
-      })) + ("/" + id);
+      }), source) + ("/" + id);
       if (from != null) {
         path += "/" + from;
       }
@@ -485,7 +510,7 @@
       if (options == null) {
         options = {};
       }
-      return this.constructor.memberPath(this.id(), options);
+      return this.constructor.memberPath(this.id(), options, this.__source);
     };
 
     REST.get = function(options, callback) {

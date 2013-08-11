@@ -128,16 +128,7 @@ class Joosy.Resources.Base extends Joosy.Module
     Joosy.Resources.Base.identity ||= {}
     Joosy.Resources.Base.identity[klass] ||= {}
 
-    shim = ->
-      shim.__call.apply shim, arguments
-
-    if shim.__proto__
-      shim.__proto__ = @prototype
-    else
-      for key, value of @prototype
-        shim[key] = value
-
-    shim.constructor = @
+    shim = @__makeShim(@::)
 
     if Object.isNumber(data) || Object.isString(data)
       id   = data
@@ -155,6 +146,25 @@ class Joosy.Resources.Base extends Joosy.Module
         @apply shim, [data]
     else
       @apply shim, [data]
+
+    shim
+
+  #
+  # Makes base shim-function for making instances through build or making instance clones
+  #
+  # @param [Object] proto         Any function or object whose properties will be inherited by a new function
+  #
+  @__makeShim: (proto) ->
+    shim = ->
+      shim.__call.apply shim, arguments
+
+    if shim.__proto__
+      shim.__proto__ = proto
+    else
+      for key, value of proto
+        shim[key] = value
+
+    shim.constructor = @
 
     shim
 

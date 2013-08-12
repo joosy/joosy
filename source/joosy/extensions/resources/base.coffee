@@ -178,7 +178,7 @@ class Joosy.Resources.Base extends Joosy.Module
     @__fillData data, false
 
   id: ->
-    @data[@__primaryKey]
+    @data?[@__primaryKey]
 
   knownAttributes: ->
     Object.keys @data

@@ -18,6 +18,22 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     @__source = location
 
   #
+  # Makes needed changes with clone/wrapper for @at method to extend its' path
+  #
+  @__atWrapper: (definer, args...) ->
+    if args.length == 1 && Object.isArray(args[0])
+      @__atWrapper(definer, args[0]...)
+    else
+      definer (clone) =>
+        clone.__source = args.reduce (path, arg) ->
+          path += if arg instanceof Joosy.Resources.REST
+            arg.memberPath()
+          else
+            arg.replace(/^\/?/, '/')
+        , ''
+        clone.__source += '/' + @::__entityName.pluralize()
+
+  #
   # Creates the proxy of current resource binded as a child of given entity
   #
   # @param [Array] args      Array of parent entities. Can be a string or another REST resource.
@@ -28,17 +44,11 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @note accepts both array notation (Comment.at(['admin', @blog, @post])) and args notation (Comment.at('admin', @blog, @post))
   #
   @at: (args...) ->
-    if args.length == 1 && Object.isArray(args[0])
-      @at(args[0]...)
-    else
-      class Clone extends this
-        @__source = args.reduce (path, arg) ->
-          path += if arg instanceof Joosy.Resources.REST
-            arg.memberPath()
-          else
-            arg.replace(/^\/?/, '/')
-        , ''
-        @__source += '/' + @::__entityName.pluralize()
+    @__atWrapper (callback) =>
+      class Clone extends @
+        callback(@)
+    , args...
+
 
   #
   # Creates the proxy of current resource instance binded as a child of given entity
@@ -51,19 +61,9 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @note accepts both array notation (comment.at(['admin', @blog, @post])) and args notation (comment.at('admin', @blog, @post))
   #
   at: (args...) ->
-    if args.length == 1 && Object.isArray(args[0])
-      @at(args[0]...)
-    else
-      clone = @constructor.__makeShim(@)
-      clone.__source = args.reduce (path, arg) ->
-        path += if arg instanceof Joosy.Resources.REST
-          arg.memberPath()
-        else
-          arg.replace(/^\/?/, '/')
-      , ''
-      clone.__source += '/' + @__entityName.pluralize()
-      clone
-
+    @constructor.__atWrapper (callback) =>
+      Object.tap @constructor.__makeShim(@), callback
+    , args...
 
   #
   # Implements `@collection` default behavior.
@@ -73,13 +73,16 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     named = @__entityName.camelize().pluralize() + 'Collection'
     if window[named] then window[named] else Joosy.Resources.RESTCollection
 
-  @__interpolatePath: (source, ids) ->
+
+  #
+  # Interpolates path with masks by given array of params
+  #
+  __interpolatePath: (source, ids) ->
     ids = [ids] unless Object.isArray(ids)
     ids.reduce (path, id) ->
       id = id.id() if id instanceof Joosy.Resources.REST
       path.replace /:[^\/]+/, id
     , source
-
 
   #
   # Builds collection path
@@ -90,24 +93,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @example Basic usage
   #   Resource.collectionPath() # /resources/
   #
-  @collectionPath: (ids=[], options={}, source=@__source) ->
-    if Object.isObject(ids)
-      source  = options if Object.isString(options)
-      options = ids
-      ids     = []
-
-    return options.url if options.url
-
-    if source
-      path = @__interpolatePath(source, ids)
-    else
-      path = '/'
-      path += @__namespace__.map((s)-> s.toLowerCase()).join('/') + '/' if @__namespace__.length > 0
-      path += @::__entityName.pluralize()
-
-    path += "/#{options.from}" if options.from
-
-    path
+  @collectionPath: (args...) ->
+    @::collectionPath args...
 
   #
   # Builds collection path
@@ -115,7 +102,24 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @see Joosy.Resources.REST.collectionPath
   #
   collectionPath: (ids=[], options={}) ->
-    @constructor.collectionPath ids, options, @__source
+    if Object.isObject(ids)
+      options = ids
+      ids     = []
+
+    return options.url if options.url
+
+    source = @__source || @constructor.__source
+
+    if source
+      path = @__interpolatePath source, ids
+    else
+      path = '/'
+      path += @constructor.__namespace__.map(String::underscore).join('/') + '/' if @constructor.__namespace__.length > 0
+      path += @__entityName.pluralize()
+
+    path += "/#{options.from}" if options.from
+    path
+
 
   #
   # Builds member path based on the given id.
@@ -126,19 +130,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @example Basic usage
   #   Resource.memberPath(1, from: 'foo') # /resources/1/foo
   #
-  @memberPath: (ids, options={}, source=@__source) ->
-    return options.url if options.url
-
-    if Object.isArray(ids)
-      id = ids.pop()
-    else
-      id = ids
-      ids = []
-
-    from  = options.from
-    path  = @collectionPath(ids, Object.merge(options, from: undefined), source) + "/#{id}"
-    path += "/#{from}" if from?
-    path
+  @memberPath: (args...) ->
+    @::memberPath args...
 
   #
   # Builds member path
@@ -153,10 +146,17 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
       options = ids
       ids     = []
 
-    ids = [ids] unless Object.isArray(ids)
-    ids.push @id()
+    return options.url if options.url
 
-    @constructor.memberPath ids, options, @__source
+    ids = [ids] unless Object.isArray(ids)
+    id = @id() || ids.pop()
+
+    from  = options.from
+
+    ids.push @id()
+    path  = @collectionPath(ids, Object.merge(options, from: undefined)) + "/#{id}"
+    path += "/#{from}" if from?
+    path
 
   #
   # Sends the GET query using collectionPath.
@@ -167,9 +167,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @get: (options, callback) ->
-    if Object.isFunction(options)
-      callback = options
-      options  = {}
+    [options, callback] = @::__extractOptionsAndCallback(options, callback)
     @__query @collectionPath(options), 'GET', options.params, callback
 
   #
@@ -181,9 +179,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @post: (options, callback) ->
-    if Object.isFunction(options)
-      callback = options
-      options  = {}
+    [options, callback] = @::__extractOptionsAndCallback(options, callback)
     @__query @collectionPath(options), 'POST', options.params, callback
 
   #
@@ -195,9 +191,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @put: (options, callback) ->
-    if Object.isFunction(options)
-      callback = options
-      options  = {}
+    [options, callback] = @::__extractOptionsAndCallback(options, callback)
     @__query @collectionPath(options), 'PUT', options.params, callback
 
   #
@@ -209,9 +203,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   @delete: (options, callback) ->
-    if Object.isFunction(options)
-      callback = options
-      options  = {}
+    [options, callback] = @::__extractOptionsAndCallback(options, callback)
     @__query @collectionPath(options), 'DELETE', options.params, callback
 
   #
@@ -223,9 +215,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   get: (options, callback) ->
-    if Object.isFunction(options)
-      callback = options
-      options  = {}
+    [options, callback] = @__extractOptionsAndCallback(options, callback)
     @constructor.__query @memberPath(options), 'GET', options.params, callback
 
   #
@@ -237,9 +227,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   post: (options, callback) ->
-    if Object.isFunction(options)
-      callback = options
-      options  = {}
+    [options, callback] = @__extractOptionsAndCallback(options, callback)
     @constructor.__query @memberPath(options), 'POST', options.params, callback
 
   #
@@ -251,9 +239,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   put: (options, callback) ->
-    if Object.isFunction(options)
-      callback = options
-      options  = {}
+    [options, callback] = @__extractOptionsAndCallback(options, callback)
     @constructor.__query @memberPath(options), 'PUT', options.params, callback
 
   #
@@ -264,9 +250,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Function] callback    Resulting callback
   #
   delete: (options, callback) ->
-    if Object.isFunction(options)
-      callback = options
-      options  = {}
+    [options, callback] = @__extractOptionsAndCallback(options, callback)
     @constructor.__query @memberPath(options), 'DELETE', options.params, callback
 
   #
@@ -287,9 +271,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @option options [Hash] params                           Passes the given params to the query
   #
   @find: (where, options={}, callback=false) ->
-    if Object.isFunction(options)
-      callback = options
-      options  = {}
+    [options, callback] = @::__extractOptionsAndCallback(options, callback)
 
     id = if Object.isArray(where) then where.last() else where
 
@@ -309,6 +291,9 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
 
     result
 
+  #
+  # Wrapper for AJAX request
+  #
   @__query: (path, method, params, callback) ->
     options =
       data: params
@@ -331,10 +316,17 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
   #
   reload: (options={}, callback=false) ->
-    if Object.isFunction(options)
-      callback = options
-      options  = {}
+    [options, callback] = @__extractOptionsAndCallback(options, callback)
 
     @constructor.__query @memberPath(options), 'GET', options.params, (data) =>
       @load data
       callback? this
+
+  #
+  # utility function for better API support for unrequired first options parameter
+  #
+  __extractOptionsAndCallback: (options, callback) ->
+    if Object.isFunction(options)
+      callback = options
+      options  = {}
+    [options, callback]

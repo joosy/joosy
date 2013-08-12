@@ -118,7 +118,8 @@
     }
 
     Base.prototype.id = function() {
-      return this.data[this.__primaryKey];
+      var _ref;
+      return (_ref = this.data) != null ? _ref[this.__primaryKey] : void 0;
     };
 
     Base.prototype.knownAttributes = function() {
@@ -388,12 +389,28 @@
       return this.__source = location;
     };
 
-    REST.at = function() {
-      var Clone, args, _ref1;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+    REST.__atWrapper = function() {
+      var args, definer,
+        _this = this;
+      definer = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       if (args.length === 1 && Object.isArray(args[0])) {
-        return this.at.apply(this, args[0]);
+        return this.__atWrapper.apply(this, [definer].concat(__slice.call(args[0])));
       } else {
+        return definer(function(clone) {
+          clone.__source = args.reduce(function(path, arg) {
+            return path += arg instanceof Joosy.Resources.REST ? arg.memberPath() : arg.replace(/^\/?/, '/');
+          }, '');
+          return clone.__source += '/' + _this.prototype.__entityName.pluralize();
+        });
+      }
+    };
+
+    REST.at = function() {
+      var args,
+        _this = this;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return this.__atWrapper.apply(this, [function(callback) {
+        var Clone, _ref1;
         return Clone = (function(_super1) {
           __extends(Clone, _super1);
 
@@ -402,31 +419,21 @@
             return _ref1;
           }
 
-          Clone.__source = args.reduce(function(path, arg) {
-            return path += arg instanceof Joosy.Resources.REST ? arg.memberPath() : arg.replace(/^\/?/, '/');
-          }, '');
-
-          Clone.__source += '/' + Clone.prototype.__entityName.pluralize();
+          callback(Clone);
 
           return Clone;
 
-        })(this);
-      }
+        })(_this);
+      }].concat(__slice.call(args)));
     };
 
     REST.prototype.at = function() {
-      var args, clone;
+      var args, _ref1,
+        _this = this;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      if (args.length === 1 && Object.isArray(args[0])) {
-        return this.at.apply(this, args[0]);
-      } else {
-        clone = this.constructor.__makeShim(this);
-        clone.__source = args.reduce(function(path, arg) {
-          return path += arg instanceof Joosy.Resources.REST ? arg.memberPath() : arg.replace(/^\/?/, '/');
-        }, '');
-        clone.__source += '/' + this.__entityName.pluralize();
-        return clone;
-      }
+      return (_ref1 = this.constructor).__atWrapper.apply(_ref1, [function(callback) {
+        return Object.tap(_this.constructor.__makeShim(_this), callback);
+      }].concat(__slice.call(args)));
     };
 
     REST.prototype.__collection = function() {
@@ -439,7 +446,7 @@
       }
     };
 
-    REST.__interpolatePath = function(source, ids) {
+    REST.prototype.__interpolatePath = function(source, ids) {
       if (!Object.isArray(ids)) {
         ids = [ids];
       }
@@ -451,37 +458,36 @@
       }, source);
     };
 
-    REST.collectionPath = function(ids, options, source) {
-      var path;
+    REST.collectionPath = function() {
+      var args, _ref1;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return (_ref1 = this.prototype).collectionPath.apply(_ref1, args);
+    };
+
+    REST.prototype.collectionPath = function(ids, options) {
+      var path, source;
       if (ids == null) {
         ids = [];
       }
       if (options == null) {
         options = {};
       }
-      if (source == null) {
-        source = this.__source;
-      }
       if (Object.isObject(ids)) {
-        if (Object.isString(options)) {
-          source = options;
-        }
         options = ids;
         ids = [];
       }
       if (options.url) {
         return options.url;
       }
+      source = this.__source || this.constructor.__source;
       if (source) {
         path = this.__interpolatePath(source, ids);
       } else {
         path = '/';
-        if (this.__namespace__.length > 0) {
-          path += this.__namespace__.map(function(s) {
-            return s.toLowerCase();
-          }).join('/') + '/';
+        if (this.constructor.__namespace__.length > 0) {
+          path += this.constructor.__namespace__.map(String.prototype.underscore).join('/') + '/';
         }
-        path += this.prototype.__entityName.pluralize();
+        path += this.__entityName.pluralize();
       }
       if (options.from) {
         path += "/" + options.from;
@@ -489,44 +495,14 @@
       return path;
     };
 
-    REST.prototype.collectionPath = function(ids, options) {
-      if (ids == null) {
-        ids = [];
-      }
-      if (options == null) {
-        options = {};
-      }
-      return this.constructor.collectionPath(ids, options, this.__source);
-    };
-
-    REST.memberPath = function(ids, options, source) {
-      var from, id, path;
-      if (options == null) {
-        options = {};
-      }
-      if (source == null) {
-        source = this.__source;
-      }
-      if (options.url) {
-        return options.url;
-      }
-      if (Object.isArray(ids)) {
-        id = ids.pop();
-      } else {
-        id = ids;
-        ids = [];
-      }
-      from = options.from;
-      path = this.collectionPath(ids, Object.merge(options, {
-        from: void 0
-      }), source) + ("/" + id);
-      if (from != null) {
-        path += "/" + from;
-      }
-      return path;
+    REST.memberPath = function() {
+      var args, _ref1;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return (_ref1 = this.prototype).memberPath.apply(_ref1, args);
     };
 
     REST.prototype.memberPath = function(ids, options) {
+      var from, id, path;
       if (ids == null) {
         ids = [];
       }
@@ -537,79 +513,74 @@
         options = ids;
         ids = [];
       }
+      if (options.url) {
+        return options.url;
+      }
       if (!Object.isArray(ids)) {
         ids = [ids];
       }
+      id = this.id() || ids.pop();
+      from = options.from;
       ids.push(this.id());
-      return this.constructor.memberPath(ids, options, this.__source);
+      path = this.collectionPath(ids, Object.merge(options, {
+        from: void 0
+      })) + ("/" + id);
+      if (from != null) {
+        path += "/" + from;
+      }
+      return path;
     };
 
     REST.get = function(options, callback) {
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
+      var _ref1;
+      _ref1 = this.prototype.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
       return this.__query(this.collectionPath(options), 'GET', options.params, callback);
     };
 
     REST.post = function(options, callback) {
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
+      var _ref1;
+      _ref1 = this.prototype.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
       return this.__query(this.collectionPath(options), 'POST', options.params, callback);
     };
 
     REST.put = function(options, callback) {
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
+      var _ref1;
+      _ref1 = this.prototype.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
       return this.__query(this.collectionPath(options), 'PUT', options.params, callback);
     };
 
     REST["delete"] = function(options, callback) {
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
+      var _ref1;
+      _ref1 = this.prototype.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
       return this.__query(this.collectionPath(options), 'DELETE', options.params, callback);
     };
 
     REST.prototype.get = function(options, callback) {
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
+      var _ref1;
+      _ref1 = this.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
       return this.constructor.__query(this.memberPath(options), 'GET', options.params, callback);
     };
 
     REST.prototype.post = function(options, callback) {
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
+      var _ref1;
+      _ref1 = this.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
       return this.constructor.__query(this.memberPath(options), 'POST', options.params, callback);
     };
 
     REST.prototype.put = function(options, callback) {
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
+      var _ref1;
+      _ref1 = this.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
       return this.constructor.__query(this.memberPath(options), 'PUT', options.params, callback);
     };
 
     REST.prototype["delete"] = function(options, callback) {
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
+      var _ref1;
+      _ref1 = this.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
       return this.constructor.__query(this.memberPath(options), 'DELETE', options.params, callback);
     };
 
     REST.find = function(where, options, callback) {
-      var id, path, result,
+      var id, path, result, _ref1,
         _this = this;
       if (options == null) {
         options = {};
@@ -617,10 +588,7 @@
       if (callback == null) {
         callback = false;
       }
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
+      _ref1 = this.prototype.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
       id = Object.isArray(where) ? where.last() : where;
       if (id === 'all') {
         result = new (this.prototype.__collection())(this, options);
@@ -656,21 +624,27 @@
     };
 
     REST.prototype.reload = function(options, callback) {
-      var _this = this;
+      var _ref1,
+        _this = this;
       if (options == null) {
         options = {};
       }
       if (callback == null) {
         callback = false;
       }
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
+      _ref1 = this.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
       return this.constructor.__query(this.memberPath(options), 'GET', options.params, function(data) {
         _this.load(data);
         return typeof callback === "function" ? callback(_this) : void 0;
       });
+    };
+
+    REST.prototype.__extractOptionsAndCallback = function(options, callback) {
+      if (Object.isFunction(options)) {
+        callback = options;
+        options = {};
+      }
+      return [options, callback];
     };
 
     return REST;

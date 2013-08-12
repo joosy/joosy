@@ -9,7 +9,7 @@
 # Internal storage rules:
 #
 #  * HTML5 Prefix option is stored with both leading and trailing slashes
-#  * Helpers pathes are stored without leading trailing slash
+#  * Helpers' paths are stored without leading trailing slash
 #  * Route matchers declare leading and trailing slashes as optional
 #
 # @example

@@ -13,7 +13,7 @@ class Joosy.Module
   # Gets Object/Class class name.
   #
   # @note Never use this to make some magical auto-suggestions!!!
-  #   Remember: minifcation will rename your classes. Therefore it
+  #   Remember: minification will rename your classes. Therefore it
   #   is only intended for development debugging purposes.
   #
   # @return [String]

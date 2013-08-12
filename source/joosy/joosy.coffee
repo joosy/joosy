@@ -78,7 +78,7 @@
       generator = generator.apply space
     for key, klass of space
       if space.hasOwnProperty(key) &&
-         Joosy.Module.hasAncestor klass, Joosy.Module
+          Joosy.Module.hasAncestor(klass, Joosy.Module)
         klass.__namespace__ = name
 
   #

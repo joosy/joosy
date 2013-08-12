@@ -11,8 +11,6 @@
 
     Base.prototype.__primaryKey = 'id';
 
-    Base.prototype.__source = false;
-
     Base.resetIdentity = function() {
       return Joosy.Resources.Base.identity = {};
     };
@@ -441,19 +439,41 @@
       }
     };
 
-    REST.collectionPath = function(options, source) {
+    REST.__interpolatePath = function(source, ids) {
+      if (!Object.isArray(ids)) {
+        ids = [ids];
+      }
+      return ids.reduce(function(path, id) {
+        if (id instanceof Joosy.Resources.REST) {
+          id = id.id();
+        }
+        return path.replace(/:[^\/]+/, id);
+      }, source);
+    };
+
+    REST.collectionPath = function(ids, options, source) {
       var path;
+      if (ids == null) {
+        ids = [];
+      }
       if (options == null) {
         options = {};
       }
       if (source == null) {
         source = this.__source;
       }
+      if (Object.isObject(ids)) {
+        if (Object.isString(options)) {
+          source = options;
+        }
+        options = ids;
+        ids = [];
+      }
       if (options.url) {
         return options.url;
       }
       if (source) {
-        path = source;
+        path = this.__interpolatePath(source, ids);
       } else {
         path = '/';
         if (this.__namespace__.length > 0) {
@@ -469,15 +489,18 @@
       return path;
     };
 
-    REST.prototype.collectionPath = function(options) {
+    REST.prototype.collectionPath = function(ids, options) {
+      if (ids == null) {
+        ids = [];
+      }
       if (options == null) {
         options = {};
       }
-      return this.constructor.collectionPath(options, this.__source);
+      return this.constructor.collectionPath(ids, options, this.__source);
     };
 
-    REST.memberPath = function(id, options, source) {
-      var from, path;
+    REST.memberPath = function(ids, options, source) {
+      var from, id, path;
       if (options == null) {
         options = {};
       }
@@ -487,8 +510,14 @@
       if (options.url) {
         return options.url;
       }
+      if (Object.isArray(ids)) {
+        id = ids.pop();
+      } else {
+        id = ids;
+        ids = [];
+      }
       from = options.from;
-      path = this.collectionPath(Object.merge(options, {
+      path = this.collectionPath(ids, Object.merge(options, {
         from: void 0
       }), source) + ("/" + id);
       if (from != null) {
@@ -497,11 +526,22 @@
       return path;
     };
 
-    REST.prototype.memberPath = function(options) {
+    REST.prototype.memberPath = function(ids, options) {
+      if (ids == null) {
+        ids = [];
+      }
       if (options == null) {
         options = {};
       }
-      return this.constructor.memberPath(this.id(), options, this.__source);
+      if (Object.isObject(ids)) {
+        options = ids;
+        ids = [];
+      }
+      if (!Object.isArray(ids)) {
+        ids = [ids];
+      }
+      ids.push(this.id());
+      return this.constructor.memberPath(ids, options, this.__source);
     };
 
     REST.get = function(options, callback) {
@@ -569,7 +609,7 @@
     };
 
     REST.find = function(where, options, callback) {
-      var result,
+      var id, path, result,
         _this = this;
       if (options == null) {
         options = {};
@@ -581,19 +621,21 @@
         callback = options;
         options = {};
       }
-      if (where === 'all') {
+      id = Object.isArray(where) ? where.last() : where;
+      if (id === 'all') {
         result = new (this.prototype.__collection())(this, options);
-        this.__query(this.collectionPath(options), 'GET', options.params, function(data) {
-          result.load(data);
-          return typeof callback === "function" ? callback(result, data) : void 0;
-        });
+        path = this.collectionPath(where, options);
       } else {
-        result = this.build(where);
-        this.__query(this.memberPath(where, options), 'GET', options.params, function(data) {
-          result.load(data);
-          return typeof callback === "function" ? callback(result, data) : void 0;
-        });
+        result = this.build(id);
+        path = this.memberPath(where, options);
       }
+      if (Object.isArray(where) && where.length > 1) {
+        result.__source = this.collectionPath(where);
+      }
+      this.__query(path, 'GET', options.params, function(data) {
+        result.load(data);
+        return typeof callback === "function" ? callback(result, data) : void 0;
+      });
       return result;
     };
 
@@ -639,7 +681,8 @@
 (function() {
   var _ref,
     __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __slice = [].slice;
 
   Joosy.Resources.RESTCollection = (function(_super) {
     __extends(RESTCollection, _super);
@@ -665,10 +708,21 @@
         callback = options;
         options = {};
       }
-      return this.model.__query(this.model.collectionPath(options), 'GET', options.params, function(data) {
+      return this.model.__query(this.model.collectionPath(options, this.__source), 'GET', options.params, function(data) {
         _this.load(data);
         return typeof callback === "function" ? callback(data) : void 0;
       });
+    };
+
+    RESTCollection.prototype.load = function() {
+      var args, res,
+        _this = this;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      res = RESTCollection.__super__.load.apply(this, args);
+      this.data.each(function(x) {
+        return x.__source = _this.__source;
+      });
+      return res;
     };
 
     return RESTCollection;

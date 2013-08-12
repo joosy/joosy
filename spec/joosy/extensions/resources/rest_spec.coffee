@@ -13,6 +13,10 @@ describe "Joosy.Resources.REST", ->
     @entity 'fluffy'
     @map 'fluffy_inlines', FluffyInline
 
+  class Interpolated extends Joosy.Resources.REST
+    @entity 'test'
+    @source '/grand_parents/:grand_parent_id/parents/:parent_id/tests'
+
   Joosy.namespace 'Animal', ->
     class @Cat extends Joosy.Resources.REST
       @entity 'cat'
@@ -43,6 +47,10 @@ describe "Joosy.Resources.REST", ->
     it 'accepts string', ->
       clone = @Test.at 'rumbas'
       expect(clone.collectionPath()).toEqual '/rumbas/tests'
+
+    it 'makes a class whose instances get new source too', ->
+      clone = @Test.at 'rumbas'
+      expect(clone.build(1).memberPath()).toEqual '/rumbas/tests/1'
 
     it 'accepts another resource instance', ->
       clone = @Test.at Fluffy.build(1)
@@ -90,6 +98,19 @@ describe "Joosy.Resources.REST", ->
     it 'builds member path with from', ->
       expect(Fluffy.memberPath 1, from: 'test').toEqual '/fluffies/1/test'
 
+    describe 'with interpolation', ->
+      it 'builds member path', ->
+        expect(Interpolated.memberPath([1,2,3])).toEqual '/grand_parents/1/parents/2/tests/3'
+
+      it 'saves member path for single instance', ->
+        item = Interpolated.find [1,2,3]
+        checkAndRespond @server.requests[0], 'GET', /^\/grand_parents\/1\/parents\/2\/tests\/3\?_=\d+/, '{"test": {"id": 3}}'
+        expect(item.memberPath()).toEqual '/grand_parents/1/parents/2/tests/3'
+
+      it 'saves member path for instances collection', ->
+        items = Interpolated.find [1,2,'all']
+        checkAndRespond @server.requests[0], 'GET', /^\/grand_parents\/1\/parents\/2\/tests\?_=\d+/, '{"tests": [{"test": {"id": 3}}]}'
+        expect(items.at(0).memberPath()).toEqual '/grand_parents/1/parents/2/tests/3'
 
   describe '@collectionPath', ->
     it 'builds collection path', ->
@@ -97,6 +118,11 @@ describe "Joosy.Resources.REST", ->
 
     it 'builds collection path with from', ->
       expect(Fluffy.collectionPath from: 'test').toEqual '/fluffies/test'
+
+    describe 'with interpolation', ->
+      it 'builds collection path', ->
+        expect(Interpolated.collectionPath([1,2])).toEqual '/grand_parents/1/parents/2/tests'
+
 
   describe '@find(:id)', ->
     rawData = '{"fluffy": {"id": 1, "name": "test1"}}'

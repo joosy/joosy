@@ -27,8 +27,6 @@ class Joosy.Resources.Base extends Joosy.Module
   #
   __primaryKey: 'id'
 
-  __source: false
-
   #
   # Clears the identity map cache. Recomended to be called during layout switch to
   # ensure correct garbage collection.
@@ -55,7 +53,8 @@ class Joosy.Resources.Base extends Joosy.Module
   #
   # @param [String] primary     Name of the field
   #
-  @primaryKey: (primaryKey) -> @::__primaryKey = primaryKey
+  @primaryKey: (primaryKey) ->
+    @::__primaryKey = primaryKey
 
   #
   # Sets the entity text name:
@@ -63,7 +62,8 @@ class Joosy.Resources.Base extends Joosy.Module
   #
   # @param [String] name    Singular name of resource
   #
-  @entity: (name) -> @::__entityName = name
+  @entity: (name) ->
+    @::__entityName = name
 
   #
   # Sets the collection to use

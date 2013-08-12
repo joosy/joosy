@@ -73,19 +73,33 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     named = @__entityName.camelize().pluralize() + 'Collection'
     if window[named] then window[named] else Joosy.Resources.RESTCollection
 
+  @__interpolatePath: (source, ids) ->
+    ids = [ids] unless Object.isArray(ids)
+    ids.reduce (path, id) ->
+      id = id.id() if id instanceof Joosy.Resources.REST
+      path.replace /:[^\/]+/, id
+    , source
+
+
   #
   # Builds collection path
   #
+  # @param [Array] id           IDs for interpolation for masked sources
   # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
   #
   # @example Basic usage
   #   Resource.collectionPath() # /resources/
   #
-  @collectionPath: (options={}, source=@__source) ->
+  @collectionPath: (ids=[], options={}, source=@__source) ->
+    if Object.isObject(ids)
+      source  = options if Object.isString(options)
+      options = ids
+      ids     = []
+
     return options.url if options.url
 
     if source
-      path = source
+      path = @__interpolatePath(source, ids)
     else
       path = '/'
       path += @__namespace__.map((s)-> s.toLowerCase()).join('/') + '/' if @__namespace__.length > 0
@@ -100,8 +114,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @see Joosy.Resources.REST.collectionPath
   #
-  collectionPath: (options={}) ->
-    @constructor.collectionPath options, @__source
+  collectionPath: (ids=[], options={}) ->
+    @constructor.collectionPath ids, options, @__source
 
   #
   # Builds member path based on the given id.
@@ -112,11 +126,17 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @example Basic usage
   #   Resource.memberPath(1, from: 'foo') # /resources/1/foo
   #
-  @memberPath: (id, options={}, source=@__source) ->
+  @memberPath: (ids, options={}, source=@__source) ->
     return options.url if options.url
 
+    if Object.isArray(ids)
+      id = ids.pop()
+    else
+      id = ids
+      ids = []
+
     from  = options.from
-    path  = @collectionPath(Object.merge(options, from: undefined), source) + "/#{id}"
+    path  = @collectionPath(ids, Object.merge(options, from: undefined), source) + "/#{id}"
     path += "/#{from}" if from?
     path
 
@@ -128,8 +148,15 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @example Basic usage
   #   resource.memberPath(from: 'foo') # /resources/1/foo
   #
-  memberPath: (options={}) ->
-    @constructor.memberPath @id(), options, @__source
+  memberPath: (ids=[], options={}) ->
+    if Object.isObject(ids)
+      options = ids
+      ids     = []
+
+    ids = [ids] unless Object.isArray(ids)
+    ids.push @id()
+
+    @constructor.memberPath ids, options, @__source
 
   #
   # Sends the GET query using collectionPath.
@@ -264,17 +291,21 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
       callback = options
       options  = {}
 
-    if where == 'all'
-      result = new (@::__collection()) this, options
+    id = if Object.isArray(where) then where.last() else where
 
-      @__query @collectionPath(options), 'GET', options.params, (data) =>
-        result.load data
-        callback?(result, data)
+    if id == 'all'
+      result = new (@::__collection()) this, options
+      path   = @collectionPath where, options
     else
-      result = @build where
-      @__query @memberPath(where, options), 'GET', options.params, (data) =>
-        result.load data
-        callback?(result, data)
+      result = @build id
+      path   = @memberPath where, options
+
+    if Object.isArray(where) && where.length > 1
+      result.__source = @collectionPath where
+
+    @__query path, 'GET', options.params, (data) =>
+      result.load data
+      callback?(result, data)
 
     result
 

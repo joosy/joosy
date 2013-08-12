@@ -1809,6 +1809,7 @@
 (function() {
   Joosy.helpers('Routes', function() {
     return this.linkTo = function(name, url, tagOptions) {
+      var block, _ref;
       if (name == null) {
         name = '';
       }
@@ -1819,9 +1820,9 @@
         tagOptions = {};
       }
       if (Object.isFunction(tagOptions)) {
-        url = name;
-        tagOptions = url;
-        name = tagOptions();
+        block = tagOptions;
+        _ref = [name, url], url = _ref[0], tagOptions = _ref[1];
+        name = block();
       }
       return Joosy.Helpers.Application.contentTag('a', name, Joosy.Module.merge(tagOptions, {
         'data-joosy': true,

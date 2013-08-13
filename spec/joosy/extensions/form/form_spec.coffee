@@ -241,6 +241,10 @@ describe "Joosy.Form", ->
       @target.respond 422, 'Content-Type': 'application/json', '{"foo": "error!"}'
       expect($(@nudeForm.$fields()[0]).attr 'class').toEqual 'field_with_errors'
 
+    it "should fill class for invalidated fields by default", ->
+      @target.respond 422, 'Content-Type': 'application/json', '{"errors":{"foo": "error!"}}'
+      expect($(@nudeForm.$fields()[0]).attr 'class').toEqual 'field_with_errors'
+
     it "should trigger 'error' and complete default action if it returned true", ->
       @nudeForm.error = sinon.spy ->
         true
@@ -312,7 +316,7 @@ describe "Joosy.Form", ->
 
       expect(result).toEqual { "test[zombie]": ['suck'], "test[puppies]": ['rock'] }
 
-    it "should prepare complexe response", ->
+    it "should prepare complex response", ->
       @nudeForm.fill @resource
       errors = {fluffies: {zombie: {mumbas: ['ololo']}}}
       result = @nudeForm.__stringifyErrors(errors)

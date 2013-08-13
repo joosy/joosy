@@ -330,6 +330,8 @@ class Joosy.Form extends Joosy.Module
   __stringifyErrors: (errors) ->
     result = {}
 
+    errors = errors.errors if Object.isObject(errors?.errors)
+
     Object.each errors, (field, notifications) =>
       if @substitutions[field]?
         field = @substitutions[field]

@@ -266,6 +266,9 @@
       var result,
         _this = this;
       result = {};
+      if (Object.isObject(errors != null ? errors.errors : void 0)) {
+        errors = errors.errors;
+      }
       Object.each(errors, function(field, notifications) {
         var f, name, splited, _i, _len;
         if (_this.substitutions[field] != null) {

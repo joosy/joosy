@@ -4,7 +4,7 @@
   "keywords": [
     "joosy"
   ],
-  "version": "1.2.0-alpha.59",
+  "version": "1.2.0-alpha.60",
   "author": "Boris Staal <boris@staal.io>",
   "homepage": "http://joosy.ws/",
   "repository": {
@@ -27,9 +27,7 @@
     "commander": "~1.2.0",
     "colors": "~0.6.0-1",
     "grunt": "~0.4.1",
-    "mincer": ">= 0.5.5",
-    "stylus": "~0.32.1",
-    "nib": "~0.9.1"
+    "mincer": ">= 0.5.5"
   },
   "devDependencies": {
     "grunt-contrib-jasmine": "~0.5.1",

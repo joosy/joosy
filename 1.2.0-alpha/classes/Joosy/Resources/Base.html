@@ -158,7 +158,8 @@ r(&#39;foo.bar&#39;, &#39;fluffy&#39;)    # triggers &#39;changed&#39;</code></p
 </div>
       <h2>Direct Known Subclasses</h2>
       <p class='children'>
-        <a href='../../../classes/Joosy/Resources/REST.html'>Joosy.Resources.REST</a>
+                <a href='../../../classes/Joosy/Resources/REST.html'>Joosy.Resources.REST</a>,
+        <a href='../../../classes/Clone.html'>Clone</a>
       </p>
       <h2>Class Method Summary</h2>
       <ul class='summary'>
@@ -230,6 +231,16 @@ r(&#39;foo.bar&#39;, &#39;fluffy&#39;)    # triggers &#39;changed&#39;</code></p
     </span>
     <span class='desc'>
       Wraps instance of resource inside shim-function allowing to track data changes.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__makeShim-class'>
+        + (void) <strong>__makeShim</strong>(proto)
+      </a>
+    </span>
+    <span class='desc'>
+      Makes base shim-function for making instances through build or making instance clones
     </span>
   </li>
 </ul>
@@ -555,6 +566,27 @@ data changes. See class example</p>
   </ul>
 </div>
   </div>
+  <div class='method_details'>
+    <p class='signature' id='__makeShim-class'>
+      + (void) <strong>__makeShim</strong>(proto)
+    </p>
+    <div class='docstring'>
+  <p>Makes base shim-function for making instances through build or making instance clones</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>proto</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Any function or object whose properties will be inherited by a new function</span>
+    </li>
+  </ul>
+</div>
+  </div>
 </div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
@@ -773,7 +805,7 @@ data changes. See class example</p>
     </div>
     <div id='footer'>
   Generated on
-  Sat Aug 10 2013 00:09:35 GMT+0700 (ICT)
+  Thu Aug 15 2013 02:22:56 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

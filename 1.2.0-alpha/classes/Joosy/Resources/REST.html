@@ -152,6 +152,16 @@
   </li>
   <li>
     <span class='signature'>
+      <a href='#__atWrapper-class'>
+        + (void) <strong>__atWrapper</strong>(definer, args...)
+      </a>
+    </span>
+    <span class='desc'>
+      Makes needed changes with clone/wrapper for @at method to extend its&#39; path
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#at-class'>
         + (void) <strong>at</strong>(args...)
       </a>
@@ -162,18 +172,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#__parentsPath-class'>
-        + (void) <strong>__parentsPath</strong>(parents)
-      </a>
-    </span>
-    <span class='desc'>
-      Builds parents part of member path based on parents array
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#collectionPath-class'>
-        + (void) <strong>collectionPath</strong>(options = {})
+        + (void) <strong>collectionPath</strong>(args...)
       </a>
     </span>
     <span class='desc'>
@@ -183,7 +183,7 @@
   <li>
     <span class='signature'>
       <a href='#memberPath-class'>
-        + (void) <strong>memberPath</strong>(id, options = {})
+        + (void) <strong>memberPath</strong>(args...)
       </a>
     </span>
     <span class='desc'>
@@ -247,12 +247,22 @@
       </a>
     </span>
     <span class='desc'>
-      
+      Wrapper for AJAX request
     </span>
   </li>
 </ul>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#at-instance'>
+        - (void) <strong>at</strong>(args...)
+      </a>
+    </span>
+    <span class='desc'>
+      Creates the proxy of current resource instance binded as a child of given entity
+    </span>
+  </li>
   <li>
     <span class='signature'>
       <a href='#__collection-instance'>
@@ -265,8 +275,18 @@
   </li>
   <li>
     <span class='signature'>
+      <a href='#__interpolatePath-instance'>
+        - (void) <strong>__interpolatePath</strong>(source, ids)
+      </a>
+    </span>
+    <span class='desc'>
+      Interpolates path with masks by given array of params
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#collectionPath-instance'>
-        - (void) <strong>collectionPath</strong>(options = {})
+        - (void) <strong>collectionPath</strong>(ids = [], options = {})
       </a>
     </span>
     <span class='desc'>
@@ -276,7 +296,7 @@
   <li>
     <span class='signature'>
       <a href='#memberPath-instance'>
-        - (void) <strong>memberPath</strong>(options = {})
+        - (void) <strong>memberPath</strong>(ids = [], options = {})
       </a>
     </span>
     <span class='desc'>
@@ -333,6 +353,16 @@
       Refetches the data from backend and triggers <code>changed</code>
     </span>
   </li>
+  <li>
+    <span class='signature'>
+      <a href='#__extractOptionsAndCallback-instance'>
+        - (void) <strong>__extractOptionsAndCallback</strong>(options, callback)
+      </a>
+    </span>
+    <span class='desc'>
+      utility function for better API support for unrequired first options parameter
+    </span>
+  </li>
 </ul>
       <h2>
         <small>Inherited Method Summary</small>
@@ -350,6 +380,7 @@
                 <a href='../../../classes/Joosy/Resources/Base.html#__collection-instance'>#__collection</a>,
                 <a href='../../../classes/Joosy/Resources/Base.html#map-class'>.map</a>,
                 <a href='../../../classes/Joosy/Resources/Base.html#build-class'>.build</a>,
+                <a href='../../../classes/Joosy/Resources/Base.html#__makeShim-class'>.__makeShim</a>,
                 <a href='../../../classes/Joosy/Resources/Base.html#id-instance'>#id</a>,
                 <a href='../../../classes/Joosy/Resources/Base.html#knownAttributes-instance'>#knownAttributes</a>,
                 <a href='../../../classes/Joosy/Resources/Base.html#load-instance'>#load</a>,
@@ -427,46 +458,50 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='at-class'>
-      + (void) <strong>at</strong>(args...)
+    <p class='signature' id='__atWrapper-class'>
+      + (void) <strong>__atWrapper</strong>(definer, args...)
     </p>
     <div class='docstring'>
-  <p>Creates the proxy of current resource binded as a child of given entity</p>
+  <p>Makes needed changes with clone/wrapper for @at method to extend its&#39; path</p>
 </div>
 <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='__parentsPath-class'>
-      + (void) <strong>__parentsPath</strong>(parents)
+    <p class='signature' id='at-class'>
+      + (void) <strong>at</strong>(args...)
     </p>
     <div class='docstring'>
-  <p>Builds parents part of member path based on parents array</p>
+  <div class='note'>
+    <strong>Note:</strong>
+    accepts both array notation (Comment.at([&#39;admin&#39;, @blog, @post])) and args notation (Comment.at(&#39;admin&#39;, @blog, @post))
+  </div>
+  <p>Creates the proxy of current resource binded as a child of given entity</p>
   <div class='examples'>
     <h3>Examples:</h3>
     <h4>
       Basic usage
     </h4>
-    <pre><code class='coffee'>Resource.__parentsPath([otherResource, &#39;&#47;bars&#47;1&#39;]) # &#47;other_resources&#47;1&#47;bars&#47;1</code></pre>
+    <pre><code class='coffee'>Comment.at([&#39;admin&#39;, @blog, @post]).collectionPath() # =&gt; &#39;&#47;admin&#47;blogs&#47;555&#47;posts&#47;666&#47;comments&#39;</code></pre>
   </div>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>parents</span>
+      <span class='name'>args</span>
       <span class='type'>
         (<tt>Array</tt>)
       </span>
       &mdash;
-      <span class='desc'>Array of parents</span>
+      <span class='desc'>Array of parent entities. Can be a string or another REST resource.</span>
     </li>
   </ul>
 </div>
   </div>
   <div class='method_details'>
     <p class='signature' id='collectionPath-class'>
-      + (void) <strong>collectionPath</strong>(options = {})
+      + (void) <strong>collectionPath</strong>(args...)
     </p>
     <div class='docstring'>
   <p>Builds collection path</p>
@@ -482,6 +517,14 @@
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
+      <span class='name'>id</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>IDs for interpolation for masked sources</span>
+    </li>
+    <li>
       <span class='name'>options</span>
       <span class='type'>
         (<tt>Hash</tt>)
@@ -494,7 +537,7 @@
   </div>
   <div class='method_details'>
     <p class='signature' id='memberPath-class'>
-      + (void) <strong>memberPath</strong>(id, options = {})
+      + (void) <strong>memberPath</strong>(args...)
     </p>
     <div class='docstring'>
   <p>Builds member path based on the given id.</p>
@@ -721,28 +764,20 @@ Callback will get parsed JSON object as a parameter.</p>
   </h3>
   <ul class='options'>
     <li>
-      <span class='name'>parent</span>
-      <span class='type'>
-        (<tt><a href='../../../classes/Joosy/Resources/REST.html'>Joosy.Resources.REST</a></tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Sets the given resource as a base path i.e. /parents/1/resources</span>
-    </li>
-    <li>
-      <span class='name'>parent</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Sets the given staring as a base path i.e. /trololo/resources</span>
-    </li>
-    <li>
       <span class='name'>from</span>
       <span class='type'>
         (<tt>String</tt>)
       </span>
       &mdash;
       <span class='desc'>Adds the given string as a last path element i.e. /resources/trololo</span>
+    </li>
+    <li>
+      <span class='name'>url</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Sets url for request instead of generated i.e. /some/custom/url</span>
     </li>
     <li>
       <span class='name'>params</span>
@@ -759,12 +794,47 @@ Callback will get parsed JSON object as a parameter.</p>
     <p class='signature' id='__query-class'>
       + (void) <strong>__query</strong>(path, method, params, callback)
     </p>
-    <div class='tags'>
+    <div class='docstring'>
+  <p>Wrapper for AJAX request</p>
+</div>
+<div class='tags'>
 </div>
   </div>
 </div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='at-instance'>
+      - (void) <strong>at</strong>(args...)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    accepts both array notation (comment.at([&#39;admin&#39;, @blog, @post])) and args notation (comment.at(&#39;admin&#39;, @blog, @post))
+  </div>
+  <p>Creates the proxy of current resource instance binded as a child of given entity</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>Comment.build(1).at([&#39;admin&#39;, @blog, @post]).memberPath() # =&gt; &#39;&#47;admin&#47;blogs&#47;555&#47;posts&#47;666&#47;comments&#47;1&#39;</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>args</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Array of parent entities. Can be a string or another REST resource.</span>
+    </li>
+  </ul>
+</div>
+  </div>
   <div class='method_details'>
     <p class='signature' id='__collection-instance'>
       - (void) <strong>__collection</strong>()
@@ -777,8 +847,18 @@ Changes the default fallback to Joosy.Resources.RESTCollection.</p>
 </div>
   </div>
   <div class='method_details'>
+    <p class='signature' id='__interpolatePath-instance'>
+      - (void) <strong>__interpolatePath</strong>(source, ids)
+    </p>
+    <div class='docstring'>
+  <p>Interpolates path with masks by given array of params</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='collectionPath-instance'>
-      - (void) <strong>collectionPath</strong>(options = {})
+      - (void) <strong>collectionPath</strong>(ids = [], options = {})
     </p>
     <div class='docstring'>
   <p>Builds collection path</p>
@@ -794,7 +874,7 @@ Changes the default fallback to Joosy.Resources.RESTCollection.</p>
   </div>
   <div class='method_details'>
     <p class='signature' id='memberPath-instance'>
-      - (void) <strong>memberPath</strong>(options = {})
+      - (void) <strong>memberPath</strong>(ids = [], options = {})
     </p>
     <div class='docstring'>
   <p>Builds member path</p>
@@ -1001,11 +1081,21 @@ Callback will get parsed JSON object as a parameter.</p>
   </ul>
 </div>
   </div>
+  <div class='method_details'>
+    <p class='signature' id='__extractOptionsAndCallback-instance'>
+      - (void) <strong>__extractOptionsAndCallback</strong>(options, callback)
+    </p>
+    <div class='docstring'>
+  <p>utility function for better API support for unrequired first options parameter</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Sat Aug 10 2013 00:09:35 GMT+0700 (ICT)
+  Thu Aug 15 2013 02:22:56 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

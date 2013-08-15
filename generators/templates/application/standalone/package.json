@@ -1,6 +1,9 @@
 {
   "dependencies": {
     "joosy": "~<%= joosy_version %>",
+    "haml-coffee": "~1.11.1",
+    "stylus": "~0.32.1",
+    "nib": "~0.9.1",
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.9",
     "grunt-contrib-uglify": "~0.2.2",

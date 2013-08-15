@@ -11,43 +11,29 @@ module.exports = (grunt) ->
   #
   grunt.initConfig
     joosy:
-      # Pass data to Stylus and HAML templates
+      # Pass static data to Stylus and HAML templates
       # config: require('./config.json')
 
       # Setup built-in development proxy to workaround Cross-Origin
-      # server:
-      #   proxy: [
-      #     {src: '/joosy', dest: 'http://joosy.ws'}
-      #   ]
+      # proxy: '/joosy': 'http://joosy.ws'
 
       assets:
-        application:
-          src:  'application.coffee'
-          dest: 'public/assets/application.js'
-        styles:
-          src:  'application.styl'
-          dest: 'public/assets/application.css'
-      haml:
-        application:
-          path:  '/'
-          src:   'index.haml'
-          dest:  'public/index.html'
-          url:   '/'
-          greedy: true
+        root: 'application.*'
+        greedy: '/'
 
     uglify:
       application:
         files:
-          'public/assets/application.js': 'public/assets/application.js'
+          'public/application.js': 'public/application.js'
 
     cssmin:
       styles:
         files:
-          'public/assets/application.css': 'public/assets/application.css'
+          'public/application.css': 'public/application.css'
 
     jasmine:
       application:
-        src: 'public/assets/application.js'
+        src: 'public/application.js'
         options: 
           keepRunner: true
           outfile: 'spec/application.html'
@@ -64,4 +50,4 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'spec', ['coffee', 'joosy:compile', 'jasmine']
 
-  grunt.registerTask 'joosy:postinstall', ['joosy:bower', 'joosy:compile:production']
+  grunt.registerTask 'joosy:postinstall', ['joosy:bower', 'joosy:compile']

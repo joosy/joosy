@@ -12,7 +12,7 @@ module.exports = class
                             """
 
     @standalone = new Standalone(@options)
-    @base       = new Base(@options, Path.join(@standalone.destination, 'source/javascript'))
+    @base       = new Base(@options, Path.join(@standalone.destination, 'app/javascript'))
 
   generate: ->
     @standalone.generate()

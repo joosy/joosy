@@ -7,4 +7,6 @@ module.exports = (grunt) ->
   require('grill').setup grunt,
     prefix: 'joosy'
     assets:
+      source: 'app'
+      destination: 'public'
       vendor: ['vendor/*', 'node_modules/joosy/source']

@@ -1,5 +1,5 @@
 bower_components
 node_modules
+public
 .DS_Store
-public/assets
-public/index.html
+Thumbs.db

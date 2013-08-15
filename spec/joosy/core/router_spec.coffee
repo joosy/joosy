@@ -184,11 +184,11 @@ describe "Joosy.Router", ->
 
       it 'defines plain helper', ->
         expect(Joosy.Helpers.Routes.rootPath()).toEqual '#'
-        expect(Joosy.Helpers.Routes.rootUrl()).toEqual "http://localhost:8888#{pathname}#"
+        expect(Joosy.Helpers.Routes.rootUrl()).toEqual "http://#{location.host}#{pathname}#"
 
       it 'defines namespaced parameterized helpers', ->
         expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '#section/page/1'
-        expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://localhost:8888#{pathname}#section/page/1"
+        expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://#{location.host}#{pathname}#section/page/1"
 
     describe 'html5 based', ->
       beforeEach ->
@@ -271,11 +271,11 @@ describe "Joosy.Router", ->
 
       it 'defines plain helper', ->
         expect(Joosy.Helpers.Routes.rootPath()).toEqual '/'
-        expect(Joosy.Helpers.Routes.rootUrl()).toEqual 'http://localhost:8888/'
+        expect(Joosy.Helpers.Routes.rootUrl()).toEqual "http://#{location.host}/"
 
       it 'defines namespaced parameterized helpers', ->
         expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '/section/page/1'
-        expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual 'http://localhost:8888/section/page/1'
+        expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://#{location.host}/section/page/1"
 
   describe 'linker', ->
     it 'defines helper', ->

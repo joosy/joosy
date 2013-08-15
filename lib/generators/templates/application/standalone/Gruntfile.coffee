@@ -11,15 +11,15 @@ module.exports = (grunt) ->
   #
   grunt.initConfig
     joosy:
+      assets:
+        root: 'application.*'
+        greedy: '/'
+
       # Pass static data to Stylus and HAML templates
       # config: require('./config.json')
 
       # Setup built-in development proxy to workaround Cross-Origin
       # proxy: '/joosy': 'http://joosy.ws'
-
-      assets:
-        root: 'application.*'
-        greedy: '/'
 
     uglify:
       application:
@@ -27,7 +27,7 @@ module.exports = (grunt) ->
           'public/application.js': 'public/application.js'
 
     cssmin:
-      styles:
+      application:
         files:
           'public/application.css': 'public/application.css'
 

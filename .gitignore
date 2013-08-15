@@ -2,9 +2,10 @@ node_modules
 bower_components
 .grunt
 *.html
-spec/*.html
+spec/*.json
 *.gem
 Gemfile.lock
 .idea/
 doc
 doc.tmp
+libpeerconnection.log

@@ -27,5 +27,3 @@ module.exports = (grunt) ->
         grunt.log.ok "Published #{gem}"
         grunt.file.delete gem
         complete(true)
-
-  grunt.registerTask 'publish', ['test', 'publish:ensureCommits', 'doc', 'release', 'publish:gem']

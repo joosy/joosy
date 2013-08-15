@@ -1,9 +1,6 @@
+require 'sugar'
+
 module.exports = (grunt) ->
-
-  Sugar  = require 'sugar'
-  Mincer = require 'mincer'
-  FS     = require 'fs'
-
   #
   # Locations
   #
@@ -13,69 +10,26 @@ module.exports = (grunt) ->
       path: 'source'
       build: 'build/joosy.js'
       extensions: (name) ->
-        root: "joosy/extensions/#{name}"
-        build: "build/joosy/extensions/#{name}.js"
+        root: "joosy/extensions/#{name || '*'}"
+        build: "build/joosy/extensions/#{name || '**/*'}.js"
     specs:
-      units:
-        environments: 'spec/joosy/environments/*_spec.*'
-        core: 'spec/joosy/core/**/*_spec.*'
-        extensions: 'spec/joosy/extensions/**/*_spec.*'
-      helpers: 'spec/helpers/**/*.*'
-      build: '.grunt'
-
-  specOptions = (category, specs, vendor=[]) ->
-    host: 'http://localhost:8888/'
-    keepRunner: true
-    outfile: "spec/#{category}.html"
-    vendor: [
-      'bower_components/sinonjs/sinon.js',
-      'bower_components/sugar/release/sugar-full.min.js'
-    ].concat(vendor),
-    specs: "#{locations.specs.build}/#{specs}"
-    helpers: locations.specs.build + '/' + locations.specs.helpers
+      helpers: [
+        'bower_components/sinonjs/sinon.js',
+        'bower_components/sugar/release/sugar-full.min.js',
+        'spec/helpers/*.coffee'
+      ]
 
   #
   # Grunt extensions
   #
-  grunt.loadNpmTasks 'grunt-contrib-connect'
-  grunt.loadNpmTasks 'grunt-contrib-coffee'
-  grunt.loadNpmTasks 'grunt-contrib-jasmine'
-  grunt.loadNpmTasks 'grunt-contrib-watch'
+  grunt.loadTasks 'lib/tasks'
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-release'
 
-  grunt.loadTasks 'lib/tasks'
-
+  #
+  # Config
+  #
   grunt.initConfig
-    release:
-      options:
-        bump: false
-        add: false
-        commit: false
-        push: false
-
-    connect:
-      specs:
-        options:
-          port: 8888
-
-    watch:
-      source:
-        files: [locations.source.path + '/**/*']
-        tasks: ['mince']
-      specs:
-        options:
-          nospawn: true
-        files: [ locations.specs.helpers ].add(Object.values locations.specs.units)
-        tasks: ['coffee']
-
-    coffee:
-      specs:
-        expand: true
-        src: [ locations.specs.helpers ].add(Object.values locations.specs.units)
-        dest: locations.specs.build
-        ext: '.js'
-
     mince:
       core:
         include: [locations.source.path]
@@ -102,65 +56,52 @@ module.exports = (grunt) ->
           'max_line_length':
             level: 'ignore'
 
-    jasmine:
+    testem:
       core:
-        options: specOptions('core', locations.specs.units.core, [
-            'bower_components/jquery/jquery.js'
-          ])
-        src: locations.source.build
-
+        src: locations.specs.helpers
+          .include('bower_components/jquery/jquery.js')
+          .include(locations.source.build)
+          .include('spec/joosy/core/**/*_spec.coffee')
       zepto:
-        options: specOptions('zepto', locations.specs.units.core, [
-            'bower_components/zepto/zepto.js'
-          ])
-        src: locations.source.build
-
+        src: locations.specs.helpers
+          .include('bower_components/zepto/zepto.js')
+          .include(locations.source.build)
+          .include('spec/joosy/core/**/*_spec.coffee')
       'environments-global':
-        options: specOptions('environments-global', ['spec/joosy/environments/global*'], [
-            'bower_components/jquery/jquery.js'
-          ])
-        src: locations.source.build
-
+        src: locations.specs.helpers
+          .include('bower_components/jquery/jquery.js')
+          .include(locations.source.build)
+          .include('spec/joosy/environments/global_spec.coffee')
       'environments-amd':
-        options: specOptions('environments-amd', ['spec/joosy/environments/amd*'], [
-            'bower_components/jquery/jquery.js',
-            'bower_components/requirejs/require.js'
-          ])
-        src: locations.source.build
-
+        src: locations.specs.helpers
+          .include('bower_components/jquery/jquery.js')
+          .include('bower_components/requirejs/require.js')
+          .include(locations.source.build)
+          .include('spec/joosy/environments/amd_spec.coffee')
       extensions:
-        options: specOptions('extensions', locations.specs.units.extensions, [
-            'bower_components/jquery/jquery.js',
-            'bower_components/jquery-form/jquery.form.js'
-          ])
-        src: [locations.source.build].include ['preloaders', 'resources', 'resources-form'].map (x) ->
-          locations.source.extensions(x).build
+        src: locations.specs.helpers
+          .include('bower_components/jquery/jquery.js')
+          .include('bower_components/jquery-form/jquery.form.js')
+          .include(locations.source.build)
+          .include(locations.source.extensions().build)
+          .include('spec/joosy/extensions/**/*_spec.coffee')
+
+    release:
+      options:
+        bump: false
+        add: false
+        commit: false
+        push: false
 
   #
-  # Builders
+  # Main tasks
   #
-  grunt.registerMultiTask 'mince', ->
-    Mincer.CoffeeEngine.configure bare: false
-    environment = new Mincer.Environment
-    environment.appendPath x for x in @data.include
-    grunt.file.write @data.dest, environment.findAsset(@data.src).toString()
+  grunt.registerTask 'default', ['testem:generate', 'testem:ci']
 
-  grunt.registerTask 'bowerize', ->
-    bower = require './bower.json'
-    meta  = require './package.json'
+  grunt.registerTask 'test', ->
+    grunt.fatal "Specify module to run manual tests for" unless @args[0]
 
-    bower.version = meta.version
-    FS.writeFileSync 'bower.json', JSON.stringify(bower, null, 2)
+    grunt.task.run "testem:generate:#{@args[0]}"
+    grunt.task.run "testem:run:#{@args[0]}"
 
-  grunt.registerTask 'build', [
-    'mince', 'coffee', 'bowerize',
-    'jasmine:core:build',
-    'jasmine:zepto:build',
-    'jasmine:environments-global:build',
-    'jasmine:environments-amd:build',
-    'jasmine:extensions:build'
-  ]
-
-  grunt.registerTask 'default', ['connect', 'build', 'watch']
-
-  grunt.registerTask 'test', ['connect', 'mince', 'coffee', 'bowerize', 'jasmine']
+  grunt.registerTask 'publish', ['testem:ci', 'publish:ensureCommits', 'doc', 'release', 'publish:gem']

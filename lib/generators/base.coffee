@@ -51,7 +51,7 @@ class Base
   # Methods that have to be overrided outside of Node.js
   #
   version: ->
-    require('../package.json').version
+    require('../../package.json').version
 
   #
   # Node-base performer

@@ -138,7 +138,7 @@ Joosy.Modules.Events =
       context.actions.each (action) =>
         action.call @, ->
           if ++counter >= context.actions.length
-            context.after.call(@) 
+            context.after.call(@)
 
   __splitEvents: (events) ->
     if Object.isString events

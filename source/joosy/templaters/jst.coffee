@@ -26,7 +26,7 @@ class Joosy.Templaters.JST
         "templates/#{name}"
       ]
 
-    for path in haystack 
+    for path in haystack
       return window.JST[path] if window.JST[path]
 
     throw new Error "Template '#{name}' not found. Checked at: '#{haystack.join(', ')}'"

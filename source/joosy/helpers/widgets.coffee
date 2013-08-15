@@ -7,7 +7,7 @@ Joosy.helpers 'Application', ->
 
   #
   # Injects widget
-  # 
+  #
   # @param [String] tag             Tag name to use a widget container
   # @param [Object] options         Tag attributes
   # @param [Joosy.Widget] widget    Class or instance of {Joosy.Widget} to register

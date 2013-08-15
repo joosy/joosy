@@ -22,7 +22,7 @@
 # "dependent chains" that will be rendered together (HTML will be injected into DOM atomically). Such chains
 # use paint filters of the top elements. Independent widgets on the other hand load on their own behalf and
 # use their own paint filters. To understand this better, here is the sample:
-# 
+#
 # Let's say we have 4 widgets A, B, C and D nested into each other:
 #
 # A is the root widget
@@ -31,7 +31,7 @@
 # D is nested into C. It does not define itself as an independent and therefore defaults to dependent rendering
 #
 # Then total chain of asynchronous callbacks goes with the following scenario.
-# 
+#
 # 1. A collects all the fetches from the whole tree recursively and starts them in parallel.
 #
 # 2. A runs erase on the previous same-level widget (attribute `@previous`) if one is given.

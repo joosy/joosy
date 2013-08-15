@@ -1,7 +1,7 @@
 module.exports = ->
   Sugar = require 'sugar'
   cli   = require 'command-router'
-  meta  = require '../../package.json'
+  meta  = require '../../../package.json'
   grunt = require 'grunt'
   path  = require 'path'
 

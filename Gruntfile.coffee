@@ -35,10 +35,6 @@ module.exports = (grunt) ->
         include: [locations.source.path]
         src: locations.source.root
         dest: locations.source.build
-      preloaders:
-        include: [locations.source.path]
-        src: locations.source.extensions('preloaders').root
-        dest: locations.source.extensions('preloaders').build
       resources:
         include: [locations.source.path]
         src: locations.source.extensions('resources').root

@@ -5,7 +5,7 @@ before_script:
   - npm install -g phantomjs
   - npm install -g grunt-cli
   - ./node_modules/.bin/bower -V install
-script: "grunt test"
+script: "grunt"
 branches:
   except:
     - 1.0

@@ -19,10 +19,16 @@ module.exports = (grunt) ->
         'spec/helpers/*.coffee'
       ]
 
+  testemOptions =
+    parallel: 8
+    launch_in_dev: ['PhantomJS'],
+    launch_in_ci: ['PhantomJS', 'Chrome', 'Firefox', 'Safari', 'IE7', 'IE8', 'IE9']
+
   #
   # Grunt extensions
   #
   grunt.loadTasks 'lib/tasks'
+  grunt.loadNpmTasks 'grunt-contrib-testem'
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-release'
 
@@ -58,22 +64,26 @@ module.exports = (grunt) ->
           .include('bower_components/jquery/jquery.js')
           .include(locations.source.build)
           .include('spec/joosy/core/**/*_spec.coffee')
+        options: testemOptions
       zepto:
         src: locations.specs.helpers
           .include('bower_components/zepto/zepto.js')
           .include(locations.source.build)
           .include('spec/joosy/core/**/*_spec.coffee')
+        options: testemOptions
       'environments-global':
         src: locations.specs.helpers
           .include('bower_components/jquery/jquery.js')
           .include(locations.source.build)
           .include('spec/joosy/environments/global_spec.coffee')
+        options: testemOptions
       'environments-amd':
         src: locations.specs.helpers
           .include('bower_components/jquery/jquery.js')
           .include('bower_components/requirejs/require.js')
           .include(locations.source.build)
           .include('spec/joosy/environments/amd_spec.coffee')
+        options: testemOptions
       extensions:
         src: locations.specs.helpers
           .include('bower_components/jquery/jquery.js')
@@ -81,6 +91,7 @@ module.exports = (grunt) ->
           .include(locations.source.build)
           .include(locations.source.extensions().build)
           .include('spec/joosy/extensions/**/*_spec.coffee')
+        options: testemOptions
 
     release:
       options:

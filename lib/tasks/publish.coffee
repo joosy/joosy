@@ -13,7 +13,7 @@ module.exports = (grunt) ->
         complete true
 
   grunt.registerTask 'publish:gem', ->
-    meta     = require './package.json'
+    meta     = require '../../package.json'
     complete = @async()
 
     grunt.util.spawn {cmd: "gem", args: ["build", "joosy.gemspec"]}, (error, result) ->

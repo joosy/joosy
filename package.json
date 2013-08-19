@@ -32,8 +32,8 @@
     "bower": "~1.1.2",
     "mincer": ">= 0.5.5",
     "semver": "~2.1.0",
-    "testem": "~0.3.24",
     "grunt-coffeelint": "0.0.6",
-    "grunt-release": "~0.3.5"
+    "grunt-release": "~0.3.5",
+    "grunt-contrib-testem": "~0.1.0"
   }
 }

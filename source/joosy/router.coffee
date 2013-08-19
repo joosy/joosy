@@ -129,8 +129,6 @@ class Joosy.Router extends Joosy.Module
     @config.prefix ||= ''
     @config.prefix   = ('/'+@config.prefix+'/').replace(/\/{2,}/g, '/') if @config.html5
 
-    @respond @canonizeLocation() if respond
-
     if @config.html5
       @listener = @bind 'popstate pushstate', =>
         @respond @canonizeLocation()
@@ -138,6 +136,8 @@ class Joosy.Router extends Joosy.Module
     else
       $(window).bind 'hashchange.JoosyRouter', =>
         @respond @canonizeLocation()
+
+    @respond @canonizeLocation() if respond
 
   #
   # Clears current map of routes and deactivates bindings

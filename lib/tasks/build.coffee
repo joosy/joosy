@@ -9,8 +9,8 @@ module.exports = (grunt) ->
     grunt.file.write @data.dest, environment.findAsset(@data.src).toString()
 
   grunt.registerTask 'bowerize', ->
-    bower = require './bower.json'
-    meta  = require './package.json'
+    bower = require '../../bower.json'
+    meta  = require '../../package.json'
 
     bower.version = meta.version
     grunt.file.write 'bower.json', JSON.stringify(bower, null, 2)

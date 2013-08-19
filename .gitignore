@@ -10,3 +10,4 @@ doc
 doc.tmp
 libpeerconnection.log
 .DS_Store
+testem.log

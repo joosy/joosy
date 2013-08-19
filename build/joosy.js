@@ -1965,17 +1965,17 @@
       if (this.config.html5) {
         this.config.prefix = ('/' + this.config.prefix + '/').replace(/\/{2,}/g, '/');
       }
-      if (respond) {
-        this.respond(this.canonizeLocation());
-      }
       if (this.config.html5) {
-        return this.listener = this.bind('popstate pushstate', function() {
+        this.listener = this.bind('popstate pushstate', function() {
           return _this.respond(_this.canonizeLocation());
         });
       } else {
-        return $(window).bind('hashchange.JoosyRouter', function() {
+        $(window).bind('hashchange.JoosyRouter', function() {
           return _this.respond(_this.canonizeLocation());
         });
+      }
+      if (respond) {
+        return this.respond(this.canonizeLocation());
       }
     };
 

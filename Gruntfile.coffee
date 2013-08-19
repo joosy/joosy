@@ -20,7 +20,6 @@ module.exports = (grunt) ->
       ]
 
   testemOptions =
-    parallel: 8
     launch_in_dev: ['PhantomJS'],
     launch_in_ci: ['PhantomJS', 'Chrome', 'Firefox', 'Safari', 'IE7', 'IE8', 'IE9']
 
@@ -103,7 +102,7 @@ module.exports = (grunt) ->
   #
   # Main tasks
   #
-  grunt.registerTask 'default', ['testem:generate', 'testem:ci']
+  grunt.registerTask 'default', 'testem'
 
   grunt.registerTask 'test', ->
     grunt.fatal "Specify module to run manual tests for" unless @args[0]

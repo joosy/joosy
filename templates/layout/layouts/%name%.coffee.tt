@@ -1,0 +1,9 @@
+<% if (typeof namespace !== 'undefined' && namespace.length > 0) { -%>
+Joosy.namespace '<%= namespace %>', ->
+
+  class @<%= klass %>Layout extends ApplicationLayout
+    @view '<%= view %>'
+<% } else { -%>
+class @<%= klass %>Layout extends ApplicationLayout
+  @view '<%= view %>'
+<% } -%>

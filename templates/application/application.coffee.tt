@@ -1,0 +1,12 @@
+<%= dependencies %>
+#
+#= require joosy
+#
+#= require_tree ./
+
+$ ->
+  Joosy.Application.initialize 'body',
+    router:
+      html5: <%= html5 %><% if (typeof prefix !== 'undefined' && prefix.length > 0) { %>
+    templater:
+      prefix: '<%= prefix %>'<% } %>

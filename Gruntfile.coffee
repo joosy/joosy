@@ -2,24 +2,26 @@ require 'sugar'
 
 module.exports = (grunt) ->
   #
-  # Locations
+  # Common settings
   #
   locations =
-    source:
-      root: 'joosy.coffee'
-      path: 'source'
-      build: 'build/joosy.js'
-      extensions: (name) ->
-        root: "joosy/extensions/#{name || '*'}"
-        build: "build/joosy/extensions/#{name || '**/*'}.js"
-    specs:
-      helpers: [
-        'bower_components/sinonjs/sinon.js',
-        'bower_components/sugar/release/sugar-full.min.js',
-        'spec/helpers/*.coffee'
-      ]
 
-  testemOptions =
+    source:
+      root:  'joosy.coffee'
+      path:  'source'
+      build: 'build/joosy.js'
+
+      extensions: (name) ->
+        root:  "joosy/extensions/#{name || '*'}"
+        build: "build/joosy/extensions/#{name || '**/*'}.js"
+
+    specs: [
+      'bower_components/sinonjs/sinon.js',
+      'bower_components/sugar/release/sugar-full.min.js',
+      'spec/helpers/*.coffee'
+    ]
+
+  testem =
     parallel: 8
     launch_in_dev: ['PhantomJS'],
     launch_in_ci: ['PhantomJS', 'Chrome', 'Firefox', 'Safari', 'IE7', 'IE8', 'IE9']
@@ -60,38 +62,38 @@ module.exports = (grunt) ->
 
     testem:
       core:
-        src: locations.specs.helpers
+        src: locations.specs
           .include('bower_components/jquery/jquery.js')
           .include(locations.source.build)
           .include('spec/joosy/core/**/*_spec.coffee')
-        options: testemOptions
+        options: testem
       zepto:
-        src: locations.specs.helpers
+        src: locations.specs
           .include('bower_components/zepto/zepto.js')
           .include(locations.source.build)
           .include('spec/joosy/core/**/*_spec.coffee')
-        options: testemOptions
+        options: testem
       'environments-global':
-        src: locations.specs.helpers
+        src: locations.specs
           .include('bower_components/jquery/jquery.js')
           .include(locations.source.build)
           .include('spec/joosy/environments/global_spec.coffee')
-        options: testemOptions
+        options: testem
       'environments-amd':
-        src: locations.specs.helpers
+        src: locations.specs
           .include('bower_components/jquery/jquery.js')
           .include('bower_components/requirejs/require.js')
           .include(locations.source.build)
           .include('spec/joosy/environments/amd_spec.coffee')
-        options: testemOptions
+        options: testem
       extensions:
-        src: locations.specs.helpers
+        src: locations.specs
           .include('bower_components/jquery/jquery.js')
-          .include('bower_components/jquery-form/jquery.form.js')
           .include(locations.source.build)
+          .include('bower_components/jquery-form/jquery.form.js')
           .include(locations.source.extensions().build)
           .include('spec/joosy/extensions/**/*_spec.coffee')
-        options: testemOptions
+        options: testem
 
     release:
       options:
@@ -106,9 +108,6 @@ module.exports = (grunt) ->
   grunt.registerTask 'default', 'testem'
 
   grunt.registerTask 'test', ->
-    grunt.fatal "Specify module to run manual tests for" unless @args[0]
+    grunt.task.run if @args[0] then "testem:run:#{@args[0]}" else 'testem'
 
-    grunt.task.run "testem:generate:#{@args[0]}"
-    grunt.task.run "testem:run:#{@args[0]}"
-
-  grunt.registerTask 'publish', ['testem:ci', 'publish:ensureCommits', 'doc', 'release', 'publish:gem']
+  grunt.registerTask 'publish', ['testem', 'publish:ensureCommits', 'doc', 'release', 'publish:gem']

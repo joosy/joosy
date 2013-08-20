@@ -3,8 +3,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'joosy'
   grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-cssmin'
-  grunt.loadNpmTasks 'grunt-contrib-jasmine'
-  grunt.loadNpmTasks 'grunt-contrib-coffee'
+  grunt.loadNpmTasks 'grunt-contrib-testem'
 
   #
   # Config
@@ -31,23 +30,26 @@ module.exports = (grunt) ->
         files:
           'public/application.css': 'public/application.css'
 
-    jasmine:
+    testem:
       application:
-        src: 'public/application.js'
-        options: 
-          keepRunner: true
-          outfile: 'spec/application.html'
-          specs:   '.grunt/spec/*_spec.js'
-          helpers: '.grunt/spec/helpers/environment.js'
+        src: [
+          'public/application.js',
+          'spec/helpers/*.coffee',
+          'spec/**/*_spec.coffee'
+        ]
+        options:
+          parallel: 4
+          launch_in_dev: ['PhantomJS'],
+          launch_in_ci: ['PhantomJS']
 
   #
   # Tasks
   #
-  grunt.loadTasks 'tasks'
-
   grunt.registerTask 'compile', ['joosy:compile', 'uglify', 'cssmin']
   grunt.registerTask 'server',  ['joosy:server']
 
-  grunt.registerTask 'spec', ['coffee', 'joosy:compile', 'jasmine']
+  grunt.registerTask 'spec', ['testem']
 
-  grunt.registerTask 'joosy:postinstall', ['joosy:bower', 'joosy:compile']
+  grunt.registerTask 'deploy', ->
+    if process.env['NODE_ENV'] == 'production'
+      grunt.task.run ['joosy:bower', 'joosy:compile'] 

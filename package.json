@@ -4,15 +4,12 @@
   "keywords": [
     "joosy"
   ],
-  "version": "1.2.0-alpha.62",
+  "version": "1.2.0-alpha.63",
   "author": "Boris Staal <boris@staal.io>",
   "homepage": "http://joosy.ws/",
   "repository": {
     "type": "git",
     "url": "git://github.com/joosy/joosy.git"
-  },
-  "bin": {
-    "joosy": "bin/joosy"
   },
   "engines": {
     "node": ">=0.4.0"

@@ -1997,16 +1997,12 @@
       }
       path = to;
       if (this.config.html5) {
-        if (path[0] === '/') {
-          path = path.substr(1);
+        if (this.config.prefix && path[0] === '/' && !path.startsWith(this.config.prefix)) {
+          path = path.replace(/^\//, this.config.prefix);
         }
-        path = this.config.prefix + path;
       } else {
-        if (path[0] === '#') {
-          path = path.substr(1);
-        }
-        if (this.config.prefix && !path.startsWith(this.config.prefix)) {
-          path = this.config.prefix + path;
+        if (this.config.prefix && !path.match(RegExp("^#?/?" + (this.config.prefix.replace(/^\#?\/?/, ''))))) {
+          path = path.replace(/^\#?\/?/, "" + this.config.prefix + "/");
         }
       }
       if (this.config.html5) {
@@ -2019,9 +2015,9 @@
 
     Router.canonizeLocation = function() {
       if (this.config.html5) {
-        return location.pathname.replace(RegExp("^" + (RegExp.escape(this.config.prefix)) + "?"), '/') + location.search;
+        return location.pathname.replace(RegExp("^(" + this.config.prefix + ")?/?"), '/') + location.search;
       } else {
-        return location.hash.replace(RegExp("^\\#(" + this.config.prefix + ")?\\/?"), '/');
+        return location.hash.replace(RegExp("^#?/?(" + this.config.prefix + "/)?"), '/');
       }
     };
 

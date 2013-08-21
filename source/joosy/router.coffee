@@ -169,13 +169,12 @@ class Joosy.Router extends Joosy.Module
     path = to
 
     if @config.html5
-      path = path.substr(1) if path[0] == '/'
-      path = @config.prefix+path
+      # omit html5 relative links
+      if @config.prefix && path[0] == '/' && !path.startsWith(@config.prefix)
+        path = path.replace /^\//, @config.prefix
     else
-      path = path.substr(1) if path[0] == '#'
-
-      if @config.prefix && !path.startsWith(@config.prefix)
-        path = @config.prefix + path
+      if @config.prefix && !path.match(RegExp("^#?/?#{@config.prefix.replace(/^\#?\/?/, '')}"))
+        path = path.replace /^\#?\/?/, "#{@config.prefix}/"
 
     if @config.html5
       history.pushState {}, '', path
@@ -191,9 +190,9 @@ class Joosy.Router extends Joosy.Module
   #
   @canonizeLocation: ->
     if @config.html5
-      location.pathname.replace(///^#{RegExp.escape @config.prefix}?///, '/')+location.search
+      location.pathname.replace(RegExp("^(#{@config.prefix})?/?"), '/')+location.search
     else
-      location.hash.replace ///^\#(#{@config.prefix})?\/?///, '/'
+      location.hash.replace RegExp("^#?/?(#{@config.prefix}/)?"), '/'
 
   #
   # Compiles one single route

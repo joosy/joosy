@@ -277,6 +277,31 @@ describe "Joosy.Router", ->
         expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '/section/page/1'
         expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://#{location.host}/section/page/1"
 
+  describe 'prefix', ->
+    afterEach ->
+      Joosy.Router.reset()
+      location.hash = ''
+      history.pushState {}, '', pathname
+      waits 0
+
+    for name, val of { html5: true, hash: false }
+      do(name, val) ->
+        it "is considered in #{name} navigation", ->
+          Joosy.Router.setup {html5: val, prefix: 'admin'}, @spies.responder, false
+          Joosy.Router.map @map
+
+          runs -> Joosy.Router.navigate '/base'
+          waits 0
+          runs ->
+            expect(@spies.responder.callCount).toEqual 1
+            expect(@spies.responder.args[0][0]).toEqual @spies.base
+
+          runs -> Joosy.Router.navigate '/admin/base'
+          waits 0
+          runs ->
+            expect(@spies.responder.callCount).toEqual 2
+            expect(@spies.responder.args[1][0]).toEqual @spies.base
+
   describe 'linker', ->
     it 'defines helper', ->
       tag = Joosy.Helpers.Routes.linkTo 'test', '/base', class: 'zomg!'

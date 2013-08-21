@@ -377,6 +377,58 @@
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice;
 
+  Joosy.Resources.RESTCollection = (function(_super) {
+    __extends(RESTCollection, _super);
+
+    function RESTCollection() {
+      _ref = RESTCollection.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    RESTCollection.include(Joosy.Modules.Log);
+
+    RESTCollection.include(Joosy.Modules.Events);
+
+    RESTCollection.prototype.reload = function(options, callback) {
+      var _this = this;
+      if (options == null) {
+        options = {};
+      }
+      if (callback == null) {
+        callback = false;
+      }
+      if (Object.isFunction(options)) {
+        callback = options;
+        options = {};
+      }
+      return this.model.__query(this.model.collectionPath(options, this.__source), 'GET', options.params, function(data) {
+        _this.load(data);
+        return typeof callback === "function" ? callback(data) : void 0;
+      });
+    };
+
+    RESTCollection.prototype.load = function() {
+      var args, res,
+        _this = this;
+      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      res = RESTCollection.__super__.load.apply(this, args);
+      this.data.each(function(x) {
+        return x.__source = _this.__source;
+      });
+      return res;
+    };
+
+    return RESTCollection;
+
+  })(Joosy.Resources.Collection);
+
+}).call(this);
+(function() {
+  var _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __slice = [].slice;
+
   Joosy.Resources.REST = (function(_super) {
     __extends(REST, _super);
 
@@ -650,58 +702,6 @@
     return REST;
 
   })(Joosy.Resources.Base);
-
-}).call(this);
-(function() {
-  var _ref,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __slice = [].slice;
-
-  Joosy.Resources.RESTCollection = (function(_super) {
-    __extends(RESTCollection, _super);
-
-    function RESTCollection() {
-      _ref = RESTCollection.__super__.constructor.apply(this, arguments);
-      return _ref;
-    }
-
-    RESTCollection.include(Joosy.Modules.Log);
-
-    RESTCollection.include(Joosy.Modules.Events);
-
-    RESTCollection.prototype.reload = function(options, callback) {
-      var _this = this;
-      if (options == null) {
-        options = {};
-      }
-      if (callback == null) {
-        callback = false;
-      }
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
-      return this.model.__query(this.model.collectionPath(options, this.__source), 'GET', options.params, function(data) {
-        _this.load(data);
-        return typeof callback === "function" ? callback(data) : void 0;
-      });
-    };
-
-    RESTCollection.prototype.load = function() {
-      var args, res,
-        _this = this;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      res = RESTCollection.__super__.load.apply(this, args);
-      this.data.each(function(x) {
-        return x.__source = _this.__source;
-      });
-      return res;
-    };
-
-    return RESTCollection;
-
-  })(Joosy.Resources.Collection);
 
 }).call(this);
 (function() {

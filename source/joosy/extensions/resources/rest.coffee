@@ -1,5 +1,5 @@
 #= require ./base
-#= require ./collection
+#= require ./rest_collection
 
 #
 # Resource with REST/JSON backend

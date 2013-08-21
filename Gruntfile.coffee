@@ -125,8 +125,8 @@ module.exports = (grunt) ->
     grunt.file.write @data.dest, environment.findAsset(@data.src).toString()
 
   grunt.registerTask 'bowerize', ->
-    bower = require 'bower.json'
-    meta  = require 'package.json'
+    bower = require './bower.json'
+    meta  = require './package.json'
 
     bower.version = meta.version
     grunt.file.write 'bower.json', JSON.stringify(bower, null, 2)
@@ -147,7 +147,7 @@ module.exports = (grunt) ->
         complete true
 
   grunt.registerTask 'publish:gem', ->
-    meta     = require 'package.json'
+    meta     = require './package.json'
     complete = @async()
 
     grunt.util.spawn {cmd: "gem", args: ["build", "joosy.gemspec"]}, (error, result) ->

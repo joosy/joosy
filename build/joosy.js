@@ -1964,6 +1964,8 @@
       (_base = this.config).prefix || (_base.prefix = '');
       if (this.config.html5) {
         this.config.prefix = ('/' + this.config.prefix + '/').replace(/\/{2,}/g, '/');
+      } else {
+        this.config.prefix = this.config.prefix.replace(/^\#?\/?/, '').replace(/\/?$/, '');
       }
       if (this.config.html5) {
         this.listener = this.bind('popstate pushstate', function() {
@@ -1997,27 +1999,24 @@
       }
       path = to;
       if (this.config.html5) {
-        if (this.config.prefix && path[0] === '/' && !path.startsWith(this.config.prefix)) {
+        if (this.config.prefix && path[0] === '/' && !path.match(RegExp("^" + (this.config.prefix.replace(/\/$/, '')) + "(/|$)"))) {
           path = path.replace(/^\//, this.config.prefix);
         }
-      } else {
-        if (this.config.prefix && !path.match(RegExp("^#?/?" + (this.config.prefix.replace(/^\#?\/?/, ''))))) {
-          path = path.replace(/^\#?\/?/, "" + this.config.prefix + "/");
-        }
-      }
-      if (this.config.html5) {
         history.pushState({}, '', path);
         this.trigger('pushstate');
       } else {
+        if (this.config.prefix && !path.match(RegExp("^#?/?" + this.config.prefix + "(/|$)"))) {
+          path = path.replace(/^\#?\/?/, "" + this.config.prefix + "/");
+        }
         location.hash = path;
       }
     };
 
     Router.canonizeLocation = function() {
       if (this.config.html5) {
-        return location.pathname.replace(RegExp("^(" + this.config.prefix + ")?/?"), '/') + location.search;
+        return location.pathname.replace(RegExp("^(" + this.config.prefix + "?)?/?"), '/') + location.search;
       } else {
-        return location.hash.replace(RegExp("^#?/?(" + this.config.prefix + "/)?"), '/');
+        return location.hash.replace(RegExp("^#?/?(" + this.config.prefix + "(/|$))?"), '/');
       }
     };
 

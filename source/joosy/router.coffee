@@ -127,7 +127,10 @@ class Joosy.Router extends Joosy.Module
   @setup: (@config, @responder, respond=true) ->
     @config.html5    = false unless history.pushState
     @config.prefix ||= ''
-    @config.prefix   = ('/'+@config.prefix+'/').replace(/\/{2,}/g, '/') if @config.html5
+    if @config.html5
+      @config.prefix = ('/'+@config.prefix+'/').replace /\/{2,}/g, '/'
+    else
+      @config.prefix = @config.prefix.replace(/^\#?\/?/, '').replace /\/?$/, ''
 
     if @config.html5
       @listener = @bind 'popstate pushstate', =>
@@ -170,17 +173,15 @@ class Joosy.Router extends Joosy.Module
 
     if @config.html5
       # omit html5 relative links
-      if @config.prefix && path[0] == '/' && !path.startsWith(@config.prefix)
+      if @config.prefix && path[0] == '/' && !path.match(RegExp("^#{@config.prefix.replace(/\/$/, '')}(/|$)"))
         path = path.replace /^\//, @config.prefix
-    else
-      if @config.prefix && !path.match(RegExp("^#?/?#{@config.prefix.replace(/^\#?\/?/, '')}"))
-        path = path.replace /^\#?\/?/, "#{@config.prefix}/"
-
-    if @config.html5
       history.pushState {}, '', path
       @trigger 'pushstate'
     else
+      if @config.prefix && !path.match(RegExp("^#?/?#{@config.prefix}(/|$)"))
+        path = path.replace /^\#?\/?/, "#{@config.prefix}/"
       location.hash = path
+
     return
 
   #
@@ -190,9 +191,9 @@ class Joosy.Router extends Joosy.Module
   #
   @canonizeLocation: ->
     if @config.html5
-      location.pathname.replace(RegExp("^(#{@config.prefix})?/?"), '/')+location.search
+      location.pathname.replace(RegExp("^(#{@config.prefix}?)?/?"), '/')+location.search
     else
-      location.hash.replace RegExp("^#?/?(#{@config.prefix}/)?"), '/'
+      location.hash.replace RegExp("^#?/?(#{@config.prefix}(/|$))?"), '/'
 
   #
   # Compiles one single route

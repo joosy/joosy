@@ -15,17 +15,11 @@
     "node": ">=0.4.0"
   },
   "dependencies": {
-    "grunt": "~0.4.1",
-    "coffee-script": "~1.6.3",
-    "sugar": "~1.3.8",
-    "grill": "~1.0.0-alpha.5",
-    "command-router": "0.0.5",
-    "resolve": "~0.4.0",
-    "ejs": "~0.8.4",
-    "commander": "~1.2.0",
-    "colors": "~0.6.0-1"
+    "grill": "~1.0.0-alpha.12"
   },
   "devDependencies": {
+    "coffee-script": "~1.6.3",
+    "sugar": "~1.3.8",
     "bower": "~1.1.2",
     "mincer": ">= 0.5.5",
     "semver": "~2.1.0",

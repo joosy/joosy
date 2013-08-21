@@ -33,22 +33,25 @@ module.exports = (grunt) ->
     testem:
       application:
         src: [
-          'public/application.js',
+          'app/javascripts/application.coffee',
           'spec/helpers/*.coffee',
           'spec/**/*_spec.coffee'
         ]
+        assets:
+          setup: ->
+            grunt.joosy.assetter('development').environment
         options:
-          parallel: 4
           launch_in_dev: ['PhantomJS'],
           launch_in_ci: ['PhantomJS']
 
   #
   # Tasks
   #
+  grunt.registerTask 'default', ['testem']
+  grunt.registerTask 'spec', ['testem']
+
   grunt.registerTask 'compile', ['joosy:compile', 'uglify', 'cssmin']
   grunt.registerTask 'server',  ['joosy:server']
-
-  grunt.registerTask 'spec', ['testem']
 
   grunt.registerTask 'deploy', ->
     if process.env['NODE_ENV'] == 'production'

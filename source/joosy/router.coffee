@@ -125,7 +125,10 @@ class Joosy.Router extends Joosy.Module
   # Inits the routing system and loads the current route
   #
   @setup: (@config, @responder, respond=true) ->
-    @config.html5    = false unless history.pushState
+    unless history.pushState
+      if @config.html5
+        @config.prefix = @config.hashSuffix
+      @config.html5 = false
     @config.prefix ||= ''
     if @config.html5
       @config.prefix = ('/'+@config.prefix+'/').replace /\/{2,}/g, '/'

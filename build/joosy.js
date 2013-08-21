@@ -1959,6 +1959,9 @@
         respond = true;
       }
       if (!history.pushState) {
+        if (this.config.html5) {
+          this.config.prefix = this.config.hashSuffix;
+        }
         this.config.html5 = false;
       }
       (_base = this.config).prefix || (_base.prefix = '');

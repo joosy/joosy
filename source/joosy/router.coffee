@@ -125,21 +125,28 @@ class Joosy.Router extends Joosy.Module
   # Inits the routing system and loads the current route
   #
   @setup: (@config, @responder, respond=true) ->
+    # Fallback to hashchange if we are unlucky
+    # enough to work in IE...
     unless history.pushState
-      if @config.html5
-        @config.prefix = @config.hashSuffix
+      @config.prefix = @config.hashSuffix
       @config.html5 = false
+
+    # ... or for some reason it was explicitly turned off
+    unless @config.html5
+      @config.prefix = @config.hashSuffix
+
     @config.prefix ||= ''
-    if @config.html5
-      @config.prefix = ('/'+@config.prefix+'/').replace /\/{2,}/g, '/'
-    else
-      @config.prefix = @config.prefix.replace(/^\#?\/?/, '').replace /\/?$/, ''
 
     if @config.html5
+      # Canonical form of HTML5 prefix is '/any/thing/'
+      @config.prefix = ('/'+@config.prefix+'/').replace /\/{2,}/g, '/'
+
       @listener = @bind 'popstate pushstate', =>
         @respond @canonizeLocation()
-
     else
+      # Canonical form of hash suffix is 'any/thing'
+      @config.prefix = @config.prefix.replace(/^\#?\/?/, '').replace /\/?$/, ''
+
       $(window).bind 'hashchange.JoosyRouter', =>
         @respond @canonizeLocation()
 

@@ -1959,22 +1959,20 @@
         respond = true;
       }
       if (!history.pushState) {
-        if (this.config.html5) {
-          this.config.prefix = this.config.hashSuffix;
-        }
+        this.config.prefix = this.config.hashSuffix;
         this.config.html5 = false;
+      }
+      if (!this.config.html5) {
+        this.config.prefix = this.config.hashSuffix;
       }
       (_base = this.config).prefix || (_base.prefix = '');
       if (this.config.html5) {
         this.config.prefix = ('/' + this.config.prefix + '/').replace(/\/{2,}/g, '/');
-      } else {
-        this.config.prefix = this.config.prefix.replace(/^\#?\/?/, '').replace(/\/?$/, '');
-      }
-      if (this.config.html5) {
         this.listener = this.bind('popstate pushstate', function() {
           return _this.respond(_this.canonizeLocation());
         });
       } else {
+        this.config.prefix = this.config.prefix.replace(/^\#?\/?/, '').replace(/\/?$/, '');
         $(window).bind('hashchange.JoosyRouter', function() {
           return _this.respond(_this.canonizeLocation());
         });

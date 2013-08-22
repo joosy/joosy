@@ -287,7 +287,7 @@ describe "Joosy.Router", ->
           waits 0
 
         beforeEach ->
-          Joosy.Router.setup {html5: val, prefix: 'admin'}, @spies.responder, false
+          Joosy.Router.setup {html5: val, prefix: 'admin', hashSuffix: 'admin'}, @spies.responder, false
           Joosy.Router.map @map
 
         it "is considered in path without prefix", ->

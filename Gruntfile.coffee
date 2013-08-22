@@ -1,6 +1,5 @@
 require 'sugar'
 
-Mincer = require 'mincer'
 semver = require 'semver'
 
 module.exports = (grunt) ->
@@ -32,6 +31,7 @@ module.exports = (grunt) ->
   #
   # Grunt extensions
   #
+  grunt.loadNpmTasks 'grill'
   grunt.loadNpmTasks 'grunt-contrib-testem'
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-release'
@@ -41,19 +41,11 @@ module.exports = (grunt) ->
   # Config
   #
   grunt.initConfig
-    mince:
-      core:
-        include: [locations.source.path]
-        src: locations.source.root
-        dest: locations.source.build
-      resources:
-        include: [locations.source.path]
-        src: locations.source.extensions('resources').root
-        dest: locations.source.extensions('resources').build
-      form:
-        include: [locations.source.path]
-        src: locations.source.extensions('resources-form').root
-        dest: locations.source.extensions('resources-form').build
+    grill:
+      assets:
+        destination: 'build'
+        paths: locations.source.path
+        root: Array.create(locations.source.root, locations.source.extensions().root)
 
     coffeelint:
       source:
@@ -129,21 +121,24 @@ module.exports = (grunt) ->
   #
   grunt.registerTask 'default', 'testem'
 
+  grunt.registerTask 'build', 'grill:compile'
+
   grunt.registerTask 'test', ->
+    grunt.task.run 'coffeelint'
     grunt.task.run if @args[0] then "testem:run:#{@args[0]}" else 'testem'
 
-  grunt.registerTask 'publish', ['testem', 'publish:ensureCommits', 'doc', 'release', 'publish:gem']
-
+  grunt.registerTask 'publish', [
+    'test',
+    'build',
+    'ensureCommits',
+    'gh-pages',
+    'release',
+    'gemify'
+  ]
 
   #
   # Building
   #
-  grunt.registerMultiTask 'mince', ->
-    Mincer.CoffeeEngine.configure bare: false
-    environment = new Mincer.Environment
-    environment.appendPath x for x in @data.include
-    grunt.file.write @data.dest, environment.findAsset(@data.src).toString()
-
   grunt.registerTask 'bowerize', ->
     bower = require './bower.json'
     meta  = require './package.json'
@@ -154,7 +149,7 @@ module.exports = (grunt) ->
   #
   # Publishing
   #
-  grunt.registerTask 'publish:ensureCommits', ->
+  grunt.registerTask 'ensureCommits', ->
     complete = @async()
 
     grunt.util.spawn {cmd: "git", args: ["status", "--porcelain" ]}, (error, result) ->
@@ -166,7 +161,7 @@ module.exports = (grunt) ->
       else
         complete true
 
-  grunt.registerTask 'publish:gem', ->
+  grunt.registerTask 'gemify', ->
     meta     = require './package.json'
     complete = @async()
 

@@ -129,8 +129,8 @@ to change or work not as expected while 1.2 branch is still early alpha.</p><p>K
 <li>Clone the project</li>
 <li>Run <code>npm install</code> to get required Node modules</li>
 <li>Run <code>bower install</code> to get required JS components</li>
-<li>Run <code>grunt test</code> to run specs once</li>
-<li>Run <code>grunt</code> to watch sources (automatic changes compilations) and run test-server (get your browser to <a href="http://localhost:8888/">http://localhost:8888/</a>)</li>
+<li>Run <code>grunt test</code> to run all specs in all available browsers</li>
+<li>Run <code>grunt test:*</code> where <code>*</code> is then name of an environment to run the environment in the development mode. Check <code>Gruntfile.coffee</code> (section <strong>testem</strong>) for the list of existing environments.</li>
 </ul><p>While current repository is at the same time NPM package, Ruby gem and Bower component, – the main Core
 environment is Node.js.</p><h2>Maintainers</h2>
 <ul>
@@ -143,7 +143,7 @@ environment is Node.js.</p><h2>Maintainers</h2>
     </div>
     <div id='footer'>
   Generated on
-  Wed Aug 21 2013 14:33:32 GMT+0700 (ICT)
+  Thu Aug 22 2013 16:43:40 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

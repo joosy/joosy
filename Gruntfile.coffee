@@ -6,27 +6,21 @@ module.exports = (grunt) ->
   #
   # Common settings
   #
-  locations =
-
-    source:
-      root:  'joosy.coffee'
-      path:  'source'
-      build: 'build/joosy.js'
-
-      extensions: (name) ->
-        root:  "joosy/extensions/#{name || '*'}"
-        build: "build/joosy/extensions/#{name || '**/*'}.js"
-
-    specs: [
-      'bower_components/sinonjs/sinon.js',
-      'bower_components/sugar/release/sugar-full.min.js',
-      'spec/helpers/*.coffee'
-    ]
-
-  testem =
-    parallel: 8
-    launch_in_dev: ['PhantomJS'],
-    launch_in_ci: ['PhantomJS', 'Chrome', 'Firefox', 'Safari', 'IE7', 'IE8', 'IE9']
+  testemOptions = (vendor, specs) ->
+    return {
+      src: Array.create([
+          'bower_components/sinonjs/sinon.js',
+          'bower_components/sugar/release/sugar-full.min.js',
+          'spec/helpers/*.coffee'
+        ], vendor, 'joosy.coffee', specs)
+      assets:
+        setup: ->
+          grunt.grill.assetter('development').environment
+      options:
+        parallel: 8
+        launch_in_dev: ['PhantomJS'],
+        launch_in_ci: ['PhantomJS', 'Chrome', 'Firefox', 'Safari', 'IE7', 'IE8', 'IE9']
+    }
 
   #
   # Grunt extensions
@@ -44,13 +38,13 @@ module.exports = (grunt) ->
     grill:
       assets:
         destination: 'build'
-        paths: locations.source.path
-        root: Array.create(locations.source.root, locations.source.extensions().root)
+        paths: 'source'
+        root: ['joosy.coffee', 'joosy/extensions/*']
 
     coffeelint:
       source:
         files:
-          src: [locations.source.path + '/joosy/**/*.coffee']
+          src: 'source/joosy/**/*.coffee'
         options:
           'max_line_length':
             level: 'ignore'
@@ -65,49 +59,35 @@ module.exports = (grunt) ->
             args: ['doc']
 
     testem:
-      core:
-        src: Array.create(
-          locations.specs,
-          'bower_components/jquery/jquery.js',
-          locations.source.build,
-          'spec/joosy/core/**/*_spec.coffee'
-        )
-        options: testem
-      zepto:
-        src: Array.create(
-          locations.specs,
-          'bower_components/zepto/zepto.js',
-          locations.source.build,
-          'spec/joosy/core/**/*_spec.coffee'
-        )
-        options: testem
-      'environments-global':
-        src: Array.create(
-          locations.specs,
-          'bower_components/jquery/jquery.js',
-          locations.source.build,
-          'spec/joosy/environments/global_spec.coffee'
-        )
-        options: testem
-      'environments-amd':
-        src: Array.create(
-          locations.specs,
-          'bower_components/jquery/jquery.js',
-          'bower_components/requirejs/require.js',
-          locations.source.build,
-          'spec/joosy/environments/amd_spec.coffee'
-        )
-        options: testem
-      extensions:
-        src: Array.create(
-          locations.specs,
-          'bower_components/jquery/jquery.js',
-          locations.source.build,
-          'bower_components/jquery-form/jquery.form.js',
-          locations.source.extensions().build,
+      core: testemOptions(
+        'bower_components/jquery/jquery.js', 
+        'spec/joosy/core/**/*_spec.coffee'
+      )
+      zepto: testemOptions(
+        'bower_components/zepto/zepto.js', 
+        'spec/joosy/core/**/*_spec.coffee'
+      )
+      'environments-global': testemOptions(
+        'bower_components/jquery/jquery.js', 
+        'spec/joosy/environments/global_spec.coffee'
+      )
+      'environments-amd': testemOptions(
+        [
+          'bower_components/jquery/jquery.js', 
+          'bower_components/requirejs/require.js'
+        ],
+        'spec/joosy/environments/amd_spec.coffee'
+      )
+      extensions: testemOptions(
+        [
+          'bower_components/jquery/jquery.js', 
+          'bower_components/jquery-form/jquery.form.js'
+        ],
+        [
+          'joosy/extensions/*',
           'spec/joosy/extensions/**/*_spec.coffee'
-        )
-        options: testem
+        ]
+      )
 
     release:
       options:

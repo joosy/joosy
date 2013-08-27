@@ -15,7 +15,7 @@ class Joosy.Resources.RESTCollection extends Joosy.Resources.Collection
   #
   # @param [Hash] options         See {Joosy.Resources.REST.find} for possible options
   # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
+  # @param [Object]   callback    `(error, instance, data) -> ...`
   #
   reload: (options={}, callback=false) ->
     if Object.isFunction(options)
@@ -24,7 +24,7 @@ class Joosy.Resources.RESTCollection extends Joosy.Resources.Collection
 
     @model.__query @model.collectionPath(options, @__source), 'GET', options.params, (error, data) =>
       @load data if data?
-      callback?(error, data)
+      callback?(error, @, data)
 
   load: (args...) ->
     res = super(args...)

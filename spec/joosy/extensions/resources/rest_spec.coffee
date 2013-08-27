@@ -95,8 +95,8 @@ describe "Joosy.Resources.REST", ->
     it 'builds member path', ->
       expect(Fluffy.memberPath 1).toEqual '/fluffies/1'
 
-    it 'builds member path with from', ->
-      expect(Fluffy.memberPath 1, from: 'test').toEqual '/fluffies/1/test'
+    it 'builds member path with action', ->
+      expect(Fluffy.memberPath 1, action: 'test').toEqual '/fluffies/1/test'
 
     describe 'with interpolation', ->
       it 'builds member path', ->
@@ -116,8 +116,8 @@ describe "Joosy.Resources.REST", ->
     it 'builds collection path', ->
       expect(Fluffy.collectionPath()).toEqual '/fluffies'
 
-    it 'builds collection path with from', ->
-      expect(Fluffy.collectionPath from: 'test').toEqual '/fluffies/test'
+    it 'builds collection path with action', ->
+      expect(Fluffy.collectionPath action: 'test').toEqual '/fluffies/test'
 
     describe 'with interpolation', ->
       it 'builds collection path', ->
@@ -139,8 +139,8 @@ describe "Joosy.Resources.REST", ->
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/1\?_=\d+/, rawData
       expect(@callback.callCount).toEqual 1
 
-    it "gets item with from", ->
-      resource = Fluffy.find 1, {from: 'action'}, @callback
+    it "gets item with action", ->
+      resource = Fluffy.find 1, {action: 'action'}, @callback
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/1\/action\?_=\d+/, rawData
       expect(@callback.callCount).toEqual 1
 
@@ -174,8 +174,8 @@ describe "Joosy.Resources.REST", ->
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\?_=\d+/, rawData
       expect(@callback.callCount).toEqual 1
 
-    it "gets collection with from", ->
-      resource = Fluffy.find 'all', {from: 'action'}, @callback
+    it "gets collection with action", ->
+      resource = Fluffy.find 'all', {action: 'action'}, @callback
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/action\?_=\d+/, rawData
       expect(@callback.callCount).toEqual 1
 
@@ -210,7 +210,7 @@ describe "Joosy.Resources.REST", ->
       resource = Fluffy.build 1
 
       it "with get", ->
-        resource.get {from: 'foo', params: {foo: 'bar'}}, callback
+        resource.get {action: 'foo', params: {foo: 'bar'}}, callback
         checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/1\/foo\?foo=bar&_=\d+/, rawData
 
       it "with post", ->
@@ -229,7 +229,7 @@ describe "Joosy.Resources.REST", ->
       resource = Fluffy
 
       it "with get", ->
-        resource.get {from: 'foo', params: {foo: 'bar'}}, callback
+        resource.get {action: 'foo', params: {foo: 'bar'}}, callback
         checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/foo\?foo=bar&_=\d+/, rawData
 
       it "with post", ->

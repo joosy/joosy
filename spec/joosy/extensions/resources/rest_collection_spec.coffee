@@ -21,7 +21,7 @@ describe "Joosy.Resources.RESTCollection", ->
 
   it "reloads", ->
     @collection.load [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]
-    @collection.reload from: 'test'
+    @collection.reload action: 'test'
 
     target = @server.requests.last()
     expect(target.method).toEqual 'GET'

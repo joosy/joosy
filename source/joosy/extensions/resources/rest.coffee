@@ -6,6 +6,9 @@
 #
 class Joosy.Resources.REST extends Joosy.Resources.Base
 
+  @requestOptions: (options) ->
+    @::__requestOptions = options
+
   #
   # Sets default base url for fetching and modifiing resources
   #
@@ -100,6 +103,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # Builds collection path
   #
   # @see Joosy.Resources.REST.collectionPath
+  # @option options [String] url      Manually set URL
+  # @option options [String] action   Action to add to the URL as a suffix
   #
   collectionPath: (ids=[], options={}) ->
     if Object.isObject(ids)
@@ -117,7 +122,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
       path += @constructor.__namespace__.map(String::underscore).join('/') + '/' if @constructor.__namespace__.length > 0
       path += @__entityName.pluralize()
 
-    path += "/#{options.from}" if options.from
+    path += "/#{options.action}" if options.action
     path
 
 
@@ -136,10 +141,13 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # Builds member path
   #
-  # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
+  # @param [Hash] options             See {Joosy.Resources.REST.find} for possible options
+  # @option options [String] url      Manually set URL
+  # @option options [String] action   Action to add to the URL as a suffix
   #
   # @example Basic usage
-  #   resource.memberPath(from: 'foo') # /resources/1/foo
+  #   resource.memberPath(action: 'foo') # /resources/1/foo
+  #
   #
   memberPath: (ids=[], options={}) ->
     if Object.isObject(ids)
@@ -151,11 +159,11 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     ids = [ids] unless Object.isArray(ids)
     id = @id() || ids.pop()
 
-    from  = options.from
+    action = options.action
 
     ids.push @id()
-    path  = @collectionPath(ids, Object.merge(options, from: undefined)) + "/#{id}"
-    path += "/#{from}" if from?
+    path  = @collectionPath(ids, Object.merge(options, action: undefined)) + "/#{id}"
+    path += "/#{action}" if action?
     path
 
   #
@@ -164,7 +172,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
+  # @param [Object]   callback    `(error, data) -> ...`
   #
   @get: (options, callback) ->
     [options, callback] = @::__extractOptionsAndCallback(options, callback)
@@ -176,7 +184,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
+  # @param [Object]   callback    `(error, data) -> ...`
   #
   @post: (options, callback) ->
     [options, callback] = @::__extractOptionsAndCallback(options, callback)
@@ -188,7 +196,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
+  # @param [Object]   callback    `(error, data) -> ...`
   #
   @put: (options, callback) ->
     [options, callback] = @::__extractOptionsAndCallback(options, callback)
@@ -200,7 +208,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
+  # @param [Object]   callback    `(error, data) -> ...`
   #
   @delete: (options, callback) ->
     [options, callback] = @::__extractOptionsAndCallback(options, callback)
@@ -212,7 +220,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
+  # @param [Object]   callback    `(error, data) -> ...`
   #
   get: (options, callback) ->
     [options, callback] = @__extractOptionsAndCallback(options, callback)
@@ -224,7 +232,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
+  # @param [Object]   callback    `(error, data) -> ...`
   #
   post: (options, callback) ->
     [options, callback] = @__extractOptionsAndCallback(options, callback)
@@ -236,7 +244,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
+  # @param [Object]   callback    `(error, data) -> ...`
   #
   put: (options, callback) ->
     [options, callback] = @__extractOptionsAndCallback(options, callback)
@@ -247,7 +255,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # Callback will get parsed JSON object as a parameter.
   #
   # @param [Hash] options         Options to proxy to memberPath
-  # @param [Function] callback    Resulting callback
+  # @param [Function] callback    `(error, data) -> ...`
   #
   delete: (options, callback) ->
     [options, callback] = @__extractOptionsAndCallback(options, callback)
@@ -261,8 +269,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #   Everything else will be considered as an id string and will make resource
   #   query for single instance from memberPath.
   # @param [Hash] options         Path modification options
-  # @param [Function] callback    Resulting callback
-  #   (will receive retrieved Collection/Resource)
+  # @param [Function] callback    `(error, instance, data) -> ...`
   #
   # @option options [String] from                           Adds the given string as a last path element
   #   i.e. /resources/trololo
@@ -296,6 +303,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   @__query: (path, method, params, callback) ->
     options =
+      url: path
       data: params
       type: method
       cache: false
@@ -307,21 +315,27 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     else
       Joosy.Module.merge options, callback
 
-    $.ajax path, options
+    if @::__requestOptions instanceof Function
+      @::__requestOptions(options)
+    else if @::__requestOptions
+      Joosy.Module.merge options, @::__requestOptions
+      console.log @::__requestOptions
+
+    $.ajax options
 
   #
   # Refetches the data from backend and triggers `changed`
   #
   # @param [Hash] options         See {Joosy.Resources.REST.find} for possible options
   # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    Success and Error callbacks to run `{ success: () ->, error: () -> }`
+  # @param [Object]   callback    `(error, instance, data) -> ...`
   #
   reload: (options={}, callback=false) ->
     [options, callback] = @__extractOptionsAndCallback(options, callback)
 
-    @constructor.__query @memberPath(options), 'GET', options.params, (data) =>
-      @load data
-      callback? this
+    @constructor.__query @memberPath(options), 'GET', options.params, (error, data) =>
+      @load data if data?
+      callback?(error, @, data)
 
   #
   # utility function for better API support for unrequired first options parameter

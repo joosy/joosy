@@ -130,7 +130,7 @@ describe "Joosy.Form", ->
 
     it "should fill form with extended action", ->
       @nudeForm.fill @resource,
-        action: @resource.memberPath(from: 'calculate')
+        action: @resource.memberPath(action: 'calculate')
       expect(@nudeForm.$fields()[0].value).toEqual 'foo'
       expect(@nudeForm.$fields()[1].value).toEqual 'bar'
       expect(@nudeForm.$container.attr 'action').toEqual '/tests/1/calculate'
@@ -138,7 +138,7 @@ describe "Joosy.Form", ->
       resource = @Test.build 'someId'
 
       @nudeForm.fill resource,
-        action: resource.memberPath(from: 'calculate')
+        action: resource.memberPath(action: 'calculate')
       expect(@nudeForm.$container.attr 'action').toEqual '/tests/someId/calculate'
 
     it "should handle field name properly", ->

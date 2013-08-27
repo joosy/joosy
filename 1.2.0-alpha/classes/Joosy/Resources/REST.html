@@ -498,7 +498,7 @@
     <h4>
       Basic usage
     </h4>
-    <pre><code class='coffee'>Comment.at([&#39;admin&#39;, @blog, @post]).collectionPath() # =&gt; &#39;&#47;admin&#47;blogs&#47;555&#47;posts&#47;666&#47;comments&#39;</code></pre>
+    <pre><code class='coffee'>Comment.at(&#39;admin&#39;, @blog, @post).collectionPath() # =&gt; &#39;&#47;admin&#47;blogs&#47;555&#47;posts&#47;666&#47;comments&#39;</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -521,32 +521,12 @@
     </p>
     <div class='docstring'>
   <p>Builds collection path</p>
-  <div class='examples'>
-    <h3>Examples:</h3>
-    <h4>
-      Basic usage
-    </h4>
-    <pre><code class='coffee'>Resource.collectionPath() # &#47;resources&#47;</code></pre>
-  </div>
 </div>
 <div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
+  <h3>See also:</h3>
+  <ul class='see'>
     <li>
-      <span class='name'>id</span>
-      <span class='type'>
-        (<tt>Array</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>IDs for interpolation for masked sources</span>
-    </li>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>See <a href='../../../classes/Joosy/Resources/REST.html#find-class'>Joosy.Resources.REST.find</a> for possible options</span>
+      <a href='../../../classes/Joosy/Resources/REST.html#collectionPath-instance'>Joosy.Resources.REST#collectionPath</a>
     </li>
   </ul>
 </div>
@@ -557,32 +537,12 @@
     </p>
     <div class='docstring'>
   <p>Builds member path based on the given id.</p>
-  <div class='examples'>
-    <h3>Examples:</h3>
-    <h4>
-      Basic usage
-    </h4>
-    <pre><code class='coffee'>Resource.memberPath(1, from: &#39;foo&#39;) # &#47;resources&#47;1&#47;foo</code></pre>
-  </div>
 </div>
 <div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
+  <h3>See also:</h3>
+  <ul class='see'>
     <li>
-      <span class='name'>id</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>ID of entity to build member path for</span>
-    </li>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>See <a href='../../../classes/Joosy/Resources/REST.html#find-class'>Joosy.Resources.REST.find</a> for possible options</span>
+      <a href='../../../classes/Joosy/Resources/REST.html#memberPath-instance'>Joosy.Resources.REST#memberPath</a>
     </li>
   </ul>
 </div>
@@ -780,7 +740,7 @@ Callback will get parsed JSON object as a parameter.</p>
   </h3>
   <ul class='options'>
     <li>
-      <span class='name'>from</span>
+      <span class='name'>action</span>
       <span class='type'>
         (<tt>String</tt>)
       </span>
@@ -834,7 +794,7 @@ Callback will get parsed JSON object as a parameter.</p>
     <h4>
       Basic usage
     </h4>
-    <pre><code class='coffee'>Comment.build(1).at([&#39;admin&#39;, @blog, @post]).memberPath() # =&gt; &#39;&#47;admin&#47;blogs&#47;555&#47;posts&#47;666&#47;comments&#47;1&#39;</code></pre>
+    <pre><code class='coffee'>Comment.build(1).at(&#39;admin&#39;, @blog, @post).memberPath() # =&gt; &#39;&#47;admin&#47;blogs&#47;555&#47;posts&#47;666&#47;comments&#47;1&#39;</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -878,8 +838,36 @@ Changes the default fallback to Joosy.Resources.RESTCollection.</p>
     </p>
     <div class='docstring'>
   <p>Builds collection path</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffee'>Resource.collectionPath() # &#47;resources&#47;</code></pre>
+    <h4>
+      Nested resources
+    </h4>
+    <pre><code class='coffee'>Resource.collectionPath([&#39;admin&#39;, Resource.build 1]) # &#47;admin&#47;resources&#47;1&#47;resources</code></pre>
+  </div>
 </div>
 <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>ids</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Interpolation arguments for nested objects</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+    </li>
+  </ul>
   <h3>
     Options Hash:
     (option):
@@ -902,12 +890,6 @@ Changes the default fallback to Joosy.Resources.RESTCollection.</p>
       <span class='desc'>Action to add to the URL as a suffix</span>
     </li>
   </ul>
-  <h3>See also:</h3>
-  <ul class='see'>
-    <li>
-      <a href='../../../classes/Joosy/Resources/REST.html#collectionPath-class'>Joosy.Resources.REST.collectionPath</a>
-    </li>
-  </ul>
 </div>
   </div>
   <div class='method_details'>
@@ -922,18 +904,28 @@ Changes the default fallback to Joosy.Resources.RESTCollection.</p>
       Basic usage
     </h4>
     <pre><code class='coffee'>resource.memberPath(action: &#39;foo&#39;) # &#47;resources&#47;1&#47;foo</code></pre>
+    <h4>
+      Nested resources
+    </h4>
+    <pre><code class='coffee'>Resource.memberPath([&#39;admin&#39;, Resource.build 1]) # &#47;admin&#47;resources&#47;1&#47;resources&#47;2</code></pre>
   </div>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>options</span>
+      <span class='name'>ids</span>
       <span class='type'>
-        (<tt>Hash</tt>)
+        (<tt>Array</tt>)
       </span>
       &mdash;
-      <span class='desc'>See <a href='../../../classes/Joosy/Resources/REST.html#find-class'>Joosy.Resources.REST.find</a> for possible options</span>
+      <span class='desc'>Interpolation arguments for nested objects</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
     </li>
   </ul>
   <h3>
@@ -1155,7 +1147,7 @@ Callback will get parsed JSON object as a parameter.</p>
     </div>
     <div id='footer'>
   Generated on
-  Tue Aug 27 2013 20:14:19 GMT+0700 (ICT)
+  Tue Aug 27 2013 20:33:01 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

@@ -128,7 +128,7 @@ describe "Joosy.Resources.REST", ->
     rawData = '{"fluffy": {"id": 1, "name": "test1"}}'
 
     beforeEach ->
-      @callback = sinon.spy (target, data) ->
+      @callback = sinon.spy (error, target, data) ->
         expect(target instanceof Fluffy).toEqual true
         expect(target.id()).toEqual 1
         expect(target 'name').toEqual 'test1'
@@ -155,7 +155,7 @@ describe "Joosy.Resources.REST", ->
       expect(@callback.callCount).toEqual 1
 
     it "gets item with direct assignation", ->
-      resource = Fluffy.find 1, (cbResource) ->
+      resource = Fluffy.find 1, (error, cbResource) ->
         expect(resource).toBe cbResource
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/1\?_=\d+/, rawData
 
@@ -163,7 +163,7 @@ describe "Joosy.Resources.REST", ->
     rawData = '{"page": 42, "fluffies": [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]}'
 
     beforeEach ->
-      @callback = sinon.spy (target, data) ->
+      @callback = sinon.spy (error, target, data) ->
         expect(target instanceof Joosy.Resources.RESTCollection).toEqual true
         expect(target.size()).toEqual 2
         expect(target.at(0) instanceof Fluffy).toEqual true
@@ -203,7 +203,7 @@ describe "Joosy.Resources.REST", ->
 
   describe "requests", ->
     rawData  = '{"foo": "bar"}'
-    callback = sinon.spy (data) ->
+    callback = sinon.spy (error, data) ->
       expect(data).toEqual {foo: 'bar'}
 
     describe "member", ->

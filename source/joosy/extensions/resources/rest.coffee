@@ -285,9 +285,9 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     if Object.isArray(where) && where.length > 1
       result.__source = @collectionPath where
 
-    @__query path, 'GET', options.params, (data) =>
-      result.load data
-      callback?(result, data)
+    @__query path, 'GET', options.params, (error, data) =>
+      result.load data if data?
+      callback?(error, result, data)
 
     result
 
@@ -302,7 +302,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
       dataType: 'json'
 
     if Object.isFunction(callback)
-      options.success = callback
+      options.success = (data) -> callback(false, data)
+      options.error   = (xhr) -> callback(xhr)
     else
       Joosy.Module.merge options, callback
 

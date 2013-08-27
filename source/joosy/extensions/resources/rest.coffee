@@ -42,7 +42,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Array] args      Array of parent entities. Can be a string or another REST resource.
   #
   # @example Basic usage
-  #   Comment.at(['admin', @blog, @post]).collectionPath() # => '/admin/blogs/555/posts/666/comments'
+  #   Comment.at('admin', @blog, @post).collectionPath() # => '/admin/blogs/555/posts/666/comments'
   #
   # @note accepts both array notation (Comment.at(['admin', @blog, @post])) and args notation (Comment.at('admin', @blog, @post))
   #
@@ -59,7 +59,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Array] args      Array of parent entities. Can be a string or another REST resource.
   #
   # @example Basic usage
-  #   Comment.build(1).at(['admin', @blog, @post]).memberPath() # => '/admin/blogs/555/posts/666/comments/1'
+  #   Comment.build(1).at('admin', @blog, @post).memberPath() # => '/admin/blogs/555/posts/666/comments/1'
   #
   # @note accepts both array notation (comment.at(['admin', @blog, @post])) and args notation (comment.at('admin', @blog, @post))
   #
@@ -90,11 +90,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # Builds collection path
   #
-  # @param [Array] id           IDs for interpolation for masked sources
-  # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
-  #
-  # @example Basic usage
-  #   Resource.collectionPath() # /resources/
+  # @see Joosy.Resources.REST#collectionPath
   #
   @collectionPath: (args...) ->
     @::collectionPath args...
@@ -102,9 +98,16 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # Builds collection path
   #
-  # @see Joosy.Resources.REST.collectionPath
+  # @param [Array] ids                Interpolation arguments for nested objects
+  # @param [Object] options
   # @option options [String] url      Manually set URL
   # @option options [String] action   Action to add to the URL as a suffix
+  #
+  # @example Basic usage
+  #   Resource.collectionPath() # /resources/
+  #
+  # @example Nested resources
+  #   Resource.collectionPath(['admin', Resource.build 1]) # /admin/resources/1/resources
   #
   collectionPath: (ids=[], options={}) ->
     if Object.isObject(ids)
@@ -129,11 +132,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # Builds member path based on the given id.
   #
-  # @param [String] id          ID of entity to build member path for
-  # @param [Hash] options       See {Joosy.Resources.REST.find} for possible options
-  #
-  # @example Basic usage
-  #   Resource.memberPath(1, from: 'foo') # /resources/1/foo
+  # @see Joosy.Resources.REST#memberPath
   #
   @memberPath: (args...) ->
     @::memberPath args...
@@ -141,13 +140,16 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # Builds member path
   #
-  # @param [Hash] options             See {Joosy.Resources.REST.find} for possible options
+  # @param [Array] ids                Interpolation arguments for nested objects
+  # @param [Object] options
   # @option options [String] url      Manually set URL
   # @option options [String] action   Action to add to the URL as a suffix
   #
   # @example Basic usage
   #   resource.memberPath(action: 'foo') # /resources/1/foo
   #
+  # @example Nested resources
+  #   Resource.memberPath(['admin', Resource.build 1]) # /admin/resources/1/resources/2
   #
   memberPath: (ids=[], options={}) ->
     if Object.isObject(ids)
@@ -271,11 +273,11 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @param [Hash] options         Path modification options
   # @param [Function] callback    `(error, instance, data) -> ...`
   #
-  # @option options [String] from                           Adds the given string as a last path element
+  # @option options [String] action             Adds the given string as a last path element
   #   i.e. /resources/trololo
-  # @option options [String] url                            Sets url for request instead of generated
+  # @option options [String] url                Sets url for request instead of generated
   #   i.e. /some/custom/url
-  # @option options [Hash] params                           Passes the given params to the query
+  # @option options [Hash] params               Passes the given params to the query
   #
   @find: (where, options={}, callback=false) ->
     [options, callback] = @::__extractOptionsAndCallback(options, callback)

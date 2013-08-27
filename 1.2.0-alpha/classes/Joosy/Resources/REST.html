@@ -141,6 +141,16 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
+      <a href='#requestOptions-class'>
+        + (void) <strong>requestOptions</strong>(options)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#source-class'>
         + (void) <strong>source</strong>(location)
       </a>
@@ -432,6 +442,13 @@
       <h2>Class Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
+    <p class='signature' id='requestOptions-class'>
+      + (void) <strong>requestOptions</strong>(options)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='source-class'>
       + (void) <strong>source</strong>(location)
     </p>
@@ -603,7 +620,7 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Success and Error callbacks to run <code>{ success: () -&gt;, error: () -&gt; }</code></span>
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -641,7 +658,7 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Success and Error callbacks to run <code>{ success: () -&gt;, error: () -&gt; }</code></span>
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -679,7 +696,7 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Success and Error callbacks to run <code>{ success: () -&gt;, error: () -&gt; }</code></span>
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -717,7 +734,7 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Success and Error callbacks to run <code>{ success: () -&gt;, error: () -&gt; }</code></span>
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -754,7 +771,7 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Resulting callback (will receive retrieved Collection/Resource)</span>
+      <span class='desc'><code>(error, instance, data) -&gt; ...</code></span>
     </li>
   </ul>
   <h3>
@@ -863,6 +880,28 @@ Changes the default fallback to Joosy.Resources.RESTCollection.</p>
   <p>Builds collection path</p>
 </div>
 <div class='tags'>
+  <h3>
+    Options Hash:
+    (option):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>url</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Manually set URL</span>
+    </li>
+    <li>
+      <span class='name'>action</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Action to add to the URL as a suffix</span>
+    </li>
+  </ul>
   <h3>See also:</h3>
   <ul class='see'>
     <li>
@@ -882,7 +921,7 @@ Changes the default fallback to Joosy.Resources.RESTCollection.</p>
     <h4>
       Basic usage
     </h4>
-    <pre><code class='coffee'>resource.memberPath(from: &#39;foo&#39;) # &#47;resources&#47;1&#47;foo</code></pre>
+    <pre><code class='coffee'>resource.memberPath(action: &#39;foo&#39;) # &#47;resources&#47;1&#47;foo</code></pre>
   </div>
 </div>
 <div class='tags'>
@@ -895,6 +934,28 @@ Changes the default fallback to Joosy.Resources.RESTCollection.</p>
       </span>
       &mdash;
       <span class='desc'>See <a href='../../../classes/Joosy/Resources/REST.html#find-class'>Joosy.Resources.REST.find</a> for possible options</span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (option):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>url</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Manually set URL</span>
+    </li>
+    <li>
+      <span class='name'>action</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Action to add to the URL as a suffix</span>
     </li>
   </ul>
 </div>
@@ -932,7 +993,7 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Success and Error callbacks to run <code>{ success: () -&gt;, error: () -&gt; }</code></span>
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -970,7 +1031,7 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Success and Error callbacks to run <code>{ success: () -&gt;, error: () -&gt; }</code></span>
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -1008,7 +1069,7 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Success and Error callbacks to run <code>{ success: () -&gt;, error: () -&gt; }</code></span>
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -1038,7 +1099,7 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Resulting callback</span>
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -1075,7 +1136,7 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Success and Error callbacks to run <code>{ success: () -&gt;, error: () -&gt; }</code></span>
+      <span class='desc'><code>(error, instance, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -1094,7 +1155,7 @@ Callback will get parsed JSON object as a parameter.</p>
     </div>
     <div id='footer'>
   Generated on
-  Tue Aug 27 2013 17:34:39 GMT+0700 (ICT)
+  Tue Aug 27 2013 20:14:19 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

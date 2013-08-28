@@ -126,7 +126,13 @@
       return Object.keys(this.data);
     };
 
-    Base.prototype.load = function(data) {
+    Base.prototype.load = function(data, clear) {
+      if (clear == null) {
+        clear = false;
+      }
+      if (clear) {
+        this.data = {};
+      }
       this.__fillData(data);
       return this;
     };
@@ -401,9 +407,11 @@
         callback = options;
         options = {};
       }
-      return this.model.__query(this.model.collectionPath(options, this.__source), 'GET', options.params, function(data) {
-        _this.load(data);
-        return typeof callback === "function" ? callback(data) : void 0;
+      return this.model.__query(this.model.collectionPath(options, this.__source), 'GET', options.params, function(error, data, xhr) {
+        if (data != null) {
+          _this.load(data);
+        }
+        return typeof callback === "function" ? callback(error, _this, data, xhr) : void 0;
       });
     };
 
@@ -436,6 +444,10 @@
       _ref = REST.__super__.constructor.apply(this, arguments);
       return _ref;
     }
+
+    REST.requestOptions = function(options) {
+      return this.prototype.__requestOptions = options;
+    };
 
     REST.source = function(location) {
       return this.__source = location;
@@ -541,8 +553,8 @@
         }
         path += this.__entityName.pluralize();
       }
-      if (options.from) {
-        path += "/" + options.from;
+      if (options.action) {
+        path += "/" + options.action;
       }
       return path;
     };
@@ -554,7 +566,7 @@
     };
 
     REST.prototype.memberPath = function(ids, options) {
-      var from, id, path;
+      var action, id, path;
       if (ids == null) {
         ids = [];
       }
@@ -572,13 +584,13 @@
         ids = [ids];
       }
       id = this.id() || ids.pop();
-      from = options.from;
+      action = options.action;
       ids.push(this.id());
       path = this.collectionPath(ids, Object.merge(options, {
-        from: void 0
+        action: void 0
       })) + ("/" + id);
-      if (from != null) {
-        path += "/" + from;
+      if (action != null) {
+        path += "/" + action;
       }
       return path;
     };
@@ -652,9 +664,11 @@
       if (Object.isArray(where) && where.length > 1) {
         result.__source = this.collectionPath(where);
       }
-      this.__query(path, 'GET', options.params, function(data) {
-        result.load(data);
-        return typeof callback === "function" ? callback(result, data) : void 0;
+      this.__query(path, 'GET', options.params, function(error, data, xhr) {
+        if (data != null) {
+          result.load(data);
+        }
+        return typeof callback === "function" ? callback(error, result, data, xhr) : void 0;
       });
       return result;
     };
@@ -662,17 +676,29 @@
     REST.__query = function(path, method, params, callback) {
       var options;
       options = {
+        url: path,
         data: params,
         type: method,
         cache: false,
         dataType: 'json'
       };
       if (Object.isFunction(callback)) {
-        options.success = callback;
+        options.success = function(data, _, xhr) {
+          return callback(false, data, xhr);
+        };
+        options.error = function(xhr) {
+          return callback(xhr);
+        };
       } else {
         Joosy.Module.merge(options, callback);
       }
-      return $.ajax(path, options);
+      if (this.prototype.__requestOptions instanceof Function) {
+        this.prototype.__requestOptions(options);
+      } else if (this.prototype.__requestOptions) {
+        Joosy.Module.merge(options, this.prototype.__requestOptions);
+        console.log(this.prototype.__requestOptions);
+      }
+      return $.ajax(options);
     };
 
     REST.prototype.reload = function(options, callback) {
@@ -685,9 +711,11 @@
         callback = false;
       }
       _ref1 = this.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
-      return this.constructor.__query(this.memberPath(options), 'GET', options.params, function(data) {
-        _this.load(data);
-        return typeof callback === "function" ? callback(_this) : void 0;
+      return this.constructor.__query(this.memberPath(options), 'GET', options.params, function(error, data, xhr) {
+        if (data != null) {
+          _this.load(data);
+        }
+        return typeof callback === "function" ? callback(error, _this, data, xhr) : void 0;
       });
     };
 

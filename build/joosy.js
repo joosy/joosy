@@ -932,6 +932,7 @@
         if (options == null) {
           options = {};
         }
+        this.prototype.__view = template;
         return this.prototype.__renderDefault = function(locals) {
           if (locals == null) {
             locals = {};
@@ -1026,10 +1027,14 @@
           }
           return _this.renderDynamic(template, locals, parentStackPointer);
         },
-        renderInline: function(locals, template) {
+        renderInline: function(locals, partial) {
+          var template;
           if (locals == null) {
             locals = {};
           }
+          template = function(params) {
+            return partial.apply(params);
+          };
           return _this.renderDynamic(template, locals, parentStackPointer);
         }
       };

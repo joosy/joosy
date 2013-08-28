@@ -22,9 +22,9 @@ class Joosy.Resources.RESTCollection extends Joosy.Resources.Collection
       callback = options
       options  = {}
 
-    @model.__query @model.collectionPath(options, @__source), 'GET', options.params, (error, data) =>
+    @model.__query @model.collectionPath(options, @__source), 'GET', options.params, (error, data, xhr) =>
       @load data if data?
-      callback?(error, @, data)
+      callback?(error, @, data, xhr)
 
   load: (args...) ->
     res = super(args...)

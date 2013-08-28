@@ -190,7 +190,8 @@ class Joosy.Resources.Base extends Joosy.Module
   #
   # @return [Joosy.Resources.Base]      Returns self
   #
-  load: (data) ->
+  load: (data, clear=false) ->
+    @data = {} if clear
     @__fillData data
     return this
 

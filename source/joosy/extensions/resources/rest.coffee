@@ -294,9 +294,9 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     if Object.isArray(where) && where.length > 1
       result.__source = @collectionPath where
 
-    @__query path, 'GET', options.params, (error, data) =>
+    @__query path, 'GET', options.params, (error, data, xhr) =>
       result.load data if data?
-      callback?(error, result, data)
+      callback?(error, result, data, xhr)
 
     result
 
@@ -312,7 +312,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
       dataType: 'json'
 
     if Object.isFunction(callback)
-      options.success = (data) -> callback(false, data)
+      options.success = (data, _, xhr) -> callback(false, data, xhr)
       options.error   = (xhr) -> callback(xhr)
     else
       Joosy.Module.merge options, callback
@@ -335,9 +335,9 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   reload: (options={}, callback=false) ->
     [options, callback] = @__extractOptionsAndCallback(options, callback)
 
-    @constructor.__query @memberPath(options), 'GET', options.params, (error, data) =>
+    @constructor.__query @memberPath(options), 'GET', options.params, (error, data, xhr) =>
       @load data if data?
-      callback?(error, @, data)
+      callback?(error, @, data, xhr)
 
   #
   # utility function for better API support for unrequired first options parameter

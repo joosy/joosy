@@ -15,6 +15,7 @@ Joosy.Modules.Renderer =
   #
   included: ->
     @view = (template, options={}) ->
+      @::__view = template
       @::__renderDefault = (locals={}) ->
         if options.dynamic
           @renderDynamic template, locals
@@ -98,7 +99,8 @@ Joosy.Modules.Renderer =
       @render template, locals, parentStackPointer
     renderDynamic: (template, locals={}) =>
       @renderDynamic template, locals, parentStackPointer
-    renderInline: (locals={}, template) =>
+    renderInline: (locals={}, partial) =>
+      template = (params) -> partial.apply(params)
       @renderDynamic template, locals, parentStackPointer
 
   #

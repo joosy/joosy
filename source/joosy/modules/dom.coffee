@@ -110,24 +110,27 @@ Joosy.Modules.DOM =
 
     return unless events
 
-    Object.each events, (key, method) =>
-      unless Object.isFunction method
-        method = @[method]
-      callback = (event) ->
-        method.call module, $(this), event
+    Object.each events, (keys, method) =>
+      for key in keys.split(',')
+        key = key.replace(/^\s+/, '')
 
-      match      = key.match @eventSplitter
-      eventName  = match[1]
-      selector   = @__extractSelector match[2]
+        unless Object.isFunction method
+          method = @[method]
+        callback = (event) ->
+          method.call module, $(this), event
 
-      if selector == ""
-        @$container.bind eventName, callback
-        Joosy.Modules.Log.debugAs @, "#{eventName} binded on container"
-      else if selector == undefined
-        throw new Error "Unknown element #{match[2]} in #{Joosy.Module.__className @constructor} (maybe typo?)"
-      else
-        @$container.on eventName, selector, callback
-        Joosy.Modules.Log.debugAs @, "#{eventName} binded on #{selector}"
+        match      = key.match @eventSplitter
+        eventName  = match[1]
+        selector   = @__extractSelector match[2]
+
+        if selector == ""
+          @$container.bind eventName, callback
+          Joosy.Modules.Log.debugAs @, "#{eventName} binded on container"
+        else if selector == undefined
+          throw new Error "Unknown element #{match[2]} in #{Joosy.Module.__className @constructor} (maybe typo?)"
+        else
+          @$container.on eventName, selector, callback
+          Joosy.Modules.Log.debugAs @, "#{eventName} binded on #{selector}"
 
   # @private
   __clearContainer: ->

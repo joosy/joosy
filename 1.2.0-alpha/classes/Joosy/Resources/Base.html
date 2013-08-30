@@ -127,7 +127,8 @@
           <td>Includes:</td>
           <td>
                         <a href='../../../mixins/Joosy/Modules/Log.html'>Joosy.Modules.Log</a>,
-            <a href='../../../mixins/Joosy/Modules/Events.html'>Joosy.Modules.Events</a>
+                        <a href='../../../mixins/Joosy/Modules/Events.html'>Joosy.Modules.Events</a>,
+            <a href='../../../mixins/Joosy/Modules/Filters.html'>Joosy.Modules.Filters</a>
           </td>
         </tr>
       </table>
@@ -164,22 +165,22 @@ r(&#39;foo.bar&#39;, &#39;fluffy&#39;)    # triggers &#39;changed&#39;</code></p
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#resetIdentity-class'>
-        + (void) <strong>resetIdentity</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      Clears the identity map cache.
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#beforeLoad-class'>
         + (void) <strong>beforeLoad</strong>(action)
       </a>
     </span>
     <span class='desc'>
       Allows to modify data before it gets stored.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#resetIdentity-class'>
+        + (void) <strong>resetIdentity</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Clears the identity map cache.
     </span>
   </li>
   <li>
@@ -234,6 +235,16 @@ r(&#39;foo.bar&#39;, &#39;fluffy&#39;)    # triggers &#39;changed&#39;</code></p
   </li>
   <li>
     <span class='signature'>
+      <a href='#grab-class'>
+        + (void) <strong>grab</strong>(form)
+      </a>
+    </span>
+    <span class='desc'>
+      Creates new instance of Resource using values from form
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#__makeShim-class'>
         + (void) <strong>__makeShim</strong>(proto)
       </a>
@@ -283,6 +294,16 @@ r(&#39;foo.bar&#39;, &#39;fluffy&#39;)    # triggers &#39;changed&#39;</code></p
     </span>
     <span class='desc'>
       Set the resource data manually
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#grab-instance'>
+        - (void) <strong>grab</strong>(form)
+      </a>
+    </span>
+    <span class='desc'>
+      Updates the Resource with a data from given form
     </span>
   </li>
   <li>
@@ -397,19 +418,15 @@ r(&#39;foo.bar&#39;, &#39;fluffy&#39;)    # triggers &#39;changed&#39;</code></p
                 <a href='../../../mixins/Joosy/Modules/Events.html#synchronize-mixin'>#synchronize</a>,
         <a href='../../../mixins/Joosy/Modules/Events.html#__splitEvents-mixin'>#__splitEvents</a>
       </p>
+      <h3 class='included'>
+        Methods included from
+        <a href='../../../mixins/Joosy/Modules/Filters.html'>Joosy.Modules.Filters</a>
+      </h3>
+      <p class='included'>
+        <a href='../../../mixins/Joosy/Modules/Filters.html#included-mixin'>#included</a>
+      </p>
       <h2>Class Method Details</h2>
       <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='resetIdentity-class'>
-      + (void) <strong>resetIdentity</strong>()
-    </p>
-    <div class='docstring'>
-  <p>Clears the identity map cache. Recomended to be called during layout switch to
-ensure correct garbage collection.</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
   <div class='method_details'>
     <p class='signature' id='beforeLoad-class'>
       + (void) <strong>beforeLoad</strong>(action)
@@ -430,6 +447,17 @@ You can define several beforeLoad filters that will be chained.</p>
       <span class='desc'><code>(Object) -&gt; Object</code> to call</span>
     </li>
   </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='resetIdentity-class'>
+      + (void) <strong>resetIdentity</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Clears the identity map cache. Recomended to be called during layout switch to
+ensure correct garbage collection.</p>
+</div>
+<div class='tags'>
 </div>
   </div>
   <div class='method_details'>
@@ -566,6 +594,27 @@ data changes. See class example</p>
 </div>
   </div>
   <div class='method_details'>
+    <p class='signature' id='grab-class'>
+      + (void) <strong>grab</strong>(form)
+    </p>
+    <div class='docstring'>
+  <p>Creates new instance of Resource using values from form</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>form</span>
+      <span class='type'>
+        (<tt>DOMElement</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Form to grab</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='__makeShim-class'>
       + (void) <strong>__makeShim</strong>(proto)
     </p>
@@ -639,6 +688,27 @@ data changes. See class example</p>
       (<tt><a href='../../../classes/Joosy/Resources/Base.html'>Joosy.Resources.Base</a></tt>)
       &mdash;
       <span class='desc'>Returns self</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='grab-instance'>
+      - (void) <strong>grab</strong>(form)
+    </p>
+    <div class='docstring'>
+  <p>Updates the Resource with a data from given form</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>form</span>
+      <span class='type'>
+        (<tt>DOMElement</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Form to grab</span>
     </li>
   </ul>
 </div>
@@ -804,7 +874,7 @@ data changes. See class example</p>
     </div>
     <div id='footer'>
   Generated on
-  Wed Aug 28 2013 23:47:14 GMT+0700 (ICT)
+  Fri Aug 30 2013 20:50:07 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

@@ -511,26 +511,33 @@
       if (!events) {
         return;
       }
-      return Object.each(events, function(key, method) {
-        var callback, eventName, match, selector;
-        if (!Object.isFunction(method)) {
-          method = _this[method];
+      return Object.each(events, function(keys, method) {
+        var callback, eventName, key, match, selector, _i, _len, _ref, _results;
+        _ref = keys.split(',');
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          key = _ref[_i];
+          key = key.replace(/^\s+/, '');
+          if (!Object.isFunction(method)) {
+            method = _this[method];
+          }
+          callback = function(event) {
+            return method.call(module, $(this), event);
+          };
+          match = key.match(_this.eventSplitter);
+          eventName = match[1];
+          selector = _this.__extractSelector(match[2]);
+          if (selector === "") {
+            _this.$container.bind(eventName, callback);
+            _results.push(Joosy.Modules.Log.debugAs(_this, "" + eventName + " binded on container"));
+          } else if (selector === void 0) {
+            throw new Error("Unknown element " + match[2] + " in " + (Joosy.Module.__className(_this.constructor)) + " (maybe typo?)");
+          } else {
+            _this.$container.on(eventName, selector, callback);
+            _results.push(Joosy.Modules.Log.debugAs(_this, "" + eventName + " binded on " + selector));
+          }
         }
-        callback = function(event) {
-          return method.call(module, $(this), event);
-        };
-        match = key.match(_this.eventSplitter);
-        eventName = match[1];
-        selector = _this.__extractSelector(match[2]);
-        if (selector === "") {
-          _this.$container.bind(eventName, callback);
-          return Joosy.Modules.Log.debugAs(_this, "" + eventName + " binded on container");
-        } else if (selector === void 0) {
-          throw new Error("Unknown element " + match[2] + " in " + (Joosy.Module.__className(_this.constructor)) + " (maybe typo?)");
-        } else {
-          _this.$container.on(eventName, selector, callback);
-          return Joosy.Modules.Log.debugAs(_this, "" + eventName + " binded on " + selector);
-        }
+        return _results;
       });
     },
     __clearContainer: function() {
@@ -2370,7 +2377,7 @@
         } else if (Object.isFunction(action)) {
           return action(params);
         } else {
-          throw new "Unknown kind of route action";
+          throw new Error("Unknown kind of route action: " + action);
         }
       });
       return this.initialized = true;

@@ -101,7 +101,7 @@ module.exports = (grunt) ->
   #
   grunt.registerTask 'default', 'testem'
 
-  grunt.registerTask 'build', 'grill:compile'
+  grunt.registerTask 'build', ['bowerize', 'grill:compile']
 
   grunt.registerTask 'test', ->
     grunt.task.run 'coffeelint'

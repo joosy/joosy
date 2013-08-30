@@ -50,7 +50,7 @@ class Joosy.Application
       else if Object.isFunction(action)
         action(params)
       else
-        throw new "Unknown kind of route action"
+        throw new Error "Unknown kind of route action: #{action}"
 
     @initialized = true
 

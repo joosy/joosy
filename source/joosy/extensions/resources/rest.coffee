@@ -321,7 +321,6 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
       @::__requestOptions(options)
     else if @::__requestOptions
       Joosy.Module.merge options, @::__requestOptions
-      console.log @::__requestOptions
 
     $.ajax options
 

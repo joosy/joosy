@@ -17,10 +17,18 @@
 #
 # @include Joosy.Modules.Log
 # @include Joosy.Modules.Events
+# @include Joosy.Modules.Filters
+#
+# @method .beforeLoad(callback)
+#   Allows to modify data before it gets stored.
+#   You can define several beforeLoad filters that will be chained.
+#   @param [Function] action    `(Object) -> Object` to call
+#
 #
 class Joosy.Resources.Base extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
+  @include Joosy.Modules.Filters
 
   #
   # Default primary key field 'id'
@@ -34,16 +42,7 @@ class Joosy.Resources.Base extends Joosy.Module
   @resetIdentity: ->
     Joosy.Resources.Base.identity = {}
 
-  #
-  # Allows to modify data before it gets stored.
-  # You can define several beforeLoad filters that will be chained.
-  #
-  # @param [Function] action    `(Object) -> Object` to call
-  #
-  @beforeLoad: (action) ->
-    unless @::hasOwnProperty '__beforeLoads'
-      @::__beforeLoads = [].concat @.__super__.__beforeLoads || []
-    @::__beforeLoads.push action
+  @registerPlainFilters 'beforeLoad'
 
   #
   # Sets the field containing primary key.
@@ -150,6 +149,14 @@ class Joosy.Resources.Base extends Joosy.Module
     shim
 
   #
+  # Creates new instance of Resource using values from form
+  #
+  # @param [DOMElement] form      Form to grab
+  #
+  @grab: (form) ->
+    @build({}).grab form
+
+  #
   # Makes base shim-function for making instances through build or making instance clones
   #
   # @param [Object] proto         Any function or object whose properties will be inherited by a new function
@@ -193,7 +200,23 @@ class Joosy.Resources.Base extends Joosy.Module
   load: (data, clear=false) ->
     @data = {} if clear
     @__fillData data
-    return this
+    return @
+
+  #
+  # Updates the Resource with a data from given form
+  #
+  # @param [DOMElement] form      Form to grab
+  #
+  grab: (form) ->
+    data = {}
+    for field in $(form).serializeArray()
+      unless data[field.name]
+        data[field.name] = field.value
+      else
+        data[field.name] = [data[field.name]] unless data[field.name] instanceof Array
+        data[field.name].push field.value
+
+    @load data
 
   #
   # Getter for wrapped data

@@ -9,18 +9,15 @@
 
     Base.include(Joosy.Modules.Events);
 
+    Base.include(Joosy.Modules.Filters);
+
     Base.prototype.__primaryKey = 'id';
 
     Base.resetIdentity = function() {
       return Joosy.Resources.Base.identity = {};
     };
 
-    Base.beforeLoad = function(action) {
-      if (!this.prototype.hasOwnProperty('__beforeLoads')) {
-        this.prototype.__beforeLoads = [].concat(this.__super__.__beforeLoads || []);
-      }
-      return this.prototype.__beforeLoads.push(action);
-    };
+    Base.registerPlainFilters('beforeLoad');
 
     Base.primaryKey = function(primaryKey) {
       return this.prototype.__primaryKey = primaryKey;
@@ -93,6 +90,10 @@
       return shim;
     };
 
+    Base.grab = function(form) {
+      return this.build({}).grab(form);
+    };
+
     Base.__makeShim = function(proto) {
       var key, shim, value;
       shim = function() {
@@ -135,6 +136,24 @@
       }
       this.__fillData(data);
       return this;
+    };
+
+    Base.prototype.grab = function(form) {
+      var data, field, _i, _len, _ref;
+      data = {};
+      _ref = $(form).serializeArray();
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        field = _ref[_i];
+        if (!data[field.name]) {
+          data[field.name] = field.value;
+        } else {
+          if (!(data[field.name] instanceof Array)) {
+            data[field.name] = [data[field.name]];
+          }
+          data[field.name].push(field.value);
+        }
+      }
+      return this.load(data);
     };
 
     Base.prototype.__get = function(path) {
@@ -696,7 +715,6 @@
         this.prototype.__requestOptions(options);
       } else if (this.prototype.__requestOptions) {
         Joosy.Module.merge(options, this.prototype.__requestOptions);
-        console.log(this.prototype.__requestOptions);
       }
       return $.ajax(options);
     };

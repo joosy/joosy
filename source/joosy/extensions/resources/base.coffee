@@ -325,3 +325,6 @@ class Joosy.Resources.Base extends Joosy.Module
     else if Object.isObject data[name]
       data[name] = klass.build data[name]
     data
+
+  toString: ->
+    "<Resource #{@__entityName}> #{JSON.stringify(@data)}"

@@ -8,10 +8,16 @@ module.exports = (grunt) ->
   testemOptions = (vendor, specs) ->
     return {
       src: grunt.util._([
+        [
           'bower_components/sinonjs/sinon.js',
           'bower_components/sugar/release/sugar-full.min.js',
           'spec/helpers/*.coffee'
-        ], vendor, 'joosy.coffee', specs).flatten()
+        ], 
+        vendor, 
+        'joosy.coffee', 
+        specs
+      ]).flatten()
+
       assets:
         setup: ->
           grunt.grill.assetter('development').environment
@@ -108,7 +114,7 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'publish', [
     'test',
-    'build',
+    'compile',
     'ensureCommits',
     'gh-pages',
     'release',

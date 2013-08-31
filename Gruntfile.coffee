@@ -1,5 +1,4 @@
-require 'sugar'
-
+moment = require 'moment'
 semver = require 'semver'
 
 module.exports = (grunt) ->
@@ -8,11 +7,11 @@ module.exports = (grunt) ->
   #
   testemOptions = (vendor, specs) ->
     return {
-      src: Array.create([
+      src: grunt.util._([
           'bower_components/sinonjs/sinon.js',
           'bower_components/sugar/release/sugar-full.min.js',
           'spec/helpers/*.coffee'
-        ], vendor, 'joosy.coffee', specs)
+        ], vendor, 'joosy.coffee', specs).flatten()
       assets:
         setup: ->
           grunt.grill.assetter('development').environment
@@ -101,7 +100,7 @@ module.exports = (grunt) ->
   #
   grunt.registerTask 'default', 'testem'
 
-  grunt.registerTask 'build', ['bowerize', 'grill:compile']
+  grunt.registerTask 'compile', ['bowerize', 'grill:compile']
 
   grunt.registerTask 'test', ->
     grunt.task.run 'coffeelint'
@@ -169,7 +168,7 @@ module.exports = (grunt) ->
 
     date = (version) ->
       return undefined unless version
-      Date.create(grunt.file.read "doc/#{version}/DATE").format "{d} {Month} {yyyy}"
+      moment(grunt.file.read "doc/#{version}/DATE").format "D MMMM YYYY"
 
     args = ['source', '--output-dir', destination]
     grunt.file.delete destination if grunt.file.exists destination
@@ -183,9 +182,9 @@ module.exports = (grunt) ->
         versions.push version if semver.valid(version)
 
       versions = versions.sort(semver.rcompare)
-      edge     = versions.filter((x) -> x.has('-')).first()
-      stable   = versions.filter((x) -> !x.has('-')).first()
-      versions = versions.remove edge, stable
+      edge     = versions.filter((x) -> x.indexOf('-') != -1)[0]
+      stable   = versions.filter((x) -> x.indexOf('-') == -1)[0]
+      versions = grunt.util._(versions).without edge, stable
 
       versions = {
         edge:

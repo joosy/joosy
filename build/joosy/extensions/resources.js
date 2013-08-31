@@ -260,6 +260,10 @@
       return data;
     };
 
+    Base.prototype.toString = function() {
+      return "<Resource " + this.__entityName + "> " + (JSON.stringify(this.data));
+    };
+
     return Base;
 
   })(Joosy.Module);

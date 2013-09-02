@@ -11,8 +11,8 @@
 #   class @RumbaPage extends Joosy.Page
 #     @view 'rumba'
 #
-# @include Joosy.Modules.Page_Scrolling
-# @extend  Joosy.Modules.Page_Title
+# @include Joosy.Modules.Page.Scrolling
+# @extend  Joosy.Modules.Page.Title
 #
 class Joosy.Page extends Joosy.Widget
   #
@@ -23,8 +23,8 @@ class Joosy.Page extends Joosy.Widget
   @layout: (layoutClass) ->
     @::__layoutClass = layoutClass
 
-  @include Joosy.Modules.Page_Scrolling
-  @extend  Joosy.Modules.Page_Title
+  @include Joosy.Modules.Page.Scrolling
+  @extend  Joosy.Modules.Page.Title
 
   #
   # @param [Hash] params             Route params

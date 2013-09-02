@@ -153,14 +153,14 @@ describe "Joosy.Modules.Events", ->
 
       waits 3
 
-  describe "namespece", ->
+  describe "namespace", ->
 
     beforeEach ->
       @callback = sinon.spy()
 
     it "proxies events", ->
       eventer   = new @Eventer
-      namespace = new Joosy.Events.Namespace(eventer)
+      namespace = eventer.eventsNamespace()
 
       namespace.bind 'event1', @callback
       namespace.bind 'event2', @callback
@@ -170,9 +170,21 @@ describe "Joosy.Modules.Events", ->
 
       expect(@callback.callCount).toEqual 2
 
+    it "assigns with callback", ->
+      callback  = @callback
+      eventer   = new @Eventer
+      namespace = eventer.eventsNamespace ->
+        @bind 'event1', callback
+        @bind 'event2', callback
+
+      eventer.trigger 'event1'
+      eventer.trigger 'event2'
+
+      expect(@callback.callCount).toEqual 2
+
     it "unbinds events", ->
       eventer   = new @Eventer
-      namespace = new Joosy.Events.Namespace(eventer)
+      namespace = eventer.eventsNamespace()
 
       namespace.bind 'event1', @callback
       namespace.bind 'event2', @callback

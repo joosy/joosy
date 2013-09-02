@@ -1,5 +1,4 @@
 #= require joosy/joosy
-#= require_tree ../events
 
 # @private
 class SynchronizationContext
@@ -8,11 +7,55 @@ class SynchronizationContext
   after: (@after) ->
 
 #
+# @private
+# Events namespace
+#
+# Creates unified collection of bindings to a particular instance
+# that can be unbinded alltogether
+#
+# @example
+#   namespace = new Namespace(something)
+#
+#   namespace.bind 'event1', ->
+#   namespace.bind 'event2', ->
+#   namespace.unbind() # unbinds both bindings
+#
+class Namespace
+  #
+  # @param [Object] @parent         Any instance that can trigger events
+  #
+  constructor: (@parent) ->
+    @bindings = []
+
+  bind: (args...) ->
+    @bindings.push @parent.bind(args...)
+
+  unbind: ->
+    @parent.unbind b for b in @bindings
+    @bindings = []
+
+
+#
 # Basic events implementation
 #
 # @mixin
 #
 Joosy.Modules.Events =
+
+  #
+  # Creates events namespace
+  #
+  # @example
+  #   namespace = @entity.eventsNamespace, ->
+  #     @bind 'action1', ->
+  #     @bind 'action2', ->
+  #
+  #   namespace.unbind()
+  #
+  eventsNamespace: (actions) ->
+    namespace = new Namespace @
+    actions?.call?(namespace)
+    namespace
 
   #
   # Waits for the list of given events to happen at least once. Then runs callback.

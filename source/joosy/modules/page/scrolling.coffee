@@ -1,5 +1,7 @@
+#= require ../page
+
 # @mixin
-Joosy.Modules.Page_Scrolling =
+Joosy.Modules.Page.Scrolling =
 
   included: ->
     #

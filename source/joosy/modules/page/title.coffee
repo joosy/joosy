@@ -1,5 +1,7 @@
+#= require ../page
+
 # @mixin
-Joosy.Modules.Page_Title =
+Joosy.Modules.Page.Title =
 
   #
   # Sets the page HTML title.

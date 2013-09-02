@@ -35,8 +35,8 @@ describe "Joosy.Page", ->
       Joosy.Router.navigate.restore()
 
     it "respects beforeFilters cancelation", ->
-      sinon.stub @Page.prototype, '__runBeforeLoads'
-      @Page::__runBeforeLoads.returns(false)
+      sinon.stub @Page.prototype, '__confirmBeforeLoads'
+      @Page::__confirmBeforeLoads.returns(false)
 
       new @Page $('#application')
 

@@ -25,7 +25,7 @@
 #   @param [Function] action    `(Object) -> Object` to call
 #
 #
-class Joosy.Resources.Base extends Joosy.Module
+class Joosy.Resources.Base extends Joosy.Function
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
   @include Joosy.Modules.Filters
@@ -122,31 +122,22 @@ class Joosy.Resources.Base extends Joosy.Module
   # @return [Joosy.Resources.Base]
   #
   @build: (data={}) ->
-    klass = @::__entityName
-
-    Joosy.Resources.Base.identity ||= {}
-    Joosy.Resources.Base.identity[klass] ||= {}
-
-    shim = @__makeShim(@::)
-
     if Object.isNumber(data) || Object.isString(data)
       id   = data
       data = {}
-      data[shim.__primaryKey] = id
+      data[@::__primaryKey] = id
 
-    if Joosy.Resources.Base.identity
-      id = data[shim.__primaryKey]
+    klass = @::__entityName
+    id    = data[@::__primaryKey]
 
-      if id? && Joosy.Resources.Base.identity[klass][id]
-        shim = Joosy.Resources.Base.identity[klass][id]
-        shim.load data
-      else
-        Joosy.Resources.Base.identity[klass][id] = shim
-        @apply shim, [data]
+    if klass? && id?
+      Joosy.Resources.Base.identity            ?= {}
+      Joosy.Resources.Base.identity[klass]     ?= {}
+      Joosy.Resources.Base.identity[klass][id] ?= new @ id: id
+
+      Joosy.Resources.Base.identity[klass][id].load data
     else
-      @apply shim, [data]
-
-    shim
+      new @ data
 
   #
   # Creates new instance of Resource using values from form
@@ -157,32 +148,14 @@ class Joosy.Resources.Base extends Joosy.Module
     @build({}).grab form
 
   #
-  # Makes base shim-function for making instances through build or making instance clones
-  #
-  # @param [Object] proto         Any function or object whose properties will be inherited by a new function
-  #
-  @__makeShim: (proto) ->
-    shim = ->
-      shim.__call.apply shim, arguments
-
-    if shim.__proto__
-      shim.__proto__ = proto
-    else
-      for key, value of proto
-        shim[key] = value
-
-    shim.constructor = @
-
-    shim
-
-  #
   # Should NOT be called directly, use {::build} instead
   #
   # @private
   # @param [Object] data      Data to store
   #
   constructor: (data={}) ->
-    @__fillData data, false
+    return super ->
+      @__fillData data, false
 
   id: ->
     @data?[@__primaryKey]
@@ -312,10 +285,7 @@ class Joosy.Resources.Base extends Joosy.Module
       name = @__entityName.camelize(false)
       data = data[name] if data[name]
 
-    if @__beforeLoads?
-      data = bl.call(this, data) for bl in @__beforeLoads
-
-    data
+    @__applyBeforeLoads data
 
   __map: (data, name, klass) ->
     if Object.isArray data[name]

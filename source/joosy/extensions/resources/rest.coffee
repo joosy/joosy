@@ -54,7 +54,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
 
 
   #
-  # Creates the proxy of current resource instance binded as a child of given entity
+  # Creates the proxy of current resource instance binded as a children of given entity
   #
   # @param [Array] args      Array of parent entities. Can be a string or another REST resource.
   #
@@ -64,9 +64,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   # @note accepts both array notation (comment.at(['admin', @blog, @post])) and args notation (comment.at('admin', @blog, @post))
   #
   at: (args...) ->
-    @constructor.__atWrapper (callback) =>
-      Object.tap @constructor.__makeShim(@), callback
-    , args...
+    new (@constructor.at args...) @data
 
   #
   # Implements `@collection` default behavior.

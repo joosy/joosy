@@ -31,6 +31,8 @@ describe "Joosy", ->
       'joosy/modules/renderer',
       'joosy/modules/time_manager',
       'joosy/page',
+      'joosy/resources/array',
+      'joosy/resources/scalar',
       'joosy/resources/watcher',
       'joosy/router',
       'joosy/templaters/jst',

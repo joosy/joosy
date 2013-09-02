@@ -112,9 +112,9 @@ class Joosy.Module
 
     for key, value of object
       if key != 'included' && key != 'extended'
-        this::[key] = value
+        @::[key] = value
 
-    object.included?.apply this
+    object.included?.apply @
     null
 
   #
@@ -130,6 +130,34 @@ class Joosy.Module
 
     object.extended?.apply this
     null
+
+#
+# Class allowing to emulate Fn-based instances in JS
+#
+# @example
+#   class Foo extends Joosy.Module.Function
+#     constructor: (value)
+#       return super ->
+#         @value = value
+#
+#   __call: -> @value
+#
+#   foo = new Foo 'test'
+#   typeof(foo)             # 'function'
+#   foo()                   # 'test'
+#
+class Joosy.Function extends Joosy.Module
+  constructor: (setup) ->
+    shim = -> shim.__call.apply shim, arguments
+
+    if shim.__proto__
+      shim.__proto__ = @
+    else
+      shim[key] = value for key, value of @
+
+    shim.constructor = @constructor
+    setup?.call(shim)
+    return shim
 
 # AMD wrapper
 if define?.amd?

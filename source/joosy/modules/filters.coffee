@@ -18,7 +18,7 @@ Joosy.Modules.Filters =
   #
   #     # private
   #
-  #     @__runBeforeLoads() # Runs filters registered as beforeLoad
+  #     @__confirmBeforeLoads() # Runs filters registered as beforeLoad
   #     @__runAfterLoads() # Runs filters registered as afterLoad
   #     @__runAfterUnloads() # Runs filters registered as afterUnload
   #
@@ -36,12 +36,28 @@ Joosy.Modules.Filters =
         camelized = @__registerFilterCollector filter
 
         @::["__run#{camelized}s"] = (params...) ->
+          return unless @["__#{filter}s"]
+
+          for callback in @["__#{filter}s"]
+            callback = @[callback] unless typeof(callback) == 'function'
+            callback.apply(@, params)
+
+        @::["__confirm#{camelized}s"] = (params...) ->
           return true unless @["__#{filter}s"]
 
           @["__#{filter}s"].reduce (flag, callback) =>
-            callback = @[callback] unless Object.isFunction callback
+            callback = @[callback] unless typeof(callback) == 'function'
             flag && callback.apply(@, params) != false
           , true
+
+        @::["__apply#{camelized}s"] = (data, params...) ->
+          return data unless @["__#{filter}s"]
+
+          for callback in @["__#{filter}s"]
+            callback = @[callback] unless typeof(callback) == 'function'
+            data = callback.apply(@, [data].concat params)
+
+          data
 
     @registerSequencedFilters = (filters...) =>
       filters.each (filter) =>

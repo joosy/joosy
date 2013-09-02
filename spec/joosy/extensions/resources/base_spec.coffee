@@ -148,6 +148,7 @@ describe "Joosy.Resources.Base", ->
     it "handles nested bi-directional reference", ->
       biDirectionTestNode = TestNode.build
         id: 1
-        children: [{id: 2, parent: {id: 1}}]
+        yolo: true
+        children: [{id: 2, parent: {id: 1, yolo: true}}]
 
       expect(biDirectionTestNode).toEqual(biDirectionTestNode('children').at(0)('parent'))

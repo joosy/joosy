@@ -41,7 +41,7 @@ describe "Joosy.Modules.Filters", ->
       @Filters.afterLoad callbacks[1]
       @Filters.afterUnload callbacks[2]
 
-      @filters.__runBeforeLoads 1, 2
+      @filters.__confirmBeforeLoads 1, 2
       @filters.__runAfterLoads 1, 2
       @filters.__runAfterUnloads 1, 2
 
@@ -60,7 +60,7 @@ describe "Joosy.Modules.Filters", ->
         callbacks[0].returns true
         callbacks[1].returns true
 
-        expect(@filters.__runBeforeLoads()).toBeTruthy()
+        expect(@filters.__confirmBeforeLoads()).toBeTruthy()
 
         expect(callbacks[0].callCount).toEqual 1
         expect(callbacks[1].callCount).toEqual 1
@@ -74,7 +74,7 @@ describe "Joosy.Modules.Filters", ->
         callbacks[0].returns true
         callbacks[1].returns false
 
-        expect(@filters.__runBeforeLoads()).toBeFalsy()
+        expect(@filters.__confirmBeforeLoads()).toBeFalsy()
 
         expect(callbacks[0].callCount).toEqual 1
         expect(callbacks[1].callCount).toEqual 1
@@ -87,7 +87,7 @@ describe "Joosy.Modules.Filters", ->
       @Filters.afterLoad   'callback1'
       @Filters.afterUnload 'callback2'
         
-      @filters.__runBeforeLoads()
+      @filters.__confirmBeforeLoads()
       @filters.__runAfterLoads()
       @filters.__runAfterUnloads()
 
@@ -188,47 +188,3 @@ describe "Joosy.Modules.Filters", ->
 
       @filters.__runBeforeLoads ['test'], ->
         expect(spies).toBeSequenced()
-
-    # describe "chaining", ->
-
-    #   it "evaluates", ->
-    #     callbacks = 0.upto(1).map =>
-    #       callback = sinon.stub()
-    #       @Filters.beforeLoad callback
-    #       callback
-
-    #     callbacks[0].returns true
-    #     callbacks[1].returns true
-
-    #     expect(@filters.__runBeforeLoads()).toBeTruthy()
-
-    #     expect(callbacks[0].callCount).toEqual 1
-    #     expect(callbacks[1].callCount).toEqual 1
-
-    #   it "breaks on false", ->
-    #     callbacks = 0.upto(2).map =>
-    #       callback = sinon.stub()
-    #       @Filters.beforeLoad callback
-    #       callback
-
-    #     callbacks[0].returns true
-    #     callbacks[1].returns false
-
-    #     expect(@filters.__runBeforeLoads()).toBeFalsy()
-
-    #     expect(callbacks[0].callCount).toEqual 1
-    #     expect(callbacks[1].callCount).toEqual 1
-    #     expect(callbacks[2].callCount).toEqual 0
-
-    # it "accepts method names as callbacks", ->
-    #   @filters['callback' + i] = sinon.spy() for i in 0.upto(2)
-
-    #   @Filters.beforeLoad  'callback0'
-    #   @Filters.afterLoad   'callback1'
-    #   @Filters.afterUnload 'callback2'
-        
-    #   @filters.__runBeforeLoads()
-    #   @filters.__runAfterLoads()
-    #   @filters.__runAfterUnloads()
-
-    #   expect(@filters['callback' + i].callCount).toEqual 1 for i in 0.upto(2)

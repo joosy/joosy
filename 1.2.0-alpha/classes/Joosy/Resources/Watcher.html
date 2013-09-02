@@ -124,13 +124,6 @@
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <h3>!!!UNSPECED</h3>
-
-</div>
-<div class='tags'>
-</div>
       <h2>Class Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -153,23 +146,13 @@
       
     </span>
   </li>
-  <li>
-    <span class='signature'>
-      <a href='#beforeLoad-class'>
-        + (void) <strong>beforeLoad</strong>(action)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
 </ul>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
-        - (void) <strong>constructor</strong>(cacheKey = false, fetcher = false)
+        - (void) <strong>constructor</strong>(callback, cacheKey = false, fetcher = false)
       </a>
     </span>
     <span class='constructor note title'>Constructor</span>
@@ -179,18 +162,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#load-instance'>
-        - (void) <strong>load</strong>(callback)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#clone-instance'>
-        - (void) <strong>clone</strong>()
+        - (void) <strong>clone</strong>(callback)
       </a>
     </span>
     <span class='desc'>
@@ -201,16 +174,6 @@
     <span class='signature'>
       <a href='#refresh-instance'>
         - (void) <strong>refresh</strong>(callback)
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#prepare-instance'>
-        - (void) <strong>prepare</strong>(data)
       </a>
     </span>
     <span class='desc'>
@@ -250,19 +213,12 @@
     <div class='tags'>
 </div>
   </div>
-  <div class='method_details'>
-    <p class='signature' id='beforeLoad-class'>
-      + (void) <strong>beforeLoad</strong>(action)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
 </div>
       <h2>Constructor Details</h2>
       <div class='methods'>
   <div class='method_details'>
     <p class='signature' id='constructor-instance'>
-      - (void) <strong>constructor</strong>(cacheKey = false, fetcher = false)
+      - (void) <strong>constructor</strong>(callback, cacheKey = false, fetcher = false)
     </p>
     <div class='tags'>
 </div>
@@ -271,15 +227,8 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='load-instance'>
-      - (void) <strong>load</strong>(callback)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
     <p class='signature' id='clone-instance'>
-      - (void) <strong>clone</strong>()
+      - (void) <strong>clone</strong>(callback)
     </p>
     <div class='tags'>
 </div>
@@ -291,18 +240,11 @@
     <div class='tags'>
 </div>
   </div>
-  <div class='method_details'>
-    <p class='signature' id='prepare-instance'>
-      - (void) <strong>prepare</strong>(data)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Fri Aug 30 2013 20:50:07 GMT+0700 (ICT)
+  Mon Sep 02 2013 20:15:20 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

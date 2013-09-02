@@ -120,7 +120,7 @@
         <tr>
           <td>Inherits:</td>
           <td>
-            <a href='../../../classes/Joosy/Module.html'>Joosy.Module</a>
+            <a href='../../../classes/Joosy/Function.html'>Joosy.Function</a>
           </td>
         </tr>
         <tr>
@@ -241,16 +241,6 @@ r(&#39;foo.bar&#39;, &#39;fluffy&#39;)    # triggers &#39;changed&#39;</code></p
     </span>
     <span class='desc'>
       Creates new instance of Resource using values from form
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#__makeShim-class'>
-        + (void) <strong>__makeShim</strong>(proto)
-      </a>
-    </span>
-    <span class='desc'>
-      Makes base shim-function for making instances through build or making instance clones
     </span>
   </li>
 </ul>
@@ -376,10 +366,27 @@ r(&#39;foo.bar&#39;, &#39;fluffy&#39;)    # triggers &#39;changed&#39;</code></p
       
     </span>
   </li>
+  <li>
+    <span class='signature'>
+      <a href='#toString-instance'>
+        - (void) <strong>toString</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
 </ul>
       <h2>
         <small>Inherited Method Summary</small>
       </h2>
+      <h3 class='inherited'>
+        Methods inherited from
+        <a href='../../../classes/Joosy/Function.html'>Joosy.Function</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../../classes/Joosy/Function.html#constructor-instance'>#constructor</a>
+      </p>
       <h3 class='inherited'>
         Methods inherited from
         <a href='../../../classes/Joosy/Module.html'>Joosy.Module</a>
@@ -610,27 +617,6 @@ data changes. See class example</p>
       </span>
       &mdash;
       <span class='desc'>Form to grab</span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='__makeShim-class'>
-      + (void) <strong>__makeShim</strong>(proto)
-    </p>
-    <div class='docstring'>
-  <p>Makes base shim-function for making instances through build or making instance clones</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>proto</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Any function or object whose properties will be inherited by a new function</span>
     </li>
   </ul>
 </div>
@@ -870,11 +856,18 @@ data changes. See class example</p>
     <div class='tags'>
 </div>
   </div>
+  <div class='method_details'>
+    <p class='signature' id='toString-instance'>
+      - (void) <strong>toString</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
 </div>
     </div>
     <div id='footer'>
   Generated on
-  Fri Aug 30 2013 20:50:07 GMT+0700 (ICT)
+  Mon Sep 02 2013 20:15:20 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

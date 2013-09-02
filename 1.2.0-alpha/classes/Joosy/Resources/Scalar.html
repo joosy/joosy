@@ -17,9 +17,9 @@
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
-    <span class='title'>Modules</span>
+    <span class='title'>Resources</span>
     &raquo;
-    <span class='title'>Log</span>
+    <span class='title'>Scalar</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -109,112 +109,153 @@
 </div>
     <div id='content'>
       <h1>
-        Mixin:
-        Joosy.Modules.Log
+        Class:
+        Joosy.Resources.Scalar
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>source&#47;joosy&#47;modules&#47;log.coffee</td>
+          <td>source&#47;joosy&#47;resources&#47;scalar.coffee</td>
         </tr>
         <tr>
-          <td>Included in:</td>
+          <td>Inherits:</td>
           <td>
-                        <a href='../../../classes/Joosy/Resources/Base.html'>Joosy.Resources.Base</a>,
-                        <a href='../../../classes/Joosy/Resources/RESTCollection.html'>Joosy.Resources.RESTCollection</a>,
-                        <a href='../../../classes/Joosy/Form.html'>Joosy.Form</a>,
-            <a href='../../../classes/Joosy/Widget.html'>Joosy.Widget</a>
+            <a href='../../../classes/Joosy/Function.html'>Joosy.Function</a>
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Wrappers for console.log</p>
-</div>
-<div class='tags'>
-</div>
-      <h2>Method Summary</h2>
+      <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#log-mixin'>
-        ? (void) <strong>log</strong>(args...)
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(value)
       </a>
     </span>
+    <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      Checks if console is available and proxies given arguments directly to <code>console.log</code>
+      
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#debug-mixin'>
-        ? (void) <strong>debug</strong>(args...)
+      <a href='#__call-instance'>
+        - (void) <strong>__call</strong>()
       </a>
     </span>
     <span class='desc'>
-      Runs <code>log</code> if debug is active
+      
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#debugAs-mixin'>
-        ? (void) <strong>debugAs</strong>(context, string, args...)
+      <a href='#get-instance'>
+        - (void) <strong>get</strong>()
       </a>
     </span>
     <span class='desc'>
-      Logs given message wrapping it with description of given object (class name)
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#set-instance'>
+        - (void) <strong>set</strong>(value)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#valueOf-instance'>
+        - (void) <strong>valueOf</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#toString-instance'>
+        - (void) <strong>toString</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
     </span>
   </li>
 </ul>
-      <h2>Method Details</h2>
+      <h2>
+        <small>Inherited Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods inherited from
+        <a href='../../../classes/Joosy/Function.html'>Joosy.Function</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../../classes/Joosy/Function.html#constructor-instance'>#constructor</a>
+      </p>
+      <h3 class='inherited'>
+        Methods inherited from
+        <a href='../../../classes/Joosy/Module.html'>Joosy.Module</a>
+      </h3>
+      <p class='inherited'>
+                <a href='../../../classes/Joosy/Module.html#__className-class'>.__className</a>,
+                <a href='../../../classes/Joosy/Module.html#hasAncestor-class'>.hasAncestor</a>,
+                <a href='../../../classes/Joosy/Module.html#aliasMethodChain-class'>.aliasMethodChain</a>,
+                <a href='../../../classes/Joosy/Module.html#aliasStaticMethodChain-class'>.aliasStaticMethodChain</a>,
+                <a href='../../../classes/Joosy/Module.html#merge-class'>.merge</a>,
+                <a href='../../../classes/Joosy/Module.html#include-class'>.include</a>,
+        <a href='../../../classes/Joosy/Module.html#extend-class'>.extend</a>
+      </p>
+      <h2>Constructor Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='log-mixin'>
-      ? (void) <strong>log</strong>(args...)
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(value)
     </p>
-    <div class='docstring'>
-  <p>Checks if console is available and proxies given arguments directly to <code>console.log</code></p>
+    <div class='tags'>
 </div>
-<div class='tags'>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='__call-instance'>
+      - (void) <strong>__call</strong>()
+    </p>
+    <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='debug-mixin'>
-      ? (void) <strong>debug</strong>(args...)
+    <p class='signature' id='get-instance'>
+      - (void) <strong>get</strong>()
     </p>
-    <div class='docstring'>
-  <p>Runs <code>log</code> if debug is active</p>
-</div>
-<div class='tags'>
+    <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='debugAs-mixin'>
-      ? (void) <strong>debugAs</strong>(context, string, args...)
+    <p class='signature' id='set-instance'>
+      - (void) <strong>set</strong>(value)
     </p>
-    <div class='docstring'>
-  <p>Logs given message wrapping it with description of given object (class name)</p>
+    <div class='tags'>
 </div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>context</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>The class required to be described in log message</span>
-    </li>
-    <li>
-      <span class='name'>string</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Message to log</span>
-    </li>
-  </ul>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='valueOf-instance'>
+      - (void) <strong>valueOf</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='toString-instance'>
+      - (void) <strong>toString</strong>()
+    </p>
+    <div class='tags'>
 </div>
   </div>
 </div>

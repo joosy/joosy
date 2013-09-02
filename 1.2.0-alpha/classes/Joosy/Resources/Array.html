@@ -17,9 +17,9 @@
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
-    <span class='title'>Modules</span>
+    <span class='title'>Resources</span>
     &raquo;
-    <span class='title'>Filters</span>
+    <span class='title'>Array</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -109,67 +109,164 @@
 </div>
     <div id='content'>
       <h1>
-        Mixin:
-        Joosy.Modules.Filters
+        Class:
+        Joosy.Resources.Array
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>source&#47;joosy&#47;modules&#47;filters.coffee</td>
+          <td>source&#47;joosy&#47;resources&#47;array.coffee</td>
         </tr>
         <tr>
-          <td>Included in:</td>
+          <td>Inherits:</td>
           <td>
-                        <a href='../../../classes/Joosy/Resources/Base.html'>Joosy.Resources.Base</a>,
-            <a href='../../../classes/Joosy/Widget.html'>Joosy.Widget</a>
+            <a href='../../../classes/Array.html'>Array</a>
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Filters registration routines</p>
-</div>
-<div class='tags'>
-</div>
-      <h2>Method Summary</h2>
+      <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#included-mixin'>
-        ? (void) <strong>included</strong>()
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>()
+      </a>
+    </span>
+    <span class='constructor note title'>Constructor</span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#get-instance'>
+        - (void) <strong>get</strong>(index)
       </a>
     </span>
     <span class='desc'>
-      Defines static registration routines
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#set-instance'>
+        - (void) <strong>set</strong>(index, value)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#push-instance'>
+        - (void) <strong>push</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#pop-instance'>
+        - (void) <strong>pop</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#shift-instance'>
+        - (void) <strong>shift</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#unshift-instance'>
+        - (void) <strong>unshift</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#splice-instance'>
+        - (void) <strong>splice</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
     </span>
   </li>
 </ul>
-      <h2>Method Details</h2>
+      <h2>Constructor Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='included-mixin'>
-      ? (void) <strong>included</strong>()
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>()
     </p>
-    <div class='docstring'>
-  <p>Defines static registration routines</p>
-  <div class='examples'>
-    <h3>Examples:</h3>
-    <h4>
-      Set of methods
-    </h4>
-    <pre><code class='coffee'>class Test
-  @beforeLoad -&gt;  # supposed to run before load and control loading queue
-  @afterLoad -&gt;   # supposed to run after load to finalize loading
-  @afterUnload -&gt; # supposed to run after unload to collect garbage
-
-  # private
-
-  @__confirmBeforeLoads() # Runs filters registered as beforeLoad
-  @__runAfterLoads() # Runs filters registered as afterLoad
-  @__runAfterUnloads() # Runs filters registered as afterUnload</code></pre>
+    <div class='tags'>
+</div>
   </div>
 </div>
-<div class='tags'>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='get-instance'>
+      - (void) <strong>get</strong>(index)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='set-instance'>
+      - (void) <strong>set</strong>(index, value)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='push-instance'>
+      - (void) <strong>push</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='pop-instance'>
+      - (void) <strong>pop</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='shift-instance'>
+      - (void) <strong>shift</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='unshift-instance'>
+      - (void) <strong>unshift</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='splice-instance'>
+      - (void) <strong>splice</strong>()
+    </p>
+    <div class='tags'>
 </div>
   </div>
 </div>

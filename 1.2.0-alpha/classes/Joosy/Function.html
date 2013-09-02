@@ -17,7 +17,7 @@
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
-    <span class='title'>Application</span>
+    <span class='title'>Function</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -108,147 +108,84 @@
     <div id='content'>
       <h1>
         Class:
-        Joosy.Application
+        Joosy.Function
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>source&#47;joosy&#47;application.coffee</td>
+          <td>source&#47;joosy&#47;module.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../../classes/Joosy/Module.html'>Joosy.Module</a>
+          </td>
         </tr>
       </table>
       <h2>Overview</h2>
       <div class='docstring'>
-  <p>Joosy Application container</p>
+  <p>Class allowing to emulate Fn-based instances in JS</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffee'>class Foo extends Joosy.Module.Function
+  constructor: (value)
+    return super -&gt;
+      @value = value
+
+__call: -&gt; @value
+
+foo = new Foo &#39;test&#39;
+typeof(foo)             # &#39;function&#39;
+foo()                   # &#39;test&#39;</code></pre>
+  </div>
 </div>
 <div class='tags'>
 </div>
-      <h2>Class Method Summary</h2>
+      <h2>Direct Known Subclasses</h2>
+      <p class='children'>
+                <a href='../../classes/Joosy/Resources/Base.html'>Joosy.Resources.Base</a>,
+        <a href='../../classes/Joosy/Resources/Scalar.html'>Joosy.Resources.Scalar</a>
+      </p>
+      <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#initialize-class'>
-        + (void) <strong>initialize</strong>(selector, options = {})
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(setup)
       </a>
     </span>
+    <span class='constructor note title'>Constructor</span>
     <span class='desc'>
-      Starts Joosy application by binding to element and bootstraping routes
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#reset-class'>
-        + (void) <strong>reset</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      Shuts down current application and clears state
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#content-class'>
-        + (void) <strong>content</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      Gets current application root node
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#changePage-class'>
-        + (void) <strong>changePage</strong>(page, params)
-      </a>
-    </span>
-    <span class='desc'>
-      Switches to given page
+      
     </span>
   </li>
 </ul>
-      <h2>Class Method Details</h2>
+      <h2>
+        <small>Inherited Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods inherited from
+        <a href='../../classes/Joosy/Module.html'>Joosy.Module</a>
+      </h3>
+      <p class='inherited'>
+                <a href='../../classes/Joosy/Module.html#__className-class'>.__className</a>,
+                <a href='../../classes/Joosy/Module.html#hasAncestor-class'>.hasAncestor</a>,
+                <a href='../../classes/Joosy/Module.html#aliasMethodChain-class'>.aliasMethodChain</a>,
+                <a href='../../classes/Joosy/Module.html#aliasStaticMethodChain-class'>.aliasStaticMethodChain</a>,
+                <a href='../../classes/Joosy/Module.html#merge-class'>.merge</a>,
+                <a href='../../classes/Joosy/Module.html#include-class'>.include</a>,
+        <a href='../../classes/Joosy/Module.html#extend-class'>.extend</a>
+      </p>
+      <h2>Constructor Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='initialize-class'>
-      + (void) <strong>initialize</strong>(selector, options = {})
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(setup)
     </p>
-    <div class='docstring'>
-  <p>Starts Joosy application by binding to element and bootstraping routes</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>name</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Name of app (the dir its located in)</span>
-    </li>
-    <li>
-      <span class='name'>selector</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>jQuery-compatible selector of root application element</span>
-    </li>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='reset-class'>
-      + (void) <strong>reset</strong>()
-    </p>
-    <div class='docstring'>
-  <p>Shuts down current application and clears state</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='content-class'>
-      + (void) <strong>content</strong>()
-    </p>
-    <div class='docstring'>
-  <p>Gets current application root node</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='changePage-class'>
-      + (void) <strong>changePage</strong>(page, params)
-    </p>
-    <div class='docstring'>
-  <p>Switches to given page</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>page</span>
-      <span class='type'>
-        (<tt><a href='../../classes/Joosy/Page.html'>Joosy.Page</a></tt>)
-      </span>
-      &mdash;
-      <span class='desc'>The class (not object) of page to load</span>
-    </li>
-    <li>
-      <span class='name'>params</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Hash of page params</span>
-    </li>
-  </ul>
+    <div class='tags'>
 </div>
   </div>
 </div>

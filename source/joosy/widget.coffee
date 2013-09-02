@@ -318,7 +318,7 @@ class Joosy.Widget extends Joosy.Module
     @__clearContainer()
     @__clearTime()
     @__removeMetamorphs()
-    @__confirmAfterUnloads()
+    @__runAfterUnloads()
 
     if @parent && modifyParent
       @parent.__nestedSections.splice @parent.__nestedSections.indexOf(@), 1

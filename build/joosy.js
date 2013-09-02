@@ -107,6 +107,9 @@
 
 }).call(this);
 (function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
   Joosy.Module = (function() {
     function Module() {}
 
@@ -206,6 +209,33 @@
     return Module;
 
   })();
+
+  Joosy.Function = (function(_super) {
+    __extends(Function, _super);
+
+    function Function(setup) {
+      var key, shim, value;
+      shim = function() {
+        return shim.__call.apply(shim, arguments);
+      };
+      if (shim.__proto__) {
+        shim.__proto__ = this;
+      } else {
+        for (key in this) {
+          value = this[key];
+          shim[key] = value;
+        }
+      }
+      shim.constructor = this.constructor;
+      if (setup != null) {
+        setup.call(shim);
+      }
+      return shim;
+    }
+
+    return Function;
+
+  })(Joosy.Module);
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
     define('joosy/module', function() {
@@ -1263,7 +1293,24 @@
         return filters.each(function(filter) {
           var camelized;
           camelized = _this.__registerFilterCollector(filter);
-          return _this.prototype["__run" + camelized + "s"] = function() {
+          _this.prototype["__run" + camelized + "s"] = function() {
+            var callback, params, _i, _len, _ref, _results;
+            params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+            if (!this["__" + filter + "s"]) {
+              return;
+            }
+            _ref = this["__" + filter + "s"];
+            _results = [];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              callback = _ref[_i];
+              if (typeof callback !== 'function') {
+                callback = this[callback];
+              }
+              _results.push(callback.apply(this, params));
+            }
+            return _results;
+          };
+          _this.prototype["__confirm" + camelized + "s"] = function() {
             var params,
               _this = this;
             params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -1271,11 +1318,27 @@
               return true;
             }
             return this["__" + filter + "s"].reduce(function(flag, callback) {
-              if (!Object.isFunction(callback)) {
+              if (typeof callback !== 'function') {
                 callback = _this[callback];
               }
               return flag && callback.apply(_this, params) !== false;
             }, true);
+          };
+          return _this.prototype["__apply" + camelized + "s"] = function() {
+            var callback, data, params, _i, _len, _ref;
+            data = arguments[0], params = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+            if (!this["__" + filter + "s"]) {
+              return data;
+            }
+            _ref = this["__" + filter + "s"];
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+              callback = _ref[_i];
+              if (typeof callback !== 'function') {
+                callback = this[callback];
+              }
+              data = callback.apply(this, [data].concat(params));
+            }
+            return data;
           };
         });
       };
@@ -1783,7 +1846,7 @@
       this.params = params;
       this.previous = previous;
       this.layoutShouldChange = ((_ref = this.previous) != null ? _ref.__layoutClass : void 0) !== this.__layoutClass;
-      this.halted = !this.__runBeforeLoads();
+      this.halted = !this.__confirmBeforeLoads();
       this.layout = (function() {
         var _ref1, _ref2;
         switch (false) {
@@ -2208,10 +2271,139 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
+  Joosy.Resources.Array = (function(_super) {
+    __extends(Array, _super);
+
+    Joosy.Module.include.call(Array, Joosy.Modules.Events);
+
+    function Array() {
+      var entry, _i, _len, _ref;
+      _ref = this.slice.call(arguments, 0);
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        entry = _ref[_i];
+        this.push(entry);
+      }
+    }
+
+    Array.prototype.get = function(index) {
+      return this[index];
+    };
+
+    Array.prototype.set = function(index, value) {
+      this[index] = value;
+      this.trigger('changed');
+      return this.length;
+    };
+
+    Array.prototype.push = function() {
+      var result;
+      result = Array.__super__.push.apply(this, arguments);
+      this.trigger('changed');
+      return result;
+    };
+
+    Array.prototype.pop = function() {
+      var result;
+      result = Array.__super__.pop.apply(this, arguments);
+      this.trigger('changed');
+      return result;
+    };
+
+    Array.prototype.shift = function() {
+      var result;
+      result = Array.__super__.shift.apply(this, arguments);
+      this.trigger('changed');
+      return result;
+    };
+
+    Array.prototype.unshift = function() {
+      var result;
+      result = Array.__super__.unshift.apply(this, arguments);
+      this.trigger('changed');
+      return result;
+    };
+
+    Array.prototype.splice = function() {
+      var result;
+      result = Array.__super__.splice.apply(this, arguments);
+      this.trigger('changed');
+      return result;
+    };
+
+    return Array;
+
+  })(Array);
+
+  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
+    define('joosy/resources/array', function() {
+      return Joosy.Resources.Array;
+    });
+  }
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Joosy.Resources.Scalar = (function(_super) {
+    __extends(Scalar, _super);
+
+    Scalar.include(Joosy.Modules.Events);
+
+    function Scalar(value) {
+      return Scalar.__super__.constructor.call(this, function() {
+        return this.value = value;
+      });
+    }
+
+    Scalar.prototype.__call = function() {
+      if (arguments.length > 0) {
+        return this.set(arguments[0]);
+      } else {
+        return this.get();
+      }
+    };
+
+    Scalar.prototype.get = function() {
+      return this.value;
+    };
+
+    Scalar.prototype.set = function(value) {
+      this.value = value;
+      return this.trigger('changed');
+    };
+
+    Scalar.prototype.valueOf = function() {
+      return this.value.valueOf();
+    };
+
+    Scalar.prototype.toString = function() {
+      return this.value.toString();
+    };
+
+    return Scalar;
+
+  })(Joosy.Function);
+
+  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
+    define('joosy/resources/scalar', function() {
+      return Joosy.Resources.Scalar;
+    });
+  }
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
   Joosy.Resources.Watcher = (function(_super) {
     __extends(Watcher, _super);
 
     Watcher.include(Joosy.Modules.Events);
+
+    Watcher.include(Joosy.Modules.Filters);
+
+    Watcher.registerPlainFilters('beforeLoad');
 
     Watcher.cache = function(cacheKey) {
       return this.prototype.__cacheKey = cacheKey;
@@ -2221,21 +2413,14 @@
       return this.prototype.__fetcher = fetcher;
     };
 
-    Watcher.beforeLoad = function(action) {
-      if (!this.prototype.hasOwnProperty('__beforeLoads')) {
-        this.prototype.__beforeLoads = [].concat(this.__super__.__beforeLoads || []);
-      }
-      return this.prototype.__beforeLoads.push(action);
-    };
-
-    function Watcher(cacheKey, fetcher) {
+    function Watcher(callback, cacheKey, fetcher) {
       if (cacheKey == null) {
         cacheKey = false;
       }
       if (fetcher == null) {
         fetcher = false;
       }
-      if (Object.isFunction(cacheKey)) {
+      if (typeof cacheKey === 'function') {
         fetcher = cacheKey;
         cacheKey = void 0;
       }
@@ -2245,30 +2430,20 @@
       if (cacheKey) {
         this.__cacheKey = cacheKey;
       }
+      if (this.__cacheKey && localStorage && localStorage[this.__cacheKey]) {
+        this.data = this.__applyBeforeLoads(JSON.parse(localStorage[this.__cacheKey]));
+        if (typeof callback === "function") {
+          callback(this);
+        }
+        this.refresh();
+      } else {
+        this.refresh(callback);
+      }
     }
 
-    Watcher.prototype.load = function(callback) {
-      var _this = this;
-      if (this.__cacheKey && localStorage[this.__cacheKey]) {
-        this.data = this.prepare(JSON.parse(localStorage[this.__cacheKey]));
-        this.trigger('changed');
-        this.refresh();
-        return typeof callback === "function" ? callback(this) : void 0;
-      } else {
-        return this.__fetcher(function(result) {
-          if (_this.__cacheKey) {
-            localStorage[_this.__cacheKey] = JSON.stringify(result);
-          }
-          _this.data = _this.prepare(result);
-          _this.trigger('changed');
-          return typeof callback === "function" ? callback(_this) : void 0;
-        });
-      }
-    };
-
-    Watcher.prototype.clone = function() {
+    Watcher.prototype.clone = function(callback) {
       var copy;
-      copy = new this.constructor(this.__cacheKey, this.__fetcher);
+      copy = new this.constructor(callback, this.__cacheKey, this.__fetcher);
       copy.data = Object.clone(this.data, true);
       copy.trigger('changed');
       return copy;
@@ -2277,25 +2452,15 @@
     Watcher.prototype.refresh = function(callback) {
       var _this = this;
       return this.__fetcher(function(result) {
-        if (_this.__cacheKey) {
+        if (_this.__cacheKey && localStorage) {
           localStorage[_this.__cacheKey] = JSON.stringify(result);
         }
-        _this.data = _this.prepare(result);
-        _this.trigger('changed');
-        return typeof callback === "function" ? callback(_this) : void 0;
-      });
-    };
-
-    Watcher.prototype.prepare = function(data) {
-      var bl, _i, _len, _ref;
-      if (this.__beforeLoads != null) {
-        _ref = this.__beforeLoads;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          bl = _ref[_i];
-          data = bl.call(this, data);
+        _this.data = _this.__applyBeforeLoads(result);
+        if (typeof callback === "function") {
+          callback(_this);
         }
-      }
-      return data;
+        return _this.trigger('changed');
+      });
     };
 
     return Watcher;

@@ -62,60 +62,46 @@
     };
 
     Base.build = function(data) {
-      var id, klass, shim, _base, _base1;
+      var id, klass, _base, _base1, _base2;
       if (data == null) {
         data = {};
       }
-      klass = this.prototype.__entityName;
-      (_base = Joosy.Resources.Base).identity || (_base.identity = {});
-      (_base1 = Joosy.Resources.Base.identity)[klass] || (_base1[klass] = {});
-      shim = this.__makeShim(this.prototype);
       if (Object.isNumber(data) || Object.isString(data)) {
         id = data;
         data = {};
-        data[shim.__primaryKey] = id;
+        data[this.prototype.__primaryKey] = id;
       }
-      if (Joosy.Resources.Base.identity) {
-        id = data[shim.__primaryKey];
-        if ((id != null) && Joosy.Resources.Base.identity[klass][id]) {
-          shim = Joosy.Resources.Base.identity[klass][id];
-          shim.load(data);
-        } else {
-          Joosy.Resources.Base.identity[klass][id] = shim;
-          this.apply(shim, [data]);
+      klass = this.prototype.__entityName;
+      id = data[this.prototype.__primaryKey];
+      if ((klass != null) && (id != null)) {
+        if ((_base = Joosy.Resources.Base).identity == null) {
+          _base.identity = {};
         }
+        if ((_base1 = Joosy.Resources.Base.identity)[klass] == null) {
+          _base1[klass] = {};
+        }
+        if ((_base2 = Joosy.Resources.Base.identity[klass])[id] == null) {
+          _base2[id] = new this({
+            id: id
+          });
+        }
+        return Joosy.Resources.Base.identity[klass][id].load(data);
       } else {
-        this.apply(shim, [data]);
+        return new this(data);
       }
-      return shim;
     };
 
     Base.grab = function(form) {
       return this.build({}).grab(form);
     };
 
-    Base.__makeShim = function(proto) {
-      var key, shim, value;
-      shim = function() {
-        return shim.__call.apply(shim, arguments);
-      };
-      if (shim.__proto__) {
-        shim.__proto__ = proto;
-      } else {
-        for (key in proto) {
-          value = proto[key];
-          shim[key] = value;
-        }
-      }
-      shim.constructor = this;
-      return shim;
-    };
-
     function Base(data) {
       if (data == null) {
         data = {};
       }
-      this.__fillData(data, false);
+      return Base.__super__.constructor.call(this, function() {
+        return this.__fillData(data, false);
+      });
     }
 
     Base.prototype.id = function() {
@@ -231,21 +217,14 @@
     };
 
     Base.prototype.__prepareData = function(data) {
-      var bl, name, _i, _len, _ref;
+      var name;
       if (Object.isObject(data) && Object.keys(data).length === 1 && this.__entityName) {
         name = this.__entityName.camelize(false);
         if (data[name]) {
           data = data[name];
         }
       }
-      if (this.__beforeLoads != null) {
-        _ref = this.__beforeLoads;
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          bl = _ref[_i];
-          data = bl.call(this, data);
-        }
-      }
-      return data;
+      return this.__applyBeforeLoads(data);
     };
 
     Base.prototype.__map = function(data, name, klass) {
@@ -266,7 +245,7 @@
 
     return Base;
 
-  })(Joosy.Module);
+  })(Joosy.Function);
 
 }).call(this);
 (function() {
@@ -515,12 +494,9 @@
     };
 
     REST.prototype.at = function() {
-      var args, _ref1,
-        _this = this;
+      var args, _ref1;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return (_ref1 = this.constructor).__atWrapper.apply(_ref1, [function(callback) {
-        return Object.tap(_this.constructor.__makeShim(_this), callback);
-      }].concat(__slice.call(args)));
+      return new ((_ref1 = this.constructor).at.apply(_ref1, args))(this.data);
     };
 
     REST.prototype.__collection = function() {

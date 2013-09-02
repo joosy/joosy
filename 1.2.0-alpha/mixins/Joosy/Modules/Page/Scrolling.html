@@ -3,23 +3,25 @@
   <head>
   <meta charset='UTF-8'>
   <title>CoffeeScript API Documentation</title>
-  <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
-  <script src='../../../assets/codo.js'></script>
-  <script src='../../../assets/search_data.js'></script>
+  <link rel='stylesheet' href='../../../../assets/codo.css' type='text/css'>
+  <script src='../../../../assets/codo.js'></script>
+  <script src='../../../../assets/search_data.js'></script>
 </head>
   <body>
-    <div id='base' data-path='../../../'></div>
+    <div id='base' data-path='../../../../'></div>
 <div id='header'>
   <div id='menu'>
-    <a href='../../../README.md.html' title='Joosy'>Joosy</a>
+    <a href='../../../../README.md.html' title='Joosy'>Joosy</a>
     &raquo;
-    <a href='../../../class_index.html' title='Index'>Index</a>
+    <a href='../../../../class_index.html' title='Index'>Index</a>
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
     <span class='title'>Modules</span>
     &raquo;
-    <span class='title'>WidgetsManager</span>
+    <span class='title'>Page</span>
+    &raquo;
+    <span class='title'>Scrolling</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -28,10 +30,10 @@
       </ul>
     </nav>
     <div id='search'>
-      <a id='class_list_link' href='../../../class_list.html'>Classes</a>
-      <a id='mixin_list_link' href='../../../mixin_list.html'>Mixins</a>
-      <a id='method_list_link' href='../../../method_list.html'>Methods</a>
-      <a id='extra_list_link' href='../../../extra_list.html'>Extras</a>
+      <a id='class_list_link' href='../../../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../../../method_list.html'>Methods</a>
+      <a id='extra_list_link' href='../../../../extra_list.html'>Extras</a>
     </div>
   </div>
   <iframe id='search_frame'></iframe>
@@ -110,20 +112,20 @@
     <div id='content'>
       <h1>
         Mixin:
-        Joosy.Modules.WidgetsManager
+        Joosy.Modules.Page.Scrolling
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>source&#47;joosy&#47;modules&#47;widgets_manager.coffee</td>
+          <td>source&#47;joosy&#47;modules&#47;page&#47;scrolling.coffee</td>
+        </tr>
+        <tr>
+          <td>Included in:</td>
+          <td>
+            <a href='../../../../classes/Joosy/Page.html'>Joosy.Page</a>
+          </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Widgets management routines</p>
-</div>
-<div class='tags'>
-</div>
       <h2>Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -138,42 +140,32 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#registerWidget-mixin'>
-        ? (void) <strong>registerWidget</strong>(container, widget)
+      <a href='#__performScrolling-mixin'>
+        ? (void) <strong>__performScrolling</strong>()
       </a>
     </span>
     <span class='desc'>
-      Registeres and runs widget inside specified container
+      Scrolls page to stored positions
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#unregisterWidget-mixin'>
-        ? (void) <strong>unregisterWidget</strong>(widget)
+      <a href='#__fixHeight-mixin'>
+        ? (void) <strong>__fixHeight</strong>()
       </a>
     </span>
     <span class='desc'>
-      Unregisteres and destroys widget
+      Freezes the page height through $(html).
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#__setupWidgets-mixin'>
-        ? (void) <strong>__setupWidgets</strong>()
+      <a href='#__releaseHeight-mixin'>
+        ? (void) <strong>__releaseHeight</strong>()
       </a>
     </span>
     <span class='desc'>
-      Intialize all widgets for current object
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#__unloadWidgets-mixin'>
-        ? (void) <strong>__unloadWidgets</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      Unregister all widgets for current object
+      Undo {#__fixHeight}
     </span>
   </li>
 </ul>
@@ -187,71 +179,31 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='registerWidget-mixin'>
-      ? (void) <strong>registerWidget</strong>(container, widget)
+    <p class='signature' id='__performScrolling-mixin'>
+      ? (void) <strong>__performScrolling</strong>()
     </p>
     <div class='docstring'>
-  <p>Registeres and runs widget inside specified container</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>container</span>
-      <span class='type'>
-        (<tt>DOM</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>jQuery or direct dom node object</span>
-    </li>
-    <li>
-      <span class='name'>widget</span>
-      <span class='type'>
-        (<tt><a href='../../../classes/Joosy/Widget.html'>Joosy.Widget</a></tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Class or object of Joosy.Widget to register</span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='unregisterWidget-mixin'>
-      ? (void) <strong>unregisterWidget</strong>(widget)
-    </p>
-    <div class='docstring'>
-  <p>Unregisteres and destroys widget</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>widget</span>
-      <span class='type'>
-        (<tt><a href='../../../classes/Joosy/Widget.html'>Joosy.Widget</a></tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Object of Joosy.Widget to unregister</span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='__setupWidgets-mixin'>
-      ? (void) <strong>__setupWidgets</strong>()
-    </p>
-    <div class='docstring'>
-  <p>Intialize all widgets for current object</p>
+  <p>Scrolls page to stored positions</p>
 </div>
 <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='__unloadWidgets-mixin'>
-      ? (void) <strong>__unloadWidgets</strong>()
+    <p class='signature' id='__fixHeight-mixin'>
+      ? (void) <strong>__fixHeight</strong>()
     </p>
     <div class='docstring'>
-  <p>Unregister all widgets for current object</p>
+  <p>Freezes the page height through $(html).</p><p>Required to implement better {Joosy.Page.scroll} behavior.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__releaseHeight-mixin'>
+      ? (void) <strong>__releaseHeight</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Undo {#__fixHeight}</p>
 </div>
 <div class='tags'>
 </div>

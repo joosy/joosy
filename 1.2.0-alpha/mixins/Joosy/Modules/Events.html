@@ -138,6 +138,16 @@
       <ul class='summary'>
   <li>
     <span class='signature'>
+      <a href='#eventsNamespace-mixin'>
+        ? (void) <strong>eventsNamespace</strong>(actions)
+      </a>
+    </span>
+    <span class='desc'>
+      Creates events namespace
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
       <a href='#wait-mixin'>
         ? (void) <strong>wait</strong>(name, events, callback)
       </a>
@@ -209,6 +219,27 @@
 </ul>
       <h2>Method Details</h2>
       <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='eventsNamespace-mixin'>
+      ? (void) <strong>eventsNamespace</strong>(actions)
+    </p>
+    <div class='docstring'>
+  <p>Creates events namespace</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffee'>namespace = @entity.eventsNamespace, -&gt;
+  @bind &#39;action1&#39;, -&gt;
+  @bind &#39;action2&#39;, -&gt;
+
+namespace.unbind()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
   <div class='method_details'>
     <p class='signature' id='wait-mixin'>
       ? (void) <strong>wait</strong>(name, events, callback)
@@ -389,7 +420,7 @@
     </div>
     <div id='footer'>
   Generated on
-  Tue Sep 03 2013 04:00:05 GMT+0700 (ICT)
+  Tue Sep 03 2013 04:46:36 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

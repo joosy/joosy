@@ -15,8 +15,7 @@
     "node": ">=0.4.0"
   },
   "dependencies": {
-    "grill": ">=1.0.0-alpha.19",
-    "moment": "~2.1.0"
+    "grill": ">=1.0.0-alpha.19"
   },
   "devDependencies": {
     "bower": "~1.2.1",
@@ -24,6 +23,7 @@
     "grunt-coffeelint": "0.0.6",
     "grunt-release": "~0.3.5",
     "grunt-contrib-testem": ">=0.5.2",
-    "grunt-gh-pages": "git+https://github.com/inossidabile/grunt-gh-pages.git"
+    "grunt-gh-pages": "git+https://github.com/inossidabile/grunt-gh-pages.git",
+    "moment": "~2.1.0"
   }
 }

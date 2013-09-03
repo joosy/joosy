@@ -2558,6 +2558,12 @@
 
   })(Joosy.Function);
 
+  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
+    define('joosy/resources/hash', function() {
+      return Joosy.Resources.Hash;
+    });
+  }
+
 }).call(this);
 (function() {
   var __hasProp = {}.hasOwnProperty,

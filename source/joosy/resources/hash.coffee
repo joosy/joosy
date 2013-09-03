@@ -77,3 +77,7 @@ class Joosy.Resources.Hash extends Joosy.Function
 
   toString: ->
     JSON.stringify(@data)
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/resources/hash', -> Joosy.Resources.Hash

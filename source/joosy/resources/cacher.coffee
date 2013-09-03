@@ -1,4 +1,4 @@
-class Joosy.Resources.Watcher extends Joosy.Module
+class Joosy.Resources.Cacher extends Joosy.Module
 
   @include Joosy.Modules.Events
   @include Joosy.Modules.Filters
@@ -38,4 +38,4 @@ class Joosy.Resources.Watcher extends Joosy.Module
 
 # AMD wrapper
 if define?.amd?
-  define 'joosy/resources/watcher', -> Joosy.Resources.Watcher
+  define 'joosy/resources/cacher', -> Joosy.Resources.Cacher

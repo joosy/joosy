@@ -44,11 +44,11 @@ class Joosy.Resources.Array extends Array
     @trigger 'changed'
     result
 
-  __fillData: (arguments, notify=true) ->
-    data = if arguments[0] instanceof Array
-      arguments[0]
+  __fillData: (data, notify=true) ->
+    data = if data[0] instanceof Array
+      data[0]
     else
-      @slice.call(arguments, 0)
+      @slice.call(data, 0)
 
     @splice 0, @length if @length > 0
     @push entry for entry in @__applyBeforeLoads(data)

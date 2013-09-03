@@ -1,7 +1,11 @@
+#= require joosy/modules/resources/cacher
+
 class Joosy.Resources.Array extends Array
 
-  Joosy.Module.include.call @, Joosy.Modules.Events
-  Joosy.Module.include.call @, Joosy.Modules.Filters
+  Joosy.Module.merge @, Joosy.Module
+
+  @include Joosy.Modules.Events
+  @include Joosy.Modules.Filters
 
   @registerPlainFilters 'beforeLoad'
 
@@ -18,6 +22,11 @@ class Joosy.Resources.Array extends Array
 
   load: ->
     @__fillData arguments
+
+  clone: (callback) ->
+    clone = new @constructor
+    clone.data = @slice 0
+    clone
 
   push: ->
     result = super
@@ -45,10 +54,7 @@ class Joosy.Resources.Array extends Array
     result
 
   __fillData: (data, notify=true) ->
-    data = if data[0] instanceof Array
-      data[0]
-    else
-      @slice.call(data, 0)
+    data = @slice.call(data, 0)
 
     @splice 0, @length if @length > 0
     @push entry for entry in @__applyBeforeLoads(data)

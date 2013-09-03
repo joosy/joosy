@@ -1,7 +1,11 @@
+#= require joosy/modules/resources/cacher
+
 class Joosy.Resources.Hash extends Joosy.Function
 
   @include Joosy.Modules.Events
   @include Joosy.Modules.Filters
+
+  @registerPlainFilters 'beforeLoad'
 
   constructor: (data={}) ->
     return super ->
@@ -32,11 +36,14 @@ class Joosy.Resources.Hash extends Joosy.Function
     @__fillData data
     @
 
+  clone: (callback) ->
+    new @constructor Object.clone(@data, true)
+
   __call: (path, value) ->
     if arguments.length > 1
-      @__set path, value
+      @set path, value
     else
-      @__get path
+      @get path
 
   #
   # Locates the actual instance of attribute path `foo.bar` from get/set

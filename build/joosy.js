@@ -2278,15 +2278,96 @@
 
 }).call(this);
 (function() {
+  Joosy.Modules.Resources = {};
+
+}).call(this);
+(function() {
+  var __slice = [].slice;
+
+  Joosy.Modules.Resources.Cacher = {
+    included: function() {
+      this.cache = function(cacheKey) {
+        return this.prototype.__cacheKey = cacheKey;
+      };
+      this.fetcher = function(fetcher) {
+        return this.prototype.__fetcher = fetcher;
+      };
+      this.cached = function(callback, cacheKey, fetcher) {
+        var instance,
+          _this = this;
+        if (cacheKey == null) {
+          cacheKey = false;
+        }
+        if (fetcher == null) {
+          fetcher = false;
+        }
+        if (typeof cacheKey === 'function') {
+          fetcher = cacheKey;
+          cacheKey = void 0;
+        }
+        cacheKey || (cacheKey = this.prototype.__cacheKey);
+        fetcher || (fetcher = this.prototype.__fetcher);
+        if (cacheKey && localStorage && localStorage[cacheKey]) {
+          instance = (function(func, args, ctor) {
+            ctor.prototype = func.prototype;
+            var child = new ctor, result = func.apply(child, args);
+            return Object(result) === result ? result : child;
+          })(this, JSON.parse(localStorage[cacheKey]), function(){});
+          if (typeof callback === "function") {
+            callback(instance);
+          }
+          return instance.refresh();
+        } else {
+          return this.fetch(function(results) {
+            instance = (function(func, args, ctor) {
+              ctor.prototype = func.prototype;
+              var child = new ctor, result = func.apply(child, args);
+              return Object(result) === result ? result : child;
+            })(_this, results, function(){});
+            return typeof callback === "function" ? callback(instance) : void 0;
+          });
+        }
+      };
+      return this.fetch = function(callback) {
+        var _this = this;
+        return this.prototype.__fetcher(function() {
+          var results;
+          results = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+          if (_this.prototype.__cacheKey && localStorage) {
+            localStorage[_this.prototype.__cacheKey] = JSON.stringify(results);
+          }
+          return callback(results);
+        });
+      };
+    },
+    refresh: function(callback) {
+      var _this = this;
+      return this.constructor.fetch(function(results) {
+        _this.load.apply(_this, results);
+        return typeof callback === "function" ? callback(_this) : void 0;
+      });
+    }
+  };
+
+  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
+    define('joosy/modules/resources/cacher', function() {
+      return Joosy.Modules.Resources.Cacher;
+    });
+  }
+
+}).call(this);
+(function() {
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   Joosy.Resources.Array = (function(_super) {
     __extends(Array, _super);
 
-    Joosy.Module.include.call(Array, Joosy.Modules.Events);
+    Joosy.Module.merge(Array, Joosy.Module);
 
-    Joosy.Module.include.call(Array, Joosy.Modules.Filters);
+    Array.include(Joosy.Modules.Events);
+
+    Array.include(Joosy.Modules.Filters);
 
     Array.registerPlainFilters('beforeLoad');
 
@@ -2306,6 +2387,13 @@
 
     Array.prototype.load = function() {
       return this.__fillData(arguments);
+    };
+
+    Array.prototype.clone = function(callback) {
+      var clone;
+      clone = new this.constructor;
+      clone.data = this.slice(0);
+      return clone;
     };
 
     Array.prototype.push = function() {
@@ -2348,7 +2436,7 @@
       if (notify == null) {
         notify = true;
       }
-      data = data[0] instanceof Array ? data[0] : this.slice.call(data, 0);
+      data = this.slice.call(data, 0);
       if (this.length > 0) {
         this.splice(0, this.length);
       }
@@ -2378,94 +2466,14 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Joosy.Resources.Cacher = (function(_super) {
-    __extends(Cacher, _super);
-
-    Cacher.include(Joosy.Modules.Events);
-
-    Cacher.include(Joosy.Modules.Filters);
-
-    Cacher.registerPlainFilters('beforeLoad');
-
-    Cacher.cache = function(cacheKey) {
-      return this.prototype.__cacheKey = cacheKey;
-    };
-
-    Cacher.fetcher = function(fetcher) {
-      return this.prototype.__fetcher = fetcher;
-    };
-
-    function Cacher(callback, cacheKey, fetcher) {
-      if (cacheKey == null) {
-        cacheKey = false;
-      }
-      if (fetcher == null) {
-        fetcher = false;
-      }
-      if (typeof cacheKey === 'function') {
-        fetcher = cacheKey;
-        cacheKey = void 0;
-      }
-      if (fetcher) {
-        this.__fetcher = fetcher;
-      }
-      if (cacheKey) {
-        this.__cacheKey = cacheKey;
-      }
-      if (this.__cacheKey && localStorage && localStorage[this.__cacheKey]) {
-        this.data = this.__applyBeforeLoads(JSON.parse(localStorage[this.__cacheKey]));
-        if (typeof callback === "function") {
-          callback(this);
-        }
-        this.refresh();
-      } else {
-        this.refresh(callback);
-      }
-    }
-
-    Cacher.prototype.clone = function(callback) {
-      var copy;
-      copy = new this.constructor(callback, this.__cacheKey, this.__fetcher);
-      copy.data = Object.clone(this.data, true);
-      copy.trigger('changed');
-      return copy;
-    };
-
-    Cacher.prototype.refresh = function(callback) {
-      var _this = this;
-      return this.__fetcher(function(result) {
-        if (_this.__cacheKey && localStorage) {
-          localStorage[_this.__cacheKey] = JSON.stringify(result);
-        }
-        _this.data = _this.__applyBeforeLoads(result);
-        if (typeof callback === "function") {
-          callback(_this);
-        }
-        return _this.trigger('changed');
-      });
-    };
-
-    return Cacher;
-
-  })(Joosy.Module);
-
-  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/resources/cacher', function() {
-      return Joosy.Resources.Cacher;
-    });
-  }
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
   Joosy.Resources.Hash = (function(_super) {
     __extends(Hash, _super);
 
     Hash.include(Joosy.Modules.Events);
 
     Hash.include(Joosy.Modules.Filters);
+
+    Hash.registerPlainFilters('beforeLoad');
 
     function Hash(data) {
       if (data == null) {
@@ -2506,11 +2514,15 @@
       return this;
     };
 
+    Hash.prototype.clone = function(callback) {
+      return new this.constructor(Object.clone(this.data, true));
+    };
+
     Hash.prototype.__call = function(path, value) {
       if (arguments.length > 1) {
-        return this.__set(path, value);
+        return this.set(path, value);
       } else {
-        return this.__get(path);
+        return this.get(path);
       }
     };
 
@@ -2576,9 +2588,11 @@
 
     Scalar.include(Joosy.Modules.Filters);
 
+    Scalar.registerPlainFilters('beforeLoad');
+
     function Scalar(value) {
       return Scalar.__super__.constructor.call(this, function() {
-        return this.value = value;
+        return this.load(value);
       });
     }
 
@@ -2586,14 +2600,19 @@
       return this.value;
     };
 
-    Scalar.prototype.set = function() {
-      return this.load.apply(this, arguments);
+    Scalar.prototype.set = function(value) {
+      this.value = value;
+      return this.trigger('changed');
     };
 
     Scalar.prototype.load = function(value) {
       this.value = this.__applyBeforeLoads(value);
       this.trigger('changed');
       return this.value;
+    };
+
+    Scalar.prototype.clone = function(callback) {
+      return new this.constructor(this.value);
     };
 
     Scalar.prototype.__call = function() {

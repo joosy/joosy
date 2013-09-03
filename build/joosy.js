@@ -245,9 +245,27 @@
 
 }).call(this);
 (function() {
-  var __slice = [].slice;
+  var Namespace, SynchronizationContext,
+    __slice = [].slice;
 
-  Joosy.Events.Namespace = (function() {
+  SynchronizationContext = (function() {
+    function SynchronizationContext() {
+      this.actions = [];
+    }
+
+    SynchronizationContext.prototype["do"] = function(action) {
+      return this.actions.push(action);
+    };
+
+    SynchronizationContext.prototype.after = function(after) {
+      this.after = after;
+    };
+
+    return SynchronizationContext;
+
+  })();
+
+  Namespace = (function() {
     function Namespace(parent) {
       this.parent = parent;
       this.bindings = [];
@@ -273,29 +291,17 @@
 
   })();
 
-}).call(this);
-(function() {
-  var SynchronizationContext,
-    __slice = [].slice;
-
-  SynchronizationContext = (function() {
-    function SynchronizationContext() {
-      this.actions = [];
-    }
-
-    SynchronizationContext.prototype["do"] = function(action) {
-      return this.actions.push(action);
-    };
-
-    SynchronizationContext.prototype.after = function(after) {
-      this.after = after;
-    };
-
-    return SynchronizationContext;
-
-  })();
-
   Joosy.Modules.Events = {
+    eventsNamespace: function(actions) {
+      var namespace;
+      namespace = new Namespace(this);
+      if (actions != null) {
+        if (typeof actions.call === "function") {
+          actions.call(namespace);
+        }
+      }
+      return namespace;
+    },
     wait: function(name, events, callback) {
       if (!this.hasOwnProperty('__oneShotEvents')) {
         this.__oneShotEvents = {};
@@ -1760,7 +1766,11 @@
 
 }).call(this);
 (function() {
-  Joosy.Modules.Page_Scrolling = {
+  Joosy.Modules.Page = {};
+
+}).call(this);
+(function() {
+  Joosy.Modules.Page.Scrolling = {
     included: function() {
       this.scroll = function(element, options) {
         if (options == null) {
@@ -1805,7 +1815,7 @@
 
 }).call(this);
 (function() {
-  Joosy.Modules.Page_Title = {
+  Joosy.Modules.Page.Title = {
     title: function(title, separator) {
       if (separator == null) {
         separator = ' / ';
@@ -1837,9 +1847,9 @@
       return this.prototype.__layoutClass = layoutClass;
     };
 
-    Page.include(Joosy.Modules.Page_Scrolling);
+    Page.include(Joosy.Modules.Page.Scrolling);
 
-    Page.extend(Joosy.Modules.Page_Title);
+    Page.extend(Joosy.Modules.Page.Title);
 
     function Page(params, previous) {
       var _ref;
@@ -2276,13 +2286,12 @@
 
     Joosy.Module.include.call(Array, Joosy.Modules.Events);
 
+    Joosy.Module.include.call(Array, Joosy.Modules.Filters);
+
+    Array.registerPlainFilters('beforeLoad');
+
     function Array() {
-      var entry, _i, _len, _ref;
-      _ref = this.slice.call(arguments, 0);
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        entry = _ref[_i];
-        this.push(entry);
-      }
+      this.__fillData(arguments, false);
     }
 
     Array.prototype.get = function(index) {
@@ -2292,7 +2301,11 @@
     Array.prototype.set = function(index, value) {
       this[index] = value;
       this.trigger('changed');
-      return this.length;
+      return value;
+    };
+
+    Array.prototype.load = function() {
+      return this.__fillData(arguments);
     };
 
     Array.prototype.push = function() {
@@ -2330,6 +2343,26 @@
       return result;
     };
 
+    Array.prototype.__fillData = function(data, notify) {
+      var entry, _i, _len, _ref;
+      if (notify == null) {
+        notify = true;
+      }
+      data = data[0] instanceof Array ? data[0] : this.slice.call(data, 0);
+      if (this.length > 0) {
+        this.splice(0, this.length);
+      }
+      _ref = this.__applyBeforeLoads(data);
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        entry = _ref[_i];
+        this.push(entry);
+      }
+      if (notify) {
+        this.trigger('changed');
+      }
+      return null;
+    };
+
     return Array;
 
   })(Array);
@@ -2345,75 +2378,24 @@
   var __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
-  Joosy.Resources.Scalar = (function(_super) {
-    __extends(Scalar, _super);
+  Joosy.Resources.Cacher = (function(_super) {
+    __extends(Cacher, _super);
 
-    Scalar.include(Joosy.Modules.Events);
+    Cacher.include(Joosy.Modules.Events);
 
-    function Scalar(value) {
-      return Scalar.__super__.constructor.call(this, function() {
-        return this.value = value;
-      });
-    }
+    Cacher.include(Joosy.Modules.Filters);
 
-    Scalar.prototype.__call = function() {
-      if (arguments.length > 0) {
-        return this.set(arguments[0]);
-      } else {
-        return this.get();
-      }
-    };
+    Cacher.registerPlainFilters('beforeLoad');
 
-    Scalar.prototype.get = function() {
-      return this.value;
-    };
-
-    Scalar.prototype.set = function(value) {
-      this.value = value;
-      return this.trigger('changed');
-    };
-
-    Scalar.prototype.valueOf = function() {
-      return this.value.valueOf();
-    };
-
-    Scalar.prototype.toString = function() {
-      return this.value.toString();
-    };
-
-    return Scalar;
-
-  })(Joosy.Function);
-
-  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/resources/scalar', function() {
-      return Joosy.Resources.Scalar;
-    });
-  }
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
-
-  Joosy.Resources.Watcher = (function(_super) {
-    __extends(Watcher, _super);
-
-    Watcher.include(Joosy.Modules.Events);
-
-    Watcher.include(Joosy.Modules.Filters);
-
-    Watcher.registerPlainFilters('beforeLoad');
-
-    Watcher.cache = function(cacheKey) {
+    Cacher.cache = function(cacheKey) {
       return this.prototype.__cacheKey = cacheKey;
     };
 
-    Watcher.fetcher = function(fetcher) {
+    Cacher.fetcher = function(fetcher) {
       return this.prototype.__fetcher = fetcher;
     };
 
-    function Watcher(callback, cacheKey, fetcher) {
+    function Cacher(callback, cacheKey, fetcher) {
       if (cacheKey == null) {
         cacheKey = false;
       }
@@ -2441,7 +2423,7 @@
       }
     }
 
-    Watcher.prototype.clone = function(callback) {
+    Cacher.prototype.clone = function(callback) {
       var copy;
       copy = new this.constructor(callback, this.__cacheKey, this.__fetcher);
       copy.data = Object.clone(this.data, true);
@@ -2449,7 +2431,7 @@
       return copy;
     };
 
-    Watcher.prototype.refresh = function(callback) {
+    Cacher.prototype.refresh = function(callback) {
       var _this = this;
       return this.__fetcher(function(result) {
         if (_this.__cacheKey && localStorage) {
@@ -2463,13 +2445,174 @@
       });
     };
 
-    return Watcher;
+    return Cacher;
 
   })(Joosy.Module);
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
-    define('joosy/resources/watcher', function() {
-      return Joosy.Resources.Watcher;
+    define('joosy/resources/cacher', function() {
+      return Joosy.Resources.Cacher;
+    });
+  }
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Joosy.Resources.Hash = (function(_super) {
+    __extends(Hash, _super);
+
+    Hash.include(Joosy.Modules.Events);
+
+    Hash.include(Joosy.Modules.Filters);
+
+    function Hash(data) {
+      if (data == null) {
+        data = {};
+      }
+      return Hash.__super__.constructor.call(this, function() {
+        return this.__fillData(data, false);
+      });
+    }
+
+    Hash.prototype.get = function(path) {
+      var instance, property, _ref;
+      _ref = this.__callTarget(path, true), instance = _ref[0], property = _ref[1];
+      if (!instance) {
+        return void 0;
+      }
+      if (instance instanceof Joosy.Resources.Hash) {
+        return instance(property);
+      } else {
+        return instance[property];
+      }
+    };
+
+    Hash.prototype.set = function(path, value) {
+      var instance, property, _ref;
+      _ref = this.__callTarget(path), instance = _ref[0], property = _ref[1];
+      if (instance instanceof Joosy.Resources.Hash) {
+        instance(property, value);
+      } else {
+        instance[property] = value;
+      }
+      this.trigger('changed');
+      return value;
+    };
+
+    Hash.prototype.load = function(data) {
+      this.__fillData(data);
+      return this;
+    };
+
+    Hash.prototype.__call = function(path, value) {
+      if (arguments.length > 1) {
+        return this.__set(path, value);
+      } else {
+        return this.__get(path);
+      }
+    };
+
+    Hash.prototype.__callTarget = function(path, safe) {
+      var keyword, part, target, _i, _len;
+      if (safe == null) {
+        safe = false;
+      }
+      if (path.indexOf('.') !== -1 && (this.data[path] == null)) {
+        path = path.split('.');
+        keyword = path.pop();
+        target = this.data;
+        for (_i = 0, _len = path.length; _i < _len; _i++) {
+          part = path[_i];
+          if (safe && (target[part] == null)) {
+            return false;
+          }
+          if (target[part] == null) {
+            target[part] = {};
+          }
+          target = target instanceof Joosy.Resources.Hash ? target(part) : target[part];
+        }
+        return [target, keyword];
+      } else {
+        return [this.data, path];
+      }
+    };
+
+    Hash.prototype.__fillData = function(data, notify) {
+      if (notify == null) {
+        notify = true;
+      }
+      this.data = this.__applyBeforeLoads(data);
+      if (notify) {
+        this.trigger('changed');
+      }
+      return null;
+    };
+
+    Hash.prototype.toString = function() {
+      return JSON.stringify(this.data);
+    };
+
+    return Hash;
+
+  })(Joosy.Function);
+
+}).call(this);
+(function() {
+  var __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Joosy.Resources.Scalar = (function(_super) {
+    __extends(Scalar, _super);
+
+    Scalar.include(Joosy.Modules.Events);
+
+    Scalar.include(Joosy.Modules.Filters);
+
+    function Scalar(value) {
+      return Scalar.__super__.constructor.call(this, function() {
+        return this.value = value;
+      });
+    }
+
+    Scalar.prototype.get = function() {
+      return this.value;
+    };
+
+    Scalar.prototype.set = function() {
+      return this.load.apply(this, arguments);
+    };
+
+    Scalar.prototype.load = function(value) {
+      this.value = this.__applyBeforeLoads(value);
+      this.trigger('changed');
+      return this.value;
+    };
+
+    Scalar.prototype.__call = function() {
+      if (arguments.length > 0) {
+        return this.set(arguments[0]);
+      } else {
+        return this.get();
+      }
+    };
+
+    Scalar.prototype.valueOf = function() {
+      return this.value.valueOf();
+    };
+
+    Scalar.prototype.toString = function() {
+      return this.value.toString();
+    };
+
+    return Scalar;
+
+  })(Joosy.Function);
+
+  if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
+    define('joosy/resources/scalar', function() {
+      return Joosy.Resources.Scalar;
     });
   }
 

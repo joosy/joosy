@@ -19,7 +19,7 @@
     &raquo;
     <span class='title'>Resources</span>
     &raquo;
-    <span class='title'>RESTCollection</span>
+    <span class='title'>Hash</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -110,49 +110,97 @@
     <div id='content'>
       <h1>
         Class:
-        Joosy.Resources.RESTCollection
+        Joosy.Resources.Hash
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>source&#47;joosy&#47;extensions&#47;resources&#47;rest_collection.coffee</td>
+          <td>source&#47;joosy&#47;resources&#47;hash.coffee</td>
         </tr>
         <tr>
           <td>Inherits:</td>
           <td>
-            <a href='../../../classes/Joosy/Resources/Collection.html'>Joosy.Resources.Collection</a>
-          </td>
-        </tr>
-        <tr>
-          <td>Includes:</td>
-          <td>
-                        <a href='../../../mixins/Joosy/Modules/Events.html'>Joosy.Modules.Events</a>,
-            <a href='../../../mixins/Joosy/Modules/Log.html'>Joosy.Modules.Log</a>
+            <a href='../../../classes/Joosy/Function.html'>Joosy.Function</a>
           </td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <p>Collection of REST Resources</p>
-</div>
-<div class='tags'>
-</div>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#reload-instance'>
-        - (void) <strong>reload</strong>(options = {}, callback = false)
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(data = {})
+      </a>
+    </span>
+    <span class='constructor note title'>Constructor</span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#get-instance'>
+        - (void) <strong>get</strong>(path)
       </a>
     </span>
     <span class='desc'>
-      Refetches the data from backend and triggers <code>changed</code>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#set-instance'>
+        - (void) <strong>set</strong>(path, value)
+      </a>
+    </span>
+    <span class='desc'>
+      
     </span>
   </li>
   <li>
     <span class='signature'>
       <a href='#load-instance'>
-        - (void) <strong>load</strong>(args...)
+        - (void) <strong>load</strong>(data)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__call-instance'>
+        - (void) <strong>__call</strong>(path, value)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__callTarget-instance'>
+        - (Array) <strong>__callTarget</strong>(path, safe = false)
+      </a>
+    </span>
+    <span class='desc'>
+      Locates the actual instance of attribute path <code>foo.bar</code> from get/set
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__fillData-instance'>
+        - (void) <strong>__fillData</strong>(data, notify = true)
+      </a>
+    </span>
+    <span class='desc'>
+      Defines how exactly prepared data should be saved
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#toString-instance'>
+        - (void) <strong>toString</strong>()
       </a>
     </span>
     <span class='desc'>
@@ -165,22 +213,10 @@
       </h2>
       <h3 class='inherited'>
         Methods inherited from
-        <a href='../../../classes/Joosy/Resources/Collection.html'>Joosy.Resources.Collection</a>
+        <a href='../../../classes/Joosy/Function.html'>Joosy.Function</a>
       </h3>
       <p class='inherited'>
-                <a href='../../../classes/Joosy/Resources/Collection.html#beforeLoad-class'>.beforeLoad</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#model-class'>.model</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#constructor-instance'>#constructor</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#load-instance'>#load</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#modelize-instance'>#modelize</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#each-instance'>#each</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#size-instance'>#size</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#find-instance'>#find</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#sortBy-instance'>#sortBy</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#findById-instance'>#findById</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#at-instance'>#at</a>,
-                <a href='../../../classes/Joosy/Resources/Collection.html#remove-instance'>#remove</a>,
-        <a href='../../../classes/Joosy/Resources/Collection.html#add-instance'>#add</a>
+        <a href='../../../classes/Joosy/Function.html#constructor-instance'>#constructor</a>
       </p>
       <h3 class='inherited'>
         Methods inherited from
@@ -195,74 +231,108 @@
                 <a href='../../../classes/Joosy/Module.html#include-class'>.include</a>,
         <a href='../../../classes/Joosy/Module.html#extend-class'>.extend</a>
       </p>
-      <h2>
-        <small>Included Method Summary</small>
-      </h2>
-      <h3 class='included'>
-        Methods included from
-        <a href='../../../mixins/Joosy/Modules/Events.html'>Joosy.Modules.Events</a>
-      </h3>
-      <p class='included'>
-                <a href='../../../mixins/Joosy/Modules/Events.html#eventsNamespace-mixin'>#eventsNamespace</a>,
-                <a href='../../../mixins/Joosy/Modules/Events.html#wait-mixin'>#wait</a>,
-                <a href='../../../mixins/Joosy/Modules/Events.html#unwait-mixin'>#unwait</a>,
-                <a href='../../../mixins/Joosy/Modules/Events.html#bind-mixin'>#bind</a>,
-                <a href='../../../mixins/Joosy/Modules/Events.html#unbind-mixin'>#unbind</a>,
-                <a href='../../../mixins/Joosy/Modules/Events.html#trigger-mixin'>#trigger</a>,
-                <a href='../../../mixins/Joosy/Modules/Events.html#synchronize-mixin'>#synchronize</a>,
-        <a href='../../../mixins/Joosy/Modules/Events.html#__splitEvents-mixin'>#__splitEvents</a>
-      </p>
-      <h3 class='included'>
-        Methods included from
-        <a href='../../../mixins/Joosy/Modules/Log.html'>Joosy.Modules.Log</a>
-      </h3>
-      <p class='included'>
-                <a href='../../../mixins/Joosy/Modules/Log.html#log-mixin'>#log</a>,
-                <a href='../../../mixins/Joosy/Modules/Log.html#debug-mixin'>#debug</a>,
-        <a href='../../../mixins/Joosy/Modules/Log.html#debugAs-mixin'>#debugAs</a>
-      </p>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(data = {})
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+</div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='reload-instance'>
-      - (void) <strong>reload</strong>(options = {}, callback = false)
+    <p class='signature' id='get-instance'>
+      - (void) <strong>get</strong>(path)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='set-instance'>
+      - (void) <strong>set</strong>(path, value)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='load-instance'>
+      - (void) <strong>load</strong>(data)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__call-instance'>
+      - (void) <strong>__call</strong>(path, value)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__callTarget-instance'>
+      - (Array) <strong>__callTarget</strong>(path, safe = false)
     </p>
     <div class='docstring'>
-  <p>Refetches the data from backend and triggers <code>changed</code></p>
+  <p>Locates the actual instance of attribute path <code>foo.bar</code> from get/set</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>options</span>
+      <span class='name'>path</span>
       <span class='type'>
-        (<tt>Hash</tt>)
+        (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>See <a href='../../../classes/Joosy/Resources/REST.html#find-class'>Joosy.Resources.REST.find</a> for possible options</span>
+      <span class='desc'>Path to the attribute (<code>foo.bar</code>)</span>
     </li>
     <li>
-      <span class='name'>callback</span>
+      <span class='name'>safe</span>
       <span class='type'>
-        (<tt>Function</tt>)
+        (<tt>Boolean</tt>)
       </span>
       &mdash;
-      <span class='desc'>Resulting callback</span>
+      <span class='desc'>Indicates whether nested hashes should not be automatically created when they don&#39;t exist</span>
     </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
     <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
+      <span class='type'></span>
+      (<tt>Array</tt>)
       &mdash;
-      <span class='desc'><code>(error, instance, data) -&gt; ...</code></span>
+      <span class='desc'>Instance of object containing last step of path and keyword for required field</span>
     </li>
   </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='load-instance'>
-      - (void) <strong>load</strong>(args...)
+    <p class='signature' id='__fillData-instance'>
+      - (void) <strong>__fillData</strong>(data, notify = true)
+    </p>
+    <div class='docstring'>
+  <p>Defines how exactly prepared data should be saved</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>data</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Raw data to store</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='toString-instance'>
+      - (void) <strong>toString</strong>()
     </p>
     <div class='tags'>
 </div>

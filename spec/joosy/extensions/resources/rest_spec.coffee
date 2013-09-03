@@ -108,9 +108,9 @@ describe "Joosy.Resources.REST", ->
         expect(item.memberPath()).toEqual '/grand_parents/1/parents/2/tests/3'
 
       it 'saves member path for instances collection', ->
-        items = Interpolated.find [1,2,'all']
+        items = Interpolated.all [1,2]
         checkAndRespond @server.requests[0], 'GET', /^\/grand_parents\/1\/parents\/2\/tests\?_=\d+/, '{"tests": [{"test": {"id": 3}}]}'
-        expect(items.at(0).memberPath()).toEqual '/grand_parents/1/parents/2/tests/3'
+        expect(items[0].memberPath()).toEqual '/grand_parents/1/parents/2/tests/3'
 
   describe '@collectionPath', ->
     it 'builds collection path', ->
@@ -159,33 +159,33 @@ describe "Joosy.Resources.REST", ->
         expect(resource).toBe cbResource
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/1\?_=\d+/, rawData
 
-  describe "@find('all')", ->
+  describe '@all', ->
     rawData = '{"page": 42, "fluffies": [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]}'
 
     beforeEach ->
       @callback = sinon.spy (error, target, data) ->
-        expect(target instanceof Joosy.Resources.RESTCollection).toEqual true
-        expect(target.size()).toEqual 2
-        expect(target.at(0) instanceof Fluffy).toEqual true
+        expect(target instanceof Joosy.Resources.Array).toEqual true
+        expect(target.length).toEqual 2
+        expect(target[0] instanceof Fluffy).toEqual true
         expect(data).toEqual $.parseJSON(rawData)
 
     it "gets collection without params", ->
-      resource = Fluffy.find 'all', @callback
+      resource = Fluffy.all @callback
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\?_=\d+/, rawData
       expect(@callback.callCount).toEqual 1
 
     it "gets collection with action", ->
-      resource = Fluffy.find 'all', {action: 'action'}, @callback
+      resource = Fluffy.all {action: 'action'}, @callback
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/action\?_=\d+/, rawData
       expect(@callback.callCount).toEqual 1
 
     it "gets collection with params", ->
-      resource = Fluffy.find 'all', params: {foo: 'bar'}, @callback
+      resource = Fluffy.all {params: {foo: 'bar'}}, @callback
       checkAndRespond @server.requests[0], 'GET', /^\/fluffies\?foo=bar&_=\d+/, rawData
       expect(@callback.callCount).toEqual 1
 
     it 'gets collection with url', ->
-      resource = Fluffy.find 'all', url: '/some/custom/url', @callback
+      resource = Fluffy.all url: '/some/custom/url', @callback
       checkAndRespond @server.requests[0], 'GET', /^\/some\/custom\/url\?_=\d+/, rawData
       expect(@callback.callCount).toEqual 1
 

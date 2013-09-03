@@ -65,23 +65,6 @@ class Joosy.Resources.Base extends Joosy.Function
     @::__entityName = name
 
   #
-  # Sets the collection to use
-  #
-  # @note By default will try to seek for `EntityNamesCollection`.
-  #   Will fallback to {Joosy.Resources.Collection}
-  #
-  # @param [Class] klass       Class to assign as collection
-  #
-  @collection: (klass) -> @::__collection = -> klass
-
-  #
-  # Implements {Joosy.Resources.Base.collection} default behavior.
-  #
-  __collection: ->
-    named = @__entityName.camelize().pluralize() + 'Collection'
-    if window[named] then window[named] else Joosy.Resources.Collection
-
-  #
   # Dynamically creates collection of inline resources.
   #
   # Inline resources share the instance with direct data and therefore can be used
@@ -289,9 +272,8 @@ class Joosy.Resources.Base extends Joosy.Function
 
   __map: (data, name, klass) ->
     if Object.isArray data[name]
-      entry = new (klass::__collection()) klass
-      entry.load data[name]
-      data[name] = entry
+      entries = data[name].map (x) -> klass.build x
+      data[name] = new Joosy.Resources.Array entries...
     else if Object.isObject data[name]
       data[name] = klass.build data[name]
     data

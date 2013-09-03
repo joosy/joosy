@@ -85,48 +85,13 @@ describe "Joosy.Resources.Base", ->
         {foo: 'bar'},
         {bar: 'baz'}
       ]
-    expect(resource('rumbaMumbas') instanceof Joosy.Resources.Collection).toBeTruthy()
-    expect(resource('rumbaMumbas').at(0)('foo')).toEqual 'bar'
+    expect(resource('rumbaMumbas') instanceof Joosy.Resources.Array).toBeTruthy()
+    expect(resource('rumbaMumbas')[0]('foo')).toEqual 'bar'
 
     resource = S.build
       rumbaMumba: {foo: 'bar'}
     expect(resource('rumbaMumba') instanceof Joosy.Resources.Base).toBeTruthy()
     expect(resource('rumbaMumba.foo')).toEqual 'bar'
-
-  it "should use magic collections", ->
-    class window.RumbaMumbasCollection extends Joosy.Resources.Collection
-
-    class RumbaMumba extends Joosy.Resources.Base
-      @entity 'rumba_mumba'
-    class R extends Joosy.Resources.Base
-      @map 'rumbaMumbas', RumbaMumba
-
-    resource = R.build
-      rumbaMumbas: [
-        {foo: 'bar'},
-        {bar: 'baz'}
-      ]
-    expect(resource('rumbaMumbas') instanceof RumbaMumbasCollection).toBeTruthy()
-    expect(resource('rumbaMumbas').at(0)('foo')).toEqual 'bar'
-
-    window.RumbaMumbasCollection = undefined
-
-  it "should use manually set collections", ->
-    class OloCollection extends Joosy.Resources.Collection
-
-    class RumbaMumba extends Joosy.Resources.Base
-      @entity 'rumba_mumba'
-      @collection OloCollection
-    class R extends Joosy.Resources.Base
-      @map 'rumbaMumbas', RumbaMumba
-
-    resource = R.build
-      rumbaMumbas: [
-        {foo: 'bar'},
-        {bar: 'baz'}
-      ]
-    expect(resource('rumbaMumbas') instanceof OloCollection).toBeTruthy()
-    expect(resource('rumbaMumbas').at(0)('foo')).toEqual 'bar'
 
   describe "identity map", ->
     it "handles builds", ->

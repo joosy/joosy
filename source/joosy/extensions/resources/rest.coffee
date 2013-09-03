@@ -1,5 +1,4 @@
 #= require ./base
-#= require ./rest_collection
 
 #
 # Resource with REST/JSON backend
@@ -65,15 +64,6 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   at: (args...) ->
     new (@constructor.at args...) @data
-
-  #
-  # Implements `@collection` default behavior.
-  # Changes the default fallback to Joosy.Resources.RESTCollection.
-  #
-  __collection: ->
-    named = @__entityName.camelize().pluralize() + 'Collection'
-    if window[named] then window[named] else Joosy.Resources.RESTCollection
-
 
   #
   # Interpolates path with masks by given array of params
@@ -262,12 +252,23 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
     @constructor.__query @memberPath(options), 'DELETE', options.params, callback
 
   #
-  # Requests the required resources from backend
+  # Refetches the data from backend and triggers `changed`
   #
-  # @param [String] where         Possible values: 'all', id.
-  #   'all' will query for collection from collectionPath.
-  #   Everything else will be considered as an id string and will make resource
-  #   query for single instance from memberPath.
+  # @param [Hash] options         See {Joosy.Resources.REST.find} for possible options
+  # @param [Function] callback    Resulting callback
+  # @param [Object]   callback    `(error, instance, data) -> ...`
+  #
+  reload: (options={}, callback=false) ->
+    [options, callback] = @__extractOptionsAndCallback(options, callback)
+
+    @constructor.__query @memberPath(options), 'GET', options.params, (error, data, xhr) =>
+      @load data if data?
+      callback?(error, @, data, xhr)
+
+  #
+  # Requests the required resource from backend
+  #
+  # @param [String] where         id or an array of ids for interpolated path
   # @param [Hash] options         Path modification options
   # @param [Function] callback    `(error, instance, data) -> ...`
   #
@@ -280,21 +281,59 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   @find: (where, options={}, callback=false) ->
     [options, callback] = @::__extractOptionsAndCallback(options, callback)
 
-    id = if Object.isArray(where) then where.last() else where
-
-    if id == 'all'
-      result = new (@::__collection()) this, options
-      path   = @collectionPath where, options
+    id = if where instanceof Array 
+      where[where.length-1]
     else
-      result = @build id
-      path   = @memberPath where, options
+      where
 
-    if Object.isArray(where) && where.length > 1
+    result = @build id
+
+    # Substitute interpolation mask with actual path
+    if where instanceof Array && where.length > 1
       result.__source = @collectionPath where
 
-    @__query path, 'GET', options.params, (error, data, xhr) =>
+    @__query @memberPath(where, options), 'GET', options.params, (error, data, xhr) =>
       result.load data if data?
       callback?(error, result, data, xhr)
+
+    result
+
+  #
+  # Requests the required collection of resources from backend
+  #
+  # @param [String] where         id or an array of ids for interpolated path
+  # @param [Hash] options         Path modification options
+  # @param [Function] callback    `(error, instance, data) -> ...`
+  #
+  # @option options [String] action             Adds the given string as a last path element
+  #   i.e. /resources/trololo
+  # @option options [String] url                Sets url for request instead of generated
+  #   i.e. /some/custom/url
+  # @option options [Hash] params               Passes the given params to the query
+  #
+  @all: (where, options={}, callback=false) ->
+    if Object.isFunction(where) || Object.isObject(where)
+      [options, callback] = @::__extractOptionsAndCallback(where, options)
+      where = []
+    else
+      [options, callback] = @::__extractOptionsAndCallback(options, callback)
+
+    result = new Joosy.Resources.Array
+
+    @__query @collectionPath(where, options), 'GET', options.params, (error, rawData, xhr) =>
+      if (data = rawData)?
+        if Object.isObject(data) && !(data = data[@::__entityName.pluralize()])
+          throw new Error "Invalid data for `all` received: #{JSON.stringify(data)}"
+
+        data = data.map (x) =>
+          instance = @build x
+          # Substitute interpolation mask with actual path
+          instance.__source = @collectionPath where if where.length > 1
+          instance
+
+        result.load data...
+
+      callback?(error, result, rawData, xhr)
 
     result
 
@@ -321,20 +360,6 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
       Joosy.Module.merge options, @::__requestOptions
 
     $.ajax options
-
-  #
-  # Refetches the data from backend and triggers `changed`
-  #
-  # @param [Hash] options         See {Joosy.Resources.REST.find} for possible options
-  # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    `(error, instance, data) -> ...`
-  #
-  reload: (options={}, callback=false) ->
-    [options, callback] = @__extractOptionsAndCallback(options, callback)
-
-    @constructor.__query @memberPath(options), 'GET', options.params, (error, data, xhr) =>
-      @load data if data?
-      callback?(error, @, data, xhr)
 
   #
   # utility function for better API support for unrequired first options parameter

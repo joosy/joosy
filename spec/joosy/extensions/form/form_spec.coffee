@@ -8,7 +8,7 @@ describe "Joosy.Form", ->
     @nudeForm = "<form id='nude'><input name='test[foo]'/><input name='test[bar]'/><input name='test[bool]' type='checkbox' value='1'/><input name='test[set]' type='radio' value='qwe' /><input name='test[set]' type='radio' value='zxc' /></form>"
     @putForm  = "<form id='put' method='put'><input name='test[camel_baz]'/></form>"
     @moreForm = "<form id='more' method='put'><input name='test[ololo]'/></form>"
-    @nestedForm = "<form id='nested'><input name='test[zee][capped][test]'/><input name='test[items_attributes][0][attr]'/><input name='test[items_attributes][1][attr]'/><input name='test[single_attributes][0][attr]'/></form>"
+    @nestedForm = "<form id='nested'><input name='test[zee][capped][test]'/><input name='test[items_attributes][0][attr]'/><input name='test[items_attributes][1][attr]'/><input name='test[single_attributes][attr]'/></form>"
     @exactForm = "<form id='exact'><input name='test[EXact][MATCH]'/></form>"
     @arrayForm = "<form id='array'><input name='test[arr][1][0][1]'/></form>"
 
@@ -38,7 +38,7 @@ describe "Joosy.Form", ->
           test: 'test'
       EXact:
         MATCH: 'works'
-      items: (new Joosy.Resources.RESTCollection(Test)).load([{attr: 'one'}, {attr: 'two'}])
+      items: new Joosy.Resources.Array Test.build(attr: 'one'), Test.build(attr: 'two')
       single: Test.build(attr: 'sin')
 
   afterEach ->

@@ -190,11 +190,11 @@ class Joosy.Form extends Joosy.Module
             input.filter("[value='#{val}']").attr 'checked', 'checked'
           else
             input.val val
-        if val instanceof Joosy.Resources.RESTCollection
-          for entity, i in val.data
+        if val instanceof Joosy.Resources.Array
+          for entity, i in val
             filler entity.data, @concatFieldName(scope, "[#{property}_attributes][#{i}]")
         else if val instanceof Joosy.Resources.REST
-          filler val.data, @concatFieldName(scope, "[#{property}_attributes][0]")
+          filler val.data, @concatFieldName(scope, "[#{property}_attributes]")
         else if Object.isObject(val) || Object.isArray(val)
           filler val, key
         else

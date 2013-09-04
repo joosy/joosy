@@ -281,7 +281,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   @find: (where, options={}, callback=false) ->
     [options, callback] = @::__extractOptionsAndCallback(options, callback)
 
-    id = if where instanceof Array 
+    id = if where instanceof Array
       where[where.length-1]
     else
       where

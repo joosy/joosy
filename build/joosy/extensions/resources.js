@@ -27,22 +27,6 @@
       return this.prototype.__entityName = name;
     };
 
-    Base.collection = function(klass) {
-      return this.prototype.__collection = function() {
-        return klass;
-      };
-    };
-
-    Base.prototype.__collection = function() {
-      var named;
-      named = this.__entityName.camelize().pluralize() + 'Collection';
-      if (window[named]) {
-        return window[named];
-      } else {
-        return Joosy.Resources.Collection;
-      }
-    };
-
     Base.map = function(name, klass) {
       if (klass == null) {
         klass = false;
@@ -228,11 +212,16 @@
     };
 
     Base.prototype.__map = function(data, name, klass) {
-      var entry;
+      var entries;
       if (Object.isArray(data[name])) {
-        entry = new (klass.prototype.__collection())(klass);
-        entry.load(data[name]);
-        data[name] = entry;
+        entries = data[name].map(function(x) {
+          return klass.build(x);
+        });
+        data[name] = (function(func, args, ctor) {
+          ctor.prototype = func.prototype;
+          var child = new ctor, result = func.apply(child, args);
+          return Object(result) === result ? result : child;
+        })(Joosy.Resources.Array, entries, function(){});
       } else if (Object.isObject(data[name])) {
         data[name] = klass.build(data[name]);
       }
@@ -246,191 +235,6 @@
     return Base;
 
   })(Joosy.Function);
-
-}).call(this);
-(function() {
-  var __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __slice = [].slice;
-
-  Joosy.Resources.Collection = (function(_super) {
-    __extends(Collection, _super);
-
-    Collection.include(Joosy.Modules.Events);
-
-    Collection.beforeLoad = function(action) {
-      return this.prototype.__beforeLoad = action;
-    };
-
-    Collection.model = function(model) {
-      return this.prototype.model = model;
-    };
-
-    function Collection(model, findOptions) {
-      if (model == null) {
-        model = false;
-      }
-      this.findOptions = findOptions;
-      if (model) {
-        this.model = model;
-      }
-      this.data = [];
-      if (!this.model) {
-        throw new Error("" + (Joosy.Module.__className(this)) + "> model can't be empty");
-      }
-    }
-
-    Collection.prototype.load = function(entities, notify) {
-      if (notify == null) {
-        notify = true;
-      }
-      if (this.__beforeLoad != null) {
-        entities = this.__beforeLoad(entities);
-      }
-      this.data = this.modelize(entities);
-      if (notify) {
-        this.trigger('changed');
-      }
-      return this;
-    };
-
-    Collection.prototype.modelize = function(collection) {
-      var root,
-        _this = this;
-      root = this.model.prototype.__entityName.pluralize();
-      if (!(collection instanceof Array)) {
-        collection = collection != null ? collection[root.camelize(false)] : void 0;
-        if (!(collection instanceof Array)) {
-          throw new Error("Can not read incoming JSON");
-        }
-      }
-      return collection.map(function(x) {
-        return _this.model.build(x);
-      });
-    };
-
-    Collection.prototype.each = function(callback) {
-      return this.data.each(callback);
-    };
-
-    Collection.prototype.size = function() {
-      return this.data.length;
-    };
-
-    Collection.prototype.find = function(description) {
-      return this.data.find(description);
-    };
-
-    Collection.prototype.sortBy = function() {
-      var params, _ref;
-      params = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return (_ref = this.data).sortBy.apply(_ref, params);
-    };
-
-    Collection.prototype.findById = function(id) {
-      return this.data.find(function(x) {
-        return x.id().toString() === id.toString();
-      });
-    };
-
-    Collection.prototype.at = function(i) {
-      return this.data[i];
-    };
-
-    Collection.prototype.remove = function(target, notify) {
-      var index, result;
-      if (notify == null) {
-        notify = true;
-      }
-      if (Object.isNumber(target)) {
-        index = target;
-      } else {
-        index = this.data.indexOf(target);
-      }
-      if (index >= 0) {
-        result = this.data.splice(index, 1)[0];
-        if (notify) {
-          this.trigger('changed');
-        }
-      }
-      return result;
-    };
-
-    Collection.prototype.add = function(element, index, notify) {
-      if (index == null) {
-        index = false;
-      }
-      if (notify == null) {
-        notify = true;
-      }
-      if (typeof index === 'number') {
-        this.data.splice(index, 0, element);
-      } else {
-        this.data.push(element);
-      }
-      if (notify) {
-        this.trigger('changed');
-      }
-      return element;
-    };
-
-    return Collection;
-
-  })(Joosy.Module);
-
-}).call(this);
-(function() {
-  var _ref,
-    __hasProp = {}.hasOwnProperty,
-    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
-    __slice = [].slice;
-
-  Joosy.Resources.RESTCollection = (function(_super) {
-    __extends(RESTCollection, _super);
-
-    function RESTCollection() {
-      _ref = RESTCollection.__super__.constructor.apply(this, arguments);
-      return _ref;
-    }
-
-    RESTCollection.include(Joosy.Modules.Log);
-
-    RESTCollection.include(Joosy.Modules.Events);
-
-    RESTCollection.prototype.reload = function(options, callback) {
-      var _this = this;
-      if (options == null) {
-        options = {};
-      }
-      if (callback == null) {
-        callback = false;
-      }
-      if (Object.isFunction(options)) {
-        callback = options;
-        options = {};
-      }
-      return this.model.__query(this.model.collectionPath(options, this.__source), 'GET', options.params, function(error, data, xhr) {
-        if (data != null) {
-          _this.load(data);
-        }
-        return typeof callback === "function" ? callback(error, _this, data, xhr) : void 0;
-      });
-    };
-
-    RESTCollection.prototype.load = function() {
-      var args, res,
-        _this = this;
-      args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      res = RESTCollection.__super__.load.apply(this, args);
-      this.data.each(function(x) {
-        return x.__source = _this.__source;
-      });
-      return res;
-    };
-
-    return RESTCollection;
-
-  })(Joosy.Resources.Collection);
 
 }).call(this);
 (function() {
@@ -497,16 +301,6 @@
       var args, _ref1;
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       return new ((_ref1 = this.constructor).at.apply(_ref1, args))(this.data);
-    };
-
-    REST.prototype.__collection = function() {
-      var named;
-      named = this.__entityName.camelize().pluralize() + 'Collection';
-      if (window[named]) {
-        return window[named];
-      } else {
-        return Joosy.Resources.RESTCollection;
-      }
     };
 
     REST.prototype.__interpolatePath = function(source, ids) {
@@ -642,8 +436,26 @@
       return this.constructor.__query(this.memberPath(options), 'DELETE', options.params, callback);
     };
 
+    REST.prototype.reload = function(options, callback) {
+      var _ref1,
+        _this = this;
+      if (options == null) {
+        options = {};
+      }
+      if (callback == null) {
+        callback = false;
+      }
+      _ref1 = this.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
+      return this.constructor.__query(this.memberPath(options), 'GET', options.params, function(error, data, xhr) {
+        if (data != null) {
+          _this.load(data);
+        }
+        return typeof callback === "function" ? callback(error, _this, data, xhr) : void 0;
+      });
+    };
+
     REST.find = function(where, options, callback) {
-      var id, path, result, _ref1,
+      var id, result, _ref1,
         _this = this;
       if (options == null) {
         options = {};
@@ -652,22 +464,53 @@
         callback = false;
       }
       _ref1 = this.prototype.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
-      id = Object.isArray(where) ? where.last() : where;
-      if (id === 'all') {
-        result = new (this.prototype.__collection())(this, options);
-        path = this.collectionPath(where, options);
-      } else {
-        result = this.build(id);
-        path = this.memberPath(where, options);
-      }
-      if (Object.isArray(where) && where.length > 1) {
+      id = where instanceof Array ? where[where.length - 1] : where;
+      result = this.build(id);
+      if (where instanceof Array && where.length > 1) {
         result.__source = this.collectionPath(where);
       }
-      this.__query(path, 'GET', options.params, function(error, data, xhr) {
+      this.__query(this.memberPath(where, options), 'GET', options.params, function(error, data, xhr) {
         if (data != null) {
           result.load(data);
         }
         return typeof callback === "function" ? callback(error, result, data, xhr) : void 0;
+      });
+      return result;
+    };
+
+    REST.all = function(where, options, callback) {
+      var result, _ref1, _ref2,
+        _this = this;
+      if (options == null) {
+        options = {};
+      }
+      if (callback == null) {
+        callback = false;
+      }
+      if (Object.isFunction(where) || Object.isObject(where)) {
+        _ref1 = this.prototype.__extractOptionsAndCallback(where, options), options = _ref1[0], callback = _ref1[1];
+        where = [];
+      } else {
+        _ref2 = this.prototype.__extractOptionsAndCallback(options, callback), options = _ref2[0], callback = _ref2[1];
+      }
+      result = new Joosy.Resources.Array;
+      this.__query(this.collectionPath(where, options), 'GET', options.params, function(error, rawData, xhr) {
+        var data;
+        if ((data = rawData) != null) {
+          if (Object.isObject(data) && !(data = data[_this.prototype.__entityName.pluralize()])) {
+            throw new Error("Invalid data for `all` received: " + (JSON.stringify(data)));
+          }
+          data = data.map(function(x) {
+            var instance;
+            instance = _this.build(x);
+            if (where.length > 1) {
+              instance.__source = _this.collectionPath(where);
+            }
+            return instance;
+          });
+          result.load.apply(result, data);
+        }
+        return typeof callback === "function" ? callback(error, result, rawData, xhr) : void 0;
       });
       return result;
     };
@@ -697,24 +540,6 @@
         Joosy.Module.merge(options, this.prototype.__requestOptions);
       }
       return $.ajax(options);
-    };
-
-    REST.prototype.reload = function(options, callback) {
-      var _ref1,
-        _this = this;
-      if (options == null) {
-        options = {};
-      }
-      if (callback == null) {
-        callback = false;
-      }
-      _ref1 = this.__extractOptionsAndCallback(options, callback), options = _ref1[0], callback = _ref1[1];
-      return this.constructor.__query(this.memberPath(options), 'GET', options.params, function(error, data, xhr) {
-        if (data != null) {
-          _this.load(data);
-        }
-        return typeof callback === "function" ? callback(error, _this, data, xhr) : void 0;
-      });
     };
 
     REST.prototype.__extractOptionsAndCallback = function(options, callback) {

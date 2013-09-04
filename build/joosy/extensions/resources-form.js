@@ -130,7 +130,7 @@
         }
         data.__joosy_form_filler_lock = true;
         Object.each(data, function(property, val) {
-          var entity, i, input, key, _i, _len, _ref, _results;
+          var entity, i, input, key, _i, _len, _results;
           key = _this.concatFieldName(scope, property);
           input = _this.$fields().filter("[name='" + key + "']:not(:file),[name='" + (key.underscore()) + "']:not(:file),[name='" + (key.camelize(false)) + "']:not(:file)");
           if (input.length > 0) {
@@ -146,16 +146,15 @@
               input.val(val);
             }
           }
-          if (val instanceof Joosy.Resources.RESTCollection) {
-            _ref = val.data;
+          if (val instanceof Joosy.Resources.Array) {
             _results = [];
-            for (i = _i = 0, _len = _ref.length; _i < _len; i = ++_i) {
-              entity = _ref[i];
+            for (i = _i = 0, _len = val.length; _i < _len; i = ++_i) {
+              entity = val[i];
               _results.push(filler(entity.data, _this.concatFieldName(scope, "[" + property + "_attributes][" + i + "]")));
             }
             return _results;
           } else if (val instanceof Joosy.Resources.REST) {
-            return filler(val.data, _this.concatFieldName(scope, "[" + property + "_attributes][0]"));
+            return filler(val.data, _this.concatFieldName(scope, "[" + property + "_attributes]"));
           } else if (Object.isObject(val) || Object.isArray(val)) {
             return filler(val, key);
           } else {

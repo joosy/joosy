@@ -205,16 +205,6 @@ r(&#39;foo.bar&#39;, &#39;fluffy&#39;)    # triggers &#39;changed&#39;</code></p
   </li>
   <li>
     <span class='signature'>
-      <a href='#collection-class'>
-        + (void) <strong>collection</strong>(klass)
-      </a>
-    </span>
-    <span class='desc'>
-      Sets the collection to use
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
       <a href='#map-class'>
         + (void) <strong>map</strong>(name, klass = false)
       </a>
@@ -246,16 +236,6 @@ r(&#39;foo.bar&#39;, &#39;fluffy&#39;)    # triggers &#39;changed&#39;</code></p
 </ul>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
-  <li>
-    <span class='signature'>
-      <a href='#__collection-instance'>
-        - (void) <strong>__collection</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      Implements <a href='../../../classes/Joosy/Resources/Base.html#collection-class'>Joosy.Resources.Base.collection</a> default behavior.
-    </span>
-  </li>
   <li>
     <span class='signature'>
       <a href='#id-instance'>
@@ -515,31 +495,6 @@ ensure correct garbage collection.</p>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='collection-class'>
-      + (void) <strong>collection</strong>(klass)
-    </p>
-    <div class='docstring'>
-  <div class='note'>
-    <strong>Note:</strong>
-    By default will try to seek for <code>EntityNamesCollection</code>. Will fallback to <a href='../../../classes/Joosy/Resources/Collection.html'>Joosy.Resources.Collection</a>
-  </div>
-  <p>Sets the collection to use</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>klass</span>
-      <span class='type'>
-        (<tt>Class</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Class to assign as collection</span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
     <p class='signature' id='map-class'>
       + (void) <strong>map</strong>(name, klass = false)
     </p>
@@ -625,16 +580,6 @@ data changes. See class example</p>
 </div>
       <h2>Instance Method Details</h2>
       <div class='methods'>
-  <div class='method_details'>
-    <p class='signature' id='__collection-instance'>
-      - (void) <strong>__collection</strong>()
-    </p>
-    <div class='docstring'>
-  <p>Implements <a href='../../../classes/Joosy/Resources/Base.html#collection-class'>Joosy.Resources.Base.collection</a> default behavior.</p>
-</div>
-<div class='tags'>
-</div>
-  </div>
   <div class='method_details'>
     <p class='signature' id='id-instance'>
       - (void) <strong>id</strong>()
@@ -868,7 +813,7 @@ data changes. See class example</p>
     </div>
     <div id='footer'>
   Generated on
-  Tue Sep 03 2013 21:52:50 GMT+0700 (ICT)
+  Wed Sep 04 2013 18:17:13 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

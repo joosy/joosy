@@ -247,7 +247,17 @@
       </a>
     </span>
     <span class='desc'>
-      Requests the required resources from backend
+      Requests the required resource from backend
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#all-class'>
+        + (void) <strong>all</strong>(where, options = {}, callback = false)
+      </a>
+    </span>
+    <span class='desc'>
+      Requests the required collection of resources from backend
     </span>
   </li>
   <li>
@@ -271,16 +281,6 @@
     </span>
     <span class='desc'>
       Creates the proxy of current resource instance binded as a children of given entity
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#__collection-instance'>
-        - (void) <strong>__collection</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      Implements <code>@collection</code> default behavior.
     </span>
   </li>
   <li>
@@ -386,8 +386,6 @@
                 <a href='../../../classes/Joosy/Resources/Base.html#resetIdentity-class'>.resetIdentity</a>,
                 <a href='../../../classes/Joosy/Resources/Base.html#primaryKey-class'>.primaryKey</a>,
                 <a href='../../../classes/Joosy/Resources/Base.html#entity-class'>.entity</a>,
-                <a href='../../../classes/Joosy/Resources/Base.html#collection-class'>.collection</a>,
-                <a href='../../../classes/Joosy/Resources/Base.html#__collection-instance'>#__collection</a>,
                 <a href='../../../classes/Joosy/Resources/Base.html#map-class'>.map</a>,
                 <a href='../../../classes/Joosy/Resources/Base.html#build-class'>.build</a>,
                 <a href='../../../classes/Joosy/Resources/Base.html#grab-class'>.grab</a>,
@@ -722,7 +720,7 @@ Callback will get parsed JSON object as a parameter.</p>
       + (void) <strong>find</strong>(where, options = {}, callback = false)
     </p>
     <div class='docstring'>
-  <p>Requests the required resources from backend</p>
+  <p>Requests the required resource from backend</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
@@ -733,7 +731,74 @@ Callback will get parsed JSON object as a parameter.</p>
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Possible values: &#39;all&#39;, id. &#39;all&#39; will query for collection from collectionPath. Everything else will be considered as an id string and will make resource query for single instance from memberPath.</span>
+      <span class='desc'>id or an array of ids for interpolated path</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Path modification options</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'><code>(error, instance, data) -&gt; ...</code></span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (option):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>action</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Adds the given string as a last path element i.e. /resources/trololo</span>
+    </li>
+    <li>
+      <span class='name'>url</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Sets url for request instead of generated i.e. /some/custom/url</span>
+    </li>
+    <li>
+      <span class='name'>params</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Passes the given params to the query</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='all-class'>
+      + (void) <strong>all</strong>(where, options = {}, callback = false)
+    </p>
+    <div class='docstring'>
+  <p>Requests the required collection of resources from backend</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>where</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>id or an array of ids for interpolated path</span>
     </li>
     <li>
       <span class='name'>options</span>
@@ -827,17 +892,6 @@ Callback will get parsed JSON object as a parameter.</p>
       <span class='desc'>Array of parent entities. Can be a string or another REST resource.</span>
     </li>
   </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='__collection-instance'>
-      - (void) <strong>__collection</strong>()
-    </p>
-    <div class='docstring'>
-  <p>Implements <code>@collection</code> default behavior.
-Changes the default fallback to Joosy.Resources.RESTCollection.</p>
-</div>
-<div class='tags'>
 </div>
   </div>
   <div class='method_details'>
@@ -1165,7 +1219,7 @@ Callback will get parsed JSON object as a parameter.</p>
     </div>
     <div id='footer'>
   Generated on
-  Tue Sep 03 2013 21:52:50 GMT+0700 (ICT)
+  Wed Sep 04 2013 18:17:13 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
   v1.7.0

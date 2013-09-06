@@ -31,6 +31,7 @@ module.exports = (grunt) ->
   # Grunt extensions
   #
   grunt.loadNpmTasks 'grill'
+  grunt.loadNpmTasks 'grunt-contrib-uglify'
   grunt.loadNpmTasks 'grunt-contrib-testem'
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-release'
@@ -45,6 +46,15 @@ module.exports = (grunt) ->
         destination: 'build'
         paths: 'source'
         root: ['joosy.coffee', 'joosy/resources', 'joosy/form.coffee']
+
+    uglify:
+      everything:
+        options:
+          report: 'min'
+        files:
+          'build/joosy.js': 'build/joosy.js'
+          'build/joosy/resources.js': 'build/joosy/resources.js'
+          'build/joosy/form.js': 'build/joosy/form.js'
 
     coffeelint:
       source:
@@ -106,16 +116,6 @@ module.exports = (grunt) ->
           'spec/joosy/environments/amd_spec.coffee'
         ]
       )
-      # extensions: testemOptions(
-      #   [
-      #     'bower_components/jquery/jquery.js', 
-      #     'bower_components/jquery-form/jquery.form.js'
-      #   ],
-      #   [
-      #     'joosy/extensions/*',
-      #     'spec/joosy/extensions/**/*_spec.coffee'
-      #   ]
-      # )
 
     release:
       options:
@@ -129,7 +129,7 @@ module.exports = (grunt) ->
   #
   grunt.registerTask 'default', 'testem'
 
-  grunt.registerTask 'compile', ['bowerize', 'grill:compile']
+  grunt.registerTask 'compile', ['bowerize', 'grill:compile', 'uglify']
 
   grunt.registerTask 'test', ->
     grunt.task.run 'coffeelint'

@@ -23,6 +23,7 @@ describe "Joosy", ->
   it "registers internal components as modules", ->
     expect(Object.keys(require.s.contexts._.registry).sortBy()).toEqual [
       'joosy/application',
+      'joosy/form',
       'joosy/layout',
       'joosy/modules/dom',
       'joosy/modules/events',
@@ -34,6 +35,7 @@ describe "Joosy", ->
       'joosy/page',
       'joosy/resources/array',
       'joosy/resources/hash',
+      'joosy/resources/rest',
       'joosy/resources/scalar',
       'joosy/router',
       'joosy/templaters/jst',

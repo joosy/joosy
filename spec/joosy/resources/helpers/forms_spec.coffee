@@ -1,9 +1,9 @@
 describe "Joosy.Helpers.Form", ->
-  class Test extends Joosy.Resources.Base
+  class Test extends Joosy.Resources.REST
     @entity 'test'
 
   h = Joosy.Helpers.Application
-  resource = Test.build 1
+  resource = Test.build id: 1
 
   describe "simple", ->
     ['text', 'file', 'hidden', 'password'].each (type) =>

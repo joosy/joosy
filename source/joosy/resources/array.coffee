@@ -1,5 +1,3 @@
-#= require joosy/modules/resources/cacher
-
 class Joosy.Resources.Array extends Array
 
   Joosy.Module.merge @, Joosy.Module
@@ -11,9 +9,6 @@ class Joosy.Resources.Array extends Array
 
   constructor: ->
     @__fillData arguments, false
-
-  get: (index) ->
-    @[index]
 
   set: (index, value) ->
     @[index] = value

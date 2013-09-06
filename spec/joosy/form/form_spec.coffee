@@ -1,8 +1,6 @@
 describe "Joosy.Form", ->
 
   beforeEach ->
-    Joosy.Resources.Base?.resetIdentity()
-
     @server = sinon.fakeServer.create()
     @seedGround()
     @nudeForm = "<form id='nude'><input name='test[foo]'/><input name='test[bar]'/><input name='test[bool]' type='checkbox' value='1'/><input name='test[set]' type='radio' value='qwe' /><input name='test[set]' type='radio' value='zxc' /></form>"
@@ -135,7 +133,7 @@ describe "Joosy.Form", ->
       expect(@nudeForm.$fields()[1].value).toEqual 'bar'
       expect(@nudeForm.$container.attr 'action').toEqual '/tests/1/calculate'
 
-      resource = @Test.build 'someId'
+      resource = @Test.build id: 'someId'
 
       @nudeForm.fill resource,
         action: resource.memberPath(action: 'calculate')

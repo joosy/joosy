@@ -1,12 +1,10 @@
-#= require ../form
-
 #
 # Form helper
 #
 Joosy.helpers 'Application', ->
 
   description = (resource, method, extendIds, idSuffix) ->
-    if Joosy.Module.hasAncestor resource.constructor, Joosy.Resources.Base
+    if resource.__entityName? && resource.id?
       id        = resource.id()
       resource  = resource.__entityName
 
@@ -48,9 +46,6 @@ Joosy.helpers 'Application', ->
 
     uuid = Joosy.uuid()
     form = @tag 'form', Joosy.Module.merge(options.html || {}, id: uuid), block?.call(this, new Form(this, resource, options))
-
-    @onRefresh? -> Joosy.Form.attach '#'+uuid, Joosy.Module.merge(options, resource: resource)
-
     form
 
   @label = (resource, method, options={}, content='') ->

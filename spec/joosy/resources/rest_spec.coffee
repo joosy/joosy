@@ -1,8 +1,5 @@
 describe "Joosy.Resources.REST", ->
 
-  beforeEach ->
-    Joosy.Resources.Base?.resetIdentity()
-
   class FluffyInline extends Joosy.Resources.REST
     @entity 'fluffy_inline'
 
@@ -50,18 +47,18 @@ describe "Joosy.Resources.REST", ->
 
     it 'makes a class whose instances get new source too', ->
       clone = @Test.at 'rumbas'
-      expect(clone.build(1).memberPath()).toEqual '/rumbas/tests/1'
+      expect(clone.build(id: 1).memberPath()).toEqual '/rumbas/tests/1'
 
     it 'accepts another resource instance', ->
-      clone = @Test.at Fluffy.build(1)
+      clone = @Test.at Fluffy.build(id: 1)
       expect(clone.collectionPath()).toEqual '/fluffies/1/tests'
 
     it 'accepts array', ->
-      clone = @Test.at ['rumbas', Fluffy.build(1), 'salsas']
+      clone = @Test.at ['rumbas', Fluffy.build(id: 1), 'salsas']
       expect(clone.collectionPath()).toEqual '/rumbas/fluffies/1/salsas/tests'
 
     it 'accepts sequential attributes', ->
-      clone = @Test.at 'rumbas', 'salsas', Fluffy.build(1)
+      clone = @Test.at 'rumbas', 'salsas', Fluffy.build(id: 1)
       expect(clone.collectionPath()).toEqual '/rumbas/salsas/fluffies/1/tests'
 
   describe '::at', ->
@@ -70,25 +67,25 @@ describe "Joosy.Resources.REST", ->
         @entity 'test'
 
     it 'returns base class instance', ->
-      original = @Test.build id: 1, name: 'foobar'
+      original = @Test.build id: 1, name: 'foobar', 'thing': 'baseclass'
       clone    = original.at 'rumbas'
       expect(clone instanceof @Test).toBeTruthy()
       expect(clone.data).toEqual original.data
 
     it 'accepts string', ->
-      clone = @Test.build(1).at('rumbas')
+      clone = @Test.build(id: 1).at('rumbas')
       expect(clone.memberPath()).toEqual '/rumbas/tests/1'
 
     it 'accepts another resource instance', ->
-      clone = @Test.build(1).at(Fluffy.build(1))
+      clone = @Test.build(id: 1).at(Fluffy.build(id: 1))
       expect(clone.memberPath()).toEqual '/fluffies/1/tests/1'
 
     it 'accepts array', ->
-      clone = @Test.build(1).at ['rumbas', Fluffy.build(1), 'salsas']
+      clone = @Test.build(id: 1).at ['rumbas', Fluffy.build(id: 1), 'salsas']
       expect(clone.memberPath()).toEqual '/rumbas/fluffies/1/salsas/tests/1'
 
     it 'accepts sequential attributes', ->
-      clone = @Test.build(1).at 'rumbas', 'salsas', Fluffy.build(1)
+      clone = @Test.build(id: 1).at 'rumbas', 'salsas', Fluffy.build(id: 1)
       expect(clone.memberPath()).toEqual '/rumbas/salsas/fluffies/1/tests/1'
 
   describe '@memberPath', ->
@@ -207,7 +204,7 @@ describe "Joosy.Resources.REST", ->
       expect(data).toEqual {foo: 'bar'}
 
     describe "member", ->
-      resource = Fluffy.build 1
+      resource = Fluffy.build id: 1
 
       it "with get", ->
         resource.get {action: 'foo', params: {foo: 'bar'}}, callback
@@ -243,16 +240,3 @@ describe "Joosy.Resources.REST", ->
       it "with delete", ->
         resource.delete callback
         checkAndRespond @server.requests[0], 'DELETE', /^\/fluffies/, rawData
-
-  describe "identity map", ->
-    it "handles finds", ->
-      inline = FluffyInline.build(1)
-      root   = Fluffy.find 1
-
-      inline.bind 'changed', callback = sinon.spy()
-
-      checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/1\?_=\d+/,
-        '{"id": 1, "fluffy_inlines": [{"id": 1, "name": 1}, {"id": 2, "name": 2}]}'
-
-      expect(inline 'name').toEqual 1
-      expect(callback.callCount).toEqual 1

@@ -14,7 +14,7 @@ module.exports = (grunt) ->
           'spec/helpers/*.coffee'
         ], 
         vendor, 
-        'joosy.coffee', 
+        'joosy.coffee',
         specs
       ]).flatten()
 
@@ -44,7 +44,7 @@ module.exports = (grunt) ->
       assets:
         destination: 'build'
         paths: 'source'
-        root: ['joosy.coffee', 'joosy/extensions/*']
+        root: ['joosy.coffee', 'joosy/resources', 'joosy/form.coffee']
 
     coffeelint:
       source:
@@ -68,9 +68,27 @@ module.exports = (grunt) ->
         'bower_components/jquery/jquery.js', 
         'spec/joosy/core/**/*_spec.coffee'
       )
-      zepto: testemOptions(
+      'core-zepto': testemOptions(
         'bower_components/zepto/zepto.js', 
         'spec/joosy/core/**/*_spec.coffee'
+      )
+      resources: testemOptions(
+        'bower_components/jquery/jquery.js',
+        [
+          'joosy/resources/index.coffee',
+          'spec/joosy/resources/**/*_spec.coffee'
+        ]
+      )
+      form: testemOptions(
+        [
+          'bower_components/jquery/jquery.js',
+          'bower_components/jquery-form/jquery.form.js'
+        ],
+        [
+          'joosy/resources/index.coffee',
+          'joosy/form.coffee',
+          'spec/joosy/form/**/*_spec.coffee'
+        ]
       )
       'environments-global': testemOptions(
         'bower_components/jquery/jquery.js', 
@@ -79,20 +97,25 @@ module.exports = (grunt) ->
       'environments-amd': testemOptions(
         [
           'bower_components/jquery/jquery.js', 
+          'bower_components/jquery-form/jquery.form.js',
           'bower_components/requirejs/require.js'
         ],
-        'spec/joosy/environments/amd_spec.coffee'
-      )
-      extensions: testemOptions(
         [
-          'bower_components/jquery/jquery.js', 
-          'bower_components/jquery-form/jquery.form.js'
-        ],
-        [
-          'joosy/extensions/*',
-          'spec/joosy/extensions/**/*_spec.coffee'
+          'joosy/resources/index.coffee',
+          'joosy/form.coffee',
+          'spec/joosy/environments/amd_spec.coffee'
         ]
       )
+      # extensions: testemOptions(
+      #   [
+      #     'bower_components/jquery/jquery.js', 
+      #     'bower_components/jquery-form/jquery.form.js'
+      #   ],
+      #   [
+      #     'joosy/extensions/*',
+      #     'spec/joosy/extensions/**/*_spec.coffee'
+      #   ]
+      # )
 
     release:
       options:

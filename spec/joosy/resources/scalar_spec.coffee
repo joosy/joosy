@@ -10,18 +10,18 @@ describe "Joosy.Resources.Scalar", ->
 
     it 'clones', ->
       clone = @scalar.clone()
-      clone.set(1)
+      clone(1)
       expect(@scalar()).toEqual(5)
 
     it 'triggers', ->
       spy = sinon.spy()
       @scalar.bind 'changed', spy
 
-      @scalar.set(7)
-      expect(@scalar.get()).toEqual 7
+      @scalar(7)
+      expect(@scalar()).toEqual 7
 
       @scalar.load(8)
-      expect(@scalar.get()).toEqual 8
+      expect(@scalar()).toEqual 8
 
       expect(spy.callCount).toEqual 2
 
@@ -32,10 +32,10 @@ describe "Joosy.Resources.Scalar", ->
           data + 1
 
       scalar = new Scalar(5)
-      expect(scalar.get()).toEqual 6
+      expect(scalar()).toEqual 6
 
-      scalar.set(5)
-      expect(scalar.get()).toEqual 5
+      scalar(5)
+      expect(scalar()).toEqual 5
 
       scalar.load(7)
-      expect(scalar.get()).toEqual 8
+      expect(scalar()).toEqual 8

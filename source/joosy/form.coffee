@@ -397,3 +397,7 @@ class Joosy.Form extends Joosy.Module
 
   isArrayOfObjects: (array) ->
     Object.isArray(array) && array.every((elem) -> Object.isObject(elem))
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/form', -> Joosy.Form

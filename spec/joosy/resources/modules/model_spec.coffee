@@ -1,22 +1,10 @@
-describe "Joosy.Resources.Base", ->
+describe "Joosy.Modules.Resources.Model", ->
+
+  class Model extends Joosy.Resources.Hash
+    @include Joosy.Modules.Resources.Model
 
   beforeEach ->
-    Joosy.Resources.Base?.resetIdentity()
-
-  class TestInline extends Joosy.Resources.Base
-    @entity 'test_inline'
-
-  class Test extends Joosy.Resources.REST
-    @entity 'test'
-    @map 'test_inlines', TestInline
-
-  class TestNode extends Joosy.Resources.Base
-    @entity 'test_node'
-    @map 'children', TestNode
-    @map 'parent', TestNode
-
-  beforeEach ->
-    @resource = Joosy.Resources.Base.build @data =
+    @resource = new Model @data =
       foo: 'bar'
       bar: 'baz'
       very:
@@ -24,10 +12,10 @@ describe "Joosy.Resources.Base", ->
           value: 'boo!'
 
   it "has primary key", ->
-    expect(Test::__primaryKey).toEqual 'id'
+    expect(Model::__primaryKey).toEqual 'id'
 
   it "remembers where it belongs", ->
-    resource = new Joosy.Resources.Base foo: 'bar'
+    resource = new Model foo: 'bar'
     expect(resource.data).toEqual foo: 'bar'
 
   it "produces magic function", ->
@@ -60,27 +48,27 @@ describe "Joosy.Resources.Base", ->
     expect(callback.callCount).toEqual(2)
 
   it "handles the before filter", ->
-    class R extends Joosy.Resources.Base
+    class R extends Model
       @beforeLoad (data) ->
         data ||= {}
         data.tested = true
         data
 
-      resource = R.build()
+      resource = new R()
 
       expect(resource 'tested').toBeTruthy()
 
   it "should map inlines", ->
-    class RumbaMumba extends Joosy.Resources.Base
+    class RumbaMumba extends Model
       @entity 'rumba_mumba'
 
-    class R extends Joosy.Resources.Base
+    class R extends Model
       @map 'rumbaMumbas', RumbaMumba
 
-    class S extends Joosy.Resources.Base
+    class S extends Model
       @map 'rumbaMumba', RumbaMumba
 
-    resource = R.build
+    resource = new R
       rumbaMumbas: [
         {foo: 'bar'},
         {bar: 'baz'}
@@ -88,32 +76,7 @@ describe "Joosy.Resources.Base", ->
     expect(resource('rumbaMumbas') instanceof Joosy.Resources.Array).toBeTruthy()
     expect(resource('rumbaMumbas')[0]('foo')).toEqual 'bar'
 
-    resource = S.build
+    resource = new S
       rumbaMumba: {foo: 'bar'}
-    expect(resource('rumbaMumba') instanceof Joosy.Resources.Base).toBeTruthy()
+    expect(resource('rumbaMumba') instanceof Model).toBeTruthy()
     expect(resource('rumbaMumba.foo')).toEqual 'bar'
-
-  describe "identity map", ->
-    it "handles builds", ->
-      foo = Test.build 1
-      bar = Test.build 1
-
-      expect(foo).toEqual bar
-
-    it "handles maps", ->
-      inline = TestInline.build(1)
-      root   = Test.build
-        id: 1
-        test_inlines: [{id: 1}, {id: 2}]
-
-      inline('foo', 'bar')
-
-      expect(root('test_inlines').at(0)('foo')).toEqual 'bar'
-
-    it "handles nested bi-directional reference", ->
-      biDirectionTestNode = TestNode.build
-        id: 1
-        yolo: true
-        children: [{id: 2, parent: {id: 1, yolo: true}}]
-
-      expect(biDirectionTestNode).toEqual(biDirectionTestNode('children').at(0)('parent'))

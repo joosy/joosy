@@ -1,9 +1,20 @@
-#= require ./base
+#= require ./hash
+#= require joosy/modules/resources/model
 
 #
 # Resource with REST/JSON backend
 #
-class Joosy.Resources.REST extends Joosy.Resources.Base
+class Joosy.Resources.REST extends Joosy.Resources.Hash
+
+  @include Joosy.Modules.Resources.Model
+
+  @beforeLoad (data) ->
+    if Object.isObject(data) && Object.keys(data).length == 1 && @__entityName
+      name = @__entityName.camelize(false)
+      data = data[name] if data[name]
+
+    data
+
 
   @requestOptions: (options) ->
     @::__requestOptions = options
@@ -45,11 +56,11 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   #
   # @note accepts both array notation (Comment.at(['admin', @blog, @post])) and args notation (Comment.at('admin', @blog, @post))
   #
-  @at: (args...) ->
+  @at: ->
     @__atWrapper (callback) =>
       class Clone extends @
         callback(@)
-    , args...
+    , arguments...
 
 
   #
@@ -281,12 +292,13 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
   @find: (where, options={}, callback=false) ->
     [options, callback] = @::__extractOptionsAndCallback(options, callback)
 
-    id = if where instanceof Array
+    result = {}
+    result[@::__primaryKey] = if where instanceof Array
       where[where.length-1]
     else
       where
 
-    result = @build id
+    result = @build result
 
     # Substitute interpolation mask with actual path
     if where instanceof Array && where.length > 1
@@ -369,3 +381,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Base
       callback = options
       options  = {}
     [options, callback]
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/resources/rest', -> Joosy.Resources.REST

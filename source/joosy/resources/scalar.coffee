@@ -1,5 +1,3 @@
-#= require joosy/modules/resources/cacher
-
 class Joosy.Resources.Scalar extends Joosy.Function
 
   @include Joosy.Modules.Events
@@ -11,12 +9,6 @@ class Joosy.Resources.Scalar extends Joosy.Function
     return super ->
       @load value
 
-  get: ->
-    @value
-
-  set: (@value) ->
-    @trigger 'changed'
-
   load: (value) ->
     @value = @__applyBeforeLoads(value)
     @trigger 'changed'
@@ -27,9 +19,15 @@ class Joosy.Resources.Scalar extends Joosy.Function
 
   __call: ->
     if arguments.length > 0
-      @set arguments[0]
+      @__set arguments[0]
     else
-      @get()
+      @__get()
+
+  __get: ->
+    @value
+
+  __set: (@value) ->
+    @trigger 'changed'
 
   valueOf: ->
     @value.valueOf()

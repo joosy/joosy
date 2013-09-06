@@ -1,5 +1,3 @@
-#= require joosy/modules/resources/cacher
-
 class Joosy.Resources.Hash extends Joosy.Function
 
   @include Joosy.Modules.Events
@@ -11,7 +9,14 @@ class Joosy.Resources.Hash extends Joosy.Function
     return super ->
       @__fillData data, false
 
-  get: (path) ->
+  load: (data) ->
+    @__fillData data
+    @
+
+  clone: (callback) ->
+    new @constructor Object.clone(@data, true)
+
+  __get: (path) ->
     [instance, property] = @__callTarget path, true
 
     return undefined unless instance
@@ -21,7 +26,7 @@ class Joosy.Resources.Hash extends Joosy.Function
     else
       instance[property]
 
-  set: (path, value) ->
+  __set: (path, value) ->
     [instance, property] = @__callTarget path
 
     if instance instanceof Joosy.Resources.Hash
@@ -32,18 +37,11 @@ class Joosy.Resources.Hash extends Joosy.Function
     @trigger 'changed'
     value
 
-  load: (data) ->
-    @__fillData data
-    @
-
-  clone: (callback) ->
-    new @constructor Object.clone(@data, true)
-
   __call: (path, value) ->
     if arguments.length > 1
-      @set path, value
+      @__set path, value
     else
-      @get path
+      @__get path
 
   #
   # Locates the actual instance of attribute path `foo.bar` from get/set

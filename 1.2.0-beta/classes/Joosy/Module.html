@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <link rel='stylesheet' href='../../assets/codo.css' type='text/css'>
+  <script src='../../assets/codo.js'></script>
+  <script src='../../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../README.md.html' title='Joosy'>Joosy</a>
+    &raquo;
+    <a href='../../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Module</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../method_list.html'>Methods</a>
+      <a id='extra_list_link' href='../../extra_list.html'>Extras</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-E</span>
+        Extras list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Joosy.Module
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>source&#47;joosy&#47;module.coffee</td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base Joosy class extending Coffee class with module-like injections and other tiny stuff.</p>
+</div>
+<div class='tags'>
+</div>
+      <h2>Direct Known Subclasses</h2>
+      <p class='children'>
+                <a href='../../classes/Joosy/Form.html'>Joosy.Form</a>,
+                <a href='../../classes/Joosy/Function.html'>Joosy.Function</a>,
+                <a href='../../classes/Joosy/Router.html'>Joosy.Router</a>,
+        <a href='../../classes/Joosy/Widget.html'>Joosy.Widget</a>
+      </p>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#__className-class'>
+        + (String) <strong>__className</strong>(klass)
+      </a>
+    </span>
+    <span class='desc'>
+      Gets Object/Class class name.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#hasAncestor-class'>
+        + (Boolean) <strong>hasAncestor</strong>(what, klass)
+      </a>
+    </span>
+    <span class='desc'>
+      Determines if class A has class B in its ancestors.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#aliasMethodChain-class'>
+        + (void) <strong>aliasMethodChain</strong>(method, feature, action)
+      </a>
+    </span>
+    <span class='desc'>
+      Allows to override method keeping the previous implementation accessible
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#aliasStaticMethodChain-class'>
+        + (void) <strong>aliasStaticMethodChain</strong>(method, feature, action)
+      </a>
+    </span>
+    <span class='desc'>
+      Allows to override class-level method keeping the previous implementation accessible
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#merge-class'>
+        + (Object) <strong>merge</strong>(destination, source, unsafe = true, deep = false)
+      </a>
+    </span>
+    <span class='desc'>
+      Simple and fast shallow merge implementation.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#include-class'>
+        + (void) <strong>include</strong>(object)
+      </a>
+    </span>
+    <span class='desc'>
+      Mixes given object as dynamic methods
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#extend-class'>
+        + (void) <strong>extend</strong>(object)
+      </a>
+    </span>
+    <span class='desc'>
+      Mixes given object as static methods
+    </span>
+  </li>
+</ul>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='__className-class'>
+      + (String) <strong>__className</strong>(klass)
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Never use this to make some magical auto-suggestions!!! Remember: minification will rename your classes. Therefore it is only intended for development debugging purposes.
+  </div>
+  <p>Gets Object/Class class name.</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span><tt>String</tt></li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='hasAncestor-class'>
+      + (Boolean) <strong>hasAncestor</strong>(what, klass)
+    </p>
+    <div class='docstring'>
+  <p>Determines if class A has class B in its ancestors.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>what</span>
+      <span class='type'>
+        (<tt>Class</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Class to check againt</span>
+    </li>
+    <li>
+      <span class='name'>klass</span>
+      <span class='type'>
+        (<tt>Class</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Possible ancestor to search for</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span><tt>Boolean</tt></li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='aliasMethodChain-class'>
+      + (void) <strong>aliasMethodChain</strong>(method, feature, action)
+    </p>
+    <div class='docstring'>
+  <p>Allows to override method keeping the previous implementation accessible</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>method</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Name of the method to override</span>
+    </li>
+    <li>
+      <span class='name'>feature</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Shortcut to use as previous implementation suffix</span>
+    </li>
+    <li>
+      <span class='name'>action</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Name of new method to use</span>
+    </li>
+    <li>
+      <span class='name'>action</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>New implementation</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='aliasStaticMethodChain-class'>
+      + (void) <strong>aliasStaticMethodChain</strong>(method, feature, action)
+    </p>
+    <div class='docstring'>
+  <p>Allows to override class-level method keeping the previous implementation accessible</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>method</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Name of the method to override</span>
+    </li>
+    <li>
+      <span class='name'>feature</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Shortcut to use as previous implementation suffix</span>
+    </li>
+    <li>
+      <span class='name'>action</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Name of new method to use</span>
+    </li>
+    <li>
+      <span class='name'>action</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>New implementation</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='merge-class'>
+      + (Object) <strong>merge</strong>(destination, source, unsafe = true, deep = false)
+    </p>
+    <div class='docstring'>
+  <p>Simple and fast shallow merge implementation.</p><p>This is here due to: <a href="https://github.com/andrewplummer/Sugar/issues/100">https://github.com/andrewplummer/Sugar/issues/100</a>.
+This bug was closed and we got some performance but this implementation is
+still like 10x fater for basic tasks.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>destination</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Object to extend</span>
+    </li>
+    <li>
+      <span class='name'>source</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Source of new properties</span>
+    </li>
+    <li>
+      <span class='name'>unsafe</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Determines if we should rewrite destination properties</span>
+    </li>
+    <li>
+      <span class='name'>deep</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Whether merge should go down recursively into nested objects</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Object</tt>)
+      &mdash;
+      <span class='desc'>The new and mighty destination Object</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='include-class'>
+      + (void) <strong>include</strong>(object)
+    </p>
+    <div class='docstring'>
+  <p>Mixes given object as dynamic methods</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>object</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Module object</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='extend-class'>
+      + (void) <strong>extend</strong>(object)
+    </p>
+    <div class='docstring'>
+  <p>Mixes given object as static methods</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>object</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Module object</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Sun Sep 08 2013 03:08:37 GMT+0700 (ICT)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.7.0
+  (Node.js v0.10.5).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
+  <script src='../../../assets/codo.js'></script>
+  <script src='../../../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../../README.md.html' title='Joosy'>Joosy</a>
+    &raquo;
+    <a href='../../../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Modules</span>
+    &raquo;
+    <span class='title'>Renderer</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../../method_list.html'>Methods</a>
+      <a id='extra_list_link' href='../../../extra_list.html'>Extras</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-E</span>
+        Extras list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Mixin:
+        Joosy.Modules.Renderer
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>source&#47;joosy&#47;modules&#47;renderer.coffee</td>
+        </tr>
+        <tr>
+          <td>Included in:</td>
+          <td>
+            <a href='../../../classes/Joosy/Widget.html'>Joosy.Widget</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Core DOM rendering mechanics</p>
+</div>
+<div class='tags'>
+</div>
+      <h2>Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#included-mixin'>
+        ? (void) <strong>included</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Defines class-level helpers: @view and @helpers View (@view): Sets the curent template by specifying its name or lambda Helpers (@helpers): Lists set of helpers&#39; namespaces to include
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#render-mixin'>
+        ? (void) <strong>render</strong>(template, locals = {}, parentStackPointer = false)
+      </a>
+    </span>
+    <span class='desc'>
+      Renders given template with given locals
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#renderDynamic-mixin'>
+        ? (void) <strong>renderDynamic</strong>(template, locals = {}, parentStackPointer = false)
+      </a>
+    </span>
+    <span class='desc'>
+      Dynamically renders given template with given locals Whenever any of assigned locals triggers <code>changed</code> event, DOM will automatically be refreshed
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__assignHelpers-mixin'>
+        ? (void) <strong>__assignHelpers</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Converts all possible <code>@helper</code> arguments to the objects available for merge
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__instantiateHelpers-mixin'>
+        ? (void) <strong>__instantiateHelpers</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Collects and merges all requested helpers including global scope to one cached object
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__instantiateRenderers-mixin'>
+        ? (void) <strong>__instantiateRenderers</strong>(parentStackPointer)
+      </a>
+    </span>
+    <span class='desc'>
+      Defines local <code>@render*</code> methods with proper stack pointer set
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__render-mixin'>
+        ? (void) <strong>__render</strong>(dynamic, template, locals = {}, parentStackPointer = false)
+      </a>
+    </span>
+    <span class='desc'>
+      Actual rendering implementation
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__renderingStackElement-mixin'>
+        ? (void) <strong>__renderingStackElement</strong>(parent = null)
+      </a>
+    </span>
+    <span class='desc'>
+      Template for the rendering stack node
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__renderingStackChildFor-mixin'>
+        ? (void) <strong>__renderingStackChildFor</strong>(parentPointer)
+      </a>
+    </span>
+    <span class='desc'>
+      Creates new rendering stack node using given pointer as the parent
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__removeMetamorphs-mixin'>
+        ? (void) <strong>__removeMetamorphs</strong>(stackPointer = false)
+      </a>
+    </span>
+    <span class='desc'>
+      Disables and unbinds all dynamic bindings for the whole rendering stack
+    </span>
+  </li>
+</ul>
+      <h2>Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='included-mixin'>
+      ? (void) <strong>included</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Defines class-level helpers: @view and @helpers</p><p>View (@view): Sets the curent template by specifying its name or lambda
+Helpers (@helpers): Lists set of helpers&#39; namespaces to include</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='render-mixin'>
+      ? (void) <strong>render</strong>(template, locals = {}, parentStackPointer = false)
+    </p>
+    <div class='docstring'>
+  <p>Renders given template with given locals</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>template</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Name of the template to render using templater</span>
+    </li>
+    <li>
+      <span class='name'>template</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'><code>(locals) -&gt;</code> lambda to use as template</span>
+    </li>
+    <li>
+      <span class='name'>locals</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Locals to assign</span>
+    </li>
+    <li>
+      <span class='name'>parentStackPointer</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Internal rendering stack pointer</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='renderDynamic-mixin'>
+      ? (void) <strong>renderDynamic</strong>(template, locals = {}, parentStackPointer = false)
+    </p>
+    <div class='docstring'>
+  <p>Dynamically renders given template with given locals</p><p>Whenever any of assigned locals triggers <code>changed</code> event, DOM will automatically be refreshed</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>template</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Name of the template to render using templater</span>
+    </li>
+    <li>
+      <span class='name'>template</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'><code>(locals) -&gt;</code> lambda to use as template</span>
+    </li>
+    <li>
+      <span class='name'>locals</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Locals to assign</span>
+    </li>
+    <li>
+      <span class='name'>parentStackPointer</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Internal rendering stack pointer</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__assignHelpers-mixin'>
+      ? (void) <strong>__assignHelpers</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Converts all possible <code>@helper</code> arguments to the objects available for merge</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__instantiateHelpers-mixin'>
+      ? (void) <strong>__instantiateHelpers</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Collects and merges all requested helpers including global scope to one cached object</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__instantiateRenderers-mixin'>
+      ? (void) <strong>__instantiateRenderers</strong>(parentStackPointer)
+    </p>
+    <div class='docstring'>
+  <p>Defines local <code>@render*</code> methods with proper stack pointer set</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>parentStackPointer</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Internal rendering stack pointer</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__render-mixin'>
+      ? (void) <strong>__render</strong>(dynamic, template, locals = {}, parentStackPointer = false)
+    </p>
+    <div class='docstring'>
+  <p>Actual rendering implementation</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__renderingStackElement-mixin'>
+      ? (void) <strong>__renderingStackElement</strong>(parent = null)
+    </p>
+    <div class='docstring'>
+  <p>Template for the rendering stack node</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__renderingStackChildFor-mixin'>
+      ? (void) <strong>__renderingStackChildFor</strong>(parentPointer)
+    </p>
+    <div class='docstring'>
+  <p>Creates new rendering stack node using given pointer as the parent</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__removeMetamorphs-mixin'>
+      ? (void) <strong>__removeMetamorphs</strong>(stackPointer = false)
+    </p>
+    <div class='docstring'>
+  <p>Disables and unbinds all dynamic bindings for the whole rendering stack</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Sun Sep 08 2013 03:08:37 GMT+0700 (ICT)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.7.0
+  (Node.js v0.10.5).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

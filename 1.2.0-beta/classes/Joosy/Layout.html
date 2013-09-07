@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <link rel='stylesheet' href='../../assets/codo.css' type='text/css'>
+  <script src='../../assets/codo.js'></script>
+  <script src='../../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../README.md.html' title='Joosy'>Joosy</a>
+    &raquo;
+    <a href='../../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Layout</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../method_list.html'>Methods</a>
+      <a id='extra_list_link' href='../../extra_list.html'>Extras</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-E</span>
+        Extras list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Joosy.Layout
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>source&#47;joosy&#47;layout.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../../classes/Joosy/Widget.html'>Joosy.Widget</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Includes:</td>
+          <td>
+                        <a href='../../mixins/Joosy/Modules/Log.html'>Joosy.Modules.Log</a>,
+                        <a href='../../mixins/Joosy/Modules/Events.html'>Joosy.Modules.Events</a>,
+                        <a href='../../mixins/Joosy/Modules/DOM.html'>Joosy.Modules.DOM</a>,
+                        <a href='../../mixins/Joosy/Modules/Renderer.html'>Joosy.Modules.Renderer</a>,
+                        <a href='../../mixins/Joosy/Modules/TimeManager.html'>Joosy.Modules.TimeManager</a>,
+            <a href='../../mixins/Joosy/Modules/Filters.html'>Joosy.Modules.Filters</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base class for all Joosy Layouts.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample application layout
+    </h4>
+    <pre><code class='coffee'>class @ApplicationLayout extends Joosy.Layout
+  @view &#39;application&#39;</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#constructor-instance'>
+        - (void) <strong>constructor</strong>(params, previous)
+      </a>
+    </span>
+    <span class='constructor note title'>Constructor</span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#page-instance'>
+        - (void) <strong>page</strong>(tag, options = {})
+      </a>
+    </span>
+    <span class='desc'>
+      Helper that outputs container tag for the page
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#content-instance'>
+        - (jQuery) <strong>content</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Gets DOM element that should be used as container for nested Page
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__renderSection-instance'>
+        - (void) <strong>__renderSection</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__nestingMap-instance'>
+        - (void) <strong>__nestingMap</strong>(page)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__bootstrapDefault-instance'>
+        - (void) <strong>__bootstrapDefault</strong>(page, applicationContainer)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+</ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods inherited from
+        <a href='../../classes/Joosy/Widget.html'>Joosy.Widget</a>
+      </h3>
+      <p class='inherited'>
+                <a href='../../classes/Joosy/Widget.html#beforeLoad-class'>.beforeLoad</a>,
+                <a href='../../classes/Joosy/Widget.html#afterLoad-class'>.afterLoad</a>,
+                <a href='../../classes/Joosy/Widget.html#beforeUnload-class'>.beforeUnload</a>,
+                <a href='../../classes/Joosy/Widget.html#fetch-class'>.fetch</a>,
+                <a href='../../classes/Joosy/Widget.html#beforePaint-class'>.beforePaint</a>,
+                <a href='../../classes/Joosy/Widget.html#paint-class'>.paint</a>,
+                <a href='../../classes/Joosy/Widget.html#erase-class'>.erase</a>,
+                <a href='../../classes/Joosy/Widget.html#mapWidgets-class'>.mapWidgets</a>,
+                <a href='../../classes/Joosy/Widget.html#independent-class'>.independent</a>,
+                <a href='../../classes/Joosy/Widget.html#constructor-instance'>#constructor</a>,
+                <a href='../../classes/Joosy/Widget.html#registerWidget-instance'>#registerWidget</a>,
+                <a href='../../classes/Joosy/Widget.html#unregisterWidget-instance'>#unregisterWidget</a>,
+                <a href='../../classes/Joosy/Widget.html#replaceWidget-instance'>#replaceWidget</a>,
+                <a href='../../classes/Joosy/Widget.html#navigate-instance'>#navigate</a>,
+                <a href='../../classes/Joosy/Widget.html#__renderSection-instance'>#__renderSection</a>,
+                <a href='../../classes/Joosy/Widget.html#__nestingMap-instance'>#__nestingMap</a>,
+                <a href='../../classes/Joosy/Widget.html#__bootstrapDefault-instance'>#__bootstrapDefault</a>,
+                <a href='../../classes/Joosy/Widget.html#__bootstrap-instance'>#__bootstrap</a>,
+                <a href='../../classes/Joosy/Widget.html#__fetch-instance'>#__fetch</a>,
+                <a href='../../classes/Joosy/Widget.html#__erase-instance'>#__erase</a>,
+                <a href='../../classes/Joosy/Widget.html#__paint-instance'>#__paint</a>,
+                <a href='../../classes/Joosy/Widget.html#__load-instance'>#__load</a>,
+                <a href='../../classes/Joosy/Widget.html#__unload-instance'>#__unload</a>,
+                <a href='../../classes/Joosy/Widget.html#__normalizeSelector-instance'>#__normalizeSelector</a>,
+        <a href='../../classes/Joosy/Widget.html#__normalizeWidget-instance'>#__normalizeWidget</a>
+      </p>
+      <h3 class='inherited'>
+        Methods inherited from
+        <a href='../../classes/Joosy/Module.html'>Joosy.Module</a>
+      </h3>
+      <p class='inherited'>
+                <a href='../../classes/Joosy/Module.html#__className-class'>.__className</a>,
+                <a href='../../classes/Joosy/Module.html#hasAncestor-class'>.hasAncestor</a>,
+                <a href='../../classes/Joosy/Module.html#aliasMethodChain-class'>.aliasMethodChain</a>,
+                <a href='../../classes/Joosy/Module.html#aliasStaticMethodChain-class'>.aliasStaticMethodChain</a>,
+                <a href='../../classes/Joosy/Module.html#merge-class'>.merge</a>,
+                <a href='../../classes/Joosy/Module.html#include-class'>.include</a>,
+        <a href='../../classes/Joosy/Module.html#extend-class'>.extend</a>
+      </p>
+      <h2>
+        <small>Included Method Summary</small>
+      </h2>
+      <h3 class='included'>
+        Methods included from
+        <a href='../../mixins/Joosy/Modules/Log.html'>Joosy.Modules.Log</a>
+      </h3>
+      <p class='included'>
+                <a href='../../mixins/Joosy/Modules/Log.html#log-mixin'>#log</a>,
+                <a href='../../mixins/Joosy/Modules/Log.html#debug-mixin'>#debug</a>,
+        <a href='../../mixins/Joosy/Modules/Log.html#debugAs-mixin'>#debugAs</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href='../../mixins/Joosy/Modules/Events.html'>Joosy.Modules.Events</a>
+      </h3>
+      <p class='included'>
+                <a href='../../mixins/Joosy/Modules/Events.html#eventsNamespace-mixin'>#eventsNamespace</a>,
+                <a href='../../mixins/Joosy/Modules/Events.html#wait-mixin'>#wait</a>,
+                <a href='../../mixins/Joosy/Modules/Events.html#unwait-mixin'>#unwait</a>,
+                <a href='../../mixins/Joosy/Modules/Events.html#bind-mixin'>#bind</a>,
+                <a href='../../mixins/Joosy/Modules/Events.html#unbind-mixin'>#unbind</a>,
+                <a href='../../mixins/Joosy/Modules/Events.html#trigger-mixin'>#trigger</a>,
+                <a href='../../mixins/Joosy/Modules/Events.html#synchronize-mixin'>#synchronize</a>,
+        <a href='../../mixins/Joosy/Modules/Events.html#__splitEvents-mixin'>#__splitEvents</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href='../../mixins/Joosy/Modules/DOM.html'>Joosy.Modules.DOM</a>
+      </h3>
+      <p class='included'>
+                <a href='../../mixins/Joosy/Modules/DOM.html#included-mixin'>#included</a>,
+                <a href='../../mixins/Joosy/Modules/DOM.html#$-mixin'>#$</a>,
+                <a href='../../mixins/Joosy/Modules/DOM.html#__extractSelector-mixin'>#__extractSelector</a>,
+                <a href='../../mixins/Joosy/Modules/DOM.html#__assignElements-mixin'>#__assignElements</a>,
+                <a href='../../mixins/Joosy/Modules/DOM.html#__wrapElement-mixin'>#__wrapElement</a>,
+                <a href='../../mixins/Joosy/Modules/DOM.html#__delegateEvents-mixin'>#__delegateEvents</a>,
+        <a href='../../mixins/Joosy/Modules/DOM.html#__clearContainer-mixin'>#__clearContainer</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href='../../mixins/Joosy/Modules/Renderer.html'>Joosy.Modules.Renderer</a>
+      </h3>
+      <p class='included'>
+                <a href='../../mixins/Joosy/Modules/Renderer.html#included-mixin'>#included</a>,
+                <a href='../../mixins/Joosy/Modules/Renderer.html#render-mixin'>#render</a>,
+                <a href='../../mixins/Joosy/Modules/Renderer.html#renderDynamic-mixin'>#renderDynamic</a>,
+                <a href='../../mixins/Joosy/Modules/Renderer.html#__assignHelpers-mixin'>#__assignHelpers</a>,
+                <a href='../../mixins/Joosy/Modules/Renderer.html#__instantiateHelpers-mixin'>#__instantiateHelpers</a>,
+                <a href='../../mixins/Joosy/Modules/Renderer.html#__instantiateRenderers-mixin'>#__instantiateRenderers</a>,
+                <a href='../../mixins/Joosy/Modules/Renderer.html#__render-mixin'>#__render</a>,
+                <a href='../../mixins/Joosy/Modules/Renderer.html#__renderingStackElement-mixin'>#__renderingStackElement</a>,
+                <a href='../../mixins/Joosy/Modules/Renderer.html#__renderingStackChildFor-mixin'>#__renderingStackChildFor</a>,
+        <a href='../../mixins/Joosy/Modules/Renderer.html#__removeMetamorphs-mixin'>#__removeMetamorphs</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href='../../mixins/Joosy/Modules/TimeManager.html'>Joosy.Modules.TimeManager</a>
+      </h3>
+      <p class='included'>
+                <a href='../../mixins/Joosy/Modules/TimeManager.html#setTimeout-mixin'>#setTimeout</a>,
+                <a href='../../mixins/Joosy/Modules/TimeManager.html#setInterval-mixin'>#setInterval</a>,
+                <a href='../../mixins/Joosy/Modules/TimeManager.html#clearTimeout-mixin'>#clearTimeout</a>,
+                <a href='../../mixins/Joosy/Modules/TimeManager.html#clearInterval-mixin'>#clearInterval</a>,
+        <a href='../../mixins/Joosy/Modules/TimeManager.html#__clearTime-mixin'>#__clearTime</a>
+      </p>
+      <h3 class='included'>
+        Methods included from
+        <a href='../../mixins/Joosy/Modules/Filters.html'>Joosy.Modules.Filters</a>
+      </h3>
+      <p class='included'>
+        <a href='../../mixins/Joosy/Modules/Filters.html#included-mixin'>#included</a>
+      </p>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-instance'>
+      - (void) <strong>constructor</strong>(params, previous)
+    </p>
+    <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>params</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Route params</span>
+    </li>
+    <li>
+      <span class='name'>previous</span>
+      <span class='type'>
+        (<tt><a href='../../classes/Joosy/Layout.html'>Joosy.Layout</a></tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Layout to replace on load</span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='page-instance'>
+      - (void) <strong>page</strong>(tag, options = {})
+    </p>
+    <div class='docstring'>
+  <p>Helper that outputs container tag for the page</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>name</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Tag name</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Tag attributes</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='content-instance'>
+      - (jQuery) <strong>content</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Gets DOM element that should be used as container for nested Page</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span><tt>jQuery</tt></li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__renderSection-instance'>
+      - (void) <strong>__renderSection</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__nestingMap-instance'>
+      - (void) <strong>__nestingMap</strong>(page)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__bootstrapDefault-instance'>
+      - (void) <strong>__bootstrapDefault</strong>(page, applicationContainer)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Sun Sep 08 2013 03:08:37 GMT+0700 (ICT)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.7.0
+  (Node.js v0.10.5).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

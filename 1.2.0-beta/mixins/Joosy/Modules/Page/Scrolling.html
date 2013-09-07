@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <link rel='stylesheet' href='../../../../assets/codo.css' type='text/css'>
+  <script src='../../../../assets/codo.js'></script>
+  <script src='../../../../assets/search_data.js'></script>
+</head>
+  <body>
+    <div id='base' data-path='../../../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../../../README.md.html' title='Joosy'>Joosy</a>
+    &raquo;
+    <a href='../../../../class_index.html' title='Index'>Index</a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Modules</span>
+    &raquo;
+    <span class='title'>Page</span>
+    &raquo;
+    <span class='title'>Scrolling</span>
+    <nav>
+      <ul>
+        <li class='noframes'>
+          (<a class='noframes' href='#'>no frames</a>)
+        </li>
+      </ul>
+    </nav>
+    <div id='search'>
+      <a id='class_list_link' href='../../../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../../../method_list.html'>Methods</a>
+      <a id='extra_list_link' href='../../../../extra_list.html'>Extras</a>
+    </div>
+  </div>
+  <iframe id='search_frame'></iframe>
+  <div id='fuzzySearch'>
+    <input type='text'>
+    <ol></ol>
+  </div>
+  <div id='help'>
+    <p>
+      Quickly fuzzy find classes, mixins, methods, file:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-T</span>
+        Open fuzzy finder dialog
+      </li>
+    </ul>
+    <p>
+      In frame mode you can toggle the list naviation frame on the left side:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-L</span>
+        Toggle list view
+      </li>
+    </ul>
+    <p>
+      You can focus a list in frame mode or toggle a tab in frameless mode:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-C</span>
+        Class list
+      </li>
+      <li>
+        <span>Ctrl-I</span>
+        Mixin list
+      </li>
+      <li>
+        <span>Ctrl-F</span>
+        File list
+      </li>
+      <li>
+        <span>Ctrl-M</span>
+        Method list
+      </li>
+      <li>
+        <span>Ctrl-E</span>
+        Extras list
+      </li>
+    </ul>
+    <p>
+      You can focus and blur the search input:
+    </p>
+    <ul>
+      <li>
+        <span>Ctrl-S</span>
+        Focus search input
+      </li>
+      <li>
+        <span>Esc</span>
+        Blur search input
+      </li>
+    </ul>
+    <p>
+      In frameless mode you can close the list tab:
+    </p>
+    <ul>
+      <li>
+        <span>Esc</span>
+        Close list tab
+      </li>
+    </ul>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Mixin:
+        Joosy.Modules.Page.Scrolling
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>source&#47;joosy&#47;modules&#47;page&#47;scrolling.coffee</td>
+        </tr>
+        <tr>
+          <td>Included in:</td>
+          <td>
+            <a href='../../../../classes/Joosy/Page.html'>Joosy.Page</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#included-mixin'>
+        ? (void) <strong>included</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__performScrolling-mixin'>
+        ? (void) <strong>__performScrolling</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Scrolls page to stored positions
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__fixHeight-mixin'>
+        ? (void) <strong>__fixHeight</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Freezes the page height through $(html).
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__releaseHeight-mixin'>
+        ? (void) <strong>__releaseHeight</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Undo {#__fixHeight}
+    </span>
+  </li>
+</ul>
+      <h2>Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='included-mixin'>
+      ? (void) <strong>included</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__performScrolling-mixin'>
+      ? (void) <strong>__performScrolling</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Scrolls page to stored positions</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__fixHeight-mixin'>
+      ? (void) <strong>__fixHeight</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Freezes the page height through $(html).</p><p>Required to implement better {Joosy.Page.scroll} behavior.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__releaseHeight-mixin'>
+      ? (void) <strong>__releaseHeight</strong>()
+    </p>
+    <div class='docstring'>
+  <p>Undo {#__fixHeight}</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  Generated on
+  Sun Sep 08 2013 03:08:37 GMT+0700 (ICT)
+  by
+  <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
+  v1.7.0
+  (Node.js v0.10.5).
+  &#10034;
+  Press Ctrl-h to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/#!/netzpirat'>@netzpirat</a>
+  &#10034;
+  <a href='https://mksoft.ch'>mksoft.ch</a>
+</div>
+  </body>
+</html>

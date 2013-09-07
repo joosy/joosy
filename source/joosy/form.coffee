@@ -95,11 +95,10 @@ class Joosy.Form extends Joosy.Module
   # @option options [Boolean] debounce                     Drop submit events while there is a pending submit request
   #
   constructor: (form, options={}) ->
-    if Object.isFunction options
+    if typeof(options) == 'function'
       @success = options
     else
-      Object.each options, (key, value) =>
-        @[key] = value
+      @[key] = value for key, value of options
 
     @$container = $(form)
     return if @$container.length == 0
@@ -108,7 +107,7 @@ class Joosy.Form extends Joosy.Module
     @__delegateEvents()
 
     method = @$container.get(0).getAttribute('method')?.toLowerCase()
-    if method && !['get', 'post'].any method
+    if method && !['get', 'post'].indexOf(method) != -1
       @__markMethod method
       @$container.attr 'method', 'POST'
 
@@ -155,7 +154,7 @@ class Joosy.Form extends Joosy.Module
 
   #
   # Links current form with given resource and sets values of form inputs from with it.
-  # Form will use give resource while doing invalidation routine.
+  # Form will use given resource while doing invalidation routine.
   #
   # @param [Resource] resource      Resource to fill fields with
   # @param [Hash] options           Options
@@ -166,7 +165,7 @@ class Joosy.Form extends Joosy.Module
   # @option options [String] action          Action URL for the form
   #
   fill: (resource, options) ->
-    resource = resource.build() if Object.isFunction(resource.build)
+    resource = resource.build() if typeof(resource.build) == 'function'
     @__resource = resource
 
     if options?.decorator?
@@ -177,27 +176,29 @@ class Joosy.Form extends Joosy.Module
     filler = (data, scope) =>
       return if data.__joosy_form_filler_lock
       data.__joosy_form_filler_lock = true
-      Object.each data, (property, val) =>
-        key = @concatFieldName scope, property
-        input = @$fields().filter("[name='#{key}']:not(:file),[name='#{key.underscore()}']:not(:file),[name='#{key.camelize(false)}']:not(:file)")
-        if input.length > 0
-          if input.is ':checkbox'
-            if val
-              input.attr 'checked', 'checked'
+
+      for property, val of data
+        do (property, val) =>
+          key = @concatFieldName scope, property
+          input = @$fields().filter("[name='#{key}']:not(:file),[name='#{inflection.underscore(key)}']:not(:file),[name='#{inflection.camelize(key, true)}']:not(:file)")
+          if input.length > 0
+            if input.is ':checkbox'
+              if val
+                input.attr 'checked', 'checked'
+              else
+                input.removeAttr 'checked'
+            else if input.is ':radio'
+              input.filter("[value='#{val}']").attr 'checked', 'checked'
             else
-              input.removeAttr 'checked'
-          else if input.is ':radio'
-            input.filter("[value='#{val}']").attr 'checked', 'checked'
+              input.val val
+          if val instanceof Joosy.Resources.Array
+            for entity, i in val
+              filler entity.data, @concatFieldName(scope, "[#{property}_attributes][#{i}]")
+          else if val instanceof Joosy.Resources.REST
+            filler val.data, @concatFieldName(scope, "[#{property}_attributes]")
+          else if val?.constructor == Object || val instanceof Array
+            filler val, key
           else
-            input.val val
-        if val instanceof Joosy.Resources.Array
-          for entity, i in val
-            filler entity.data, @concatFieldName(scope, "[#{property}_attributes][#{i}]")
-        else if val instanceof Joosy.Resources.REST
-          filler val.data, @concatFieldName(scope, "[#{property}_attributes]")
-        else if Object.isObject(val) || Object.isArray(val)
-          filler val, key
-        else
       delete data.__joosy_form_filler_lock
 
     filler data, resource.__entityName || options.resourceName
@@ -264,9 +265,10 @@ class Joosy.Form extends Joosy.Module
     if !@error? || @error(errors) is true
       errors = @__stringifyErrors(errors)
 
-      Object.each errors, (field, notifications) =>
-        input = @findField(field).addClass @invalidationClass
-        @notification? input, notifications
+      for field, notifications of errors
+        do (field, notifications) =>
+          input = @findField(field).addClass @invalidationClass
+          @notification? input, notifications
 
       return errors
 
@@ -330,29 +332,30 @@ class Joosy.Form extends Joosy.Module
   __stringifyErrors: (errors) ->
     result = {}
 
-    errors = errors.errors if Object.isObject(errors?.errors)
+    errors = errors.errors if errors?.errors?.constructor == Object
 
-    Object.each errors, (field, notifications) =>
-      if @substitutions[field]?
-        field = @substitutions[field]
+    for field, notifications of errors
+      do (field, notifications) =>
+        if @substitutions[field]?
+          field = @substitutions[field]
 
-      if Object.isObject(notifications) || @isArrayOfObjects(notifications)
-        Object.each @__foldInlineEntities(notifications), (key, value) ->
-          result[field+key] = value
-      else
-        if field.indexOf(".") != -1
-          splited = field.split '.'
-          field   = splited.shift()
-          if @resourceName || @__resource
-            name    = @resourceName || @__resource.__entityName
-            field   = name + "[#{field}]"
-          field  += "[#{f}]" for f in splited
+        if notifications.constructor == Object || @isArrayOfObjects(notifications)
+          result[field+key] = value for key, value of @__foldInlineEntities(notifications)
+            
+        else
+          if field.indexOf(".") != -1
+            splited = field.split '.'
+            field   = splited.shift()
+            if @resourceName || @__resource
+              name    = @resourceName || @__resource.__entityName
+              field   = name + "[#{field}]"
+            field  += "[#{f}]" for f in splited
 
-        else if @resourceName || @__resource
-          name  = @resourceName || @__resource.__entityName
-          field = name + "[#{field}]"
+          else if @resourceName || @__resource
+            name  = @resourceName || @__resource.__entityName
+            field = name + "[#{field}]"
 
-        result[field] = notifications
+          result[field] = notifications
 
     result
 
@@ -372,8 +375,8 @@ class Joosy.Form extends Joosy.Module
   # @return [Hash]
   #
   __foldInlineEntities: (hash, scope="", result={}) ->
-    Object.each hash, (key, value) =>
-      if Object.isObject(value) || @isArrayOfObjects(value)
+    for key, value of hash
+      if value?.constructor == Object || @isArrayOfObjects(value)
         @__foldInlineEntities(value, "#{scope}[#{key}]", result)
       else
         result["#{scope}[#{key}]"] = value
@@ -388,7 +391,7 @@ class Joosy.Form extends Joosy.Module
     items = name.split('][')
     first = items[0].split('[')
     if first.length == 2
-      if first[0].isBlank()
+      if first[0].length == 0
         items.splice 0, 1, first[1]
       else
         items.splice 0, 1, first[0], first[1]
@@ -396,7 +399,7 @@ class Joosy.Form extends Joosy.Module
     items
 
   isArrayOfObjects: (array) ->
-    Object.isArray(array) && array.every((elem) -> Object.isObject(elem))
+    array instanceof Array && array.filter((elem) -> elem?.constructor != Object).length == 0
 
 # AMD wrapper
 if define?.amd?

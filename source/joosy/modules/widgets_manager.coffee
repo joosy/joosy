@@ -10,8 +10,8 @@ Joosy.Modules.WidgetsManager =
   included: ->
     @mapWidgets = (map) ->
       unless @::hasOwnProperty "__widgets"
-        @::__widgets = Object.clone(@.__super__.__widgets) || {}
-      Object.merge @::__widgets, map
+        @::__widgets = Joosy.Module.merge {}, @.__super__.widgets
+      Joosy.Module.merge @::__widgets, map
 
   #
   # Registeres and runs widget inside specified container
@@ -23,7 +23,7 @@ Joosy.Modules.WidgetsManager =
     if Joosy.Module.hasAncestor widget, Joosy.Widget
       widget = new widget()
 
-    if Object.isFunction(widget)
+    if typeof(widget) == 'function'
       widget = widget()
 
     @__activeWidgets ||= []
@@ -47,16 +47,16 @@ Joosy.Modules.WidgetsManager =
   __setupWidgets: ->
     return unless @__widgets
 
-    registered = Object.extended()
+    registered = {}
 
-    Object.each @__widgets, (selector, widget) =>
+    for selector, widget of @__widgets
       if selector == '$container'
         activeSelector = @$container
       else
         selector = @__extractSelector(selector) if @__extractSelector?
         activeSelector = $(selector, @$container)
 
-      registered[selector] = Object.extended()
+      registered[selector] = {}
 
       activeSelector.each (index, elem) =>
         if Joosy.Module.hasAncestor widget, Joosy.Widget
@@ -73,8 +73,8 @@ Joosy.Modules.WidgetsManager =
     @__widgets = {}
 
     if Joosy.debug()
-      registered.each (selector, value) =>
-        value.each (widget, count) =>
+      for selector, value of registered
+        for widget, count of value
           Joosy.Modules.Log.debugAs @, "Widget #{widget} registered at '#{selector}'. Elements: #{count}"
 
   #

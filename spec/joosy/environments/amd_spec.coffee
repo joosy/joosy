@@ -16,12 +16,12 @@ describe "Joosy", ->
     runs ->
       requirejs ['joosy/module'], (module) ->
         result = true
-        expect(Object.isFunction module.hasAncestor).toBeTruthy()
+        expect(typeof(module.hasAncestor) == 'function').toBeTruthy()
 
     waitsFor (-> result), 'Unable to download Joosy', 1000
 
   it "registers internal components as modules", ->
-    expect(Object.keys(require.s.contexts._.registry).sortBy()).toEqual [
+    expect(Object.keys(require.s.contexts._.registry).sort()).toEqual [
       'joosy/application',
       'joosy/form',
       'joosy/layout',

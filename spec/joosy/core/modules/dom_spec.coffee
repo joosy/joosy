@@ -36,7 +36,7 @@ describe "Joosy.Modules.DOM", ->
           first: 'overrided'
           third: 'third'
 
-      expect((new B).__elements).toEqual Object.extended
+      expect((new B).__elements).toEqual
         posts: '.post'
         content:
           post1: '#post1'
@@ -46,7 +46,7 @@ describe "Joosy.Modules.DOM", ->
         third: 'third'
         footer: '.footer'
 
-      expect((new @DOM).__elements).toEqual Object.extended
+      expect((new @DOM).__elements).toEqual
         posts: '.post'
         footer: '.footer'
         content:
@@ -102,17 +102,17 @@ describe "Joosy.Modules.DOM", ->
           'test $footer': 'onFooterTest'
           'custom' : 'overrided'
 
-      expect((new B).__events).toEqual Object.extended
+      expect((new B).__events).toEqual
         'test': 'onDOMTest'
         'test .post': 'callback2'
         'test $footer': 'onFooterTest'
         'custom' : 'overrided'
 
-      expect((new @DOM).__events).toEqual Object.extended
+      expect((new @DOM).__events).toEqual
         'test': 'onDOMTest'
 
     it "delegates", ->
-      callbacks = 1.upto(3).map -> sinon.spy()
+      callbacks = [1..3].map -> sinon.spy()
 
       @DOM.mapEvents
         'test .post': callbacks[2]

@@ -1,15 +1,19 @@
 describe "Joosy", ->
 
+  unique = (array) ->
+    array.filter (item, index, array) ->
+      array.indexOf(item) == index
+
   it "generates proper UUIDs", ->
     uuids = []
-    2.times -> uuids.push Joosy.uuid()
-    expect(uuids.unique().length).toEqual(2)
+    uuids.push Joosy.uuid() for i in [1..2]
+    expect(unique(uuids).length).toEqual(2)
     expect(uuids[0]).toMatch /[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[0-9A-F]{4}-[0-9A-F]{12}/
 
   it "generates proper UIDs", ->
     uids = []
-    5.times -> uids.push Joosy.uid()
-    expect(uids.unique().length).toEqual(5)
+    uids.push Joosy.uid() for i in [1..5]
+    expect(unique(uids).length).toEqual(5)
 
   it "builds proper URLs", ->
     expect(Joosy.buildUrl 'http://www.org').toEqual('http://www.org')

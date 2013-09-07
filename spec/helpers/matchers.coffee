@@ -10,7 +10,7 @@ beforeEach ->
     #
     toBeSequenced: ->
       # Are we working with array?
-      if !Object.isArray(@actual) || @actual.length == 0
+      if !Array.isArray(@actual) || @actual.length == 0
         @message = -> 'Not array or empty array given'
         return false
 
@@ -22,7 +22,7 @@ beforeEach ->
 
       # Were they called in a proper order?
       if @actual.length > 1
-        for spy, i in @actual.from(1)
+        for spy, i in @actual.slice(1)
           unless spy.calledAfter @actual[i]
             @message = -> "Spy ##{i+1} wasn't called after spy ##{i}"
             return false

@@ -19,7 +19,7 @@ describe "Joosy.Modules.Resources.Model", ->
     expect(resource.data).toEqual foo: 'bar'
 
   it "produces magic function", ->
-    expect(Object.isFunction @resource).toBeTruthy()
+    expect(typeof(@resource) == 'function').toBeTruthy()
     expect(@resource.data).toEqual @data
 
   it "gets values", ->

@@ -130,8 +130,8 @@ class Joosy.Widget extends Joosy.Module
   #
   @mapWidgets: (map) ->
     unless @::hasOwnProperty "__widgets"
-      @::__widgets = Object.clone(@.__super__.__widgets) || {}
-    Object.merge @::__widgets, map
+      @::__widgets = Joosy.Module.merge {}, @.__super__.__widgets
+    Joosy.Module.merge @::__widgets, map
 
   #
   # Declares widget as indepent changing the way it behaves during the bootstrap
@@ -156,7 +156,7 @@ class Joosy.Widget extends Joosy.Module
   # @param [Joosy.Widget] widget        Class or object of Joosy.Widget to register
   #
   registerWidget: ($container, widget) ->
-    if Object.isString $container
+    if typeof($container) == 'string'
       $container = @__normalizeSelector($container)
 
     widget = @__normalizeWidget(widget)
@@ -251,12 +251,13 @@ class Joosy.Widget extends Joosy.Module
     @data = {}
 
     @synchronize (context) =>
-      Object.each nestingMap, (selector, section) ->
-        section.instance.__fetch(section.nested)
+      for selector, section of nestingMap
+        do (selector, section) ->
+          section.instance.__fetch(section.nested)
 
-        if !section.instance.__independent
-          context.do (done) ->
-            section.instance.wait 'section:fetched', done
+          if !section.instance.__independent
+            context.do (done) ->
+              section.instance.wait 'section:fetched', done
 
       context.do (done) =>
         @__runFetchs [], done
@@ -287,13 +288,14 @@ class Joosy.Widget extends Joosy.Module
 
     @__load()
 
-    Object.each nestingMap, (selector, section) =>
-      $container = @__normalizeSelector(selector)
+    for selector, section of nestingMap
+      do (selector, section) =>
+        $container = @__normalizeSelector(selector)
 
-      if !section.instance.__independent || section.instance.__triggeredEvents?['section:fetched']
-        section.instance.__paint @, section.nested, $container
-      else
-        section.instance.__bootstrap @, section.nested, $container, false
+        if !section.instance.__independent || section.instance.__triggeredEvents?['section:fetched']
+          section.instance.__paint @, section.nested, $container
+        else
+          section.instance.__bootstrap @, section.nested, $container, false
 
   #
   # Initializes section that was injected into DOM
@@ -347,7 +349,7 @@ class Joosy.Widget extends Joosy.Module
   # Besides already being instance it cann be either class or lambda
   #
   __normalizeWidget: (widget) ->
-    if Object.isFunction(widget) && !Joosy.Module.hasAncestor(widget, Joosy.Widget)
+    if typeof(widget) == 'function' && !Joosy.Module.hasAncestor(widget, Joosy.Widget)
       widget = widget.call(@)
 
     if Joosy.Module.hasAncestor widget, Joosy.Widget

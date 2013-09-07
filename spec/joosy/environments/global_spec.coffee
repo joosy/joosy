@@ -18,4 +18,4 @@ describe "Joosy", ->
     waitsFor (-> result), 'Unable to download Joosy', 1000
 
     runs ->
-      expect(Object.keys ghetto).toEqual ['Joosy', 'Metamorph']
+      expect(Object.keys ghetto).toEqual ['inflection', 'Joosy', 'Metamorph']

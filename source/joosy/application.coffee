@@ -14,7 +14,7 @@ class Joosy.Application
   @initialized: false
   @loading: true
 
-  @config:
+  @defaultConfig:
     test:     false
     debug:    false
     templater:
@@ -35,8 +35,11 @@ class Joosy.Application
     if @initialized
       throw new Error 'Attempted to initialize Application twice'
 
-    Object.merge @config, window.JoosyEnvironment, true if window.JoosyEnvironment?
-    Object.merge @config, options, true
+    @config = {}
+
+    Joosy.Module.merge @config, @defaultConfig, true, true
+    Joosy.Module.merge @config, window.JoosyEnvironment, true, true if window.JoosyEnvironment?
+    Joosy.Module.merge @config, options, true, true
 
     @forceSandbox() if @config.test
 
@@ -46,7 +49,7 @@ class Joosy.Application
     Joosy.Router.setup @config.router, (action, params) =>
       if Joosy.Module.hasAncestor action, Joosy.Page
         @changePage action, params
-      else if Object.isFunction(action)
+      else if typeof(action) == 'function'
         action(params)
       else
         throw new Error "Unknown kind of route action: #{action}"

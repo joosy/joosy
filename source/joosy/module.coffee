@@ -19,7 +19,7 @@ class Joosy.Module
   # @return [String]
   #
   @__className: (klass) ->
-    unless Object.isFunction(klass)
+    unless typeof(klass) == 'function'
       klass = klass.constructor
 
     if klass.name?
@@ -61,7 +61,7 @@ class Joosy.Module
     camelized = feature.charAt(0).toUpperCase() + feature.slice(1)
     chained = "#{method}Without#{camelized}"
 
-    action = @::[action] unless Object.isFunction(action)
+    action = @::[action] unless typeof(action) == 'function'
 
     @::[chained] = @::[method]
     @::[method] = action
@@ -91,14 +91,19 @@ class Joosy.Module
   # @param [Object] destination       Object to extend
   # @param [Object] source            Source of new properties
   # @param [Boolean] unsafe           Determines if we should rewrite destination properties
+  # @param [Boolean] deep             Whether merge should go down recursively into nested objects
   #
   # @return [Object]                  The new and mighty destination Object
   #
-  @merge: (destination, source, unsafe=true) ->
+  @merge: (destination, source, unsafe=true, deep=false) ->
     for key, value of source
       if source.hasOwnProperty(key)
         if unsafe || !destination.hasOwnProperty(key)
-          destination[key] = value
+          if deep && value.constructor == Object
+            destination[key] = {} unless destination[key]?.constructor == Object
+            Joosy.Module.merge destination[key], value
+          else
+            destination[key] = value
     destination
 
   #

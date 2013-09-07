@@ -10,7 +10,6 @@ module.exports = (grunt) ->
       src: grunt.util._([
         [
           'bower_components/sinonjs/sinon.js',
-          'bower_components/sugar/release/sugar-full.min.js',
           'spec/helpers/*.coffee'
         ], 
         vendor, 
@@ -81,15 +80,21 @@ module.exports = (grunt) ->
 
     testem:
       core: testemOptions(
-        'bower_components/jquery/jquery.js', 
+        [
+          'bower_components/jquery/jquery.js'
+        ],
         'spec/joosy/core/**/*_spec.coffee'
       )
       'core-zepto': testemOptions(
-        'bower_components/zepto/zepto.js', 
+        [
+          'bower_components/zepto/zepto.js'
+        ],
         'spec/joosy/core/**/*_spec.coffee'
       )
       resources: testemOptions(
-        'bower_components/jquery/jquery.js',
+        [
+          'bower_components/jquery/jquery.js'
+        ],
         [
           'joosy/resources/index.coffee',
           'spec/joosy/resources/**/*_spec.coffee'
@@ -103,11 +108,14 @@ module.exports = (grunt) ->
         [
           'joosy/resources/index.coffee',
           'joosy/form.coffee',
+          'joosy/helpers/form.coffee',
           'spec/joosy/form/**/*_spec.coffee'
         ]
       )
       'environments-global': testemOptions(
-        'bower_components/jquery/jquery.js', 
+        [
+          'bower_components/jquery/jquery.js'
+        ],
         'spec/joosy/environments/global_spec.coffee'
       )
       'environments-amd': testemOptions(
@@ -119,6 +127,7 @@ module.exports = (grunt) ->
         [
           'joosy/resources/index.coffee',
           'joosy/form.coffee',
+          'joosy/helpers/form.coffee',
           'spec/joosy/environments/amd_spec.coffee'
         ]
       )

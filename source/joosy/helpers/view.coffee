@@ -66,11 +66,11 @@ Joosy.helpers 'Application', ->
   @contentTag = (name, contentOrOptions=null, options=null, escape=true) ->
     # This is a bit painfull but this is
     # how we emulate Ruby block with lambda :(
-    if Object.isString(contentOrOptions)
+    if typeof(contentOrOptions) == 'string'
       options ||= {}
       content   = contentOrOptions
-    else if Object.isObject(contentOrOptions)
-      if Object.isFunction(options)
+    else if contentOrOptions.constructor == Object
+      if typeof(options) == 'function'
         escape = true
         content = options()
       else

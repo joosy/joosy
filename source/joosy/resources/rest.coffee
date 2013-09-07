@@ -11,8 +11,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   @registerPlainFilters 'beforeSave'
 
   @beforeLoad (data) ->
-    if Object.isObject(data) && Object.keys(data).length == 1 && @__entityName
-      name = @__entityName.camelize(false)
+    if data.constructor == Object && Object.keys(data).length == 1 && @__entityName
+      name = inflection.camelize(@__entityName, true)
       data = data[name] if data[name]
 
     data
@@ -36,7 +36,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   # Makes needed changes with clone/wrapper for @at method to extend its' path
   #
   @__atWrapper: (definer, args...) ->
-    if args.length == 1 && Object.isArray(args[0])
+    if args.length == 1 && args[0] instanceof Array
       @__atWrapper(definer, args[0]...)
     else
       definer (clone) =>
@@ -46,7 +46,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
           else
             arg.replace(/^\/?/, '/')
         , ''
-        clone.__source += '/' + @::__entityName.pluralize()
+        clone.__source += '/' + inflection.pluralize(@::__entityName)
 
   #
   # Creates the proxy of current resource binded as a child of given entity
@@ -82,7 +82,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   # Interpolates path with masks by given array of params
   #
   __interpolatePath: (source, ids) ->
-    ids = [ids] unless Object.isArray(ids)
+    ids = [ids] unless ids instanceof Array
     ids.reduce (path, id) ->
       id = id.id() if id instanceof Joosy.Resources.REST
       path.replace /:[^\/]+/, id
@@ -111,7 +111,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   #   Resource.collectionPath(['admin', Resource.build 1]) # /admin/resources/1/resources
   #
   collectionPath: (ids=[], options={}) ->
-    if Object.isObject(ids)
+    # (options) ->
+    if ids.constructor == Object
       options = ids
       ids     = []
 
@@ -124,7 +125,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
     else
       path = '/'
       path += @constructor.__namespace__.map(String::underscore).join('/') + '/' if @constructor.__namespace__.length > 0
-      path += @__entityName.pluralize()
+      path += inflection.pluralize(@__entityName)
 
     path += "/#{options.action}" if options.action
     path
@@ -153,19 +154,19 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   #   Resource.memberPath(['admin', Resource.build 1]) # /admin/resources/1/resources/2
   #
   memberPath: (ids=[], options={}) ->
-    if Object.isObject(ids)
+    if ids.constructor == Object
       options = ids
       ids     = []
 
     return options.url if options.url
 
-    ids = [ids] unless Object.isArray(ids)
+    ids = [ids] unless ids instanceof Array
     id = @id() || ids.pop()
 
     action = options.action
 
     ids.push @id()
-    path  = @collectionPath(ids, Object.merge(options, action: undefined)) + "/#{id}"
+    path  = @collectionPath(ids, Joosy.Module.merge(options, action: undefined)) + "/#{id}"
     path += "/#{action}" if action?
     path
 
@@ -326,7 +327,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   # @option options [Hash] params               Passes the given params to the query
   #
   @all: (where, options={}, callback=false) ->
-    if Object.isFunction(where) || Object.isObject(where)
+    if typeof(where) == 'function' || where.constructor == Object
       [options, callback] = @::__extractOptionsAndCallback(where, options)
       where = []
     else
@@ -336,7 +337,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
 
     @__query @collectionPath(where, options), 'GET', options.params, (error, rawData, xhr) =>
       if (data = rawData)?
-        if Object.isObject(data) && !(data = data[@::__entityName.pluralize()])
+        if data.constructor == Object && !(data = data[inflection.pluralize(@::__entityName)])
           throw new Error "Invalid data for `all` received: #{JSON.stringify(data)}"
 
         data = data.map (x) =>
@@ -372,7 +373,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
       cache: false
       dataType: 'json'
 
-    if Object.isFunction(callback)
+    if typeof(callback) == 'function'
       options.success = (data, _, xhr) -> callback(false, data, xhr)
       options.error   = (xhr) -> callback(xhr)
     else
@@ -389,7 +390,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   # utility function for better API support for unrequired first options parameter
   #
   __extractOptionsAndCallback: (options, callback) ->
-    if Object.isFunction(options)
+    if typeof(options) == 'function'
       callback = options
       options  = {}
     [options, callback]

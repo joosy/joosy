@@ -88,8 +88,8 @@ describe "Joosy.Modules.Events", ->
         expect(@callback.callCount).toEqual 1
 
     it "allows simultaneous usage", ->
-      3.times (i) => @eventer.bind "event#{i}", @callback
-      3.times (i) => @eventer.wait "event#{i}", @callback
+      @eventer.bind "event#{i}", @callback for i in [1..3]
+      @eventer.wait "event#{i}", @callback for i in [1..3]
 
       @eventer.trigger 'event2'
 

@@ -109,7 +109,7 @@ describe "Joosy.Application", ->
 
     it "sequences paint hooks", ->
       spies = []
-      11.times -> spies.push sinon.spy()
+      spies.push sinon.spy() for i in [1..11]
 
       class Layout extends Joosy.Layout
         @beforePaint (complete) -> spies[0](); complete()

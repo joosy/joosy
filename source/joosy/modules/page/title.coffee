@@ -12,10 +12,10 @@ Joosy.Modules.Page.Title =
   #
   title: (title, separator=' / ') ->
     @afterLoad ->
-      titleStr = if Object.isFunction(title) then title.apply(@) else title
-      titleStr = titleStr.join(separator) if Object.isArray(titleStr)
+      title = title.apply(@) if typeof(title) == 'function'
+      title = title.join(separator) if title instanceof Array
       @__previousTitle = document.title
-      document.title = titleStr
+      document.title = title
 
     @afterUnload ->
       document.title = @__previousTitle

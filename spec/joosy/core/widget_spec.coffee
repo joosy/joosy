@@ -79,7 +79,7 @@ describe "Joosy.Widget", ->
 
       @c.__bootstrap null, {}, $('#content', @$ground)
 
-      ['paint', 'beforePaint'].each (filter) =>
+      for filter in ['paint', 'beforePaint']
         expect(@spies["a/#{filter}"].callCount).toEqual 1
         expect(@spies["b/#{filter}"].callCount).toEqual 0
         expect(@spies["c/#{filter}"].callCount).toEqual 1
@@ -219,7 +219,7 @@ describe "Joosy.Widget", ->
       class @F extends Joosy.Widget
         @view "F"
 
-      ['a', 'b', 'c', 'd', 'e', 'f'].each (instance) =>
+      for instance in ['a', 'b', 'c', 'd', 'e', 'f']
         @[instance] = new @[instance.toUpperCase()] 'params'
 
       @nestingMap =

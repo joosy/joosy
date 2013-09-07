@@ -67,8 +67,8 @@ Joosy.Modules.Events =
   wait: (name, events, callback) ->
     @__oneShotEvents = {} unless @hasOwnProperty('__oneShotEvents')
 
-    # unnamed binding
-    if Object.isFunction(events)
+    # (events, callback) ->
+    if arguments.length == 2
       callback = events
       events   = name
       name     = Object.keys(@__oneShotEvents).length.toString()
@@ -100,8 +100,8 @@ Joosy.Modules.Events =
   bind: (name, events, callback) ->
     @__boundEvents = {} unless @hasOwnProperty '__boundEvents'
 
-    # unnamed binding
-    if Object.isFunction(events)
+    # (events, callback) ->
+    if arguments.length == 2
       callback = events
       events   = name
       name     = Object.keys(@__boundEvents).length.toString()
@@ -131,7 +131,7 @@ Joosy.Modules.Events =
   trigger: (event, data...) ->
     Joosy.Modules.Log.debugAs @, "Event #{event} triggered"
 
-    if Object.isObject event
+    if event.constructor == Object
       remember = event.remember
       event    = event.name
     else
@@ -140,17 +140,20 @@ Joosy.Modules.Events =
     if @hasOwnProperty '__oneShotEvents'
       fire = []
       for name, [events, callback] of @__oneShotEvents
-        events.remove event
+        while (needle = events.indexOf(event)) != -1
+          events.splice needle, 1
+
         if events.length == 0
           fire.push name
-      fire.each (name) =>
-        callback = @__oneShotEvents[name][1]
-        delete @__oneShotEvents[name]
-        callback data...
+      for name in fire
+        do (name) =>
+          callback = @__oneShotEvents[name][1]
+          delete @__oneShotEvents[name]
+          callback data...
 
     if @hasOwnProperty '__boundEvents'
       for name, [events, callback] of @__boundEvents
-        if events.any event
+        if events.indexOf(event) != -1
           callback data...
 
     if remember
@@ -178,20 +181,21 @@ Joosy.Modules.Events =
     if context.actions.length == 0
       context.after.call(@)
     else
-      context.actions.each (action) =>
-        action.call @, ->
-          if ++counter >= context.actions.length
-            context.after.call(@)
+      for action in context.actions
+        do (action) =>
+          action.call @, ->
+            if ++counter >= context.actions.length
+              context.after.call(@)
 
   __splitEvents: (events) ->
-    if Object.isString events
-      if events.isBlank()
+    if typeof(events) == 'string'
+      if events.length == 0
         events = []
       else
         events = events.trim().split /\s+/
 
     if @hasOwnProperty '__triggeredEvents'
-      events = events.findAll (e) => !@__triggeredEvents[e]
+      events = events.filter (e) => !@__triggeredEvents[e]
 
     events
 

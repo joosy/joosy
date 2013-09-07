@@ -7,7 +7,9 @@
 Joosy.helpers 'Routes', ->
 
   @linkTo = (name='', url='', tagOptions={}) ->
-    if Object.isFunction tagOptions
+
+    # (url, tagOptions, block) ->
+    if typeof(tagOptions) == 'function'
       block = tagOptions
       [url, tagOptions] = [name, url]
       name = block()

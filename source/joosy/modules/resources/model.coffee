@@ -55,7 +55,8 @@ Joosy.Modules.Resources.Model =
     #
     @map = (name, klass=false) ->
       unless klass
-        klass = window[name.singularize().camelize()]
+
+        klass = window[inflection.camelize inflection.singularize(name)]
 
       if !klass
         throw new Error "#{Joosy.Module.__className @}> class can not be detected for '#{name}' mapping"
@@ -63,10 +64,10 @@ Joosy.Modules.Resources.Model =
       @beforeLoad (data) ->
         klass = klass() unless klass.build?
 
-        if Object.isArray data[name]
+        if data[name] instanceof Array
           entries = data[name].map (x) -> klass.build x
           data[name] = new klass::__collection entries...
-        else if Object.isObject data[name]
+        else if data[name]?.constructor == Object
           data[name] = klass.build data[name]
         data
 

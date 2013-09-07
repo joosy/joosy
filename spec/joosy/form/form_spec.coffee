@@ -76,8 +76,7 @@ describe "Joosy.Form", ->
 
     it "should not stack _method inputs", ->
       form   = new Joosy.Form @putForm
-      3.times =>
-        form.fill @resource
+      form.fill @resource for i in [1..3]
       marker = @putForm.find "input[name=_method]"
       expect(marker.length).toEqual 1
       expect(marker.attr 'value').toEqual 'PUT'
@@ -186,15 +185,13 @@ describe "Joosy.Form", ->
 
       it 'should allow multiple submit', ->
         @nudeForm = new Joosy.Form @nudeForm
-        3.times =>
-          @nudeForm.$container.submit()
+        @nudeForm.$container.submit() for i in [1..3]
         expect(@requests.length).toEqual 3
 
       it 'should optionally prevent multiple submit', ->
         @nudeForm = new Joosy.Form @nudeForm, debounce: true
-        [200, 404, 500].each (code) =>
-          3.times =>
-            @nudeForm.$container.submit()
+        for code in [200, 404, 500]
+          @nudeForm.$container.submit() for i in [1..3]
           expect(@requests.length).toEqual 1
           @requests[0].respond(code, {}, '{}')
           expect(@requests.length).toEqual 1
@@ -210,14 +207,12 @@ describe "Joosy.Form", ->
 
       it 'should optionally allow multiple submit', ->
         @nudeForm = new Joosy.Form @nudeForm, debounce: false
-        3.times =>
-          @nudeForm.$container.submit()
+        @nudeForm.$container.submit() for i in [1..3]
         expect(@requests.length).toEqual 3
 
       it 'should prevent multiple submit', ->
         @nudeForm = new Joosy.Form @nudeForm
-        3.times =>
-          @nudeForm.$container.submit()
+        @nudeForm.$container.submit() for i in [1..3]
         expect(@requests.length).toEqual 1
 
   describe "Callbacks", ->
@@ -226,11 +221,11 @@ describe "Joosy.Form", ->
       @nudeForm = new Joosy.Form @nudeForm, @spy=sinon.spy()
       @nudeForm.fill @resource
       @nudeForm.$container.submit()
-      @target = @server.requests.last()
+      @target = @server.requests[@server.requests.length-1]
 
     it "should trigger 'success'", ->
       expect(@target.method).toEqual 'POST'
-      expect(@target.url.endsWith '/tests/1').toEqual true
+      expect(@target.url.match /\/tests\/1$/).toBeTruthy()
       @target.respond 200, 'Content-Type': 'application/json', '{"form": "works"}'
       expect(@spy.callCount).toEqual 1
       expect(@spy.args[0][0]).toEqual {form: 'works'}

@@ -44,4 +44,4 @@ describe "Joosy.Modules.Resources.IdentityMap", ->
       yolo: true
       children: [{id: 2, parent: {id: 1, yolo: true}}]
 
-    expect(biDirectionTestNode).toEqual(biDirectionTestNode('children').at(0)('parent'))
+    expect(biDirectionTestNode).toEqual(biDirectionTestNode('children')[0]('parent'))

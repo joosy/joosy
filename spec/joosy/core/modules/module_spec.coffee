@@ -19,8 +19,8 @@ describe "Joosy.Module", ->
   it "has minimal set of properties", ->
     class Klass extends Joosy.Module
 
-    expect(Object.extended(Klass).keys()).toEqual ['__namespace__', '__className', 'hasAncestor', 'aliasMethodChain', 'aliasStaticMethodChain', 'merge', 'include', 'extend', '__super__']
-    expect(Object.extended(Klass.prototype).keys()).toEqual ['constructor']
+    expect(Object.keys Klass).toEqual ['__namespace__', '__className', 'hasAncestor', 'aliasMethodChain', 'aliasStaticMethodChain', 'merge', 'include', 'extend', '__super__']
+    expect(Object.keys Klass.prototype).toEqual ['constructor']
 
   it "includes", ->
     Module =

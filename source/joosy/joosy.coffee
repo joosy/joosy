@@ -139,17 +139,15 @@
   #
   buildUrl: (url, params) ->
     paramsString = []
-
-    Object.each params, (key, value) ->
-      paramsString.push "#{key}=#{value}"
+    paramsString.push "#{key}=#{value}" for key, value of params
 
     hash = url.match(/(\#.*)?$/)[0]
     url  = url.replace /\#.*$/, ''
-    if !paramsString.isEmpty() && !url.has(/\?/)
+    if paramsString.length != 0 && url.indexOf('?') == -1
       url  = url + "?"
 
     paramsString = paramsString.join '&'
-    if !paramsString.isBlank() && url.last() != '?'
+    if paramsString.length > 0 && url[url.length-1] != '?'
       paramsString = '&' + paramsString
 
     url + paramsString + hash

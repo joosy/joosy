@@ -6,7 +6,7 @@ describe "Joosy.Helpers.Form", ->
   resource = Test.build id: 1
 
   describe "simple", ->
-    ['text', 'file', 'hidden', 'password'].each (type) =>
+    for type in ['text', 'file', 'hidden', 'password']
       it "renders #{type}Field", ->
         expect(h["#{type}Field"] 'a', 'b', {a: 'b'}).toBeTag 'input', '', id: 'a_b', name: 'a[b]', a: 'b', type: type
 
@@ -56,7 +56,7 @@ describe "Joosy.Helpers.Form", ->
     h.formFor(resource, callback)
     form = callback.args[0][0]
 
-    ['text', 'file', 'hidden', 'password'].each (type) =>
+    for type in ['text', 'file', 'hidden', 'password']
       it "renders #{type}Field", ->
         expect(form["#{type}Field"] 'b', {a: 'b'}).toBeTag 'input', '', id: 'test_b', name: 'test[b]', a: 'b', type: type
 
@@ -84,7 +84,7 @@ describe "Joosy.Helpers.Form", ->
     h.formFor(resource, extendIds: true, callback)
     form = callback.args[0][0]
 
-    ['text', 'file', 'hidden', 'password'].each (type) =>
+    for type in ['text', 'file', 'hidden', 'password']
       it "renders #{type}Field", ->
         expect(form["#{type}Field"] 'b', {a: 'b'}).toBeTag 'input', '', id: 'test_1_b', name: 'test[b]', a: 'b', type: type
 

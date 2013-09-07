@@ -93,7 +93,8 @@ class Joosy.Router extends Joosy.Module
     # @option [Hash] options   "as", prefixes all other "as" commands
     # @param [Function] block  callback for child commands
     namespace: (name, options={}, block) ->
-      if Object.isFunction(options)
+      # (name, block) ->
+      if arguments.length == 2
         block = options
         options = {}
 
@@ -106,9 +107,9 @@ class Joosy.Router extends Joosy.Module
   # @param [Object] routes        Set of routes in inner format (see class description)
   #
   @map: (routes, namespace) ->
-    Object.each routes, (path, to) =>
+    for path, to of routes
       path = namespace + '/' + path if namespace?
-      if Object.isFunction(to) || to.prototype
+      if typeof(to) == 'function' || to.prototype
         @compileRoute path, to
       else
         @map to, path
@@ -276,8 +277,9 @@ class Joosy.Router extends Joosy.Module
     helper = (options) ->
       result = path
 
-      path.match(/\/:[^\/]+/g)?.each? (param) ->
-        result = result.replace(param.substr(1), options[param.substr(2)])
+      if match = path.match(/\/:[^\/]+/g)
+        for param in match
+          result = result.replace(param.substr(1), options[param.substr(2)])
 
       if Joosy.Router.config.html5
         "#{Joosy.Router.config.prefix}#{result}"
@@ -299,14 +301,13 @@ class Joosy.Router extends Joosy.Module
     # Collect parameters from route placeholers
     match.shift() # First entry is full route regexp match that should be just skipped
 
-    route?.capture?.each (key) ->
-      params[key] = decodeURIComponent match.shift()
+    if captures = route?.capture
+      params[key] = decodeURIComponent match.shift() for key in captures
 
     # Collect parameters from URL query section
-    query.each (entry) ->
-      unless entry.isBlank()
-        [key, value] = entry.split '='
-        params[key] = value
+    for entry in query when entry.length > 0
+      [key, value] = entry.split '='
+      params[key] = value
 
     params
 

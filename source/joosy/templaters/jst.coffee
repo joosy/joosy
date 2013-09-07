@@ -39,10 +39,11 @@ class Joosy.Templaters.JST
   # @param [String] entity      Entity to lookup template path by its namespace
   #
   resolveTemplate: (section, template, entity) ->
-    if template.startsWith '/'
+    if template[0] == '/'
       return template.substr 1
 
-    path = entity.constructor?.__namespace__?.map('underscore') || []
+    path = entity.constructor?.__namespace__?.map (x) -> inflection.underscore(x)
+    path ||= []
     path.unshift section
 
     "#{path.join '/'}/#{template}"

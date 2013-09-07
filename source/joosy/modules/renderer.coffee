@@ -1,4 +1,4 @@
-#= require metamorph
+#= require vendor/metamorph
 #= require joosy/joosy
 
 #
@@ -24,10 +24,10 @@ Joosy.Modules.Renderer =
 
     @helper = (helpers...) ->
       unless @::hasOwnProperty "__helpers"
-        @::__helpers = @.__super__.__helpers?.clone() || []
+        @::__helpers = @.__super__.__helpers?.slice() || []
 
-      @::__helpers = @::__helpers.add(helpers).unique()
-      @::__helpers = @::__helpers.unique()
+      @::__helpers = @::__helpers.concat(helpers).filter (value, i, array) ->
+        array.indexOf(value) == i
 
   #
   # Renders given template with given locals
@@ -60,15 +60,16 @@ Joosy.Modules.Renderer =
     return unless @__helpers?
   
     unless @hasOwnProperty "__helpers"
-      @__helpers = @__helpers.clone()
+      @__helpers = @__helpers.slice()
 
-    @__helpers.each (helper, i) =>
-      unless Object.isObject(helper)
-        unless @[helper]?
-          throw new Error "Cannot find method '#{helper}' to use as helper"
+    for helper, i in @__helpers
+      do (helper, i) =>
+        unless helper.constructor == Object
+          unless @[helper]?
+            throw new Error "Cannot find method '#{helper}' to use as helper"
 
-        @__helpers[i] = {}
-        @__helpers[i][helper] = => @[helper] arguments...
+          @__helpers[i] = {}
+          @__helpers[i][helper] = => @[helper] arguments...
 
   #
   # Collects and merges all requested helpers including global scope to one cached object
@@ -112,14 +113,14 @@ Joosy.Modules.Renderer =
     stack.template = template
     stack.locals   = locals
 
-    if Object.isString template
+    if typeof(template) == 'string'
       if @__renderSection?
         template = Joosy.templater().resolveTemplate @__renderSection(), template, this
       template = Joosy.templater().buildView template
-    else if !Object.isFunction template
+    else if typeof(template) != 'function'
       throw new Error "#{Joosy.Module.__className @}> template (maybe @view) does not look like a string or lambda"
 
-    if !Object.isObject(locals) && Object.extended().constructor != locals.constructor
+    if locals.constructor != Object
       throw new Error "#{Joosy.Module.__className @}> locals (maybe @data?) is not a hash"
 
     context = =>
@@ -147,12 +148,15 @@ Joosy.Modules.Renderer =
 
       # This is here to break stack tree and save from
       # repeating DOM modification
-      update = update.debounce 0
+      timeout = null
+      debouncedUpdate = ->
+        clearTimeout timeout
+        timeout = setTimeout update, 0
 
       for key, object of locals
         if locals.hasOwnProperty key
           if object?.bind? && object?.unbind?
-            binding = [object, object.bind('changed', update)]
+            binding = [object, object.bind('changed', debouncedUpdate)]
             stack.metamorphBindings.push binding
 
       morph.__bindings = stack.metamorphBindings
@@ -202,8 +206,9 @@ Joosy.Modules.Renderer =
         stackPointer.metamorphBindings = []
 
     unless stackPointer
-      @__renderingStack?.each (stackPointer) ->
-        remove stackPointer
+      if @__renderingStack?
+        remove stackPointer for stackPointer in @__renderingStack
+        
     else
       remove stackPointer
 

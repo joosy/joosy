@@ -8,12 +8,14 @@ class Form
     options.extendIds = @options.extendIds
     options
 
-  ['text', 'file', 'hidden', 'password'].each (type) =>
-    @::[type+'Field'] = (property, options={}) ->
-      @context[type+'Field'] @resource, property, @__extend(options)
+  for type in ['text', 'file', 'hidden', 'password']
+    do (type) =>
+      @::[type+'Field'] = (property, options={}) ->
+        @context[type+'Field'] @resource, property, @__extend(options)
 
   label: (property, options={}, content='') ->
-    if !Object.isObject(options)
+    # (property, content) ->
+    if arguments.length == 2
       content = options
       options = {}
 
@@ -71,9 +73,14 @@ Joosy.helpers 'Application', ->
     attributes.name  = resource
     attributes.name += if property.match(/^\[.*\]$/) then property else "[#{property}]"
 
+    # Parameterizing property
+    property = property.replace(/[^a-z0-9\-_]+/gi, '_')
+    property = property.replace /^_+|_+$|(_)_+/g, '$1'
+    property = property.toLowerCase()
+
     attributes.id  = resource
     attributes.id += "_#{resourceId}" if resourceId? && extendIds
-    attributes.id += "_#{property.parameterize().underscore()}"
+    attributes.id += "_#{property}"
     attributes.id += "_#{idSuffix}" if idSuffix
 
     attributes
@@ -106,7 +113,8 @@ Joosy.helpers 'Application', ->
   #     != form.textField 'property'
   #
   @formFor = (resource, options={}, block) ->
-    if Object.isFunction(options)
+    # (options, block) ->
+    if arguments.length == 2
       block   = options
       options = {}
 
@@ -127,7 +135,8 @@ Joosy.helpers 'Application', ->
   # @param [String] content                Content of the label
   #
   @label = (resource, property, options={}, content='') ->
-    if !Object.isObject(options)
+    # (resource, property, content) ->
+    if arguments.length == 3
       content = options
       options = {}
 
@@ -140,11 +149,12 @@ Joosy.helpers 'Application', ->
   #
   # Set of typical generators for basic inputs: textField, fileField, hiddenField, passwordField
   #
-  ['text', 'file', 'hidden', 'password'].each (type) =>
-    @[type+'Field'] = (resource, property, options={}) ->
-      [parameters, attributes] = separateOptions options, ['extendIds']
+  for type in ['text', 'file', 'hidden', 'password']
+    do (type) =>
+      @[type+'Field'] = (resource, property, options={}) ->
+        [parameters, attributes] = separateOptions options, ['extendIds']
 
-      input type, resource, property, parameters.extendIds, '', attributes
+        input type, resource, property, parameters.extendIds, '', attributes
 
   #
   # Generates a radio button
@@ -198,25 +208,24 @@ Joosy.helpers 'Application', ->
   # @param [Array] selectOptions            Options to build select with `['foo', 'bar']`
   # @param [String] selectOptions           Options to build select with `<option ...`
   #
-  @select = (resource, property, selectOptions, options) ->
+  @select = (resource, property, rawSelectOptions, options) ->
     [parameters, attributes] = separateOptions(options, ['extendIds', 'value', 'includeBlank'])
 
-    if Object.isObject selectOptions
-      opts = []
-      for key, val of selectOptions
-        opts.push [val, key]
+    if rawSelectOptions.constructor == Object
+      selectOptions = []
+      selectOptions.push [val, key] for key, val of rawSelectOptions
     else
-      opts = selectOptions
+      selectOptions = rawSelectOptions
 
-    opts.unshift ['', ''] if parameters.includeBlank
-    opts = opts.reduce (str, vals) =>
-      params = if Object.isArray vals then ['option', vals[0], { value: vals[1] }] else ['option', vals, {}]
-      if parameters.value == (if Object.isArray(vals) then vals[1] else vals)
+    selectOptions.unshift ['', ''] if parameters.includeBlank
+    selectOptions = selectOptions.reduce (str, vals) =>
+      params = if (vals instanceof Array) then ['option', vals[0], { value: vals[1] }] else ['option', vals, {}]
+      if parameters.value == (if (vals instanceof Array) then vals[1] else vals)
         params[2].selected = 'selected'
       str += @contentTag.apply @, params
     , ''
 
-    @contentTag 'select', opts, domify(resource, property, parameters.extendIds, '', attributes)
+    @contentTag 'select', selectOptions, domify(resource, property, parameters.extendIds, '', attributes)
 
   #
   # Generates a text area

@@ -36,7 +36,7 @@ describe "Joosy.Modules.Filters", ->
       expect(target.__afterUnloads).toBeUndefined()
 
     it "runs callbacks", ->
-      callbacks = 0.upto(2).map -> sinon.spy()
+      callbacks = [0..2].map -> sinon.spy()
       @Filters.beforeLoad callbacks[0]
       @Filters.afterLoad callbacks[1]
       @Filters.afterUnload callbacks[2]
@@ -45,14 +45,14 @@ describe "Joosy.Modules.Filters", ->
       @filters.__runAfterLoads 1, 2
       @filters.__runAfterUnloads 1, 2
 
-      for i in 0.upto(2)
+      for i in [0..2]
         expect(callbacks[i].callCount).toEqual 1
         expect(callbacks[i].alwaysCalledWithExactly 1, 2).toBeTruthy()
 
     describe "chaining", ->
 
       it "evaluates", ->
-        callbacks = 0.upto(1).map =>
+        callbacks = [0..1].map =>
           callback = sinon.stub()
           @Filters.beforeLoad callback
           callback
@@ -66,7 +66,7 @@ describe "Joosy.Modules.Filters", ->
         expect(callbacks[1].callCount).toEqual 1
 
       it "breaks on false", ->
-        callbacks = 0.upto(2).map =>
+        callbacks = [0..2].map =>
           callback = sinon.stub()
           @Filters.beforeLoad callback
           callback
@@ -81,7 +81,7 @@ describe "Joosy.Modules.Filters", ->
         expect(callbacks[2].callCount).toEqual 0
 
     it "accepts method names as callbacks", ->
-      @filters['callback' + i] = sinon.spy() for i in 0.upto(2)
+      @filters['callback' + i] = sinon.spy() for i in [0..2]
 
       @Filters.beforeLoad  'callback0'
       @Filters.afterLoad   'callback1'
@@ -91,8 +91,7 @@ describe "Joosy.Modules.Filters", ->
       @filters.__runAfterLoads()
       @filters.__runAfterUnloads()
 
-      expect(@filters['callback' + i].callCount).toEqual 1 for i in 0.upto(2)
-
+      expect(@filters['callback' + i].callCount).toEqual 1 for i in [0..2]
   describe 'sequenced', ->
 
     beforeEach ->
@@ -165,7 +164,7 @@ describe "Joosy.Modules.Filters", ->
             expect(spy.args[2][1]).toEqual 'test2'
 
     it "runs multiple callbacks", ->
-      spies = 0.upto(2).map -> sinon.spy()
+      spies = [0..2].map -> sinon.spy()
       context = @filters
 
       @Filters.beforeLoad (argument, complete) ->

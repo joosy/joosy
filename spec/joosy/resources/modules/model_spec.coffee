@@ -80,3 +80,20 @@ describe "Joosy.Modules.Resources.Model", ->
       rumbaMumba: {foo: 'bar'}
     expect(resource('rumbaMumba') instanceof Model).toBeTruthy()
     expect(resource('rumbaMumba.foo')).toEqual 'bar'
+
+  it "allows to override a collection", ->
+    class Array extends Joosy.Resources.Array
+
+    class RumbaMumba extends Model
+      @entity 'rumba_mumba'
+      @collection Array
+
+    class R extends Model
+      @map 'rumbaMumbas', RumbaMumba
+
+    resource = new R
+      rumbaMumbas: [
+        {foo: 'bar'},
+        {bar: 'baz'}
+      ]
+    expect(resource('rumbaMumbas') instanceof Array).toBeTruthy()

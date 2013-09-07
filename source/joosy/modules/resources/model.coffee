@@ -15,6 +15,14 @@ Joosy.Modules.Resources.Model =
       @::__primaryKey = primaryKey
 
     #
+    # Sets the collection to use
+    #
+    # @param [Class] klass       Class to use as a collection wrapper
+    #
+    @collection = (klass) ->
+      @::__collection = klass
+
+    #
     # Sets the entity text name:
     #   required to do some magic like skipping the root node.
     #
@@ -57,7 +65,7 @@ Joosy.Modules.Resources.Model =
 
         if Object.isArray data[name]
           entries = data[name].map (x) -> klass.build x
-          data[name] = new Joosy.Resources.Array entries...
+          data[name] = new klass::__collection entries...
         else if Object.isObject data[name]
           data[name] = klass.build data[name]
         data
@@ -80,6 +88,11 @@ Joosy.Modules.Resources.Model =
   # Default primary key field 'id'
   #
   __primaryKey: 'id'
+
+  #
+  # Default collection: Joosy.Resources.Array
+  #
+  __collection: Joosy.Resources.Array
 
   id: ->
     @data?[@__primaryKey]

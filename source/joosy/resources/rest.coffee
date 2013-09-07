@@ -330,7 +330,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
     else
       [options, callback] = @::__extractOptionsAndCallback(options, callback)
 
-    result = new Joosy.Resources.Array
+    result = new @::__collection
 
     @__query @collectionPath(where, options), 'GET', options.params, (error, rawData, xhr) =>
       if (data = rawData)?

@@ -84,7 +84,7 @@ To generate assets statically prior to the deployment run:
 
 You assets are at `public/` directory, enjoy!
 
-* [List of supported generators](https://github.com/joosy/generator-joosy)
+* [List of supported generators](https://github.com/joosy/generator-joosy#available-in-app-generators)
 * [Commands and options of Grill](https://github.com/joosy/grill#commands)
 
 ## Hacking

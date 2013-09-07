@@ -118,7 +118,7 @@ class Joosy.Router extends Joosy.Module
   #
   # @param [Function] block   callback for child commands
   #
-  @draw: (block)->
+  @draw: (block) ->
     Drawer.run block
 
   #

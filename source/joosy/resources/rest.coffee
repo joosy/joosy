@@ -8,6 +8,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
 
   @include Joosy.Modules.Resources.Model
 
+  @registerPlainFilters 'beforeSave'
+
   @beforeLoad (data) ->
     if Object.isObject(data) && Object.keys(data).length == 1 && @__entityName
       name = @__entityName.camelize(false)
@@ -348,6 +350,16 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
       callback?(error, result, rawData, xhr)
 
     result
+
+  save: (callback) ->
+    if @id()
+      @put {params: @__applyBeforeSaves(@data)}, (error, data) =>
+        @load data unless error
+        callback? error, @
+    else
+      @constructor.post {params: @__applyBeforeSaves(@data)}, (error, data) =>
+        @load data unless error
+        callback? error, @
 
   #
   # Wrapper for AJAX request

@@ -23,7 +23,7 @@ Joosy.Modules.Filters =
   #     @__runAfterUnloads() # Runs filters registered as afterUnload
   #
   included: ->
-    @__registerFilterCollector = (filter) =>
+    @__registerFilterCollector = (filter) ->
       @[filter] = (callback) ->
         unless @::hasOwnProperty "__#{filter}s"
           @::["__#{filter}s"] = [].concat @.__super__["__#{filter}s"] || []
@@ -31,7 +31,7 @@ Joosy.Modules.Filters =
 
       filter.charAt(0).toUpperCase() + filter.slice(1)
 
-    @registerPlainFilters = (filters...) =>
+    @registerPlainFilters = (filters...) ->
       filters.each (filter) =>
         camelized = @__registerFilterCollector filter
 
@@ -59,7 +59,7 @@ Joosy.Modules.Filters =
 
           data
 
-    @registerSequencedFilters = (filters...) =>
+    @registerSequencedFilters = (filters...) ->
       filters.each (filter) =>
         camelized = @__registerFilterCollector filter
 

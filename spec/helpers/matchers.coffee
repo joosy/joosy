@@ -2,7 +2,7 @@ beforeEach ->
   @addMatchers
 
     #
-    # Checks whether listed array of callbacks was 
+    # Checks whether listed array of callbacks was
     # called in exact order one by one
     #
     # @example

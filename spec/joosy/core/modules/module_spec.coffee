@@ -9,9 +9,9 @@ describe "Joosy.Module", ->
     for a in [A, B, C, D]
       for b in [A, B, C, D]
         if (a == b) ||
-          ((a == B) && (b == A)) ||
-          ((a == C) && (b != D))
-            expect(Joosy.Module.hasAncestor a, b).toBeTruthy()
+            ((a == B) && (b == A)) ||
+            ((a == C) && (b != D))
+          expect(Joosy.Module.hasAncestor a, b).toBeTruthy()
         else
           expect(Joosy.Module.hasAncestor a, b).toBeFalsy()
 

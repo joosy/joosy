@@ -1,4 +1,4 @@
-describe "Joosy.Resources.Array", ->
+describe 'Joosy.Resources.Array', ->
 
   describe 'in general', ->
     beforeEach ->
@@ -18,7 +18,7 @@ describe "Joosy.Resources.Array", ->
       expect(@array.length).toEqual 3
       expect(@array[0]).toEqual 1
       expect(@array[1]).toEqual 2
-      expect(@array[2]).toEqual 3      
+      expect(@array[2]).toEqual 3
 
     it 'triggers', ->
       spy = sinon.spy()

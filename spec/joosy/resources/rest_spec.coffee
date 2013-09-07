@@ -240,3 +240,26 @@ describe "Joosy.Resources.REST", ->
       it "with delete", ->
         resource.delete callback
         checkAndRespond @server.requests[0], 'DELETE', /^\/fluffies/, rawData
+
+    describe "save", ->
+      beforeEach ->
+        class @Resource extends Joosy.Resources.REST
+          @entity 'resource'
+
+          @beforeSave (data) ->
+            data.tested = true
+            data
+
+      it "creates", ->
+        resource = new @Resource(foo: 'bar')
+        resource.save()
+
+        checkAndRespond @server.requests[0], 'POST', /^\/resources/, rawData
+        expect(@server.requests[0].requestBody).toEqual 'foo=bar&tested=true'
+
+      it "updates", ->
+        resource = new @Resource(id: 1, foo: 'bar')
+        resource.save()
+
+        checkAndRespond @server.requests[0], 'PUT', /^\/resources\/1/, rawData
+        expect(@server.requests[0].requestBody).toEqual 'id=1&foo=bar&tested=true'

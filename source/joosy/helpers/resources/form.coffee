@@ -1,99 +1,233 @@
 #
+# @private
+#
+class Form
+  constructor: (@context, @resource, @options) ->
+
+  __extend: (options) ->
+    options.extendIds = @options.extendIds
+    options
+
+  ['text', 'file', 'hidden', 'password'].each (type) =>
+    @::[type+'Field'] = (property, options={}) ->
+      @context[type+'Field'] @resource, property, @__extend(options)
+
+  label: (property, options={}, content='') ->
+    if !Object.isObject(options)
+      content = options
+      options = {}
+
+    @context.label @resource, property, @__extend(options), content
+
+  radioButton: (property, tagValue, options={}) ->
+    @context.radioButton @resource, property, tagValue, @__extend(options)
+
+  textArea: (property, options={}) ->
+    @context.textArea @resource, property, @__extend(options)
+
+  checkBox: (property, options={}, checkedValue=1, uncheckedValue=0) ->
+    @context.checkBox @resource, property, @__extend(options), checkedValue, uncheckedValue
+
+  select: (property, selectOptions={}, options={}) ->
+    @context.select @resource, property, selectOptions, @__extend(options)
+
+#
 # Form helper
 #
 Joosy.helpers 'Application', ->
 
-  description = (resource, method, extendIds, idSuffix) ->
+  separateOptions = (options, keys) ->
+    attributes = {}
+    parameters = {}
+
+    for key, value of options
+      if keys.indexOf(key) != -1
+        parameters[key] = value
+      else
+        attributes[key] = value
+
+    [parameters, attributes]
+
+  #
+  # Generates main attributes of a single field for a form
+  #
+  # @param [String]  resource            Name of resource
+  # @param [Object]  resource            Instance of something that includes Joosy.Modules.Resources.Module
+  # @param [String]  property            Name of attribute the field is for
+  # @param [Boolean] extendIds           Marks whether DOM id of a field should contain primary key of resource
+  # @param [String]  idSuffix            Suffix to append to DOM id
+  # @param [Hash]    DOM attributes      Initial set that should be extended
+  #
+  domify = (resource, property, extendIds, idSuffix, attributes) ->
     if resource.__entityName? && resource.id?
-      id        = resource.id()
-      resource  = resource.__entityName
+      resourceId = resource.id()
+      resource   = resource.__entityName
 
-    name: resource + "#{if method.match(/^\[.*\]$/) then method else "[#{method}]"}"
-    id:   resource + (if id && extendIds then '_'+id else '') + "_#{method.parameterize().underscore()}" + (if idSuffix then '_'+idSuffix else '')
+    unless attributes
+      attributes = {}
+    else
+      attributes = Joosy.Module.merge {}, attributes
 
-  input = (type, resource, method, options={}) =>
-    d = description(resource, method, options.extendIds, options.idSuffix)
-    delete options.extendIds
-    delete options.idSuffix
-    @tag 'input', Joosy.Module.merge {type: type, name: d.name, id: d.id}, options
+    attributes.name  = resource
+    attributes.name += if property.match(/^\[.*\]$/) then property else "[#{property}]"
+
+    attributes.id  = resource
+    attributes.id += "_#{resourceId}" if resourceId? && extendIds
+    attributes.id += "_#{property.parameterize().underscore()}"
+    attributes.id += "_#{idSuffix}" if idSuffix
+
+    attributes
 
   #
-  # @private
+  # Generates input field
   #
-  class Form
-    constructor: (@context, @resource, @options) ->
+  input = (type, resource, property, extendIds, idSuffix, attributes={}) =>
+    attributes.type = type
+    attributes = domify(resource, property, extendIds, idSuffix, attributes)
 
-    label: (method, options={}, content='') ->
-      if !Object.isObject(options)
-        content = options
-        options = {}
+    @tag 'input', attributes
 
-      @context.label(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), content)
+  #
+  # ======================================================================
+  #
 
-    radioButton: (method, tagValue, options={}) -> @context.radioButton(@resource, method, tagValue, Joosy.Module.merge(extendIds: @options.extendIds, options))
-    textArea: (method, options={}) -> @context.textArea(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options))
-    checkBox: (method, options={}, checkedValue=1, uncheckedValue=0) -> @context.checkBox(@resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options), checkedValue, uncheckedValue)
-    select: (method, options={}, htmlOptions={}) -> @context.select @resource, method, options, Joosy.Module.merge(extendIds: @options.extendIds, htmlOptions)
-
-  ['text', 'file', 'hidden', 'password'].each (type) =>
-    Form.prototype[type+'Field'] = (method, options={}) ->
-      @context[type+'Field'] @resource, method, Joosy.Module.merge(extendIds: @options.extendIds, options)
-
+  #
+  # Instantiates a form builder
+  #
+  # @param [String]   resource             Name of resource
+  # @param [Object]   resource             Instance of something that includes Joosy.Modules.Resources.Module
+  # @param [Function] block                Inline template that will be rendered as a form
+  # @param [Object] options
+  #
+  # @option options [Boolean] extendIds    Marks if DOM ids of fields should include primary key of resource (default: false)
+  #
+  # @example
+  #   != @formFor Resource, {extendIds: true}, (form) =>
+  #     != form.textField 'property'
+  #
   @formFor = (resource, options={}, block) ->
     if Object.isFunction(options)
       block   = options
       options = {}
 
+    attributes = Joosy.Module.merge(options.html || {}, id: uuid)
     uuid = Joosy.uuid()
-    form = @tag 'form', Joosy.Module.merge(options.html || {}, id: uuid), block?.call(this, new Form(this, resource, options))
-    form
+    form = new Form @, resource, options
 
-  @label = (resource, method, options={}, content='') ->
+    @tag 'form', attributes, block?.call(@, form)
+
+  #
+  # Generates `label` tag
+  #
+  # @param [String] resource               Name of resource
+  # @param [Object] resource               Instance of something that includes Joosy.Modules.Resources.Module
+  # @param [String] property               Attribute of a resource to use
+  # @param [Object] options
+  # @option options [Boolean] extendIds    Marks if DOM ids of fields should include primary key of resource (default: false)
+  # @param [String] content                Content of the label
+  #
+  @label = (resource, property, options={}, content='') ->
     if !Object.isObject(options)
       content = options
       options = {}
 
-    d = description(resource, method, options.extendIds)
-    delete options.extendIds
+    [parameters, attributes] = separateOptions options, ['extendIds']
 
-    @contentTag 'label', content, Joosy.Module.merge(options, for: d.id)
+    attributes.for = domify(resource, property, parameters.extendIds, '', attributes).id
 
+    @contentTag 'label', content, attributes
+
+  #
+  # Set of typical generators for basic inputs: textField, fileField, hiddenField, passwordField
+  #
   ['text', 'file', 'hidden', 'password'].each (type) =>
-    @[type+'Field'] = (resource, method, options={}) -> input type, resource, method, options
+    @[type+'Field'] = (resource, property, options={}) ->
+      [parameters, attributes] = separateOptions options, ['extendIds']
 
-  @radioButton = (resource, method, tagValue, options={}) -> input 'radio', resource, method, Joosy.Module.merge(value: tagValue, idSuffix: tagValue, options)
+      input type, resource, property, parameters.extendIds, '', attributes
 
-  @checkBox = (resource, method, options={}, checkedValue=1, uncheckedValue=0) ->
-    spy = @tag 'input', Joosy.Module.merge(name: description(resource, method).name, value: uncheckedValue, type: 'hidden')
-    box = input 'checkbox', resource, method, Joosy.Module.merge(value: checkedValue, options)
+  #
+  # Generates a radio button
+  #
+  # @param [String] resource               Name of resource
+  # @param [Object] resource               Instance of something that includes Joosy.Modules.Resources.Module
+  # @param [String] property               Attribute of a resource to use
+  # @param [Object] options
+  # @option options [Boolean] extendIds    Marks if DOM ids of fields should include primary key of resource (default: false)
+  # @param [String] tagValue               Value of the button
+  #
+  @radioButton = (resource, property, tagValue, options={}) ->
+    [parameters, attributes] = separateOptions(options, ['extendIds'])
+
+    attributes.value = tagValue
+    input 'radio', resource, property, options.extendIds, tagValue, attributes
+
+  #
+  # Generates a checkbox
+  #
+  # @param [String] resource               Name of resource
+  # @param [Object] resource               Instance of something that includes Joosy.Modules.Resources.Module
+  # @param [String] property               Attribute of a resource to use
+  # @param [Object] options
+  # @option options [Boolean] extendIds    Marks if DOM ids of fields should include primary key of resource (default: false)
+  # @param [String] checkedValue           Value for the checked condition
+  # @param [String] uncheckedValue         Value for the unchecked condition
+  #
+  @checkBox = (resource, property, options={}, checkedValue=1, uncheckedValue=0) ->
+    [parameters, attributes] = separateOptions(options, ['extendIds'])
+
+    spyAttributes = domify resource, property, parameters.extendIds, '', attributes
+    spy = @tag 'input', name: spyAttributes.name, value: uncheckedValue, type: 'hidden'
+
+    attributes.value = checkedValue
+    box = input 'checkbox', resource, property, parameters.extendIds, '', attributes
 
     spy+box
 
-  @select = (resource, method, options, htmlOptions) ->
-    if Object.isObject options
+  #
+  # Generates a select
+  #
+  # @param [String] resource                Name of resource
+  # @param [Object] resource                Instance of something that includes Joosy.Modules.Resources.Module
+  # @param [String] property                Attribute of a resource to use
+  # @param [Object] options
+  # @option options [Boolean] extendIds     Marks if DOM ids of fields should include primary key of resource (default: false)
+  # @option options [String] value          Sets current value of a select
+  # @option options [Boolean] includeBlank  Marks if select should contain blank starting option
+  # @param [Object] selectOptions           Options to build select with `{foo: 'bar'}`
+  # @param [Array] selectOptions            Options to build select with `['foo', 'bar']`
+  # @param [String] selectOptions           Options to build select with `<option ...`
+  #
+  @select = (resource, property, selectOptions, options) ->
+    [parameters, attributes] = separateOptions(options, ['extendIds', 'value', 'includeBlank'])
+
+    if Object.isObject selectOptions
       opts = []
-      for key, val of options
+      for key, val of selectOptions
         opts.push [val, key]
     else
-      opts = options
-    if htmlOptions.includeBlank
-      delete htmlOptions.includeBlank
-      opts.unshift ['', '']
+      opts = selectOptions
+
+    opts.unshift ['', ''] if parameters.includeBlank
     opts = opts.reduce (str, vals) =>
       params = if Object.isArray vals then ['option', vals[0], { value: vals[1] }] else ['option', vals, {}]
-      if htmlOptions.value == (if Object.isArray(vals) then vals[1] else vals)
+      if parameters.value == (if Object.isArray(vals) then vals[1] else vals)
         params[2].selected = 'selected'
       str += @contentTag.apply @, params
     , ''
-    extendIds = htmlOptions.extendIds
-    delete htmlOptions.value
-    delete htmlOptions.extendIds
-    @contentTag 'select', opts, Joosy.Module.merge(description(resource, method, extendIds), htmlOptions)
 
-  @textArea = (resource, method, options={}) ->
-    value     = options.value
-    extendIds = options.extendIds
-    delete options.value
-    delete options.extendIds
+    @contentTag 'select', opts, domify(resource, property, parameters.extendIds, '', attributes)
 
-    @contentTag 'textarea', value, Joosy.Module.merge(description(resource, method, extendIds), options)
+  #
+  # Generates a text area
+  #
+  # @param [String] resource               Name of resource
+  # @param [Object] resource               Instance of something that includes Joosy.Modules.Resources.Module
+  # @param [String] property               Attribute of a resource to use
+  # @param [Object] options
+  # @option options [Boolean] extendIds    Marks if DOM ids of fields should include primary key of resource (default: false)
+  # @option options [String] value         Value of the text area
+  #
+  @textArea = (resource, property, options={}) ->
+    [parameters, attributes] = separateOptions(options, ['extendIds', 'value'])
+    @contentTag 'textarea', parameters.value, domify(resource, property, parameters.extendIds, '', attributes)

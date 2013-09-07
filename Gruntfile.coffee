@@ -59,10 +59,16 @@ module.exports = (grunt) ->
     coffeelint:
       source:
         files:
-          src: 'source/joosy/**/*.coffee'
+          src: ['source/joosy/**/*.coffee', 'spec/**/*.coffee']
         options:
           'max_line_length':
             level: 'ignore'
+          'arrow_spacing':
+            level: 'error'
+          'line_endings':
+            level: 'error'
+          'no_empty_param_list':
+            level: 'error'
 
     'gh-pages':
       docs:

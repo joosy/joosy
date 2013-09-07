@@ -89,9 +89,9 @@ describe "Joosy.Router", ->
       Joosy.Router.compileRoute '/such/a/long/long/url/:with/:plenty/:of/:params', '123'
 
       expect(Joosy.Router.routes['^/?such/a/long/long/url/([^/]+)/([^/]+)/([^/]+)/([^/]+)/?$']).toEqual
-          capture: ['with', 'plenty', 'of', 'params']
-          to: '123'
-          as: undefined
+        capture: ['with', 'plenty', 'of', 'params']
+        to: '123'
+        as: undefined
 
     it 'compiles aliased route', ->
       Joosy.Router.compileRoute '/such/a/long/long/url/:with/:plenty/:of/:params', '456', '123'

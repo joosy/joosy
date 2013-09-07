@@ -12,7 +12,7 @@ describe "Joosy.Widget", ->
 
       for instance in entries
         for filter in ['paint', 'beforePaint', 'erase', 'fetch']
-          spies[instance+'/'+filter] = sinon.spy()
+          spies[instance + '/' + filter] = sinon.spy()
 
       class @A extends Joosy.Widget
         @view """
@@ -55,8 +55,8 @@ describe "Joosy.Widget", ->
         sinon.spy @[instance], '__load'
         sinon.spy @[instance], '__unload'
 
-      @nestingMap = 
-        '#content': 
+      @nestingMap =
+        '#content':
           instance: @b
           nested:
             '#subcontent': {instance: @d}
@@ -333,7 +333,7 @@ describe "Joosy.Widget", ->
           @A.fetch (complete) -> setTimeout complete, 100
 
           @C.fetch (complete) -> setTimeout complete, 0
-          @C.independent()          
+          @C.independent()
 
           runs ->
             @a.__bootstrap null, @nestingMap, @$ground

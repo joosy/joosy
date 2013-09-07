@@ -38,7 +38,7 @@ describe "Joosy.Modules.DOM", ->
 
       expect((new B).__elements).toEqual Object.extended
         posts: '.post'
-        content: 
+        content:
           post1: '#post1'
           post2: '#post2'
         first: 'overrided'
@@ -49,7 +49,7 @@ describe "Joosy.Modules.DOM", ->
       expect((new @DOM).__elements).toEqual Object.extended
         posts: '.post'
         footer: '.footer'
-        content: 
+        content:
           post1: '#post1'
           post2: '#post2'
 

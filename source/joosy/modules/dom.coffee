@@ -77,12 +77,13 @@ Joosy.Modules.DOM =
     return unless entries
 
     for key,value of entries
-      if value.constructor == Object
-        @__assignElements root['$'+key]={}, value
-      else
-        value = @__extractSelector value
-        root['$'+key] = @__wrapElement(value)
-        root['$'+key].selector = value
+      do (key, value) =>
+        if typeof(value) != 'string'
+          @__assignElements root['$'+key]={}, value
+        else
+          value = @__extractSelector value
+          root['$'+key] = @__wrapElement(value)
+          root['$'+key].selector = value
 
   #
   # Wraps actual element closures. Required to clear context to avoid circular reference

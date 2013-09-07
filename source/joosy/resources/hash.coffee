@@ -13,9 +13,6 @@ class Joosy.Resources.Hash extends Joosy.Function
     @__fillData data
     @
 
-  clone: (callback) ->
-    new @constructor Joosy.Module.merge({}, @data, true, true)
-
   __get: (path) ->
     [instance, property] = @__callTarget path, true
 

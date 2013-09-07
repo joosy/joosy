@@ -131,11 +131,11 @@ Joosy.Modules.Events =
   trigger: (event, data...) ->
     Joosy.Modules.Log.debugAs @, "Event #{event} triggered"
 
-    if event.constructor == Object
+    if typeof(event) == 'string'
+      remember = false
+    else
       remember = event.remember
       event    = event.name
-    else
-      remember = false
 
     if @hasOwnProperty '__oneShotEvents'
       fire = []

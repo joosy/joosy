@@ -206,16 +206,15 @@ Joosy.helpers 'Application', ->
   # @option options [Boolean] includeBlank  Marks if select should contain blank starting option
   # @param [Object] selectOptions           Options to build select with `{foo: 'bar'}`
   # @param [Array] selectOptions            Options to build select with `['foo', 'bar']`
-  # @param [String] selectOptions           Options to build select with `<option ...`
   #
   @select = (resource, property, rawSelectOptions, options) ->
     [parameters, attributes] = separateOptions(options, ['extendIds', 'value', 'includeBlank'])
 
-    if rawSelectOptions.constructor == Object
+    if rawSelectOptions instanceof Array
+      selectOptions = rawSelectOptions
+    else
       selectOptions = []
       selectOptions.push [val, key] for key, val of rawSelectOptions
-    else
-      selectOptions = rawSelectOptions
 
     selectOptions.unshift ['', ''] if parameters.includeBlank
     selectOptions = selectOptions.reduce (str, vals) =>

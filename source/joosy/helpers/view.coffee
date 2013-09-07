@@ -55,9 +55,9 @@ Joosy.helpers 'Application', ->
   #
   # Possible arguments variations:
   #   1. @contentTag 'name', 'content'
-  #   2. @contentTag 'name', {}, ->
-  #   3. @contentTag 'name', {}, false, ->
-  #   4. @contentTag 'name', ->
+  #   2. @contentTag 'name', ->
+  #   3. @contentTag 'name', {}, ->
+  #   4. @contentTag 'name', {}, false, ->
   #
   # Example
   #   != @contentTag 'div', {class: 'foo'}, =>
@@ -69,7 +69,10 @@ Joosy.helpers 'Application', ->
     if typeof(contentOrOptions) == 'string'
       options ||= {}
       content   = contentOrOptions
-    else if contentOrOptions.constructor == Object
+    else if typeof(contentOrOptions) == 'function'
+      options = {}
+      content = contentOrOptions()
+    else
       if typeof(options) == 'function'
         escape = true
         content = options()
@@ -77,9 +80,6 @@ Joosy.helpers 'Application', ->
         escape = options
         content = escape()
       options = contentOrOptions
-    else
-      options = {}
-      content = contentOrOptions()
 
     element = document.createElement name
     temp    = document.createElement 'div'

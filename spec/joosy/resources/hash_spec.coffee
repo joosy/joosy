@@ -10,14 +10,6 @@ describe "Joosy.Resources.Hash", ->
       expect(@hash 'bar').toEqual {baz: 'yummy!'}
       expect(@hash 'bar.baz').toEqual 'yummy!'
 
-    it 'clones', ->
-      clone = @hash.clone()
-      clone.data.foo = 'new'
-      clone('bar', 'new as well')
-      expect(@hash 'foo').toEqual 'bar'
-      expect(@hash 'bar').toEqual {baz: 'yummy!'}
-      expect(@hash 'bar.baz').toEqual 'yummy!'
-
     it 'sets', ->
       @hash('bar.baz', 'the ignition')
       expect(@hash.data.bar.baz).toEqual 'the ignition'

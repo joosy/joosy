@@ -27,13 +27,14 @@ or
   gem 'joosy', github: 'joosy/joosy', branch: '1.1'
 ```
 
-[Guides](http://guides.joosy.ws/) and [API](http://api.joosy.ws/) are also bound to 1.1 branch.
-Again – make sure you use proper gem versions.
+[Guides](http://guides.joosy.ws/) are still bound to 1.1 branch! [API](http://api.joosy.ws/) docs
+are available for all current versions. Again – make sure you use proper gem versions.
 
 ### Whatever! I'm ninja!
 
-Below in this README you will find new installation instructions. They are still very likely
-to change or work not as expected while 1.2 branch is still early alpha.
+Below in this README you will find new installation instructions. 1.2 branch is currently in beta.
+It means we are in feature-freeze mode and interface is unlikely to change. But things are still
+unstable and the release can contain tiny inconsistencies that might be required to make things work.
 
 Keep track on what's going on at the [Wiki](https://github.com/joosy/joosy/wiki#12-feather)
 
@@ -52,7 +53,7 @@ Finally, Joosy boosts your development drastically. Just like the Rails framewor
 Add Joosy gem to your Gemfile:
 
 ```ruby
-  gem 'joosy-rails', '~> 1.0.0'
+  gem 'joosy-rails', '~> 1.0.0.RC2'
 ```
 
 Use built-in generator to seed a basic application:
@@ -65,21 +66,26 @@ Make sure to remove `public/index.html` and you are ready to go with [localhost:
 
 ### Standalone application
 
-Make sure you have Node.js installed. Install joosy package globally to start with:
+Standalone mode of Joosy is based on [Yeoman](http://yeoman.io) and [Grill](https://github.com/joosy/grill). Start from installing proper Yeoman extension:
 
-    npm install joosy -g
+    npm install -g yo generator-joosy
 
-Now run basic application generator with the following command:
+Now create a directory to use a project root and run application generator:
 
-    joosy new dummy
+    mkdir new dummy
+    cd dummy
+    yo joosy
 
-The main application code will appear at `source` directory. `stylesheets` is for Stylus-based styles and the main canvas of page is defined at `source/index.haml`. Now you can `grunt joosy:server` to start development server at [localhost:4000](http://localhost:4000/).
+The main application code will appear at `source` directory. `stylesheets` is for Stylus-based styles and the main canvas of page is defined at `source/haml/index.haml`. Now you can `grunt server` to start development server at [localhost:4000](http://localhost:4000/).
 
 To generate assets statically prior to the deployment run:
 
-    grunt joosy:compile
+    grunt compile
 
 You assets are at `public/` directory, enjoy!
+
+* [List of supported generators](https://github.com/joosy/generator-joosy)
+* [Commands and options of Grill](https://github.com/joosy/grill#commands)
 
 ## Hacking
 

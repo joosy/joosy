@@ -1,7 +1,5 @@
 <%= dependencies %>
 #
-#= require joosy
-#
 #= require_tree ./
 
 $ ->

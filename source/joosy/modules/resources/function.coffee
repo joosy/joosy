@@ -17,7 +17,7 @@
 #   typeof(foo)             # 'function'
 #   foo()                   # 'test'
 #
-Joosy.Modules.Function =
+Joosy.Modules.Resources.Function =
 
   extended: ->
     if @build

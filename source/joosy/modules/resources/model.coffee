@@ -79,6 +79,16 @@ Joosy.Modules.Resources.Model =
     @grab = (form) ->
       @build({}).grab form
 
+    @attrAccessor = ->
+      for attribute in arguments
+        do (attribute) =>
+          @::[attribute] = (value) ->
+            if value
+              @set attribute, value
+            else
+              @get attribute
+
+
   #
   # Default primary key field 'id'
   #

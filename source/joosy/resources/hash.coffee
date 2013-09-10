@@ -1,12 +1,18 @@
-#= require joosy/modules/function
-
 class Joosy.Resources.Hash extends Joosy.Module
 
-  @extend  Joosy.Modules.Function
   @include Joosy.Modules.Events
   @include Joosy.Modules.Filters
 
   @registerPlainFilters 'beforeLoad'
+
+  @build: ->
+    new @ arguments...
+
+  __call: (path, value) ->
+    if arguments.length > 1
+      @set path, value
+    else
+      @get path
 
   constructor: (data={}) ->
     @__fillData data, false
@@ -15,32 +21,26 @@ class Joosy.Resources.Hash extends Joosy.Module
     @__fillData data
     @
 
-  __get: (path) ->
+  get: (path) ->
     [instance, property] = @__callTarget path, true
 
     return undefined unless instance
 
-    if instance.__get?
-      instance.__get(property)
+    if instance.get
+      instance.get(property)
     else
       instance[property]
 
-  __set: (path, value) ->
+  set: (path, value) ->
     [instance, property] = @__callTarget path
 
-    if instance.__set?
-      instance.__set(property, value)
+    if instance.set?
+      instance.set(property, value)
     else
       instance[property] = value
 
     @trigger 'changed'
     value
-
-  __call: (path, value) ->
-    if arguments.length > 1
-      @__set path, value
-    else
-      @__get path
 
   #
   # Locates the actual instance of attribute path `foo.bar` from get/set

@@ -1,10 +1,18 @@
 class Joosy.Resources.Scalar extends Joosy.Module
 
-  @extend  Joosy.Modules.Function
   @include Joosy.Modules.Events
   @include Joosy.Modules.Filters
 
   @registerPlainFilters 'beforeLoad'
+
+  @build: ->
+    new @ arguments...
+
+  __call: ->
+    if arguments.length > 0
+      @set arguments[0]
+    else
+      @get()
 
   constructor: (value) ->
     @load value
@@ -14,16 +22,10 @@ class Joosy.Resources.Scalar extends Joosy.Module
     @trigger 'changed'
     @value
 
-  __call: ->
-    if arguments.length > 0
-      @__set arguments[0]
-    else
-      @__get()
-
-  __get: ->
+  get: ->
     @value
 
-  __set: (@value) ->
+  set: (@value) ->
     @trigger 'changed'
 
   valueOf: ->

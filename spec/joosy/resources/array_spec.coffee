@@ -16,15 +16,6 @@ describe 'Joosy.Resources.Array', ->
       @array.push 5
       expect(@array.length).toEqual 5
 
-    it 'clones', ->
-      clone = @array.clone()
-      clone.push 5
-      clone.unshift 6
-      expect(@array.length).toEqual 3
-      expect(@array[0]).toEqual 1
-      expect(@array[1]).toEqual 2
-      expect(@array[2]).toEqual 3
-
     it 'triggers', ->
       spy = sinon.spy()
       @array.bind 'changed', spy

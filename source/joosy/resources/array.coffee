@@ -13,18 +13,16 @@ class Joosy.Resources.Array extends Array
   constructor: ->
     @__fillData arguments, false
 
+  load: ->
+    @__fillData arguments
+
+  get: (index) ->
+    @[index]
+
   set: (index, value) ->
     @[index] = value
     @trigger 'changed'
     value
-
-  load: ->
-    @__fillData arguments
-
-  clone: (callback) ->
-    clone = new @constructor
-    clone.data = @slice 0
-    clone
 
   push: ->
     result = super

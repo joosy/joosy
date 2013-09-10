@@ -34,9 +34,9 @@ describe "Joosy.Modules.Resources.IdentityMap", ->
       id: 1
       test_inlines: [{id: 1}, {id: 2}]
 
-    inline('foo', 'bar')
+    inline.set('foo', 'bar')
 
-    expect(root('test_inlines')[0]('foo')).toEqual 'bar'
+    expect(root.get('test_inlines')[0].get('foo')).toEqual 'bar'
 
   it "handles nested bi-directional reference", ->
     biDirectionTestNode = TestNode.build
@@ -44,4 +44,4 @@ describe "Joosy.Modules.Resources.IdentityMap", ->
       yolo: true
       children: [{id: 2, parent: {id: 1, yolo: true}}]
 
-    expect(biDirectionTestNode).toEqual(biDirectionTestNode('children')[0]('parent'))
+    expect(biDirectionTestNode).toEqual(biDirectionTestNode.get('children')[0].get('parent'))

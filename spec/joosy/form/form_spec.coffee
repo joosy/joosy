@@ -165,7 +165,7 @@ describe "Joosy.Form", ->
       expect(@arrayForm.$fields()[0].value).toEqual 'here'
 
     it "should break cross-references", ->
-      @resource('single')('trololo', @resource)
+      @resource.get('single').get('trololo', @resource)
       @nestedForm.fill @resource
       # expect(you).toBeAlive(), lol
 

@@ -18,32 +18,28 @@ describe "Joosy.Modules.Resources.Model", ->
     resource = Model.build foo: 'bar'
     expect(resource.data).toEqual foo: 'bar'
 
-  it "produces magic function", ->
-    expect(typeof(@resource) == 'function').toBeTruthy()
-    expect(@resource.data).toEqual @data
-
   it "gets values", ->
-    expect(@resource 'foo').toEqual 'bar'
-    expect(@resource 'very.deep').toEqual value: 'boo!'
-    expect(@resource 'very.deep.value').toEqual 'boo!'
+    expect(@resource.get 'foo').toEqual 'bar'
+    expect(@resource.get 'very.deep').toEqual value: 'boo!'
+    expect(@resource.get 'very.deep.value').toEqual 'boo!'
 
   it "sets values", ->
-    expect(@resource 'foo').toEqual 'bar'
-    @resource 'foo', 'baz'
-    expect(@resource 'foo').toEqual 'baz'
+    expect(@resource.get 'foo').toEqual 'bar'
+    @resource.set 'foo', 'baz'
+    expect(@resource.get 'foo').toEqual 'baz'
 
-    expect(@resource 'very.deep').toEqual value: 'boo!'
-    @resource 'very.deep', 'banana!'
-    expect(@resource 'very.deep').toEqual 'banana!'
+    expect(@resource.get 'very.deep').toEqual value: 'boo!'
+    @resource.set 'very.deep', 'banana!'
+    expect(@resource.get 'very.deep').toEqual 'banana!'
 
-    @resource 'another.deep.value', 'banana strikes back'
-    expect(@resource 'another.deep').toEqual value: 'banana strikes back'
+    @resource.set 'another.deep.value', 'banana strikes back'
+    expect(@resource.get 'another.deep').toEqual value: 'banana strikes back'
 
   it "triggers 'changed' right", ->
     callback = sinon.spy()
     @resource.bind 'changed', callback
-    @resource 'foo', 'baz'
-    @resource 'foo', 'baz2'
+    @resource.set 'foo', 'baz'
+    @resource.set 'foo', 'baz2'
 
     expect(callback.callCount).toEqual(2)
 
@@ -56,7 +52,7 @@ describe "Joosy.Modules.Resources.Model", ->
 
       resource = R.build()
 
-      expect(resource 'tested').toBeTruthy()
+      expect(resource.get 'tested').toBeTruthy()
 
   it "should map inlines", ->
     class RumbaMumba extends Model
@@ -73,13 +69,13 @@ describe "Joosy.Modules.Resources.Model", ->
         {foo: 'bar'},
         {bar: 'baz'}
       ]
-    expect(resource('rumbaMumbas') instanceof Joosy.Resources.Array).toBeTruthy()
-    expect(resource('rumbaMumbas')[0]('foo')).toEqual 'bar'
+    expect(resource.get('rumbaMumbas') instanceof Joosy.Resources.Array).toBeTruthy()
+    expect(resource.get('rumbaMumbas')[0].get('foo')).toEqual 'bar'
 
     resource = S.build
       rumbaMumba: {foo: 'bar'}
-    expect(resource('rumbaMumba') instanceof Model).toBeTruthy()
-    expect(resource('rumbaMumba.foo')).toEqual 'bar'
+    expect(resource.get('rumbaMumba') instanceof Model).toBeTruthy()
+    expect(resource.get('rumbaMumba.foo')).toEqual 'bar'
 
   it "allows to override a collection", ->
     class Array extends Joosy.Resources.Array
@@ -96,4 +92,19 @@ describe "Joosy.Modules.Resources.Model", ->
         {foo: 'bar'},
         {bar: 'baz'}
       ]
-    expect(resource('rumbaMumbas') instanceof Array).toBeTruthy()
+    expect(resource.get('rumbaMumbas') instanceof Array).toBeTruthy()
+
+  it "sets attributes", ->
+    class Fluffy extends Model
+      @attrAccessor 'foo', 'bar'
+
+    fluffy = Fluffy.build foo: 'bar', bar: 'foo'
+
+    expect(fluffy.foo()).toEqual 'bar'
+    expect(fluffy.bar()).toEqual 'foo'
+
+    fluffy.foo 'bar1'
+    fluffy.bar 'foo1'
+
+    expect(fluffy.foo()).toEqual 'bar1'
+    expect(fluffy.bar()).toEqual 'foo1'

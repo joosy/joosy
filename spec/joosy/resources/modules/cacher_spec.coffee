@@ -20,13 +20,13 @@ describe 'Joosy.Modules.Resources.Cacher', ->
 
     it 'caches', ->
       @Cacher.cached (instance) =>
-        expect(instance()).toEqual 1
+        expect(instance.get()).toEqual 1
 
         expect(localStorage['scalar']).toEqual '[1]'
         expect(@spy.callCount).toEqual 1
 
         instance.refresh (instance) =>
-          expect(instance()).toEqual 1
+          expect(instance.get()).toEqual 1
           expect(@spy.callCount).toEqual 2
 
   describe 'Array', ->

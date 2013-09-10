@@ -128,7 +128,7 @@ describe "Joosy.Resources.REST", ->
       @callback = sinon.spy (error, target, data) ->
         expect(target instanceof Fluffy).toEqual true
         expect(target.id()).toEqual 1
-        expect(target 'name').toEqual 'test1'
+        expect(target.get 'name').toEqual 'test1'
         expect(data).toEqual $.parseJSON(rawData)
 
     it "gets item without params", ->

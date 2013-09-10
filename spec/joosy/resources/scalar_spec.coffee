@@ -12,11 +12,11 @@ describe "Joosy.Resources.Scalar", ->
       spy = sinon.spy()
       @scalar.bind 'changed', spy
 
-      @scalar(7)
-      expect(@scalar()).toEqual 7
+      @scalar.set(7)
+      expect(@scalar.get()).toEqual 7
 
       @scalar.load(8)
-      expect(@scalar()).toEqual 8
+      expect(@scalar.get()).toEqual 8
 
       expect(spy.callCount).toEqual 2
 
@@ -27,10 +27,10 @@ describe "Joosy.Resources.Scalar", ->
           data + 1
 
       scalar = Scalar.build(5)
-      expect(scalar()).toEqual 6
+      expect(scalar.get()).toEqual 6
 
-      scalar(5)
-      expect(scalar()).toEqual 5
+      scalar.set(5)
+      expect(scalar.get()).toEqual 5
 
       scalar.load(7)
-      expect(scalar()).toEqual 8
+      expect(scalar.get()).toEqual 8

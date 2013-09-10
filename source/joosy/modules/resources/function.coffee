@@ -19,17 +19,23 @@
 #
 Joosy.Modules.Function =
 
-  build: ->
+  extended: ->
+    if @build
+      @aliasStaticMethodChain 'build', 'function'
+    else
+      @build = @buildWithFunction
+      @buildWithoutFunction = ->
+        new @ arguments...
+
+  buildWithFunction: ->
     shim  = -> shim.__call.apply shim, arguments
+    proto = @buildWithoutFunction arguments...
 
     if shim.__proto__
-      shim.__proto__ = @::
+      shim.__proto__ = proto
     else
-      for key, value of @::
+      for key, value of proto
         shim[key] = value
 
-    shim.constructor = @
-
-    @apply shim, arguments
-
+    shim.constructor = proto.constructor
     shim

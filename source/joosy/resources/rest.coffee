@@ -171,99 +171,32 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
     path
 
   #
-  # Sends the GET query using collectionPath.
+  # Sends a query using collectionPath.
   # Callback will get parsed JSON object as a parameter.
   #
+  # @param [String] method        GET / POST / PUT / DELETE
   # @param [Hash] options         Options to proxy to collectionPath
   # @param [Function] callback    Resulting callback
   # @param [Object]   callback    `(error, data) -> ...`
   #
-  @get: (options, callback) ->
+  @send: (method, options, callback) ->
     [options, callback] = @::__extractOptionsAndCallback(options, callback)
-    @__query @collectionPath(options), 'GET', options.params, callback
+    @__query @collectionPath(options), method.toUpperCase(), options.params, callback
+
+
 
   #
-  # Sends the POST query using collectionPath.
+  # Sends a query using memberPath.
   # Callback will get parsed JSON object as a parameter.
   #
-  # @param [Hash] options         Options to proxy to collectionPath
-  # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    `(error, data) -> ...`
-  #
-  @post: (options, callback) ->
-    [options, callback] = @::__extractOptionsAndCallback(options, callback)
-    @__query @collectionPath(options), 'POST', options.params, callback
-
-  #
-  # Sends the PUT query using collectionPath.
-  # Callback will get parsed JSON object as a parameter.
-  #
-  # @param [Hash] options         Options to proxy to collectionPath
-  # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    `(error, data) -> ...`
-  #
-  @put: (options, callback) ->
-    [options, callback] = @::__extractOptionsAndCallback(options, callback)
-    @__query @collectionPath(options), 'PUT', options.params, callback
-
-  #
-  # Sends the DELETE query using collectionPath.
-  # Callback will get parsed JSON object as a parameter.
-  #
-  # @param [Hash] options         Options to proxy to collectionPath
-  # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    `(error, data) -> ...`
-  #
-  @delete: (options, callback) ->
-    [options, callback] = @::__extractOptionsAndCallback(options, callback)
-    @__query @collectionPath(options), 'DELETE', options.params, callback
-
-  #
-  # Sends the GET query using memberPath.
-  # Callback will get parsed JSON object as a parameter.
-  #
+  # @param [String] method        GET / POST / PUT / DELETE
   # @param [Hash] options         Options to proxy to memberPath
   # @param [Function] callback    Resulting callback
   # @param [Object]   callback    `(error, data) -> ...`
   #
-  get: (options, callback) ->
+  send: (method, options, callback) ->
     [options, callback] = @__extractOptionsAndCallback(options, callback)
-    @constructor.__query @memberPath(options), 'GET', options.params, callback
-
-  #
-  # Sends the POST query using memberPath.
-  # Callback will get parsed JSON object as a parameter.
-  #
-  # @param [Hash] options         Options to proxy to memberPath
-  # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    `(error, data) -> ...`
-  #
-  post: (options, callback) ->
-    [options, callback] = @__extractOptionsAndCallback(options, callback)
-    @constructor.__query @memberPath(options), 'POST', options.params, callback
-
-  #
-  # Sends the PUT query using memberPath.
-  # Callback will get parsed JSON object as a parameter.
-  #
-  # @param [Hash] options         Options to proxy to memberPath
-  # @param [Function] callback    Resulting callback
-  # @param [Object]   callback    `(error, data) -> ...`
-  #
-  put: (options, callback) ->
-    [options, callback] = @__extractOptionsAndCallback(options, callback)
-    @constructor.__query @memberPath(options), 'PUT', options.params, callback
-
-  #
-  # Sends the DELETE query using memberPath.
-  # Callback will get parsed JSON object as a parameter.
-  #
-  # @param [Hash] options         Options to proxy to memberPath
-  # @param [Function] callback    `(error, data) -> ...`
-  #
-  delete: (options, callback) ->
-    [options, callback] = @__extractOptionsAndCallback(options, callback)
-    @constructor.__query @memberPath(options), 'DELETE', options.params, callback
+    @constructor.__query @memberPath(options), method.toUpperCase(), options.params, callback
 
   #
   # Refetches the data from backend and triggers `changed`
@@ -352,15 +285,21 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
 
     result
 
+  update: (callback) ->
+    @send 'put', {params: @__applyBeforeSaves(@data)}, (error, data) =>
+      @load data unless error
+      callback? error, @
+
+  create: (callback) ->
+    @constructor.send 'post', {params: @__applyBeforeSaves(@data)}, (error, data) =>
+      @load data unless error
+      callback? error, @
+
   save: (callback) ->
     if @id()
-      @put {params: @__applyBeforeSaves(@data)}, (error, data) =>
-        @load data unless error
-        callback? error, @
+      @update callback
     else
-      @constructor.post {params: @__applyBeforeSaves(@data)}, (error, data) =>
-        @load data unless error
-        callback? error, @
+      @create callback
 
   #
   # Wrapper for AJAX request

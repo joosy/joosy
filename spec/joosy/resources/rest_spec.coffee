@@ -207,38 +207,38 @@ describe "Joosy.Resources.REST", ->
       resource = Fluffy.build id: 1
 
       it "with get", ->
-        resource.get {action: 'foo', params: {foo: 'bar'}}, callback
+        resource.send 'get', {action: 'foo', params: {foo: 'bar'}}, callback
         checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/1\/foo\?foo=bar&_=\d+/, rawData
 
       it "with post", ->
-        resource.post callback
+        resource.send 'post', callback
         checkAndRespond @server.requests[0], 'POST', /^\/fluffies\/1/, rawData
 
       it "with put", ->
-        resource.put callback
+        resource.send 'put', callback
         checkAndRespond @server.requests[0], 'PUT', /^\/fluffies\/1/, rawData
 
       it "with delete", ->
-        resource.delete callback
+        resource.send 'delete', callback
         checkAndRespond @server.requests[0], 'DELETE', /^\/fluffies\/1/, rawData
 
     describe "collection", ->
       resource = Fluffy
 
       it "with get", ->
-        resource.get {action: 'foo', params: {foo: 'bar'}}, callback
+        resource.send 'get', {action: 'foo', params: {foo: 'bar'}}, callback
         checkAndRespond @server.requests[0], 'GET', /^\/fluffies\/foo\?foo=bar&_=\d+/, rawData
 
       it "with post", ->
-        resource.post callback
+        resource.send 'post', callback
         checkAndRespond @server.requests[0], 'POST', /^\/fluffies/, rawData
 
       it "with put", ->
-        resource.put callback
+        resource.send 'put', callback
         checkAndRespond @server.requests[0], 'PUT', /^\/fluffies/, rawData
 
       it "with delete", ->
-        resource.delete callback
+        resource.send 'delete', callback
         checkAndRespond @server.requests[0], 'DELETE', /^\/fluffies/, rawData
 
     describe "save", ->

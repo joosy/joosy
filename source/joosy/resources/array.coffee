@@ -7,6 +7,9 @@ class Joosy.Resources.Array extends Array
 
   @registerPlainFilters 'beforeLoad'
 
+  @build: ->
+    new @ arguments...
+
   constructor: ->
     @__fillData arguments, false
 

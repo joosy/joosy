@@ -30,7 +30,8 @@ beforeEach ->
       return true
 
     toEqualHTML: (string) ->
-      html     = @actual.replace(/>\s+</g, '><')
+      html     = @actual.replace(/>\s+</g, '><').toLowerCase().replace(/\"/g, '')
+      string   = string.toLowerCase().replace(/\"/g, '')
       @message = -> "Expected '#{html}' to equal '#{string}'"
 
       html == string
@@ -44,23 +45,36 @@ beforeEach ->
     #   tag.toBeTag 'div', 'foo', class: 'foo', id: /\S+/
     #
     toBeTag: (tagName, content, attrs) ->
+      reason = ''
       @message = =>
         actual = $('<div>').append(@actual).html()
-        "Expected '#{actual}' to be a tag #{tagName} with attributes #{JSON.stringify attrs} and content '#{content}'"
+        "Expected '#{actual}' to be a tag #{tagName} with attributes #{JSON.stringify attrs} and content '#{content}': #{reason}"
 
       tag = $ @actual
 
       # Is it alone?
       flag = tag.length == 1
+      if !flag
+        reason = 'not alone'
+        return false
 
       # Tag name matches?
       flag &&= tag[0].nodeName == tagName.toUpperCase()
+      if !flag
+        reason = 'tag name mismatch'
+        return false
 
       # Content matches?
       flag &&= tag.html() == content if content != false
+      if !flag
+        reason = 'content mismatch'
+        return false
 
       # Same number of attributes?
       flag &&= tag[0].attributes.length == Object.keys(attrs).length
+      if !flag
+        reason = 'attributes count mismatch'
+        return false
 
       # Attributes match?
       for name, val of attrs

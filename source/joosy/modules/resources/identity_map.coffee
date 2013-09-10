@@ -4,6 +4,7 @@ Joosy.Modules.Resources.IdentityMap =
 
   extended: ->
     @::__identityHolder = @
+    @aliasStaticMethodChain 'build', 'identityMap'
 
   #
   # Clears the identity map cache. Recomended to be called during layout switch to
@@ -25,7 +26,7 @@ Joosy.Modules.Resources.IdentityMap =
   #
   # @return [Joosy.Resources.REST]
   #
-  build: (data={}) ->
+  buildWithIdentityMap: (data={}) ->
     elements = @identityPath(data)
 
     if elements.filter((element) -> !element?).length == 0
@@ -37,9 +38,9 @@ Joosy.Modules.Resources.IdentityMap =
       # init identity cell as a first step...
       preload = {}
       preload[@::__primaryKey] = data[@::__primaryKey]
-      location[destination] ?= new @ preload
+      location[destination] ?= @buildWithoutIdentityMap preload
 
       # ...and load data as a second
       location[destination].load data
     else
-      new @ data
+      @buildWithoutIdentityMap data

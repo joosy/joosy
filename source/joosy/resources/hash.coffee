@@ -1,13 +1,15 @@
-class Joosy.Resources.Hash extends Joosy.Function
+#= require joosy/modules/function
 
+class Joosy.Resources.Hash extends Joosy.Module
+
+  @extend  Joosy.Modules.Function
   @include Joosy.Modules.Events
   @include Joosy.Modules.Filters
 
   @registerPlainFilters 'beforeLoad'
 
   constructor: (data={}) ->
-    return super ->
-      @__fillData data, false
+    @__fillData data, false
 
   load: (data) ->
     @__fillData data
@@ -17,17 +19,17 @@ class Joosy.Resources.Hash extends Joosy.Function
     [instance, property] = @__callTarget path, true
 
     return undefined unless instance
-      
-    if instance instanceof Joosy.Resources.Hash
-      instance property
+
+    if instance.__get?
+      instance.__get(property)
     else
       instance[property]
 
   __set: (path, value) ->
     [instance, property] = @__callTarget path
 
-    if instance instanceof Joosy.Resources.Hash
-      instance(property, value)
+    if instance.__set?
+      instance.__set(property, value)
     else
       instance[property] = value
 
@@ -58,8 +60,8 @@ class Joosy.Resources.Hash extends Joosy.Function
 
         target[part] ?= {}
 
-        target = if target instanceof Joosy.Resources.Hash
-          target(part)
+        target = if target.__get
+          target.__get(part)
         else
           target[part]
 
@@ -78,7 +80,7 @@ class Joosy.Resources.Hash extends Joosy.Function
     null
 
   toString: ->
-    JSON.stringify(@data)
+    "Hash: #{JSON.stringify(@data)}"
 
 # AMD wrapper
 if define?.amd?

@@ -4,7 +4,7 @@ describe "Joosy.Modules.Resources.Model", ->
     @include Joosy.Modules.Resources.Model
 
   beforeEach ->
-    @resource = new Model @data =
+    @resource = Model.build @data =
       foo: 'bar'
       bar: 'baz'
       very:
@@ -15,7 +15,7 @@ describe "Joosy.Modules.Resources.Model", ->
     expect(Model::__primaryKey).toEqual 'id'
 
   it "remembers where it belongs", ->
-    resource = new Model foo: 'bar'
+    resource = Model.build foo: 'bar'
     expect(resource.data).toEqual foo: 'bar'
 
   it "produces magic function", ->
@@ -54,7 +54,7 @@ describe "Joosy.Modules.Resources.Model", ->
         data.tested = true
         data
 
-      resource = new R()
+      resource = R.build()
 
       expect(resource 'tested').toBeTruthy()
 
@@ -68,7 +68,7 @@ describe "Joosy.Modules.Resources.Model", ->
     class S extends Model
       @map 'rumbaMumba', RumbaMumba
 
-    resource = new R
+    resource = R.build
       rumbaMumbas: [
         {foo: 'bar'},
         {bar: 'baz'}
@@ -76,7 +76,7 @@ describe "Joosy.Modules.Resources.Model", ->
     expect(resource('rumbaMumbas') instanceof Joosy.Resources.Array).toBeTruthy()
     expect(resource('rumbaMumbas')[0]('foo')).toEqual 'bar'
 
-    resource = new S
+    resource = S.build
       rumbaMumba: {foo: 'bar'}
     expect(resource('rumbaMumba') instanceof Model).toBeTruthy()
     expect(resource('rumbaMumba.foo')).toEqual 'bar'
@@ -91,7 +91,7 @@ describe "Joosy.Modules.Resources.Model", ->
     class R extends Model
       @map 'rumbaMumbas', RumbaMumba
 
-    resource = new R
+    resource = R.build
       rumbaMumbas: [
         {foo: 'bar'},
         {bar: 'baz'}

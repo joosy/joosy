@@ -190,127 +190,128 @@ describe "Joosy.Router", ->
         expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '#section/page/1'
         expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://#{location.host}#{pathname}#section/page/1"
 
-    describe 'html5 based', ->
-      beforeEach ->
-        Joosy.Router.setup {html5: true}, @spies.responder, false
-        Joosy.Router.map @map
+    if history.pushState?
+      describe 'html5 based', ->
+        beforeEach ->
+          Joosy.Router.setup {html5: true}, @spies.responder, false
+          Joosy.Router.map @map
 
-      afterEach ->
-        Joosy.Router.reset()
-        history.pushState {}, '', pathname
-        waits 0
-
-      it 'resets', ->
-        runs -> Joosy.Router.navigate '/page'
-        waits 0
-        runs ->
-          Joosy.Router.reset()
-          Joosy.Router.navigate '/'
-        waits 0
-        runs ->
-          expect(@spies.responder.callCount).toEqual 1
-
-      it 'boots pages', ->
-        runs -> Joosy.Router.navigate '/page'
-        waits 0
-        runs ->
-          expect(@spies.responder.callCount).toEqual 1
-          expect(@spies.responder.args[0][0]).toEqual @Page
-
-      it 'runs lamdas', ->
-        runs -> Joosy.Router.navigate '/base'
-        waits 0
-        runs ->
-          expect(@spies.responder.callCount).toEqual 1
-          expect(@spies.responder.args[0][0]).toEqual @spies.base
-
-      it 'responds namespaced routes', ->
-        runs -> Joosy.Router.navigate '/section/page/1'
-        waits 0
-        runs ->
-          expect(@spies.responder.callCount).toEqual 1
-          expect(@spies.responder.args[0][0]).toEqual @spies.section
-
-      it 'parses query parametrs', ->
-        runs -> Joosy.Router.navigate '/?test=test&foo=bar'
-        waits 0
-        runs ->
-          expect(@spies.responder.callCount).toEqual 1
-          expect(@spies.responder.args[0][0]).toEqual @spies.root
-          expect(@spies.responder.args[0][1]).toEqual {test: 'test', foo: 'bar'}
-
-      it 'parses route placeholders', ->
-        runs -> Joosy.Router.navigate '/section/page/1'
-        waits 0
-        runs ->
-          expect(@spies.responder.callCount).toEqual 1
-          expect(@spies.responder.args[0][0]).toEqual @spies.section
-          expect(@spies.responder.args[0][1]).toEqual {id: '1'}
-
-      it 'ignores restricted routes', ->
-        Joosy.Router.restrict /^base/
-
-        runs -> Joosy.Router.navigate '/base'
-        waits 0
-        runs ->
-          expect(@spies.responder.callCount).toEqual 0
-
-      it 'defaults to wildcard route', ->
-        runs -> Joosy.Router.navigate '/trololo'
-        waits 0
-        runs ->
-          expect(@spies.responder.callCount).toEqual 1
-          expect(@spies.responder.args[0][0]).toEqual @spies.wildcard
-
-      it 'navigates', ->
-        runs -> Joosy.Router.navigate '/base'
-        waits 0
-        runs ->
-          location.pathname == '/base'
-          expect(@spies.responder.callCount).toEqual 1
-
-      it 'defines plain helper', ->
-        expect(Joosy.Helpers.Routes.rootPath()).toEqual '/'
-        expect(Joosy.Helpers.Routes.rootUrl()).toEqual "http://#{location.host}/"
-
-      it 'defines namespaced parameterized helpers', ->
-        expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '/section/page/1'
-        expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://#{location.host}/section/page/1"
-
-  for name, val of { html5: true, hash: false }
-    do(name, val) ->
-      describe "#{name} prefix", ->
         afterEach ->
           Joosy.Router.reset()
-          location.hash = ''
           history.pushState {}, '', pathname
           waits 0
 
-        beforeEach ->
-          Joosy.Router.setup {html5: val, prefix: 'admin', hashSuffix: 'admin'}, @spies.responder, false
-          Joosy.Router.map @map
+        it 'resets', ->
+          runs -> Joosy.Router.navigate '/page'
+          waits 0
+          runs ->
+            Joosy.Router.reset()
+            Joosy.Router.navigate '/'
+          waits 0
+          runs ->
+            expect(@spies.responder.callCount).toEqual 1
 
-        it "is considered in path without prefix", ->
+        it 'boots pages', ->
+          runs -> Joosy.Router.navigate '/page'
+          waits 0
+          runs ->
+            expect(@spies.responder.callCount).toEqual 1
+            expect(@spies.responder.args[0][0]).toEqual @Page
+
+        it 'runs lamdas', ->
           runs -> Joosy.Router.navigate '/base'
           waits 0
           runs ->
             expect(@spies.responder.callCount).toEqual 1
             expect(@spies.responder.args[0][0]).toEqual @spies.base
 
-        it "is considered in path with prefix", ->
-          runs -> Joosy.Router.navigate '/admin/base'
+        it 'responds namespaced routes', ->
+          runs -> Joosy.Router.navigate '/section/page/1'
           waits 0
           runs ->
             expect(@spies.responder.callCount).toEqual 1
-            expect(@spies.responder.args[0][0]).toEqual @spies.base
+            expect(@spies.responder.args[0][0]).toEqual @spies.section
 
-        it "is considered in root path", ->
-          runs -> Joosy.Router.navigate '/admin'
+        it 'parses query parametrs', ->
+          runs -> Joosy.Router.navigate '/?test=test&foo=bar'
           waits 0
           runs ->
             expect(@spies.responder.callCount).toEqual 1
             expect(@spies.responder.args[0][0]).toEqual @spies.root
+            expect(@spies.responder.args[0][1]).toEqual {test: 'test', foo: 'bar'}
 
+        it 'parses route placeholders', ->
+          runs -> Joosy.Router.navigate '/section/page/1'
+          waits 0
+          runs ->
+            expect(@spies.responder.callCount).toEqual 1
+            expect(@spies.responder.args[0][0]).toEqual @spies.section
+            expect(@spies.responder.args[0][1]).toEqual {id: '1'}
+
+        it 'ignores restricted routes', ->
+          Joosy.Router.restrict /^base/
+
+          runs -> Joosy.Router.navigate '/base'
+          waits 0
+          runs ->
+            expect(@spies.responder.callCount).toEqual 0
+
+        it 'defaults to wildcard route', ->
+          runs -> Joosy.Router.navigate '/trololo'
+          waits 0
+          runs ->
+            expect(@spies.responder.callCount).toEqual 1
+            expect(@spies.responder.args[0][0]).toEqual @spies.wildcard
+
+        it 'navigates', ->
+          runs -> Joosy.Router.navigate '/base'
+          waits 0
+          runs ->
+            location.pathname == '/base'
+            expect(@spies.responder.callCount).toEqual 1
+
+        it 'defines plain helper', ->
+          expect(Joosy.Helpers.Routes.rootPath()).toEqual '/'
+          expect(Joosy.Helpers.Routes.rootUrl()).toEqual "http://#{location.host}/"
+
+        it 'defines namespaced parameterized helpers', ->
+          expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '/section/page/1'
+          expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://#{location.host}/section/page/1"
+
+  for name, val of { html5: true, hash: false }
+    do (name, val) ->
+      if name != 'html5' || history.pushState
+        describe "#{name} prefix", ->
+          afterEach ->
+            Joosy.Router.reset()
+            location.hash = ''
+            history.pushState?({}, '', pathname)
+            waits 0
+
+          beforeEach ->
+            Joosy.Router.setup {html5: val, prefix: 'admin', hashSuffix: 'admin'}, @spies.responder, false
+            Joosy.Router.map @map
+
+          it "is considered in path without prefix", ->
+            runs -> Joosy.Router.navigate '/base'
+            waits 0
+            runs ->
+              expect(@spies.responder.callCount).toEqual 1
+              expect(@spies.responder.args[0][0]).toEqual @spies.base
+
+          it "is considered in path with prefix", ->
+            runs -> Joosy.Router.navigate '/admin/base'
+            waits 0
+            runs ->
+              expect(@spies.responder.callCount).toEqual 1
+              expect(@spies.responder.args[0][0]).toEqual @spies.base
+
+          it "is considered in root path", ->
+            runs -> Joosy.Router.navigate '/admin'
+            waits 0
+            runs ->
+              expect(@spies.responder.callCount).toEqual 1
+              expect(@spies.responder.args[0][0]).toEqual @spies.root
 
   describe 'linker', ->
     it 'defines helper', ->

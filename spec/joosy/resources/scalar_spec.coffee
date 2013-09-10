@@ -2,16 +2,11 @@ describe "Joosy.Resources.Scalar", ->
 
   describe 'in general', ->
     beforeEach ->
-      @scalar = new Joosy.Resources.Scalar(5)
+      @scalar = Joosy.Resources.Scalar.build(5)
 
     it 'wraps', ->
       expect(@scalar+1).toEqual(6)
       expect("#{@scalar}").toEqual('5')
-
-    it 'clones', ->
-      clone = @scalar.clone()
-      clone(1)
-      expect(@scalar()).toEqual(5)
 
     it 'triggers', ->
       spy = sinon.spy()
@@ -31,7 +26,7 @@ describe "Joosy.Resources.Scalar", ->
         @beforeLoad (data) ->
           data + 1
 
-      scalar = new Scalar(5)
+      scalar = Scalar.build(5)
       expect(scalar()).toEqual 6
 
       scalar(5)

@@ -290,10 +290,12 @@ class Joosy.Router extends Joosy.Module
       @["#{as}Path"] = helper
 
       @["#{as}Url"] = (options) ->
+        origin  = "#{location.protocol}//#{location.host}"
+
         if Joosy.Router.config.html5
-          "#{location.origin}#{helper(options)}"
+          "#{origin}#{helper(options)}"
         else
-          "#{location.origin}#{location.pathname}#{helper(options)}"
+          "#{origin}#{location.pathname}#{helper(options)}"
 
   @__grabParams: (query, route=null, match=[]) ->
     params = {}

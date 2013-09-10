@@ -72,12 +72,6 @@ Joosy.Modules.Resources.Model =
         data
 
     #
-    # @return [Joosy.Resources.REST]
-    #
-    @build = (data={}) ->
-      new @ data
-
-    #
     # Creates new instance of Resource using values from form
     #
     # @param [DOMElement] form      Form to grab

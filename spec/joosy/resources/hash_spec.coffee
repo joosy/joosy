@@ -2,7 +2,7 @@ describe "Joosy.Resources.Hash", ->
 
   describe 'in general', ->
     beforeEach ->
-      @hash = new Joosy.Resources.Hash({foo: 'bar', bar: {baz: 'yummy!'}})
+      @hash = Joosy.Resources.Hash.build({foo: 'bar', bar: {baz: 'yummy!'}})
 
     it 'wraps', ->
       expect(typeof(@hash)).toEqual 'function'
@@ -28,8 +28,8 @@ describe "Joosy.Resources.Hash", ->
 
   describe 'nested hash', ->
     beforeEach ->
-      @nested = new Joosy.Resources.Hash(trolo: 'lo')
-      @hash   = new Joosy.Resources.Hash({foo: 'bar', bar: @nested})
+      @nested = Joosy.Resources.Hash.build(trolo: 'lo')
+      @hash   = Joosy.Resources.Hash.build({foo: 'bar', bar: @nested})
 
     it 'gets', ->
       expect(@hash 'bar.trolo').toEqual 'lo'
@@ -45,6 +45,6 @@ describe "Joosy.Resources.Hash", ->
           data.test = true
           data
 
-      hash = new Hash(foo: 'bar')
+      hash = Hash.build(foo: 'bar')
       expect(hash.data.test).toBeTruthy()
       expect(hash 'test').toBeTruthy()

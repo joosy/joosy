@@ -7,8 +7,8 @@ describe "Joosy.Templaters.JST", ->
       window.I18n = {locale: 'en'}
 
     afterEach ->
-      delete window.JST
-      delete window.I18n
+      window.JST = undefined
+      window.I18n = undefined
 
     describe "with empty application name", ->
 

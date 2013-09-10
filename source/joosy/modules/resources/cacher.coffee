@@ -15,12 +15,12 @@ Joosy.Modules.Resources.Cacher =
       fetcher  ||= @::__fetcher
 
       if cacheKey && localStorage && localStorage[cacheKey]
-        instance = new @ JSON.parse(localStorage[cacheKey])...
+        instance = @build JSON.parse(localStorage[cacheKey])...
         callback? instance
         instance.refresh()
       else
         @fetch (results) =>
-          instance = new @ results...
+          instance = @build results...
           callback? instance
 
     @fetch = (callback) ->

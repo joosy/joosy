@@ -1,21 +1,18 @@
-class Joosy.Resources.Scalar extends Joosy.Function
+class Joosy.Resources.Scalar extends Joosy.Module
 
+  @extend  Joosy.Modules.Function
   @include Joosy.Modules.Events
   @include Joosy.Modules.Filters
 
   @registerPlainFilters 'beforeLoad'
 
   constructor: (value) ->
-    return super ->
-      @load value
+    @load value
 
   load: (value) ->
     @value = @__applyBeforeLoads(value)
     @trigger 'changed'
     @value
-
-  clone: (callback) ->
-    new @constructor @value
 
   __call: ->
     if arguments.length > 0

@@ -5,10 +5,10 @@ describe "Joosy.Helpers.View", ->
 
   it "renders tag with string content", ->
     tag = h.contentTag 'div', 'content', {id: 'id'}
-    expect(tag).toEqual '<div id="id">content</div>'
+    expect(tag).toBeTag 'div', 'content', id: 'id'
 
   it "renders tag with lambda content", ->
     tag = h.contentTag 'div', {id: 'id'}, ->
       h.contentTag 'div', 'content', {id: 'id2'}
 
-    expect(tag).toEqual '<div id="id"><div id="id2">content</div></div>'
+    expect(tag.toLowerCase()).toEqualHTML '<div id="id"><div id="id2">content</div></div>'

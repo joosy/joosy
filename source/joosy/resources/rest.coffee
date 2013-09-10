@@ -41,7 +41,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
     else
       definer (clone) =>
         clone.__source = args.reduce (path, arg) ->
-          path += if arg instanceof Joosy.Resources.REST
+          path += if Joosy.Module.hasAncestor arg.constructor, Joosy.Resources.REST
             arg.memberPath()
           else
             arg.replace(/^\/?/, '/')

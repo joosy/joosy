@@ -11,6 +11,11 @@ describe 'Joosy.Resources.Array', ->
       expect(@array[1]).toEqual 2
       expect(@array[2]).toEqual 3
 
+    it 'modifies', ->
+      @array.push 4
+      @array.push 5
+      expect(@array.length).toEqual 5
+
     it 'clones', ->
       clone = @array.clone()
       clone.push 5

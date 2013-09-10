@@ -194,42 +194,12 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#get-class'>
-        + (void) <strong>get</strong>(options, callback)
+      <a href='#send-class'>
+        + (void) <strong>send</strong>(method, options, callback)
       </a>
     </span>
     <span class='desc'>
-      Sends the GET query using collectionPath.
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#post-class'>
-        + (void) <strong>post</strong>(options, callback)
-      </a>
-    </span>
-    <span class='desc'>
-      Sends the POST query using collectionPath.
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#put-class'>
-        + (void) <strong>put</strong>(options, callback)
-      </a>
-    </span>
-    <span class='desc'>
-      Sends the PUT query using collectionPath.
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#delete-class'>
-        + (void) <strong>delete</strong>(options, callback)
-      </a>
-    </span>
-    <span class='desc'>
-      Sends the DELETE query using collectionPath.
+      Sends a query using collectionPath.
     </span>
   </li>
   <li>
@@ -307,42 +277,12 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#get-instance'>
-        - (void) <strong>get</strong>(options, callback)
+      <a href='#send-instance'>
+        - (void) <strong>send</strong>(method, options, callback)
       </a>
     </span>
     <span class='desc'>
-      Sends the GET query using memberPath.
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#post-instance'>
-        - (void) <strong>post</strong>(options, callback)
-      </a>
-    </span>
-    <span class='desc'>
-      Sends the POST query using memberPath.
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#put-instance'>
-        - (void) <strong>put</strong>(options, callback)
-      </a>
-    </span>
-    <span class='desc'>
-      Sends the PUT query using memberPath.
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#delete-instance'>
-        - (void) <strong>delete</strong>(options, callback)
-      </a>
-    </span>
-    <span class='desc'>
-      Sends the DELETE query using memberPath.
+      Sends a query using memberPath.
     </span>
   </li>
   <li>
@@ -353,6 +293,26 @@
     </span>
     <span class='desc'>
       Refetches the data from backend and triggers <code>changed</code>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#update-instance'>
+        - (void) <strong>update</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#create-instance'>
+        - (void) <strong>create</strong>(callback)
+      </a>
+    </span>
+    <span class='desc'>
+      
     </span>
   </li>
   <li>
@@ -384,21 +344,15 @@
         <a href='../../../classes/Joosy/Resources/Hash.html'>Joosy.Resources.Hash</a>
       </h3>
       <p class='inherited'>
+                <a href='../../../classes/Joosy/Resources/Hash.html#build-class'>.build</a>,
+                <a href='../../../classes/Joosy/Resources/Hash.html#__call-instance'>#__call</a>,
                 <a href='../../../classes/Joosy/Resources/Hash.html#constructor-instance'>#constructor</a>,
                 <a href='../../../classes/Joosy/Resources/Hash.html#load-instance'>#load</a>,
-                <a href='../../../classes/Joosy/Resources/Hash.html#__get-instance'>#__get</a>,
-                <a href='../../../classes/Joosy/Resources/Hash.html#__set-instance'>#__set</a>,
-                <a href='../../../classes/Joosy/Resources/Hash.html#__call-instance'>#__call</a>,
+                <a href='../../../classes/Joosy/Resources/Hash.html#get-instance'>#get</a>,
+                <a href='../../../classes/Joosy/Resources/Hash.html#set-instance'>#set</a>,
                 <a href='../../../classes/Joosy/Resources/Hash.html#__callTarget-instance'>#__callTarget</a>,
                 <a href='../../../classes/Joosy/Resources/Hash.html#__fillData-instance'>#__fillData</a>,
         <a href='../../../classes/Joosy/Resources/Hash.html#toString-instance'>#toString</a>
-      </p>
-      <h3 class='inherited'>
-        Methods inherited from
-        <a href='../../../classes/Joosy/Function.html'>Joosy.Function</a>
-      </h3>
-      <p class='inherited'>
-        <a href='../../../classes/Joosy/Function.html#constructor-instance'>#constructor</a>
       </p>
       <h3 class='inherited'>
         Methods inherited from
@@ -522,130 +476,24 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='get-class'>
-      + (void) <strong>get</strong>(options, callback)
+    <p class='signature' id='send-class'>
+      + (void) <strong>send</strong>(method, options, callback)
     </p>
     <div class='docstring'>
-  <p>Sends the GET query using collectionPath.
+  <p>Sends a query using collectionPath.
 Callback will get parsed JSON object as a parameter.</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>options</span>
+      <span class='name'>method</span>
       <span class='type'>
-        (<tt>Hash</tt>)
+        (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Options to proxy to collectionPath</span>
+      <span class='desc'>GET / POST / PUT / DELETE</span>
     </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Resulting callback</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'><code>(error, data) -&gt; ...</code></span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='post-class'>
-      + (void) <strong>post</strong>(options, callback)
-    </p>
-    <div class='docstring'>
-  <p>Sends the POST query using collectionPath.
-Callback will get parsed JSON object as a parameter.</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Options to proxy to collectionPath</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Resulting callback</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'><code>(error, data) -&gt; ...</code></span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='put-class'>
-      + (void) <strong>put</strong>(options, callback)
-    </p>
-    <div class='docstring'>
-  <p>Sends the PUT query using collectionPath.
-Callback will get parsed JSON object as a parameter.</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Options to proxy to collectionPath</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Resulting callback</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'><code>(error, data) -&gt; ...</code></span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='delete-class'>
-      + (void) <strong>delete</strong>(options, callback)
-    </p>
-    <div class='docstring'>
-  <p>Sends the DELETE query using collectionPath.
-Callback will get parsed JSON object as a parameter.</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
     <li>
       <span class='name'>options</span>
       <span class='type'>
@@ -983,16 +831,24 @@ Callback will get parsed JSON object as a parameter.</p>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='get-instance'>
-      - (void) <strong>get</strong>(options, callback)
+    <p class='signature' id='send-instance'>
+      - (void) <strong>send</strong>(method, options, callback)
     </p>
     <div class='docstring'>
-  <p>Sends the GET query using memberPath.
+  <p>Sends a query using memberPath.
 Callback will get parsed JSON object as a parameter.</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
+    <li>
+      <span class='name'>method</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>GET / POST / PUT / DELETE</span>
+    </li>
     <li>
       <span class='name'>options</span>
       <span class='type'>
@@ -1013,112 +869,6 @@ Callback will get parsed JSON object as a parameter.</p>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'><code>(error, data) -&gt; ...</code></span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='post-instance'>
-      - (void) <strong>post</strong>(options, callback)
-    </p>
-    <div class='docstring'>
-  <p>Sends the POST query using memberPath.
-Callback will get parsed JSON object as a parameter.</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Options to proxy to memberPath</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Resulting callback</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'><code>(error, data) -&gt; ...</code></span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='put-instance'>
-      - (void) <strong>put</strong>(options, callback)
-    </p>
-    <div class='docstring'>
-  <p>Sends the PUT query using memberPath.
-Callback will get parsed JSON object as a parameter.</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Options to proxy to memberPath</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Function</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Resulting callback</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Object</tt>)
-      </span>
-      &mdash;
-      <span class='desc'><code>(error, data) -&gt; ...</code></span>
-    </li>
-  </ul>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='delete-instance'>
-      - (void) <strong>delete</strong>(options, callback)
-    </p>
-    <div class='docstring'>
-  <p>Sends the DELETE query using memberPath.
-Callback will get parsed JSON object as a parameter.</p>
-</div>
-<div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
-    <li>
-      <span class='name'>options</span>
-      <span class='type'>
-        (<tt>Hash</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Options to proxy to memberPath</span>
-    </li>
-    <li>
-      <span class='name'>callback</span>
-      <span class='type'>
-        (<tt>Function</tt>)
       </span>
       &mdash;
       <span class='desc'><code>(error, data) -&gt; ...</code></span>
@@ -1164,6 +914,20 @@ Callback will get parsed JSON object as a parameter.</p>
 </div>
   </div>
   <div class='method_details'>
+    <p class='signature' id='update-instance'>
+      - (void) <strong>update</strong>(callback)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='create-instance'>
+      - (void) <strong>create</strong>(callback)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
     <p class='signature' id='save-instance'>
       - (void) <strong>save</strong>(callback)
     </p>
@@ -1184,11 +948,11 @@ Callback will get parsed JSON object as a parameter.</p>
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 08 2013 03:08:37 GMT+0700 (ICT)
+  Wed Sep 11 2013 02:27:32 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
-  v1.7.0
-  (Node.js v0.10.5).
+  v1.8.0
+  (Node.js v0.10.18).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;

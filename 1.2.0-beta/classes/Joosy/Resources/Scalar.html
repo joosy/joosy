@@ -120,12 +120,35 @@
         <tr>
           <td>Inherits:</td>
           <td>
-            <a href='../../../classes/Joosy/Function.html'>Joosy.Function</a>
+            <a href='../../../classes/Joosy/Module.html'>Joosy.Module</a>
           </td>
         </tr>
       </table>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#build-class'>
+        + (void) <strong>build</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+</ul>
       <h2>Instance Method Summary</h2>
       <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#__call-instance'>
+        - (void) <strong>__call</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
   <li>
     <span class='signature'>
       <a href='#constructor-instance'>
@@ -149,8 +172,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#clone-instance'>
-        - (void) <strong>clone</strong>(callback)
+      <a href='#get-instance'>
+        - (void) <strong>get</strong>()
       </a>
     </span>
     <span class='desc'>
@@ -159,28 +182,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#__call-instance'>
-        - (void) <strong>__call</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#__get-instance'>
-        - (void) <strong>__get</strong>()
-      </a>
-    </span>
-    <span class='desc'>
-      
-    </span>
-  </li>
-  <li>
-    <span class='signature'>
-      <a href='#__set-instance'>
-        - (void) <strong>__set</strong>(value)
+      <a href='#set-instance'>
+        - (void) <strong>set</strong>(value)
       </a>
     </span>
     <span class='desc'>
@@ -213,13 +216,6 @@
       </h2>
       <h3 class='inherited'>
         Methods inherited from
-        <a href='../../../classes/Joosy/Function.html'>Joosy.Function</a>
-      </h3>
-      <p class='inherited'>
-        <a href='../../../classes/Joosy/Function.html#constructor-instance'>#constructor</a>
-      </p>
-      <h3 class='inherited'>
-        Methods inherited from
         <a href='../../../classes/Joosy/Module.html'>Joosy.Module</a>
       </h3>
       <p class='inherited'>
@@ -231,6 +227,16 @@
                 <a href='../../../classes/Joosy/Module.html#include-class'>.include</a>,
         <a href='../../../classes/Joosy/Module.html#extend-class'>.extend</a>
       </p>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='build-class'>
+      + (void) <strong>build</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+</div>
       <h2>Constructor Details</h2>
       <div class='methods'>
   <div class='method_details'>
@@ -244,20 +250,6 @@
       <h2>Instance Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='load-instance'>
-      - (void) <strong>load</strong>(value)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='clone-instance'>
-      - (void) <strong>clone</strong>(callback)
-    </p>
-    <div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
     <p class='signature' id='__call-instance'>
       - (void) <strong>__call</strong>()
     </p>
@@ -265,15 +257,22 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='__get-instance'>
-      - (void) <strong>__get</strong>()
+    <p class='signature' id='load-instance'>
+      - (void) <strong>load</strong>(value)
     </p>
     <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='__set-instance'>
-      - (void) <strong>__set</strong>(value)
+    <p class='signature' id='get-instance'>
+      - (void) <strong>get</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='set-instance'>
+      - (void) <strong>set</strong>(value)
     </p>
     <div class='tags'>
 </div>
@@ -296,11 +295,11 @@
     </div>
     <div id='footer'>
   Generated on
-  Sun Sep 08 2013 03:08:37 GMT+0700 (ICT)
+  Wed Sep 11 2013 02:27:32 GMT+0700 (ICT)
   by
   <a href='https://github.com/netzpirat/codo' title='CoffeeScript API documentation generator'>Codo</a>
-  v1.7.0
-  (Node.js v0.10.5).
+  v1.8.0
+  (Node.js v0.10.18).
   &#10034;
   Press Ctrl-h to see the keyboard shortcuts
   &#10034;

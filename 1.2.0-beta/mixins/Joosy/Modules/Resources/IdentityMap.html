@@ -19,9 +19,9 @@
     &raquo;
     <span class='title'>Modules</span>
     &raquo;
-    <span class='title'>Page</span>
+    <span class='title'>Resources</span>
     &raquo;
-    <span class='title'>Title</span>
+    <span class='title'>IdentityMap</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -112,57 +112,97 @@
     <div id='content'>
       <h1>
         Mixin:
-        Joosy.Modules.Page.Title
+        Joosy.Modules.Resources.IdentityMap
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>source&#47;joosy&#47;modules&#47;page&#47;title.coffee</td>
-        </tr>
-        <tr>
-          <td>Extended in:</td>
-          <td>
-            <a href='../../../../classes/Joosy/Page.html'>Joosy.Page</a>
-          </td>
+          <td>source&#47;joosy&#47;modules&#47;resources&#47;identity_map.coffee</td>
         </tr>
       </table>
       <h2>Method Summary</h2>
       <ul class='summary'>
   <li>
     <span class='signature'>
-      <a href='#title-mixin'>
-        ? (void) <strong>title</strong>(title, separator = ' / ')
+      <a href='#extended-mixin'>
+        ? (void) <strong>extended</strong>()
       </a>
     </span>
     <span class='desc'>
-      Sets the page HTML title.
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#identityReset-mixin'>
+        ? (void) <strong>identityReset</strong>()
+      </a>
+    </span>
+    <span class='desc'>
+      Clears the identity map cache.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#identityPath-mixin'>
+        ? (void) <strong>identityPath</strong>(data)
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#buildWithIdentityMap-mixin'>
+        ? (Joosy.Resources.REST) <strong>buildWithIdentityMap</strong>(data = {})
+      </a>
+    </span>
+    <span class='desc'>
+      Wraps instance of resource inside shim-function allowing to track data changes.
     </span>
   </li>
 </ul>
       <h2>Method Details</h2>
       <div class='methods'>
   <div class='method_details'>
-    <p class='signature' id='title-mixin'>
-      ? (void) <strong>title</strong>(title, separator = ' / ')
+    <p class='signature' id='extended-mixin'>
+      ? (void) <strong>extended</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='identityReset-mixin'>
+      ? (void) <strong>identityReset</strong>()
     </p>
     <div class='docstring'>
-  <div class='note'>
-    <strong>Note:</strong>
-    Title will be reverted on unload.
-  </div>
-  <p>Sets the page HTML title.</p>
+  <p>Clears the identity map cache. Recomended to be called during layout switch to
+ensure correct garbage collection.</p>
 </div>
 <div class='tags'>
-  <h3>Parameters:</h3>
-  <ul class='param'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='identityPath-mixin'>
+      ? (void) <strong>identityPath</strong>(data)
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='buildWithIdentityMap-mixin'>
+      ? (Joosy.Resources.REST) <strong>buildWithIdentityMap</strong>(data = {})
+    </p>
+    <div class='docstring'>
+  <p>Wraps instance of resource inside shim-function allowing to track
+data changes. See class example</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
     <li>
-      <span class='name'>title</span>
-      <span class='type'>
-        (<tt>String</tt>)
-      </span>
-      &mdash;
-      <span class='desc'>Title to set.</span>
-    </li>
+      <span class='type'></span><tt><a href='../../../../classes/Joosy/Resources/REST.html'>Joosy.Resources.REST</a></tt></li>
   </ul>
 </div>
   </div>

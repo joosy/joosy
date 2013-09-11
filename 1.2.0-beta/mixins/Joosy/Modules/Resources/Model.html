@@ -3,23 +3,25 @@
   <head>
   <meta charset='UTF-8'>
   <title>CoffeeScript API Documentation</title>
-  <link rel='stylesheet' href='../../../assets/codo.css' type='text/css'>
-  <script src='../../../assets/codo.js'></script>
-  <script src='../../../assets/search_data.js'></script>
+  <link rel='stylesheet' href='../../../../assets/codo.css' type='text/css'>
+  <script src='../../../../assets/codo.js'></script>
+  <script src='../../../../assets/search_data.js'></script>
 </head>
   <body>
-    <div id='base' data-path='../../../'></div>
+    <div id='base' data-path='../../../../'></div>
 <div id='header'>
   <div id='menu'>
-    <a href='../../../README.md.html' title='Joosy'>Joosy</a>
+    <a href='../../../../README.md.html' title='Joosy'>Joosy</a>
     &raquo;
-    <a href='../../../class_index.html' title='Index'>Index</a>
+    <a href='../../../../class_index.html' title='Index'>Index</a>
     &raquo;
     <span class='title'>Joosy</span>
     &raquo;
     <span class='title'>Modules</span>
     &raquo;
-    <span class='title'>DOM</span>
+    <span class='title'>Resources</span>
+    &raquo;
+    <span class='title'>Model</span>
     <nav>
       <ul>
         <li class='noframes'>
@@ -28,10 +30,10 @@
       </ul>
     </nav>
     <div id='search'>
-      <a id='class_list_link' href='../../../class_list.html'>Classes</a>
-      <a id='mixin_list_link' href='../../../mixin_list.html'>Mixins</a>
-      <a id='method_list_link' href='../../../method_list.html'>Methods</a>
-      <a id='extra_list_link' href='../../../extra_list.html'>Extras</a>
+      <a id='class_list_link' href='../../../../class_list.html'>Classes</a>
+      <a id='mixin_list_link' href='../../../../mixin_list.html'>Mixins</a>
+      <a id='method_list_link' href='../../../../method_list.html'>Methods</a>
+      <a id='extra_list_link' href='../../../../extra_list.html'>Extras</a>
     </div>
   </div>
   <iframe id='search_frame'></iframe>
@@ -110,31 +112,14 @@
     <div id='content'>
       <h1>
         Mixin:
-        Joosy.Modules.DOM
+        Joosy.Modules.Resources.Model
       </h1>
       <table class='box'>
         <tr>
           <td>Defined in:</td>
-          <td>source&#47;joosy&#47;modules&#47;dom.coffee</td>
-        </tr>
-        <tr>
-          <td>Included in:</td>
-          <td>
-                        <a href='../../../classes/Joosy/Form.html'>Joosy.Form</a>,
-            <a href='../../../classes/Joosy/Widget.html'>Joosy.Widget</a>
-          </td>
+          <td>source&#47;joosy&#47;modules&#47;resources&#47;model.coffee</td>
         </tr>
       </table>
-      <h2>Overview</h2>
-      <div class='docstring'>
-  <div class='note'>
-    <strong>Note:</strong>
-    Requires implementor to contain DOM node at @$container propert
-  </div>
-  <p>DOM container handling, DOM elements and DOM events bindings</p>
-</div>
-<div class='tags'>
-</div>
       <h2>Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -149,8 +134,8 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#$-mixin'>
-        ? (void) <strong>$</strong>(selector, context)
+      <a href='#id-mixin'>
+        ? (void) <strong>id</strong>()
       </a>
     </span>
     <span class='desc'>
@@ -159,55 +144,50 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#__extractSelector-mixin'>
-        ? (void) <strong>__extractSelector</strong>(selector)
+      <a href='#knownAttributes-mixin'>
+        ? (void) <strong>knownAttributes</strong>()
       </a>
     </span>
-    <span class='note private title'>Private</span>
     <span class='desc'>
-      Converts &#39;$...&#39; notation to selector from &#39;elements&#39;
+      
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#__assignElements-mixin'>
-        ? (void) <strong>__assignElements</strong>(root, entries)
+      <a href='#load-mixin'>
+        ? (Object) <strong>load</strong>(data, clear = false)
       </a>
     </span>
-    <span class='note private title'>Private</span>
     <span class='desc'>
-      Assigns elements defined in &#39;elements&#39;
+      Set the resource data manually
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#__wrapElement-mixin'>
-        ? (void) <strong>__wrapElement</strong>(value)
+      <a href='#__fillData-mixin'>
+        ? (void) <strong>__fillData</strong>(data, notify = true)
       </a>
     </span>
-    <span class='note private title'>Private</span>
     <span class='desc'>
-      Wraps actual element closures.
+      Defines how exactly prepared data should be saved
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#__delegateEvents-mixin'>
-        ? (void) <strong>__delegateEvents</strong>()
+      <a href='#grab-mixin'>
+        ? (void) <strong>grab</strong>(form)
       </a>
     </span>
-    <span class='note private title'>Private</span>
     <span class='desc'>
-      Binds events defined in &#39;events&#39; to container
+      Updates the Resource with a data from given form
     </span>
   </li>
   <li>
     <span class='signature'>
-      <a href='#__clearContainer-mixin'>
-        ? (void) <strong>__clearContainer</strong>()
+      <a href='#toString-mixin'>
+        ? (void) <strong>toString</strong>()
       </a>
     </span>
-    <span class='note private title'>Private</span>
     <span class='desc'>
       
     </span>
@@ -223,90 +203,94 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='$-mixin'>
-      ? (void) <strong>$</strong>(selector, context)
+    <p class='signature' id='id-mixin'>
+      ? (void) <strong>id</strong>()
     </p>
     <div class='tags'>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='__extractSelector-mixin'>
-      ? (void) <strong>__extractSelector</strong>(selector)
-      (private)
+    <p class='signature' id='knownAttributes-mixin'>
+      ? (void) <strong>knownAttributes</strong>()
+    </p>
+    <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='load-mixin'>
+      ? (Object) <strong>load</strong>(data, clear = false)
     </p>
     <div class='docstring'>
-  <p>Converts &#39;$...&#39; notation to selector from &#39;elements&#39;</p>
+  <p>Set the resource data manually</p>
 </div>
 <div class='tags'>
   <h3>Parameters:</h3>
   <ul class='param'>
     <li>
-      <span class='name'>selector</span>
+      <span class='name'>data</span>
       <span class='type'>
-        (<tt>String</tt>)
+        (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Selector to convert</span>
+      <span class='desc'>Data to store</span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Object</tt>)
+      &mdash;
+      <span class='desc'>Returns self</span>
     </li>
   </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='__assignElements-mixin'>
-      ? (void) <strong>__assignElements</strong>(root, entries)
-      (private)
+    <p class='signature' id='__fillData-mixin'>
+      ? (void) <strong>__fillData</strong>(data, notify = true)
     </p>
     <div class='docstring'>
-  <p>Assigns elements defined in &#39;elements&#39;</p>
-  <div class='examples'>
-    <h3>Examples:</h3>
-    <h4>
-      Sample elements
-    </h4>
-    <pre><code class='coffee'>@mapElements
-  foo: &#39;.foo&#39;
-  bar: &#39;.bar&#39;</code></pre>
-  </div>
+  <p>Defines how exactly prepared data should be saved</p>
 </div>
 <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>data</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Raw data to store</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='__wrapElement-mixin'>
-      ? (void) <strong>__wrapElement</strong>(value)
-      (private)
+    <p class='signature' id='grab-mixin'>
+      ? (void) <strong>grab</strong>(form)
     </p>
     <div class='docstring'>
-  <p>Wraps actual element closures. Required to clear context to avoid circular reference</p>
+  <p>Updates the Resource with a data from given form</p>
 </div>
 <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>form</span>
+      <span class='type'>
+        (<tt>DOMElement</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Form to grab</span>
+    </li>
+  </ul>
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='__delegateEvents-mixin'>
-      ? (void) <strong>__delegateEvents</strong>()
-      (private)
-    </p>
-    <div class='docstring'>
-  <p>Binds events defined in &#39;events&#39; to container</p>
-  <div class='examples'>
-    <h3>Examples:</h3>
-    <h4>
-      Sample events
-    </h4>
-    <pre><code class='coffee'>@mapEvents
-  &#39;click&#39;: -&gt; # this will raise on container click
-  &#39;click .foo&#39;: -&gt; # this will raise on .foo click
-  &#39;click $foo&#39;: -&gt; #this will search for selector of foo element</code></pre>
-  </div>
-</div>
-<div class='tags'>
-</div>
-  </div>
-  <div class='method_details'>
-    <p class='signature' id='__clearContainer-mixin'>
-      ? (void) <strong>__clearContainer</strong>()
-      (private)
+    <p class='signature' id='toString-mixin'>
+      ? (void) <strong>toString</strong>()
     </p>
     <div class='tags'>
 </div>

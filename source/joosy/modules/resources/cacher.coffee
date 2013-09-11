@@ -1,5 +1,6 @@
 #= require ../resources
 
+# @mixin
 Joosy.Modules.Resources.Cacher =
 
   included: ->

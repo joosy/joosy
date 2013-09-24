@@ -124,7 +124,11 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
       path = @__interpolatePath source, ids
     else
       path = '/'
-      path += @constructor.__namespace__.map(String::underscore).join('/') + '/' if @constructor.__namespace__.length > 0
+
+      if @constructor.__namespace__.length > 0
+        namespace = @constructor.__namespace__.map (x) -> inflection.underscore(x)
+        path += namespace.join('/') + '/'
+
       path += inflection.pluralize(@__entityName)
 
     path += "/#{options.action}" if options.action

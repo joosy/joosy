@@ -14,6 +14,10 @@ describe "Joosy.Resources.REST", ->
     @entity 'test'
     @source '/grand_parents/:grand_parent_id/parents/:parent_id/tests'
 
+  Joosy.namespace 'Deeply.Nested', ->
+    class @Entity extends Joosy.Resources.REST
+      @entity 'entity'
+
   Joosy.namespace 'Animal', ->
     class @Cat extends Joosy.Resources.REST
       @entity 'cat'
@@ -120,6 +124,9 @@ describe "Joosy.Resources.REST", ->
       it 'builds collection path', ->
         expect(Interpolated.collectionPath([1,2])).toEqual '/grand_parents/1/parents/2/tests'
 
+    describe 'with namespace', ->
+      it 'builds collection path', ->
+        expect(Deeply.Nested.Entity.collectionPath([1,2])).toEqual '/deeply/nested/entities'
 
   describe '@find(:id)', ->
     rawData = '{"fluffy": {"id": 1, "name": "test1"}}'

@@ -84,7 +84,7 @@ Joosy.Modules.Resources.Model =
       for attribute in arguments
         do (attribute) =>
           @::[attribute] = (value) ->
-            if value
+            if value?
               @set attribute, value
             else
               @get attribute

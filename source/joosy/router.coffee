@@ -25,14 +25,16 @@
 class Joosy.Router extends Joosy.Module
   @extend Joosy.Modules.Events
 
-  # We need to be constantly subscribed to popstate event to filter
-  # the first event that always happens on the initial load
-  $(window).bind 'popstate', (event) =>
-    if window.history.loaded?
-      @trigger 'popstate', event
-    else
-      window.history.loaded = true
+  # We need to subscribe to popstate event in such weird way to skip
+  # the first event that always happens on the initial load in Webkit
+  $ =>
+    bind = =>
+      $(window).bind 'popstate', (event) =>
+        @trigger 'popstate', event
 
+    setTimeout bind, 0
+
+  # Comfortable links for the views
   $(document).on 'click', 'a[data-joosy]', (event) ->
     event.preventDefault()
     Joosy.Router.navigate @getAttribute('href')

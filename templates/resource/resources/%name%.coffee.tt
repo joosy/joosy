@@ -1,0 +1,9 @@
+<% if (typeof namespace !== 'undefined' && namespace.length > 0) { -%>
+Joosy.namespace '<%= namespace %>', ->
+
+  class @<%= klass %> extends Joosy.Resources.REST
+    @entity '<%= view %>'
+<% } else { -%>
+class @<%= klass %> extends Joosy.Resources.REST
+  @entity '<%= view %>'
+<% } -%>

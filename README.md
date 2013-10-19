@@ -110,3 +110,7 @@ environment is Node.js.
 Copyright 2011-2013 [Boris Staal](http://staal.io)
 
 It is free software, and may be redistributed under the terms of MIT license.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/joosy/joosy/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+

@@ -139,7 +139,7 @@ class Joosy.Widget extends Joosy.Module
   @independent: ->
     @::__independent = true
 
-  @registerPlainFilters 'beforeLoad', 'afterLoad', 'afterUnload'
+  @registerPlainFilters 'beforeLoad', 'beforeUnload', 'afterLoad', 'afterUnload'
 
   @registerSequencedFilters 'beforePaint', 'paint', 'erase', 'fetch'
 
@@ -313,6 +313,8 @@ class Joosy.Widget extends Joosy.Module
   # Deinitializes section that is preparing to be removed from DOM
   #
   __unload: (modifyParent=true) ->
+    @__runBeforeUnloads()
+
     if @__nestedSections
       section.__unload(false) for section in @__nestedSections
       delete @__nestedSections

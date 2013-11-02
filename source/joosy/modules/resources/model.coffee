@@ -3,7 +3,7 @@
 # @mixin
 Joosy.Modules.Resources.Model =
 
-  included: ->
+  ClassMethods:
     #
     # Sets the field containing primary key.
     #
@@ -12,7 +12,7 @@ Joosy.Modules.Resources.Model =
     #
     # @param [String] primary     Name of the field
     #
-    @primaryKey = (primaryKey) ->
+    primaryKey: (primaryKey) ->
       @::__primaryKey = primaryKey
 
     #
@@ -20,7 +20,7 @@ Joosy.Modules.Resources.Model =
     #
     # @param [Class] klass       Class to use as a collection wrapper
     #
-    @collection = (klass) ->
+    collection: (klass) ->
       @::__collection = klass
 
     #
@@ -29,7 +29,7 @@ Joosy.Modules.Resources.Model =
     #
     # @param [String] name    Singular name of resource
     #
-    @entity = (name) ->
+    entity: (name) ->
       @::__entityName = name
 
     #
@@ -54,7 +54,7 @@ Joosy.Modules.Resources.Model =
     # @param [String] name    Pluralized name of property to define
     # @param [Class] klass    Resource class to instantiate
     #
-    @map = (name, klass=false) ->
+    map: (name, klass=false) ->
       unless klass
 
         klass = window[inflection.camelize inflection.singularize(name)]
@@ -77,10 +77,10 @@ Joosy.Modules.Resources.Model =
     #
     # @param [DOMElement] form      Form to grab
     #
-    @grab = (form) ->
+    grab: (form) ->
       @build({}).grab form
 
-    @attrAccessor = ->
+    attrAccessor: ->
       for attribute in arguments
         do (attribute) =>
           @::[attribute] = (value) ->
@@ -89,63 +89,63 @@ Joosy.Modules.Resources.Model =
             else
               @get attribute
 
+  InstanceMethods:
+    #
+    # Default primary key field 'id'
+    #
+    __primaryKey: 'id'
 
-  #
-  # Default primary key field 'id'
-  #
-  __primaryKey: 'id'
+    #
+    # Default collection: Joosy.Resources.Array
+    #
+    __collection: Joosy.Resources.Array
 
-  #
-  # Default collection: Joosy.Resources.Array
-  #
-  __collection: Joosy.Resources.Array
+    id: ->
+      @data?[@__primaryKey]
 
-  id: ->
-    @data?[@__primaryKey]
+    knownAttributes: ->
+      Object.keys @data
 
-  knownAttributes: ->
-    Object.keys @data
+    #
+    # Set the resource data manually
+    #
+    # @param [Object] data      Data to store
+    #
+    # @return [Object]          Returns self
+    #
+    load: (data, clear=false) ->
+      @data = {} if clear
+      @__fillData data
+      @
 
-  #
-  # Set the resource data manually
-  #
-  # @param [Object] data      Data to store
-  #
-  # @return [Object]          Returns self
-  #
-  load: (data, clear=false) ->
-    @data = {} if clear
-    @__fillData data
-    @
+    #
+    # Defines how exactly prepared data should be saved
+    #
+    # @param [Object] data    Raw data to store
+    #
+    __fillData: (data, notify=true) ->
+      @raw  = data
+      @data = {} unless @hasOwnProperty 'data'
 
-  #
-  # Defines how exactly prepared data should be saved
-  #
-  # @param [Object] data    Raw data to store
-  #
-  __fillData: (data, notify=true) ->
-    @raw  = data
-    @data = {} unless @hasOwnProperty 'data'
+      Joosy.Module.merge @data, @__applyBeforeLoads(data)
+      @trigger 'changed' if notify
+      null
 
-    Joosy.Module.merge @data, @__applyBeforeLoads(data)
-    @trigger 'changed' if notify
-    null
+    #
+    # Updates the Resource with a data from given form
+    #
+    # @param [DOMElement] form      Form to grab
+    #
+    grab: (form) ->
+      data = {}
+      for field in $(form).serializeArray()
+        unless data[field.name]
+          data[field.name] = field.value
+        else
+          data[field.name] = [data[field.name]] unless data[field.name] instanceof Array
+          data[field.name].push field.value
 
-  #
-  # Updates the Resource with a data from given form
-  #
-  # @param [DOMElement] form      Form to grab
-  #
-  grab: (form) ->
-    data = {}
-    for field in $(form).serializeArray()
-      unless data[field.name]
-        data[field.name] = field.value
-      else
-        data[field.name] = [data[field.name]] unless data[field.name] instanceof Array
-        data[field.name].push field.value
+      @load data
 
-    @load data
-
-  toString: ->
-    "<Resource #{@__entityName}> #{JSON.stringify(@data)}"
+    toString: ->
+      "<Resource #{@__entityName}> #{JSON.stringify(@data)}"

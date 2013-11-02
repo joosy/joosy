@@ -4,7 +4,7 @@ describe "Joosy.Modules.Filters", ->
 
     beforeEach ->
       class @Filters extends Joosy.Module
-        @include Joosy.Modules.Filters
+        @extend Joosy.Modules.Filters
         @registerPlainFilters 'beforeLoad', 'afterLoad', 'afterUnload'
 
       @filters = new @Filters
@@ -96,7 +96,7 @@ describe "Joosy.Modules.Filters", ->
 
     beforeEach ->
       class @Filters extends Joosy.Module
-        @include Joosy.Modules.Filters
+        @extend Joosy.Modules.Filters
         @registerSequencedFilters 'beforeLoad', 'afterLoad', 'afterUnload'
 
       @filters = new @Filters

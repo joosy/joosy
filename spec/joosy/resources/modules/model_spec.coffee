@@ -1,7 +1,7 @@
 describe "Joosy.Modules.Resources.Model", ->
 
   class Model extends Joosy.Resources.Hash
-    @include Joosy.Modules.Resources.Model
+    @concern Joosy.Modules.Resources.Model
 
   beforeEach ->
     @resource = Model.build @data =

@@ -5,7 +5,7 @@ describe "Joosy.Modules.DOM", ->
     container = @$ground.find('#application')
 
     class @DOM extends Joosy.Module
-      @include Joosy.Modules.DOM
+      @concern Joosy.Modules.DOM
 
       @mapElements
         posts: '.post'

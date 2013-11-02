@@ -12,7 +12,7 @@ describe 'Joosy.Modules.Resources.Cacher', ->
       spy = @spy
 
       class @Cacher extends Joosy.Resources.Scalar
-        @include Joosy.Modules.Resources.Cacher
+        @concern Joosy.Modules.Resources.Cacher
 
         @cache 'scalar'
         @fetcher (callback) ->
@@ -35,7 +35,7 @@ describe 'Joosy.Modules.Resources.Cacher', ->
       spy = @spy
 
       class @Cacher extends Joosy.Resources.Array
-        @include Joosy.Modules.Resources.Cacher
+        @concern Joosy.Modules.Resources.Cacher
 
         @cache 'array'
         @fetcher (callback) ->
@@ -63,7 +63,7 @@ describe 'Joosy.Modules.Resources.Cacher', ->
       spy = @spy
 
       class @Cacher extends Joosy.Resources.Hash
-        @include Joosy.Modules.Resources.Cacher
+        @concern Joosy.Modules.Resources.Cacher
 
         @cache 'hash'
         @fetcher (callback) ->

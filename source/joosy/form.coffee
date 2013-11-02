@@ -20,7 +20,7 @@
 # @include Joosy.Modules.DOM
 #
 class Joosy.Form extends Joosy.Module
-  @include Joosy.Modules.DOM
+  @concern Joosy.Modules.DOM
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
 

@@ -134,8 +134,15 @@ class Joosy.Module
 
     @merge this, object
 
-    object.extended?.apply this
+    object.extended?.apply @
     null
+
+  @concern: (object) ->
+    @extend object.ClassMethods if object.ClassMethods?
+    @include object.InstanceMethods if object.InstanceMethods?
+
+    object.extended?.apply @
+    object.included?.apply @
 
 # AMD wrapper
 if define?.amd?

@@ -105,18 +105,18 @@
 #
 # @include Joosy.Modules.Log
 # @include Joosy.Modules.Events
-# @include Joosy.Modules.DOM
-# @include Joosy.Modules.Renderer
+# @concern Joosy.Modules.DOM
+# @concern Joosy.Modules.Renderer
 # @include Joosy.Modules.TimeManager
-# @include Joosy.Modules.Filters
+# @extend Joosy.Modules.Filters
 #
 class Joosy.Widget extends Joosy.Module
   @include Joosy.Modules.Log
   @include Joosy.Modules.Events
-  @include Joosy.Modules.DOM
-  @include Joosy.Modules.Renderer
+  @concern Joosy.Modules.DOM
+  @concern Joosy.Modules.Renderer
   @include Joosy.Modules.TimeManager
-  @include Joosy.Modules.Filters
+  @extend Joosy.Modules.Filters
 
   #
   # Extends widgets mapping

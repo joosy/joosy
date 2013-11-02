@@ -23,7 +23,7 @@ class Joosy.Page extends Joosy.Widget
   @layout: (layoutClass) ->
     @::__layoutClass = layoutClass
 
-  @include Joosy.Modules.Page.Scrolling
+  @concern Joosy.Modules.Page.Scrolling
   @extend  Joosy.Modules.Page.Title
 
   #

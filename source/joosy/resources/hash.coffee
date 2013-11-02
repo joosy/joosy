@@ -1,7 +1,7 @@
 class Joosy.Resources.Hash extends Joosy.Module
 
   @include Joosy.Modules.Events
-  @include Joosy.Modules.Filters
+  @extend Joosy.Modules.Filters
 
   @registerPlainFilters 'beforeLoad'
 

@@ -3,11 +3,11 @@
 # @mixin
 Joosy.Modules.Resources.Cacher =
 
-  included: ->
-    @cache   = (cacheKey) -> @::__cacheKey = cacheKey
-    @fetcher = (fetcher) -> @::__fetcher = fetcher
+  ClassMethods:
+    cache: (cacheKey) -> @::__cacheKey = cacheKey
+    fetcher: (fetcher) -> @::__fetcher = fetcher
 
-    @cached = (callback, cacheKey=false, fetcher=false) ->
+    cached: (callback, cacheKey=false, fetcher=false) ->
       if typeof(cacheKey) == 'function'
         fetcher  = cacheKey
         cacheKey = undefined
@@ -24,15 +24,16 @@ Joosy.Modules.Resources.Cacher =
           instance = @build results...
           callback? instance
 
-    @fetch = (callback) ->
+    fetch: (callback) ->
       @::__fetcher (results...) =>
         localStorage[@::__cacheKey] = JSON.stringify(results) if @::__cacheKey && localStorage
         callback results
 
-  refresh: (callback) ->
-    @constructor.fetch (results) =>
-      @load results...
-      callback? @
+  InstanceMethods:
+    refresh: (callback) ->
+      @constructor.fetch (results) =>
+        @load results...
+        callback? @
 
 # AMD wrapper
 if define?.amd?

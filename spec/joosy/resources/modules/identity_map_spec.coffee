@@ -1,7 +1,7 @@
 describe "Joosy.Modules.Resources.IdentityMap", ->
 
   class Model extends Joosy.Resources.Hash
-    @include Joosy.Modules.Resources.Model
+    @concern Joosy.Modules.Resources.Model
     @extend  Joosy.Modules.Resources.IdentityMap
 
   class TestInline extends Model

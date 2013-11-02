@@ -6,7 +6,7 @@
 #
 class Joosy.Resources.REST extends Joosy.Resources.Hash
 
-  @include Joosy.Modules.Resources.Model
+  @concern Joosy.Modules.Resources.Model
 
   @registerPlainFilters 'beforeSave'
 

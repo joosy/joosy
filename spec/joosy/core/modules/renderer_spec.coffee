@@ -2,7 +2,7 @@ describe "Joosy.Modules.Renderer", ->
 
   beforeEach ->
     class @Renderer extends Joosy.Module
-      @include Joosy.Modules.Renderer
+      @concern Joosy.Modules.Renderer
 
     @renderer = new @Renderer
 

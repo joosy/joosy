@@ -4,6 +4,14 @@
 Joosy.Modules.Page.Scrolling =
 
   included: ->
+    @afterLoad ->
+      @__performScrolling() if @__scrollElement
+
+    @paint (complete) ->
+      @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
+      complete()
+
+  ClassMethods:
     #
     # Sets the position where page will be scrolled to after load.
     #
@@ -17,38 +25,32 @@ Joosy.Modules.Page.Scrolling =
     # @option options [Integer] margin      Defines the margin from element position.
     #   Can be negative.
     #
-    @scroll = (element, options={}) ->
+    scroll: (element, options={}) ->
       @::__scrollElement = element
       @::__scrollSpeed = options.speed || 500
       @::__scrollMargin = options.margin || 0
 
-    @paint (complete) ->
-      @__fixHeight() if @__scrollElement && @__scrollSpeed != 0
-      complete()
+  InstanceMethods:
+    #
+    # Scrolls page to stored positions
+    #
+    __performScrolling: ->
+      scroll = $(@__extractSelector @__scrollElement).offset()?.top + @__scrollMargin
+      Joosy.Modules.Log.debugAs @, "Scrolling to #{@__extractSelector @__scrollElement}"
+      $('html, body').animate {scrollTop: scroll}, @__scrollSpeed, =>
+        if @__scrollSpeed != 0
+          @__releaseHeight()
 
-    @afterLoad ->
-      @__performScrolling() if @__scrollElement
+    #
+    # Freezes the page height through $(html).
+    #
+    # Required to implement better {Joosy.Page.scroll} behavior.
+    #
+    __fixHeight: ->
+      $('html').css 'min-height', $(document).height()
 
-  #
-  # Scrolls page to stored positions
-  #
-  __performScrolling: ->
-    scroll = $(@__extractSelector @__scrollElement).offset()?.top + @__scrollMargin
-    Joosy.Modules.Log.debugAs @, "Scrolling to #{@__extractSelector @__scrollElement}"
-    $('html, body').animate {scrollTop: scroll}, @__scrollSpeed, =>
-      if @__scrollSpeed != 0
-        @__releaseHeight()
-
-  #
-  # Freezes the page height through $(html).
-  #
-  # Required to implement better {Joosy.Page.scroll} behavior.
-  #
-  __fixHeight: ->
-    $('html').css 'min-height', $(document).height()
-
-  #
-  # Undo {#__fixHeight}
-  #
-  __releaseHeight: ->
-    $('html').css 'min-height', ''
+    #
+    # Undo {#__fixHeight}
+    #
+    __releaseHeight: ->
+      $('html').css 'min-height', ''

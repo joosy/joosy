@@ -146,12 +146,12 @@ module.exports = (grunt) ->
 
   grunt.registerTask 'compile', ['bowerize', 'grill:compile', 'uglify']
 
-  grunt.registerTask 'test', ->
+  grunt.registerTask 'spec', ->
     grunt.task.run 'coffeelint'
     grunt.task.run if @args[0] then "testem:run:#{@args[0]}" else 'testem'
 
   grunt.registerTask 'publish', [
-    'test',
+    'spec',
     'compile',
     'ensureCommits',
     'gh-pages',

@@ -1,6 +1,11 @@
 #= require ../page
 
+#
+# Title management for Page (or possibly other widgets)
+#
+# @see Joosy.Page
 # @mixin
+#
 Joosy.Modules.Page.Title =
 
   #
@@ -9,6 +14,15 @@ Joosy.Modules.Page.Title =
   # @note Title will be reverted on unload.
   #
   # @param [String] title       Title to set.
+  # @param [String] separator   The string to use to `.join` when title is an array
+  #
+  # @example
+  #   class TestPage extends Joosy.Page
+  #     @title 'Test title'
+  #
+  # @example
+  #   class TestPage extends Joosy.Page
+  #     @title -> I18n.t('titles.test')
   #
   title: (title, separator=' / ') ->
     @afterLoad ->

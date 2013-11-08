@@ -1,5 +1,7 @@
 #
-# @private
+# Form is an internally-used instance of `formFor` block.
+#
+# @nodoc
 #
 class Form
   constructor: (@context, @resource, @options) ->
@@ -38,6 +40,13 @@ class Form
 #
 Joosy.helpers 'Application', ->
 
+  #
+  # Internally-used helper allowing to split hash into two by a list of keys
+  #
+  # @param [Hash] options          Original hash
+  # @param [Array<String>]         Keys to separate
+  # @return [Array<Hash>]
+  #
   separateOptions = (options, keys) ->
     attributes = {}
     parameters = {}

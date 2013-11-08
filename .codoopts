@@ -1,2 +1,3 @@
 --output-dir ./doc.tmp
+--output ./doc.tmp
 source

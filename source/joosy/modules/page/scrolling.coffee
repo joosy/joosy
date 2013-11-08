@@ -1,6 +1,11 @@
 #= require ../page
 
+#
+# The auto-scrolling filters for Page (or possibly widgets)
+#
+# @see Joosy.Page
 # @mixin
+#
 Joosy.Modules.Page.Scrolling =
 
   included: ->
@@ -25,6 +30,10 @@ Joosy.Modules.Page.Scrolling =
     # @option options [Integer] margin      Defines the margin from element position.
     #   Can be negative.
     #
+    # @example
+    #   class TestPage extends Joosy.Page
+    #     @scroll '#header', speed: 300, margin: -100
+    #
     scroll: (element, options={}) ->
       @::__scrollElement = element
       @::__scrollSpeed = options.speed || 500
@@ -33,6 +42,8 @@ Joosy.Modules.Page.Scrolling =
   InstanceMethods:
     #
     # Scrolls page to stored positions
+    #
+    # @private
     #
     __performScrolling: ->
       scroll = $(@__extractSelector @__scrollElement).offset()?.top + @__scrollMargin
@@ -44,13 +55,17 @@ Joosy.Modules.Page.Scrolling =
     #
     # Freezes the page height through $(html).
     #
-    # Required to implement better {Joosy.Page.scroll} behavior.
+    # Required to implement better {Joosy.Modules.Page.Scrolling.scroll} behavior.
+    #
+    # @private
     #
     __fixHeight: ->
       $('html').css 'min-height', $(document).height()
 
     #
-    # Undo {#__fixHeight}
+    # Undoes {Joosy.Modules.Page.Scrolling#__fixHeight}
+    #
+    # @private
     #
     __releaseHeight: ->
       $('html').css 'min-height', ''

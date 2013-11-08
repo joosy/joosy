@@ -60,6 +60,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   #
   @at: ->
     @__atWrapper (callback) =>
+      # @nodoc
       class Clone extends @
         callback(@)
     , arguments...

@@ -226,13 +226,14 @@ class Joosy.Router extends Joosy.Module
     result  = {}
 
     # Full RegExp matcher for the route
-    matcher = matcher.replace(/\/:([^\/]+)/g, '/([^/]+)')   # Turning :params into regexp section
+    matcher = matcher.replace(/\/?:([^\/]+)/g, '/([^/]+)')  # Turning :params into regexp section
     matcher = matcher.replace(/^\/?/, '^/?')                # Making leading slash optional
     matcher = matcher.replace(/\/?$/, '/?$')                # Making trailing slash optional
 
     # Array of parameter names
-    params  = (path.match(/\/:[^\/]+/g) || []).map (str) ->
-      str.substr 2
+    params  = (path.match(/\/?:[^\/]+/g) || []).map (str) ->
+      str = str.substr(1) if str[0] == '/'
+      str.substr(1)
 
     @routes ||= {}
     @routes[matcher] =

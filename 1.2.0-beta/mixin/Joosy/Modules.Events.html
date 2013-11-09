@@ -71,8 +71,8 @@
     <span class='signature'>
       <a href='#wait-'>
         ~
-(String)
-<b>wait</b><span>(name, events, callback)</span>
+(void)
+<b>wait</b><span>(events, callback)</span>
       </a>
     </span>
     <span class='desc'>
@@ -95,8 +95,8 @@
     <span class='signature'>
       <a href='#bind-'>
         ~
-(String)
-<b>bind</b><span>(name, events, callback)</span>
+(void)
+<b>bind</b><span>(events, callback)</span>
       </a>
     </span>
     <span class='desc'>
@@ -124,7 +124,7 @@
       </a>
     </span>
     <span class='desc'>
-      Triggers event for {Joosy.Modules.Events~bind} and {Joosy.Modules.Events~wait}
+      Triggers event for <a href='../../mixin/Joosy/Modules.Events.html#bind-'>Joosy.Modules.Events~bind</a> and <a href='../../mixin/Joosy/Modules.Events.html#wait-'>Joosy.Modules.Events~wait</a>
     </span>
   </li>
   <li>
@@ -208,30 +208,40 @@ namespace.unbind()</code></pre>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Custom name for the binding</span>
     </li>
     <li>
       <span class='name'>events</span>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>List of events to wait for separated by space</span>
     </li>
     <li>
       <span class='name'>events</span>
       <span class='type'>
         (<tt>Array</tt>)
       </span>
+      &mdash;
+      <span class='desc'>List of events to wait in the form of Array</span>
     </li>
     <li>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Function</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Action to run when all events were triggered at least once</span>
     </li>
     <li>
       <span class='name'>options</span>
       <span class='type'>
         (<tt>Hash</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Options</span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -290,6 +300,8 @@ namespace.unbind()</code></pre>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Name of <a href='../../mixin/Joosy/Modules.Events.html#wait-'>Joosy.Modules.Events~wait</a> binding</span>
     </li>
   </ul>
 </div>
@@ -316,24 +328,32 @@ namespace.unbind()</code></pre>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Custom name for the binding</span>
     </li>
     <li>
       <span class='name'>events</span>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>List of events to wait for separated by space</span>
     </li>
     <li>
       <span class='name'>events</span>
       <span class='type'>
         (<tt>Array</tt>)
       </span>
+      &mdash;
+      <span class='desc'>List of events to wait in the form of Array</span>
     </li>
     <li>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Function</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Action to run on trigger</span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -392,6 +412,8 @@ namespace.unbind()</code></pre>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Name of <a href='../../mixin/Joosy/Modules.Events.html#bind-'>Joosy.Modules.Events~bind</a> binding</span>
     </li>
   </ul>
 </div>
@@ -414,12 +436,16 @@ namespace.unbind()</code></pre>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Name of event to trigger</span>
     </li>
     <li>
       <span class='name'>data</span>
       <span class='type'>
         (<tt>Mixed</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Data to pass to event</span>
     </li>
   </ul>
 </div>
@@ -453,6 +479,8 @@ namespace.unbind()</code></pre>
       <span class='type'>
         (<tt>Function</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Configuration block (see example)</span>
     </li>
   </ul>
 </div>
@@ -462,7 +490,7 @@ namespace.unbind()</code></pre>
       ~
 (Array)
 <b>__splitEvents</b><span>(events)</span>
-      (private)
+      <span class='note private'>Private</span>
       <br>
     </p>
     <div class='docstring'>
@@ -488,11 +516,11 @@ namespace.unbind()</code></pre>
 </div>
     </div>
     <div id='footer'>
-  November 09, 13 18:21:28 by
+  November 09, 13 18:25:11 by
   <a href='https://github.com/coffeescript/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
-  2.0.0-rc.1
+  2.0.0-rc.2
   &#10034;
   Press H to see the keyboard shortcuts
   &#10034;

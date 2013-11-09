@@ -220,6 +220,8 @@ adding typical model features and making it aware of primary key and collection.
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Name of the field</span>
     </li>
   </ul>
 </div>
@@ -242,6 +244,8 @@ adding typical model features and making it aware of primary key and collection.
       <span class='type'>
         (<tt>Class</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Class to use as a collection wrapper</span>
     </li>
   </ul>
 </div>
@@ -264,6 +268,8 @@ adding typical model features and making it aware of primary key and collection.
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Singular name of resource</span>
     </li>
   </ul>
 </div>
@@ -307,12 +313,16 @@ p.zombies[0].get(&#39;foo&#39;) # bar</code></pre>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Pluralized name of property to define</span>
     </li>
     <li>
       <span class='name'>klass</span>
       <span class='type'>
         (<tt>Class</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Resource class to instantiate</span>
     </li>
   </ul>
 </div>
@@ -335,6 +345,8 @@ p.zombies[0].get(&#39;foo&#39;) # bar</code></pre>
       <span class='type'>
         (<tt>DOMElement</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Form to grab</span>
     </li>
   </ul>
 </div>
@@ -384,7 +396,7 @@ test.field2(&#39;new value&#39;)    # &#39;new value&#39;</code></pre>
   <h3>See also:</h3>
   <ul class='see'>
     <li>
-      <a href='Joosy.Modules.Resources.Model.primaryKey'>Joosy.Modules.Resources.Model.primaryKey</a>
+      <a href='../../mixin/Joosy/Modules.Resources.Model.html#primaryKey-static'>Joosy.Modules.Resources.Model.primaryKey</a>
     </li>
   </ul>
 </div>
@@ -439,12 +451,16 @@ receive different parts of model data from different endpoints.</p>
       <span class='type'>
         (<tt>Object</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Data to store</span>
     </li>
     <li>
       <span class='name'>clear</span>
       <span class='type'>
         (<tt>Boolean</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Whether previous data should be overwriten (not merged)</span>
     </li>
   </ul>
   <h3>Returns:</h3>
@@ -463,7 +479,7 @@ receive different parts of model data from different endpoints.</p>
       #
 (void)
 <b>__fillData</b><span>(data, notify = true)</span>
-      (private)
+      <span class='note private'>Private</span>
       <br>
     </p>
     <div class='docstring'>
@@ -477,6 +493,8 @@ receive different parts of model data from different endpoints.</p>
       <span class='type'>
         (<tt>Object</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Raw data to store</span>
     </li>
   </ul>
 </div>
@@ -509,6 +527,8 @@ test = Test.build().grab($ &#39;form&#39;)</code></pre>
       <span class='type'>
         (<tt>DOMElement</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Form to grab</span>
     </li>
   </ul>
 </div>
@@ -516,11 +536,11 @@ test = Test.build().grab($ &#39;form&#39;)</code></pre>
 </div>
     </div>
     <div id='footer'>
-  November 09, 13 18:21:28 by
+  November 09, 13 18:25:11 by
   <a href='https://github.com/coffeescript/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
-  2.0.0-rc.1
+  2.0.0-rc.2
   &#10034;
   Press H to see the keyboard shortcuts
   &#10034;

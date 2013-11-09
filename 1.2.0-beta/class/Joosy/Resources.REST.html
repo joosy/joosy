@@ -90,7 +90,7 @@
       </a>
     </span>
     <span class='desc'>
-      Makes needed changes with clone/wrapper for @at method to extend its' path
+      Makes needed changes with clone/wrapper for @at method to extend its&#39; path
     </span>
   </li>
   <li>
@@ -250,7 +250,7 @@
       </a>
     </span>
     <span class='desc'>
-      Refetches the data from backend and triggers `changed`
+      Refetches the data from backend and triggers <code>changed</code>
     </span>
   </li>
   <li>
@@ -383,12 +383,16 @@
       <span class='type'>
         (<tt>Hash</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Options as a hash</span>
     </li>
     <li>
       <span class='name'>options</span>
       <span class='type'>
         (<tt>Function&lt;Hash&gt;</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Function that overrides options in given hash</span>
     </li>
   </ul>
 </div>
@@ -415,6 +419,8 @@
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Name of the field</span>
     </li>
   </ul>
 </div>
@@ -461,6 +467,8 @@
       <span class='type'>
         (<tt>Array</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Array of parent entities. Can be a string or another REST resource.</span>
     </li>
   </ul>
 </div>
@@ -522,24 +530,32 @@ Callback will get parsed JSON object as a parameter.</p>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>GET / POST / PUT / DELETE</span>
     </li>
     <li>
       <span class='name'>options</span>
       <span class='type'>
         (<tt>Hash</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Options to proxy to collectionPath</span>
     </li>
     <li>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Function</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
     </li>
     <li>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Object</tt>)
       </span>
+      &mdash;
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -562,18 +578,24 @@ Callback will get parsed JSON object as a parameter.</p>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>id or an array of ids for interpolated path</span>
     </li>
     <li>
       <span class='name'>options</span>
       <span class='type'>
         (<tt>Hash</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Path modification options</span>
     </li>
     <li>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Function</tt>)
       </span>
+      &mdash;
+      <span class='desc'><code>(error, instance, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -596,18 +618,24 @@ Callback will get parsed JSON object as a parameter.</p>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>id or an array of ids for interpolated path</span>
     </li>
     <li>
       <span class='name'>options</span>
       <span class='type'>
         (<tt>Hash</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Path modification options</span>
     </li>
     <li>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Function</tt>)
       </span>
+      &mdash;
+      <span class='desc'><code>(error, instance, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -617,7 +645,7 @@ Callback will get parsed JSON object as a parameter.</p>
       .
 (void)
 <b>__query</b><span>(path, method, params, callback)</span>
-      (private)
+      <span class='note private'>Private</span>
       <br>
     </p>
     <div class='docstring'>
@@ -658,6 +686,8 @@ Callback will get parsed JSON object as a parameter.</p>
       <span class='type'>
         (<tt>Array</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Array of parent entities. Can be a string or another REST resource.</span>
     </li>
   </ul>
 </div>
@@ -704,6 +734,8 @@ Callback will get parsed JSON object as a parameter.</p>
       <span class='type'>
         (<tt>Array</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Interpolation arguments for nested objects</span>
     </li>
     <li>
       <span class='name'>options</span>
@@ -743,6 +775,8 @@ Callback will get parsed JSON object as a parameter.</p>
       <span class='type'>
         (<tt>Array</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Interpolation arguments for nested objects</span>
     </li>
     <li>
       <span class='name'>options</span>
@@ -772,24 +806,32 @@ Callback will get parsed JSON object as a parameter.</p>
       <span class='type'>
         (<tt>String</tt>)
       </span>
+      &mdash;
+      <span class='desc'>GET / POST / PUT / DELETE</span>
     </li>
     <li>
       <span class='name'>options</span>
       <span class='type'>
         (<tt>Hash</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Options to proxy to memberPath</span>
     </li>
     <li>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Function</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
     </li>
     <li>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Object</tt>)
       </span>
+      &mdash;
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -812,18 +854,24 @@ Callback will get parsed JSON object as a parameter.</p>
       <span class='type'>
         (<tt>Hash</tt>)
       </span>
+      &mdash;
+      <span class='desc'>See <a href='../../class/Joosy/Resources.REST.html#find-static'>Joosy.Resources.REST.find</a> for possible options</span>
     </li>
     <li>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Function</tt>)
       </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
     </li>
     <li>
       <span class='name'>callback</span>
       <span class='type'>
         (<tt>Object</tt>)
       </span>
+      &mdash;
+      <span class='desc'><code>(error, instance, data) -&gt; ...</code></span>
     </li>
   </ul>
 </div>
@@ -923,7 +971,7 @@ test.create (error, test) -&gt;
       #
 (void)
 <b>__extractOptionsAndCallback</b><span>(options, callback)</span>
-      (private)
+      <span class='note private'>Private</span>
       <br>
     </p>
     <div class='docstring'>
@@ -935,11 +983,11 @@ test.create (error, test) -&gt;
 </div>
     </div>
     <div id='footer'>
-  November 09, 13 18:21:28 by
+  November 09, 13 18:25:11 by
   <a href='https://github.com/coffeescript/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
-  2.0.0-rc.1
+  2.0.0-rc.2
   &#10034;
   Press H to see the keyboard shortcuts
   &#10034;

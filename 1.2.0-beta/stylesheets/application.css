@@ -191,13 +191,18 @@ h2 {
 }
 #content h1 .note,
 #content li .note,
-#content .properties .note {
+#content .properties .note,
+#content .method_details .signature .note {
   font-weight: normal;
   padding: 3px 5px;
   position: relative;
   top: -3px;
   text-transform: capitalize;
   display: inline;
+}
+#content .method_details .signature .note {
+  font-size: 0.6em;
+  top: -1px;
 }
 #content h1 .note {
   font-size: 0.5em;

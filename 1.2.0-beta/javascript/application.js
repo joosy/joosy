@@ -11512,7 +11512,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
     $('body #content.list ul').on('click', 'li', function(event) {
       var link;
       link = $(this).find('a:not(.toggle)').attr('href');
-      if (!(link ? link === '#' : void 0)) {
+      if (link && link !== '#') {
         top.frames['main'].location.href = link;
       }
       return event.preventDefault();

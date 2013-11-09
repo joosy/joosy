@@ -4,6 +4,9 @@
 # JST template precompilation binding
 #
 class Joosy.Templaters.JST
+  #
+  # Initializes JST templater
+  #
   constructor: (@config={}) ->
     @prefix = @config.prefix if @config.prefix? && @config.prefix.length > 0
 

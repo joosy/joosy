@@ -44,12 +44,9 @@ class Joosy.Page extends Joosy.Widget
     # we should declare ourselves as a relpacement to the layout, not the page
     @previous = @previous.layout if @layoutShouldChange && !@layout
 
-  ######
-  ###### Widget extensions
-  ######
-
   #
-  # This is required by {Joosy.Modules.Renderer}
+  # This is required by {Joosy.Modules.Renderer}.
+  #
   # Sets the base template dir to app_name/templates/pages
   #
   __renderSection: ->

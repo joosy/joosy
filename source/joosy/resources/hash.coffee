@@ -1,3 +1,14 @@
+#
+# The hash structure with the support of dynamic rendering
+#
+# @include Joosy.Modules.Events
+# @extend  Joosy.Modules.Filters
+#
+# @example
+#   data = Joosy.Resources.Hash.build field1: 'test', field2: 'test'
+#   data.get('field1')                              # 'test'
+#   data.set('field2', 'test2')                     # triggers 'changed'
+#
 class Joosy.Resources.Hash extends Joosy.Module
 
   @include Joosy.Modules.Events
@@ -5,22 +16,49 @@ class Joosy.Resources.Hash extends Joosy.Module
 
   @registerPlainFilters 'beforeLoad'
 
+  #
+  # Instantiates a new hash
+  #
   @build: ->
     new @ arguments...
 
+  #
+  # Internal helper for {Joosy.Modules.Resources.Function}
+  #
   __call: (path, value) ->
     if arguments.length > 1
       @set path, value
     else
       @get path
 
+  #
+  # Accepts hash of fields that have to be defined
+  #
   constructor: (data={}) ->
     @__fillData data, false
 
+  #
+  # Replaces all the values with given
+  #
+  # @example
+  #   data = Joosy.Resources.Hash.build foo: 'bar'
+  #   data.load bar: 'baz'
+  #   data                                          # { bar: 'baz' }
+  #
   load: (data) ->
     @__fillData data
     @
 
+  #
+  # Gets value by field name.
+  #
+  # @param [String] path              The path to the field that should be resolved
+  # @note Can resolve nested fields
+  #
+  # @example
+  #    data.get('field')              # { subfield: 'value' }
+  #    data.get('field.subfield')     # 'value'
+  #
   get: (path) ->
     [instance, property] = @__callTarget path, true
 
@@ -31,6 +69,17 @@ class Joosy.Resources.Hash extends Joosy.Module
     else
       instance[property]
 
+  #
+  # Sets value by field name.
+  #
+  # @param [String] path              The path to the field that should be resolved
+  # @param [Mixed] value              The value to set
+  # @note Can resolve nested fields
+  #
+  # @example
+  #    data.set('field', {subfield: 'value'})
+  #    data.set('field.subfield', 'value2')
+  #
   set: (path, value) ->
     [instance, property] = @__callTarget path
 
@@ -79,6 +128,9 @@ class Joosy.Resources.Hash extends Joosy.Module
     @trigger 'changed' if notify
     null
 
+  #
+  # @nodoc
+  #
   toString: ->
     "Hash: #{JSON.stringify(@data)}"
 

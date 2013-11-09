@@ -37,10 +37,6 @@ class Joosy.Layout extends Joosy.Widget
   content: ->
     $("##{@uid}")
 
-  ######
-  ###### Widget extensions
-  ######
-
   #
   # This is required by {Joosy.Modules.Renderer}
   # Sets the base template dir to app_name/templates/layouts

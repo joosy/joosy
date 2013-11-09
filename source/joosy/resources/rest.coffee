@@ -4,6 +4,8 @@
 #
 # Resource with REST/JSON backend
 #
+# @concern Joosy.Modules.Resources.Model
+#
 class Joosy.Resources.REST extends Joosy.Resources.Hash
 
   @concern Joosy.Modules.Resources.Model
@@ -17,7 +19,24 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
 
     data
 
-
+  #
+  # Registeres default options for all HTTP queries
+  #
+  # @param [Hash] options                  Options as a hash
+  # @param [Function<Hash>] options        Function that overrides options in given hash
+  #
+  # @example
+  #   class Test extends Joosy.Resources.REST
+  #     @requestOptions
+  #       headers:
+  #         'access-token': 'test'
+  #
+  # @example
+  #   class Test extends Joosy.Resources.REST
+  #     @requestOptions (options) ->
+  #       options.url = Config.baseUrl + options.url
+  #
+  #
   @requestOptions: (options) ->
     @::__requestOptions = options
 
@@ -290,16 +309,48 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
 
     result
 
+  #
+  # Updates the instance on the server with PUT query
+  #
+  # @param [Function<Mixed, REST>] callback
+  #
+  # @example
+  #   class Test extends Joosy.Resources.REST
+  #   test = Test.build id: 1, field1: 'test'
+  #
+  #   test.update (error, test) ->
+  #     unless error
+  #       # ...
+  #
   update: (callback) ->
     @send 'put', {params: @__applyBeforeSaves(@data)}, (error, data) =>
       @load data unless error
       callback? error, @
 
+  #
+  # Updates new entry on the server with local state with POST query
+  #
+  # @param [Function<Mixed, REST>] callback
+  #
+  # @example
+  #   class Test extends Joosy.Resources.REST
+  #   test = Test.build field1: 'test'
+  #
+  #   test.create (error, test) ->
+  #     unless error
+  #       # ...
+  #
   create: (callback) ->
     @constructor.send 'post', {params: @__applyBeforeSaves(@data)}, (error, data) =>
       @load data unless error
       callback? error, @
 
+  #
+  # Saves current state of instance (automatically choosing between updation and creation)
+  #
+  # @see Joosy.Resources.REST.create
+  # @see Joosy.Resources.REST.update
+  #
   save: (callback) ->
     if @id()
       @update callback
@@ -308,6 +359,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
 
   #
   # Wrapper for AJAX request
+  #
+  # @private
   #
   @__query: (path, method, params, callback) ->
     options =
@@ -331,7 +384,9 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
     $.ajax options
 
   #
-  # utility function for better API support for unrequired first options parameter
+  # Utility function for better API support for unrequired first options parameter
+  #
+  # @private
   #
   __extractOptionsAndCallback: (options, callback) ->
     if typeof(options) == 'function'

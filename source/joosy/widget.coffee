@@ -172,6 +172,10 @@ class Joosy.Widget extends Joosy.Module
   unregisterWidget: (widget) ->
     widget.__unload()
 
+  #
+  # Unloads the previous widget and inject the new one inplace saving
+  # the continuity
+  #
   replaceWidget: (widget, replacement) ->
     replacement = @__normalizeWidget(replacement)
     replacement.previous = widget
@@ -331,7 +335,7 @@ class Joosy.Widget extends Joosy.Module
     delete @parent
 
   #
-  # Normalizes selector and returns jQuery wrap
+  # Normalizes selector and returns jQuery wrap.
   #
   # Selector can be one of:
   #
@@ -346,7 +350,7 @@ class Joosy.Widget extends Joosy.Module
       $(@__extractSelector(selector), @$container)
 
   #
-  # Normalizes widget descrpition to its instance
+  # Normalizes widget descrpition to its instance.
   #
   # Besides already being instance it cann be either class or lambda
   #

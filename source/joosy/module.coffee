@@ -7,6 +7,8 @@ class Joosy.Module
   # Sets the default namespace for all Joosy descendants.
   # This is used in {Joosy.namespace} magic.
   #
+  # @nodoc
+  #
   @__namespace__: []
 
   #
@@ -137,6 +139,12 @@ class Joosy.Module
     object.extended?.apply @
     null
 
+  #
+  # Mixes given object as a concern
+  #
+  # Concern is a Module containing two submodules named ClassMethods and InstanceMethods
+  # that should be correspondingly extended and included
+  #
   @concern: (object) ->
     @extend object.ClassMethods if object.ClassMethods?
     @include object.InstanceMethods if object.InstanceMethods?

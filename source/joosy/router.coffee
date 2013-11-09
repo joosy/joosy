@@ -41,7 +41,8 @@ class Joosy.Router extends Joosy.Module
 
   #
   # Rails-like wrapper around internal raw routes representation
-  # @private
+  #
+  # @nodoc
   #
   class Drawer
     @run: (block, namespace='', alias='') ->
@@ -300,6 +301,11 @@ class Joosy.Router extends Joosy.Module
         else
           "#{origin}#{location.pathname}#{helper(options)}"
 
+  #
+  # Parses parameters from both, current URL and route placeholders
+  #
+  # @private
+  #
   @__grabParams: (query, route=null, match=[]) ->
     params = {}
 

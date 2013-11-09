@@ -214,7 +214,7 @@ module.exports = (grunt) ->
       return undefined unless version
       moment(grunt.file.read "doc/#{version}/DATE").format "D MMMM YYYY"
 
-    args = ['source', '--output-dir', destination]
+    args = ['source', '--output', destination]
     grunt.file.delete destination if grunt.file.exists destination
 
     grunt.util.spawn {cmd: "codo", args: args, opts: {stdio: [0,1,2]}}, (error, result) ->

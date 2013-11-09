@@ -62,7 +62,7 @@ class Joosy.Resources.Scalar extends Joosy.Module
   # @see Joosy.Resources.Scalar.load
   #
   set: (@value) ->
-    @load value
+    @trigger 'changed'
 
   #
   # JS helper converting object to its internal value during basic operations

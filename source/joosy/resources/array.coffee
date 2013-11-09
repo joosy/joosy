@@ -27,7 +27,7 @@ class Joosy.Resources.Array extends Array
 
   #
   # Accepts numerous parameters (corresponding to array members)
-  # 
+  #
   constructor: ->
     @__fillData arguments, false
 

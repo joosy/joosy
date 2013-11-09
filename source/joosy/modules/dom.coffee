@@ -3,9 +3,8 @@
 #
 # DOM container handling, DOM elements and DOM events bindings
 #
+# @note Requires implementor to contain DOM node at @$container property
 # @mixin
-#
-# @note Requires implementor to contain DOM node at @$container propert
 #
 Joosy.Modules.DOM =
   eventSplitter: /^(\S+)\s*(.*)$/
@@ -41,6 +40,13 @@ Joosy.Modules.DOM =
       Joosy.Module.merge @::__events, map
 
   InstanceMethods:
+    #
+    # jQuery accessor limited to the container of current object
+    #
+    # @param [String] selector           jQuery selector
+    # @param [jQuery] context            The override for the context
+    # @return [jQuery]
+    #
     $: (selector, context) ->
       $(selector, context || @$container)
 
@@ -66,10 +72,7 @@ Joosy.Modules.DOM =
     # Assigns elements defined in 'elements'
     #
     # @private
-    # @example Sample elements
-    #   @mapElements
-    #     foo: '.foo'
-    #     bar: '.bar'
+    # @see Joosy.Modules.DOM.mapElements
     #
     __assignElements: (root, entries) ->
       root    ||= @
@@ -90,6 +93,7 @@ Joosy.Modules.DOM =
     # Wraps actual element closures. Required to clear context to avoid circular reference
     #
     # @private
+    # @see Joosy.Modules.DOM.mapElements
     #
     __wrapElement: (value) ->
       (context) =>
@@ -100,11 +104,7 @@ Joosy.Modules.DOM =
     # Binds events defined in 'events' to container
     #
     # @private
-    # @example Sample events
-    #   @mapEvents
-    #     'click': -> # this will raise on container click
-    #     'click .foo': -> # this will raise on .foo click
-    #     'click $foo': -> #this will search for selector of foo element
+    # @see Joosy.Modules.DOM.mapEvents
     #
     __delegateEvents: ->
       module = @
@@ -135,7 +135,11 @@ Joosy.Modules.DOM =
               @$container.on eventName, selector, callback
               Joosy.Modules.Log.debugAs @, "#{eventName} binded on #{selector}"
 
+    #
+    # Clears the container from everything
+    #
     # @private
+    #
     __clearContainer: ->
       @$container.unbind().off()
       @$container = $()

@@ -56,6 +56,8 @@ Joosy.Modules.TimeManager =
   #
   # Drops all registered timeouts and intervals for this object
   #
+  # @private
+  #
   __clearTime: ->
     if @__intervals
       for entry in @__intervals

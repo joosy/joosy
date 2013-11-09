@@ -4,9 +4,13 @@
 # Filters registration routines
 #
 # @mixin
+# @private
 #
 Joosy.Modules.Filters =
 
+  #
+  # Internal helper registering filters accessors
+  #
   __registerFilterCollector: (filter) ->
     @[filter] = (callback) ->
       unless @::hasOwnProperty "__#{filter}s"
@@ -15,6 +19,14 @@ Joosy.Modules.Filters =
 
     filter.charAt(0).toUpperCase() + filter.slice(1)
 
+  #
+  # Registers a set of plain (synchronous) filters
+  #
+  # @example
+  #   class Test
+  #     @extend Joosy.Modules.Filters
+  #     @registerPlainFilters 'beforeLoad', 'afterLoad'
+  #
   registerPlainFilters: (filters...) ->
     for filter in filters
       do (filter) =>
@@ -44,6 +56,14 @@ Joosy.Modules.Filters =
 
           data
 
+  #
+  # Registers a set of sequenced (asynchronous) filters
+  #
+  # @example
+  #   class Test
+  #     @extend Joosy.Modules.Filters
+  #     @registerSequencedFilters 'fetch', 'paint'
+  #
   registerSequencedFilters: (filters...) ->
     for filter in filters
       do (filter) =>

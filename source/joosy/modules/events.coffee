@@ -1,13 +1,14 @@
 #= require joosy/joosy
 
-# @private
+# @nodoc
 class SynchronizationContext
   constructor:    -> @actions = []
   do: (action)    -> @actions.push action
   after: (@after) ->
 
 #
-# @private
+# @nodoc
+#
 # Events namespace
 #
 # Creates unified collection of bindings to a particular instance
@@ -46,10 +47,16 @@ Joosy.Modules.Events =
   # Creates events namespace
   #
   # @example
-  #   namespace = @entity.eventsNamespace, ->
+  #   namespace = @entity.eventsNamespace ->
   #     @bind 'action1', ->
   #     @bind 'action2', ->
   #
+  #   namespace.unbind()
+  #
+  # @example
+  #   namespace = @entity.eventsNamespace()
+  #   namespace.bind 'action1', ->
+  #   namespace.bind 'action2', ->
   #   namespace.unbind()
   #
   eventsNamespace: (actions) ->
@@ -60,9 +67,19 @@ Joosy.Modules.Events =
   #
   # Waits for the list of given events to happen at least once. Then runs callback.
   #
-  # @param [String|Array] events        List of events to wait for separated by space
+  # @overload ~wait(events, callback)
+  #   Uses internal unique ID as the name of the binding
+  #
+  # @overload ~wait(name, events, callback)
+  #   Allows to pass custom name for the binding
+  #
+  # @param [String] name                Custom name for the binding
+  # @param [String] events              List of events to wait for separated by space
+  # @param [Array] events               List of events to wait in the form of Array
   # @param [Function] callback          Action to run when all events were triggered at least once
   # @param [Hash] options               Options
+  #
+  # @return [String]                    An ID (or custom name) of binding
   #
   wait: (name, events, callback) ->
     @__oneShotEvents = {} unless @hasOwnProperty('__oneShotEvents')
@@ -85,7 +102,7 @@ Joosy.Modules.Events =
   #
   # Removes waiter action
   #
-  # @param [Function] target            Name of waiter to unbind
+  # @param [String] target            Name of {Joosy.Modules.Events~wait} binding
   #
   unwait: (target) ->
     delete @__oneShotEvents[target] if @hasOwnProperty '__oneShotEvents'
@@ -93,9 +110,18 @@ Joosy.Modules.Events =
   #
   # Binds action to run each time any of given event was triggered
   #
-  # @param [String|Array] events        List of events separated by space
+  # @overload ~bind(events, callback)
+  #   Uses internal unique ID as the name of the binding
+  #
+  # @overload ~bind(name, events, callback)
+  #   Allows to pass custom name for the binding
+  #
+  # @param [String] name                Custom name for the binding
+  # @param [String] events              List of events to wait for separated by space
+  # @param [Array] events               List of events to wait in the form of Array
   # @param [Function] callback          Action to run on trigger
-  # @param [Hash] options               Options
+  #
+  # @return [String]                    An ID (or custom name) of binding
   #
   bind: (name, events, callback) ->
     @__boundEvents = {} unless @hasOwnProperty '__boundEvents'
@@ -118,15 +144,16 @@ Joosy.Modules.Events =
   #
   # Unbinds action from runing on trigger
   #
-  # @param [Function] target            Name of bind to unbind
+  # @param [String] target            Name of {Joosy.Modules.Events~bind} binding
   #
   unbind: (target) ->
     delete @__boundEvents[target] if @hasOwnProperty '__boundEvents'
 
   #
-  # Triggers event for {bind} and {wait}
+  # Triggers event for {Joosy.Modules.Events~bind} and {Joosy.Modules.Events~wait}
   #
-  # @param [String]           Name of event to trigger
+  # @param [String] event           Name of event to trigger
+  # @param [Mixed] data             Data to pass to event
   #
   trigger: (event, data...) ->
     Joosy.Modules.Log.debugAs @, "Event #{event} triggered"
@@ -187,6 +214,13 @@ Joosy.Modules.Events =
             if ++counter >= context.actions.length
               context.after.call(@)
 
+  #
+  # Turns the list of events given in form of stiring into the array
+  #
+  # @param [String] events
+  # @return [Array]
+  # @private
+  #
   __splitEvents: (events) ->
     if typeof(events) == 'string'
       if events.length == 0

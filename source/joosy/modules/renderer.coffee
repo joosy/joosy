@@ -12,6 +12,10 @@ Joosy.Modules.Renderer =
     #
     # Sets the curent template by specifying its name or lambda
     #
+    # @param [String] template
+    # @param [Hash] options
+    # @option options [Boolean] dynamic        Marks if the whole view should be rendered as a Dynamic one
+    #
     view: (template, options={}) ->
       @::__view = template
       @::__renderDefault = (locals={}) ->
@@ -58,6 +62,8 @@ Joosy.Modules.Renderer =
     #
     # Converts all possible `@helper` arguments to the objects available for merge
     #
+    # @private
+    #
     __assignHelpers: ->
       return unless @__helpers?
     
@@ -75,6 +81,8 @@ Joosy.Modules.Renderer =
 
     #
     # Collects and merges all requested helpers including global scope to one cached object
+    #
+    # @private
     #
     __instantiateHelpers: ->
       unless @__helpersInstance
@@ -96,6 +104,7 @@ Joosy.Modules.Renderer =
     # Defines local `@render*` methods with proper stack pointer set
     #
     # @param [Object] parentStackPointer        Internal rendering stack pointer
+    # @private
     #
     __instantiateRenderers: (parentStackPointer) ->
       render: (template, locals={}) =>
@@ -108,6 +117,8 @@ Joosy.Modules.Renderer =
 
     #
     # Actual rendering implementation
+    #
+    # @private
     #
     __render: (dynamic, template, locals={}, parentStackPointer=false) ->
       stack = @__renderingStackChildFor parentStackPointer
@@ -170,6 +181,8 @@ Joosy.Modules.Renderer =
     #
     # Template for the rendering stack node
     #
+    # @private
+    #
     __renderingStackElement: (parent=null) ->
       metamorphBindings: []
       locals: null
@@ -179,6 +192,8 @@ Joosy.Modules.Renderer =
 
     #
     # Creates new rendering stack node using given pointer as the parent
+    #
+    # @private
     #
     __renderingStackChildFor: (parentPointer) ->
       if !@__renderingStack
@@ -195,6 +210,8 @@ Joosy.Modules.Renderer =
 
     #
     # Disables and unbinds all dynamic bindings for the whole rendering stack
+    #
+    # @private
     #
     __removeMetamorphs: (stackPointer=false) ->
       remove = (stackPointer) =>

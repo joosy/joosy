@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <script src='../../javascript/application.js'></script>
+  <script src='../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../extra/README.md.html' title='Joosy'>
+      Joosy
+    </a>
+    &raquo;
+    <a href='../../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Form</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Joosy.Form
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>source&#47;joosy&#47;form.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../../class/Joosy/Module.html'>Joosy.Module</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Includes:</td>
+          <td>
+            <a href='../../mixin/Joosy/Modules.Log.html'>Joosy.Modules.Log</a>
+            <a href='../../mixin/Joosy/Modules.Events.html'>Joosy.Modules.Events</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Concerns:</td>
+          <td>
+            <a href='../../mixin/Joosy/Modules.DOM.html'>Joosy.Modules.DOM</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>AJAXifies form including file uploads and stuff. Built on top of jQuery.Form.</p><p>Joosy.Form automatically cares of form validation highlights. It can
+read common server error responses and add .field_with_errors class to proper
+field.</p><p>If you don&#39;t have resource associated with form (#fill), it will try to find fields
+by exact keywords from response. Otherwise it will search for resource_name[field].</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Joosy.Form usage
+    </h4>
+    <pre><code class='coffeescript'>form = new Joosy.Form, -&gt; (response)
+  console.log &quot;Saved and got some: #{response}&quot;
+
+form.progress = (percent) -&gt; console.log &quot;Uploaded by #{percent}%&quot;
+form.fill @resource</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+      <h2>Variables Summary</h2>
+      <dl class='constants'>
+  <dt id='invalidationClass-variable'>
+    invalidationClass
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>&#39;field_with_errors&#39;</code></pre>
+    <div class='docstring'>
+  <p>Marks the CSS class to use to mark invalidated fields</p>
+</div>
+<div class='tags'>
+</div>
+  </dd>
+  <dt id='substitutions-variable'>
+    substitutions
+    =
+  </dt>
+  <dd>
+    <pre><code class='coffeescript'>{}</code></pre>
+    <div class='docstring'>
+  <p>List of mappings for fields of invalidated data which comes from server</p><p>If you have something like {foo: &#39;bar&#39;, bar: &#39;baz&#39;} coming from server
+substitutions = {foo: &#39;foo_id&#39;} will change it to {foo_id: &#39;bar&#39;, bar: &#39;baz&#39;}</p>
+</div>
+<div class='tags'>
+</div>
+  </dd>
+</dl>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#submit-static'>
+        .
+(void)
+<b>submit</b><span>(form, options = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Makes one AJAX request with form data without binding
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#attach-static'>
+        .
+(void)
+<b>attach</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#unbind-dynamic'>
+        #
+(void)
+<b>unbind</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Resets form submit behavior to default
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#fill-dynamic'>
+        #
+(void)
+<b>fill</b><span>(resource, options)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Links current form with given resource and sets values of form inputs from with it.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#submit-dynamic'>
+        #
+(void)
+<b>submit</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Submit the HTML Form
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#serialize-dynamic'>
+        #
+(String)
+<b>serialize</b><span>(skipMethod = true)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Serializes form into query string.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__success-dynamic'>
+        #
+(void)
+<b>__success</b><span>(response, status, xhr)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Inner success callback.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__before-dynamic'>
+        #
+(void)
+<b>__before</b><span>(xhr, settings)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Inner before callback.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__error-dynamic'>
+        #
+(void)
+<b>__error</b><span>(data)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Inner error callback.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__debounce-dynamic'>
+        #
+(void)
+<b>__debounce</b><span>(xhr)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Aborts form submit if there is already another one pending XHR
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#findField-dynamic'>
+        #
+(void)
+<b>findField</b><span>(field)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Finds field by field name.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__markMethod-dynamic'>
+        #
+(void)
+<b>__markMethod</b><span>(method = &#39;PUT&#39;)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Simulates REST methods by adding hidden _method input with real method
+while setting POST as the transport method
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__stringifyErrors-dynamic'>
+        #
+(Hash&lt;String, Array&gt;)
+<b>__stringifyErrors</b><span>(errors)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Prepares server response for default error handler
+Turns all possible response notations into form notation (foo[bar])
+Every direct field of incoming data will be decorated by @substitutions
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__foldInlineEntities-dynamic'>
+        #
+(Hash)
+<b>__foldInlineEntities</b><span>(hash, scope = &quot;&quot;, result = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Flattens complex inline structures into form notation
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#concatFieldName-dynamic'>
+        #
+(void)
+<b>concatFieldName</b><span>(wrapper, name)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#splitFieldName-dynamic'>
+        #
+(void)
+<b>splitFieldName</b><span>(name)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#isArrayOfObjects-dynamic'>
+        #
+(void)
+<b>isArrayOfObjects</b><span>(array)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+</ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+        <h3 class='inherited'>
+          Methods inherited from
+          <a href='../../class/Joosy/Module.html'>Joosy.Module</a>
+        </h3>
+        <p class='inherited'>
+          <a href='../../class/Joosy/Module.html#__className-static'>.__className</a>
+          <a href='../../class/Joosy/Module.html#hasAncestor-static'>.hasAncestor</a>
+          <a href='../../class/Joosy/Module.html#aliasMethodChain-static'>.aliasMethodChain</a>
+          <a href='../../class/Joosy/Module.html#aliasStaticMethodChain-static'>.aliasStaticMethodChain</a>
+          <a href='../../class/Joosy/Module.html#merge-static'>.merge</a>
+          <a href='../../class/Joosy/Module.html#include-static'>.include</a>
+          <a href='../../class/Joosy/Module.html#extend-static'>.extend</a>
+          <a href='../../class/Joosy/Module.html#concern-static'>.concern</a>
+        </p>
+      </h2>
+      <h2>
+        <small>Included Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods included from
+        <a href='../../mixin/Joosy/Modules.Log.html'>Joosy.Modules.Log</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../mixin/Joosy/Modules.Log.html#log-dynamic'>#log</a>
+        <a href='../../mixin/Joosy/Modules.Log.html#debug-dynamic'>#debug</a>
+        <a href='../../mixin/Joosy/Modules.Log.html#debugAs-dynamic'>#debugAs</a>
+      </p>
+      <h3 class='inherited'>
+        Methods included from
+        <a href='../../mixin/Joosy/Modules.Events.html'>Joosy.Modules.Events</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../mixin/Joosy/Modules.Events.html#eventsNamespace-dynamic'>#eventsNamespace</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#wait-dynamic'>#wait</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#unwait-dynamic'>#unwait</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#bind-dynamic'>#bind</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#unbind-dynamic'>#unbind</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#trigger-dynamic'>#trigger</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#synchronize-dynamic'>#synchronize</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#__splitEvents-dynamic'>#__splitEvents</a>
+      </p>
+      <h2>
+        <small>Concerned Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods concerned from
+        <a href='../../mixin/Joosy/Modules.DOM.html'>Joosy.Modules.DOM</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../mixin/Joosy/Modules.DOM.html#mapElements-static'>.mapElements</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#mapEvents-static'>.mapEvents</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#$-dynamic'>#$</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#__extractSelector-dynamic'>#__extractSelector</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#__assignElements-dynamic'>#__assignElements</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#__wrapElement-dynamic'>#__wrapElement</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#__delegateEvents-dynamic'>#__delegateEvents</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#__clearContainer-dynamic'>#__clearContainer</a>
+      </p>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='submit-static'>
+      .
+(void)
+<b>submit</b><span>(form, options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Makes one AJAX request with form data without binding</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>form</span>
+      <span class='type'>
+        (<tt>Element</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+    </li>
+  </ul>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='#constructor'>#constructor</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='attach-static'>
+      .
+(void)
+<b>attach</b><span>()</span>
+      <br>
+    </p>
+    
+  </div>
+</div>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-dynamic'>
+      #
+(void)
+<b>constructor</b><span>(form, options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    If method of form differs from POST or GET it will simulate it
+  </div>
+  <div class='note'>
+    <strong>Note:</strong>
+    For browsers having no support of HTML5 Forms it may do an iframe requests
+  </div>
+  <p>During initialization replaces your basic form submit with AJAX request</p><p>by adding hidden _method input. In this cases the method itself will be
+set to POST.</p><p>to handle file uploading.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>form</span>
+      <span class='type'>
+        (<tt>jQuery</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='unbind-dynamic'>
+      #
+(void)
+<b>unbind</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Resets form submit behavior to default</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='fill-dynamic'>
+      #
+(void)
+<b>fill</b><span>(resource, options)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Links current form with given resource and sets values of form inputs from with it.
+Form will use given resource while doing invalidation routine.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>resource</span>
+      <span class='type'>
+        (<tt>Resource</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='submit-dynamic'>
+      #
+(void)
+<b>submit</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Submit the HTML Form</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='serialize-dynamic'>
+      #
+(String)
+<b>serialize</b><span>(skipMethod = true)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Serializes form into query string.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>skipMethod</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span><tt>String</tt></li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__success-dynamic'>
+      #
+(void)
+<b>__success</b><span>(response, status, xhr)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Inner success callback.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__before-dynamic'>
+      #
+(void)
+<b>__before</b><span>(xhr, settings)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Inner before callback.
+By default will clean invalidation.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__error-dynamic'>
+      #
+(void)
+<b>__error</b><span>(data)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Inner error callback.
+By default will trigger basic invalidation.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__debounce-dynamic'>
+      #
+(void)
+<b>__debounce</b><span>(xhr)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Aborts form submit if there is already another one pending XHR</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='findField-dynamic'>
+      #
+(void)
+<b>findField</b><span>(field)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Finds field by field name.
+This is not inlined since we want to override
+or monkeypatch it from time to time</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>field</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__markMethod-dynamic'>
+      #
+(void)
+<b>__markMethod</b><span>(method = &#39;PUT&#39;)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Simulates REST methods by adding hidden _method input with real method
+while setting POST as the transport method</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>method</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__stringifyErrors-dynamic'>
+      #
+(Hash&lt;String, Array&gt;)
+<b>__stringifyErrors</b><span>(errors)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Prepares server response for default error handler
+Turns all possible response notations into form notation (foo[bar])
+Every direct field of incoming data will be decorated by @substitutions</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Flat validation result
+    </h4>
+    <pre><code class='coffeescript'>{ field1: [&#39;error&#39;] }             # input
+{ field1: [&#39;error&#39;] }             # if form was not associated with Resource by {#fill}
+{ &quot;fluffy[field1]&quot;: [&#39;error&#39;]}    # if form was associated with Resource (named fluffy)</code></pre>
+    <h4>
+      Complex validation result
+    </h4>
+    <pre><code class='coffeescript'>{ foo: { bar: { baz: [&#39;error&#39;] } } }    # input
+{ &quot;foo[bar][bar]&quot;: [&#39;error&#39;] }          # output</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>errors</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>Hash&lt;String, Array&gt;</tt>)
+      &mdash;
+      <span class='desc'>Flat hash with field names in keys and arrays of errors in values</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__foldInlineEntities-dynamic'>
+      #
+(Hash)
+<b>__foldInlineEntities</b><span>(hash, scope = &quot;&quot;, result = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Flattens complex inline structures into form notation</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic flattening
+    </h4>
+    <pre><code class='coffeescript'>data  = foo: { bar: { baz: [] } }
+inner = @__foldInlineEntities(data.foo, &#39;foo&#39;)
+
+inner # { &quot;foo[bar][baz]&quot;: [] }</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>hash</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>scope</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>result</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span><tt>Hash</tt></li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='concatFieldName-dynamic'>
+      #
+(void)
+<b>concatFieldName</b><span>(wrapper, name)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='splitFieldName-dynamic'>
+      #
+(void)
+<b>splitFieldName</b><span>(name)</span>
+      <br>
+    </p>
+    
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='isArrayOfObjects-dynamic'>
+      #
+(void)
+<b>isArrayOfObjects</b><span>(array)</span>
+      <br>
+    </p>
+    
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  November 09, 13 18:21:28 by
+  <a href='https://github.com/coffeescript/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.0.0-rc.1
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+  &#10034;
+  <a href='https://mksoft.ch' target='_parent'>mksoft.ch</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

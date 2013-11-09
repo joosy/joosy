@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <script src='../../javascript/application.js'></script>
+  <script src='../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../extra/README.md.html' title='Joosy'>
+      Joosy
+    </a>
+    &raquo;
+    <a href='../../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Modules</span>
+    &raquo;
+    <span class='title'>Events</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Mixin:
+        Joosy.Modules.Events
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>source&#47;joosy&#47;modules&#47;events.coffee</td>
+        </tr>
+        <tr>
+          <td>Included in:</td>
+          <td>
+            <a href='../../class/Joosy/Form.html'>Joosy.Form</a>
+            <a href='../../class/Joosy/Resources.Array.html'>Joosy.Resources.Array</a>
+            <a href='../../class/Joosy/Resources.Hash.html'>Joosy.Resources.Hash</a>
+            <a href='../../class/Joosy/Resources.Scalar.html'>Joosy.Resources.Scalar</a>
+            <a href='../../class/Joosy/Widget.html'>Joosy.Widget</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Basic events implementation</p>
+</div>
+<div class='tags'>
+</div>
+      <h2>Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#eventsNamespace-'>
+        ~
+(void)
+<b>eventsNamespace</b><span>(actions)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Creates events namespace
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#wait-'>
+        ~
+(String)
+<b>wait</b><span>(name, events, callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Waits for the list of given events to happen at least once.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#unwait-'>
+        ~
+(void)
+<b>unwait</b><span>(target)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Removes waiter action
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#bind-'>
+        ~
+(String)
+<b>bind</b><span>(name, events, callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Binds action to run each time any of given event was triggered
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#unbind-'>
+        ~
+(void)
+<b>unbind</b><span>(target)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Unbinds action from runing on trigger
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#trigger-'>
+        ~
+(void)
+<b>trigger</b><span>(event, data...)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Triggers event for {Joosy.Modules.Events~bind} and {Joosy.Modules.Events~wait}
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#synchronize-'>
+        ~
+(void)
+<b>synchronize</b><span>(block)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Runs set of callbacks finializing with result callback
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__splitEvents-'>
+        ~
+(Array)
+<b>__splitEvents</b><span>(events)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Turns the list of events given in form of stiring into the array
+    </span>
+  </li>
+</ul>
+      <h2>Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='eventsNamespace-'>
+      ~
+(void)
+<b>eventsNamespace</b><span>(actions)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Creates events namespace</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>namespace = @entity.eventsNamespace -&gt;
+  @bind &#39;action1&#39;, -&gt;
+  @bind &#39;action2&#39;, -&gt;
+
+namespace.unbind()</code></pre>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>namespace = @entity.eventsNamespace()
+namespace.bind &#39;action1&#39;, -&gt;
+namespace.bind &#39;action2&#39;, -&gt;
+namespace.unbind()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='wait-'>
+      ~
+(void)
+<b>wait</b><span>(events, callback)</span>
+      <br>
+      ~
+(void)
+<b>wait</b><span>(name, events, callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Waits for the list of given events to happen at least once. Then runs callback.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>name</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>events</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>events</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>String</tt>)
+      &mdash;
+      <span class='desc'>An ID (or custom name) of binding</span>
+    </li>
+  </ul>
+  <div class='overloads'>
+    <h3>Overloads:</h3>
+    <div class='overload'>
+      <p class='signature'>
+        ~
+(void)
+<b>wait</b><span>(events, callback)</span>
+      </p>
+      <div class='docstring'>
+  <p>Uses internal unique ID as the name of the binding</p>
+</div>
+<div class='tags'>
+</div>
+    </div>
+    <div class='overload'>
+      <p class='signature'>
+        ~
+(void)
+<b>wait</b><span>(name, events, callback)</span>
+      </p>
+      <div class='docstring'>
+  <p>Allows to pass custom name for the binding</p>
+</div>
+<div class='tags'>
+</div>
+    </div>
+  </div>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='unwait-'>
+      ~
+(void)
+<b>unwait</b><span>(target)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Removes waiter action</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>target</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='bind-'>
+      ~
+(void)
+<b>bind</b><span>(events, callback)</span>
+      <br>
+      ~
+(void)
+<b>bind</b><span>(name, events, callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Binds action to run each time any of given event was triggered</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>name</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>events</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>events</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span>
+      (<tt>String</tt>)
+      &mdash;
+      <span class='desc'>An ID (or custom name) of binding</span>
+    </li>
+  </ul>
+  <div class='overloads'>
+    <h3>Overloads:</h3>
+    <div class='overload'>
+      <p class='signature'>
+        ~
+(void)
+<b>bind</b><span>(events, callback)</span>
+      </p>
+      <div class='docstring'>
+  <p>Uses internal unique ID as the name of the binding</p>
+</div>
+<div class='tags'>
+</div>
+    </div>
+    <div class='overload'>
+      <p class='signature'>
+        ~
+(void)
+<b>bind</b><span>(name, events, callback)</span>
+      </p>
+      <div class='docstring'>
+  <p>Allows to pass custom name for the binding</p>
+</div>
+<div class='tags'>
+</div>
+    </div>
+  </div>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='unbind-'>
+      ~
+(void)
+<b>unbind</b><span>(target)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Unbinds action from runing on trigger</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>target</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='trigger-'>
+      ~
+(void)
+<b>trigger</b><span>(event, data...)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Triggers event for <a href='../../mixin/Joosy/Modules.Events.html#bind-'>Joosy.Modules.Events~bind</a> and <a href='../../mixin/Joosy/Modules.Events.html#wait-'>Joosy.Modules.Events~wait</a></p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>event</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>data</span>
+      <span class='type'>
+        (<tt>Mixed</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='synchronize-'>
+      ~
+(void)
+<b>synchronize</b><span>(block)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Runs set of callbacks finializing with result callback</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffeescript'>@synchronize (context) -&gt;
+  context.do (done) -&gt; done()
+  context.do (done) -&gt; done()
+  context.after -&gt;
+    console.log &#39;Success!&#39;</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>block</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__splitEvents-'>
+      ~
+(Array)
+<b>__splitEvents</b><span>(events)</span>
+      (private)
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Turns the list of events given in form of stiring into the array</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>events</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+  </ul>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span><tt>Array</tt></li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  November 09, 13 18:21:28 by
+  <a href='https://github.com/coffeescript/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.0.0-rc.1
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+  &#10034;
+  <a href='https://mksoft.ch' target='_parent'>mksoft.ch</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

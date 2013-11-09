@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <script src='../../javascript/application.js'></script>
+  <script src='../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../extra/README.md.html' title='Joosy'>
+      Joosy
+    </a>
+    &raquo;
+    <a href='../../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Widget</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Joosy.Widget
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>source&#47;joosy&#47;widget.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../../class/Joosy/Module.html'>Joosy.Module</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Extends:</td>
+          <td>
+            <a href='../../mixin/Joosy/Modules.Filters.html'>Joosy.Modules.Filters</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Includes:</td>
+          <td>
+            <a href='../../mixin/Joosy/Modules.Log.html'>Joosy.Modules.Log</a>
+            <a href='../../mixin/Joosy/Modules.Events.html'>Joosy.Modules.Events</a>
+            <a href='../../mixin/Joosy/Modules.TimeManager.html'>Joosy.Modules.TimeManager</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Concerns:</td>
+          <td>
+            <a href='../../mixin/Joosy/Modules.DOM.html'>Joosy.Modules.DOM</a>
+            <a href='../../mixin/Joosy/Modules.Renderer.html'>Joosy.Modules.Renderer</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base class for all Joosy Widgets.</p><p>Joosy expects you to perceive your actual application as a tree of widgets. Internally all high-level
+containers like <a href='../../class/Joosy/Layout.html'>Joosy.Layout</a> and <a href='../../class/Joosy/Page.html'>Joosy.Page</a> are inheriting from Widget. Widget contains logic for:</p><ul>
+<li><p>Recursive nesting (widgets can contain widgets, etc.)</p></li>
+<li><p>Loading and Unloading flows (proper initializations, destructions and replacements)</p></li>
+<li><p>Filtering (afterLoad, beforeLoad and the family of paint filters)</p></li>
+</ul><p>During the bootstrap, widgets can take either dependent or independent strategy. Dependent widgets form
+&quot;dependent chains&quot; that will be rendered together (HTML will be injected into DOM atomically). Such chains
+use paint filters of the top elements. Independent widgets on the other hand load on their own behalf and
+use their own paint filters. To understand this better, here is the sample:</p><p>Let&#39;s say we have 4 widgets A, B, C and D nested into each other:</p><p>A is the root widget
+B is nested into A. It does not define itself as an independent and therefore defaults to dependent rendering
+C is nested into B. It defines itself as an independent children
+D is nested into C. It does not define itself as an independent and therefore defaults to dependent rendering</p><p>Then total chain of asynchronous callbacks goes with the following scenario.</p><ol>
+<li><p>A collects all the fetches from the whole tree recursively and starts them in parallel.</p></li>
+<li><p>A runs erase on the previous same-level widget (attribute <code>@previous</code>) if one is given.</p></li>
+<li><p>A runs beforePaint on itself when 2 is done.</p></li>
+<li><p>A waits for step 3 and all fetches of containers in recursive dependency chain (equal to B) to complete.</p></li>
+<li><p>A builds resulting HTML using:</p><ul>
+<li>HTML of dependency chain (B)</li>
+<li>HTML of independent containers that are ready to be rendered (their own recursive dependency chain is fetched completely).</li>
+</ul>
+</li>
+<li><p>A forks every independent container that was not rendered (C).</p></li>
+<li><p>A starts paint on itself and injects HTML into DOM.</p></li>
+<li><p>C repeats steps 2-7 using itself as a base and D as its own recursive dependency chain</p></li>
+</ol>
+
+</div>
+<div class='tags'>
+</div>
+      <h2>Direct Known Subclasses</h2>
+      <p class='children'>
+        <a href='../../class/Joosy/Layout.html'>Joosy.Layout</a>
+        <a href='../../class/Joosy/Page.html'>Joosy.Page</a>
+      </p>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#mapWidgets-static'>
+        .
+(void)
+<b>mapWidgets</b><span>(map)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Extends widgets mapping
+
+Pass either widget class or instance as a value.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#independent-static'>
+        .
+(void)
+<b>independent</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Declares widget as indepent changing the way it behaves during the bootstrap
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#beforeLoad-static'>
+        .
+(void)
+<b>beforeLoad</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Initialization hook that runs in the very begining of bootstrap process.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#afterLoad-static'>
+        .
+(void)
+<b>afterLoad</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Hook that runs after the section was properly loaded and injected into DOM.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#beforeUnload-static'>
+        .
+(void)
+<b>beforeUnload</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Hook that finalizes section desctruction.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#fetch-static'>
+        .
+(void)
+<b>fetch</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the data fetching proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#beforePaint-static'>
+        .
+(void)
+<b>beforePaint</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the painting preparation proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#paint-static'>
+        .
+(void)
+<b>paint</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the painting proccess.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#erase-static'>
+        .
+(void)
+<b>erase</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Sets the method which will controll the erasing proccess.
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#registerWidget-dynamic'>
+        #
+(void)
+<b>registerWidget</b><span>($container, widget)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Registeres and runs widget inside specified container
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#unregisterWidget-dynamic'>
+        #
+(void)
+<b>unregisterWidget</b><span>(widget)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Unregisteres and destroys widget
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#replaceWidget-dynamic'>
+        #
+(void)
+<b>replaceWidget</b><span>(widget, replacement)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Unloads the previous widget and inject the new one inplace saving
+the continuity
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#navigate-dynamic'>
+        #
+(void)
+<b>navigate</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__renderSection-dynamic'>
+        #
+(void)
+<b>__renderSection</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      This is required by {Joosy.Modules.Renderer}
+Sets the base template dir to app_name/templates/widgets
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__nestingMap-dynamic'>
+        #
+(void)
+<b>__nestingMap</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Collects statically registered widgets to form default nesting map
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__bootstrapDefault-dynamic'>
+        #
+(void)
+<b>__bootstrapDefault</b><span>(parent, $container)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Shortcut for default bootstrap using statically registered widgets
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__bootstrap-dynamic'>
+        #
+(void)
+<b>__bootstrap</b><span>(parent, nestingMap, $container, fetch = true)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Bootstraps the section with given nestings at given container
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__fetch-dynamic'>
+        #
+(void)
+<b>__fetch</b><span>(nestingMap)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Recursively starts fetching for the whole nested tree.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__erase-dynamic'>
+        #
+(void)
+<b>__erase</b><span>(parent)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Runs erasing chain for the previous section and beforePaints for current
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__paint-dynamic'>
+        #
+(void)
+<b>__paint</b><span>(parent, nestingMap, $container)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Builds HTML of section and its dependent nestings and injects it into DOM
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__load-dynamic'>
+        #
+(void)
+<b>__load</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Initializes section that was injected into DOM
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__unload-dynamic'>
+        #
+(void)
+<b>__unload</b><span>(modifyParent = true)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Deinitializes section that is preparing to be removed from DOM
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__normalizeSelector-dynamic'>
+        #
+(void)
+<b>__normalizeSelector</b><span>(selector)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Normalizes selector and returns jQuery wrap.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__normalizeWidget-dynamic'>
+        #
+(void)
+<b>__normalizeWidget</b><span>(widget)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Normalizes widget descrpition to its instance.
+    </span>
+  </li>
+</ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+        <h3 class='inherited'>
+          Methods inherited from
+          <a href='../../class/Joosy/Module.html'>Joosy.Module</a>
+        </h3>
+        <p class='inherited'>
+          <a href='../../class/Joosy/Module.html#__className-static'>.__className</a>
+          <a href='../../class/Joosy/Module.html#hasAncestor-static'>.hasAncestor</a>
+          <a href='../../class/Joosy/Module.html#aliasMethodChain-static'>.aliasMethodChain</a>
+          <a href='../../class/Joosy/Module.html#aliasStaticMethodChain-static'>.aliasStaticMethodChain</a>
+          <a href='../../class/Joosy/Module.html#merge-static'>.merge</a>
+          <a href='../../class/Joosy/Module.html#include-static'>.include</a>
+          <a href='../../class/Joosy/Module.html#extend-static'>.extend</a>
+          <a href='../../class/Joosy/Module.html#concern-static'>.concern</a>
+        </p>
+      </h2>
+      <h2>
+        <small>Extended Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods extended from
+        <a href='../../mixin/Joosy/Modules.Filters.html'>Joosy.Modules.Filters</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../mixin/Joosy/Modules.Filters.html#__registerFilterCollector-static'>.__registerFilterCollector</a>
+        <a href='../../mixin/Joosy/Modules.Filters.html#registerPlainFilters-static'>.registerPlainFilters</a>
+        <a href='../../mixin/Joosy/Modules.Filters.html#registerSequencedFilters-static'>.registerSequencedFilters</a>
+      </p>
+      <h2>
+        <small>Included Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods included from
+        <a href='../../mixin/Joosy/Modules.Log.html'>Joosy.Modules.Log</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../mixin/Joosy/Modules.Log.html#log-dynamic'>#log</a>
+        <a href='../../mixin/Joosy/Modules.Log.html#debug-dynamic'>#debug</a>
+        <a href='../../mixin/Joosy/Modules.Log.html#debugAs-dynamic'>#debugAs</a>
+      </p>
+      <h3 class='inherited'>
+        Methods included from
+        <a href='../../mixin/Joosy/Modules.Events.html'>Joosy.Modules.Events</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../mixin/Joosy/Modules.Events.html#eventsNamespace-dynamic'>#eventsNamespace</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#wait-dynamic'>#wait</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#unwait-dynamic'>#unwait</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#bind-dynamic'>#bind</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#unbind-dynamic'>#unbind</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#trigger-dynamic'>#trigger</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#synchronize-dynamic'>#synchronize</a>
+        <a href='../../mixin/Joosy/Modules.Events.html#__splitEvents-dynamic'>#__splitEvents</a>
+      </p>
+      <h3 class='inherited'>
+        Methods included from
+        <a href='../../mixin/Joosy/Modules.TimeManager.html'>Joosy.Modules.TimeManager</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../mixin/Joosy/Modules.TimeManager.html#setTimeout-dynamic'>#setTimeout</a>
+        <a href='../../mixin/Joosy/Modules.TimeManager.html#setInterval-dynamic'>#setInterval</a>
+        <a href='../../mixin/Joosy/Modules.TimeManager.html#clearTimeout-dynamic'>#clearTimeout</a>
+        <a href='../../mixin/Joosy/Modules.TimeManager.html#clearInterval-dynamic'>#clearInterval</a>
+        <a href='../../mixin/Joosy/Modules.TimeManager.html#__clearTime-dynamic'>#__clearTime</a>
+      </p>
+      <h2>
+        <small>Concerned Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods concerned from
+        <a href='../../mixin/Joosy/Modules.DOM.html'>Joosy.Modules.DOM</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../mixin/Joosy/Modules.DOM.html#mapElements-static'>.mapElements</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#mapEvents-static'>.mapEvents</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#$-dynamic'>#$</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#__extractSelector-dynamic'>#__extractSelector</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#__assignElements-dynamic'>#__assignElements</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#__wrapElement-dynamic'>#__wrapElement</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#__delegateEvents-dynamic'>#__delegateEvents</a>
+        <a href='../../mixin/Joosy/Modules.DOM.html#__clearContainer-dynamic'>#__clearContainer</a>
+      </p>
+      <h3 class='inherited'>
+        Methods concerned from
+        <a href='../../mixin/Joosy/Modules.Renderer.html'>Joosy.Modules.Renderer</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#view-static'>.view</a>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#helper-static'>.helper</a>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#render-dynamic'>#render</a>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#renderDynamic-dynamic'>#renderDynamic</a>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#__assignHelpers-dynamic'>#__assignHelpers</a>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#__instantiateHelpers-dynamic'>#__instantiateHelpers</a>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#__instantiateRenderers-dynamic'>#__instantiateRenderers</a>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#__render-dynamic'>#__render</a>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#__renderingStackElement-dynamic'>#__renderingStackElement</a>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#__renderingStackChildFor-dynamic'>#__renderingStackChildFor</a>
+        <a href='../../mixin/Joosy/Modules.Renderer.html#__removeMetamorphs-dynamic'>#__removeMetamorphs</a>
+      </p>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='mapWidgets-static'>
+      .
+(void)
+<b>mapWidgets</b><span>(map)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Extends widgets mapping</p><p>Pass either widget class or instance as a value. Given lambdas are evaluated.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>@mapWidgets
+  &#39;.selector1&#39;: Widget1
+  &#39;.selector2&#39;: -&gt; @widget = new Widget2</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='independent-static'>
+      .
+(void)
+<b>independent</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Declares widget as indepent changing the way it behaves during the bootstrap</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='beforeLoad-static'>
+      .
+(void)
+<b>beforeLoad</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Initialization hook that runs in the very begining of bootstrap process.
+Call it multiple times to attach several hooks.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='afterLoad-static'>
+      .
+(void)
+<b>afterLoad</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Hook that runs after the section was properly loaded and injected into DOM.
+Call it multiple times to attach several hooks.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='beforeUnload-static'>
+      .
+(void)
+<b>beforeUnload</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Hook that finalizes section desctruction.
+Call it multiple times to attach several hooks.</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='fetch-static'>
+      .
+(void)
+<b>fetch</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with <code>complete</code> function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the data fetching proccess.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffeescript'>@fetch (complete) -&gt;
+  $.get &#39;&#47;rumbas&#39;, (@data) =&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='beforePaint-static'>
+      .
+(void)
+<b>beforePaint</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with <code>complete</code> function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the painting preparation proccess.
+This method will be called right ater previous section erase and in parallel with new data fetching so you can use it to initiate preloader.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample before painter
+    </h4>
+    <pre><code class='coffeescript'>@beforePaint (complete) -&gt;
+  @$preloader.slideDown -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='paint-static'>
+      .
+(void)
+<b>paint</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with <code>complete</code> function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <p>Sets the method which will controll the painting proccess.
+This method will be called after fetching, erasing and beforePaint is complete.
+It should be used to setup appearance effects of page.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample painter
+    </h4>
+    <pre><code class='coffeescript'>@paint (complete) -&gt;
+  @$container.fadeIn -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='erase-static'>
+      .
+(void)
+<b>erase</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    Given method will be called with <code>complete</code> function as parameter. As soon as your preparations are done you should call that function.
+  </div>
+  <div class='note'>
+    <strong>Note:</strong>
+    This method will be caled <em>before</em> unload routines so in theory you can access page data from that. Think twice if you are doing it right though.
+  </div>
+  <p>Sets the method which will controll the erasing proccess.
+Use this method to setup hiding effect.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample eraser
+    </h4>
+    <pre><code class='coffeescript'>@erase (complete) -&gt;
+  @$container.fadeOut -&gt; complete()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-dynamic'>
+      #
+(void)
+<b>constructor</b><span>(params, previous)</span>
+      <br>
+    </p>
+    <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>params</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>previous</span>
+      <span class='type'>
+        (<tt>Joosy.Layout</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='registerWidget-dynamic'>
+      #
+(void)
+<b>registerWidget</b><span>($container, widget)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Registeres and runs widget inside specified container</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>container</span>
+      <span class='type'>
+        (<tt>DOM</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>widget</span>
+      <span class='type'>
+        (<tt>Joosy.Widget</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='unregisterWidget-dynamic'>
+      #
+(void)
+<b>unregisterWidget</b><span>(widget)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Unregisteres and destroys widget</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>widget</span>
+      <span class='type'>
+        (<tt>Joosy.Widget</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='replaceWidget-dynamic'>
+      #
+(void)
+<b>replaceWidget</b><span>(widget, replacement)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Unloads the previous widget and inject the new one inplace saving
+the continuity</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='navigate-dynamic'>
+      #
+(void)
+<b>navigate</b><span>()</span>
+      <br>
+    </p>
+    <div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='../../class/Joosy/Router.html#navigate-static'>Joosy.Router.navigate</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__renderSection-dynamic'>
+      #
+(void)
+<b>__renderSection</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>This is required by <a href='../../mixin/Joosy/Modules.Renderer.html'>Joosy.Modules.Renderer</a>
+Sets the base template dir to app_name/templates/widgets</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__nestingMap-dynamic'>
+      #
+(void)
+<b>__nestingMap</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Collects statically registered widgets to form default nesting map</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__bootstrapDefault-dynamic'>
+      #
+(void)
+<b>__bootstrapDefault</b><span>(parent, $container)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Shortcut for default bootstrap using statically registered widgets</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>$container</span>
+      <span class='type'>
+        (<tt>jQuery</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__bootstrap-dynamic'>
+      #
+(void)
+<b>__bootstrap</b><span>(parent, nestingMap, $container, fetch = true)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Bootstraps the section with given nestings at given container</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>nestingMap =
+  &#39;.page&#39;:
+    instance: page
+    nested:
+      &#39;.widget1&#39;: {instance: widget1}
+
+layout.__bootstrap nestingMap, Joosy.Application.content()</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>nestingMap</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>$container</span>
+      <span class='type'>
+        (<tt>jQuery</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>fetch</span>
+      <span class='type'>
+        (<tt>boolean</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__fetch-dynamic'>
+      #
+(void)
+<b>__fetch</b><span>(nestingMap)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Recursively starts fetching for the whole nested tree. As soon as fetching is done, section
+triggers rememberable event &#39;section:fetched&#39;</p><p>Section can be considered fetched if (and triggers event when): <em> Its fetchers are complete </em> All the fetchers of all dependent nestings are complete</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__erase-dynamic'>
+      #
+(void)
+<b>__erase</b><span>(parent)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Runs erasing chain for the previous section and beforePaints for current</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__paint-dynamic'>
+      #
+(void)
+<b>__paint</b><span>(parent, nestingMap, $container)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Builds HTML of section and its dependent nestings and injects it into DOM</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__load-dynamic'>
+      #
+(void)
+<b>__load</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Initializes section that was injected into DOM</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__unload-dynamic'>
+      #
+(void)
+<b>__unload</b><span>(modifyParent = true)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Deinitializes section that is preparing to be removed from DOM</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__normalizeSelector-dynamic'>
+      #
+(void)
+<b>__normalizeSelector</b><span>(selector)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Normalizes selector and returns jQuery wrap.</p><p>Selector can be one of:</p><ul>
+<li>$container - gets raw main container <em> $elem      - attempts to get values from <a href='../../mixin/Joosy/Modules.DOM.html'>Joosy.Modules.DOM</a> mappings </em> .selector  - raw CSS selectors pass as-is</li>
+</ul>
+
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__normalizeWidget-dynamic'>
+      #
+(void)
+<b>__normalizeWidget</b><span>(widget)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Normalizes widget descrpition to its instance.</p><p>Besides already being instance it cann be either class or lambda</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  November 09, 13 18:21:28 by
+  <a href='https://github.com/coffeescript/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.0.0-rc.1
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+  &#10034;
+  <a href='https://mksoft.ch' target='_parent'>mksoft.ch</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

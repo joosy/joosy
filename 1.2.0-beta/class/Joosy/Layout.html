@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <script src='../../javascript/application.js'></script>
+  <script src='../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../extra/README.md.html' title='Joosy'>
+      Joosy
+    </a>
+    &raquo;
+    <a href='../../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Layout</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Joosy.Layout
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>source&#47;joosy&#47;layout.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../../class/Joosy/Widget.html'>Joosy.Widget</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Base class for all Joosy Layouts.</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Sample application layout
+    </h4>
+    <pre><code class='coffeescript'>class @ApplicationLayout extends Joosy.Layout
+  @view &#39;application&#39;</code></pre>
+  </div>
+</div>
+<div class='tags'>
+</div>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#page-dynamic'>
+        #
+(void)
+<b>page</b><span>(tag, options = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Helper that outputs container tag for the page
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#content-dynamic'>
+        #
+(jQuery)
+<b>content</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Gets DOM element that should be used as container for nested Page
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__renderSection-dynamic'>
+        #
+(void)
+<b>__renderSection</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      This is required by {Joosy.Modules.Renderer}
+Sets the base template dir to app_name/templates/layouts
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__nestingMap-dynamic'>
+        #
+(void)
+<b>__nestingMap</b><span>(page)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Extends list of registered nested widgets with page
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__bootstrapDefault-dynamic'>
+        #
+(void)
+<b>__bootstrapDefault</b><span>(page, applicationContainer)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Adds page as first argument to default bootstrap
+    </span>
+  </li>
+</ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+        <h3 class='inherited'>
+          Methods inherited from
+          <a href='../../class/Joosy/Widget.html'>Joosy.Widget</a>
+        </h3>
+        <p class='inherited'>
+          <a href='../../class/Joosy/Widget.html#mapWidgets-static'>.mapWidgets</a>
+          <a href='../../class/Joosy/Widget.html#independent-static'>.independent</a>
+          <a href='../../class/Joosy/Widget.html#registerWidget-dynamic'>#registerWidget</a>
+          <a href='../../class/Joosy/Widget.html#unregisterWidget-dynamic'>#unregisterWidget</a>
+          <a href='../../class/Joosy/Widget.html#replaceWidget-dynamic'>#replaceWidget</a>
+          <a href='../../class/Joosy/Widget.html#navigate-dynamic'>#navigate</a>
+          <a href='../../class/Joosy/Widget.html#__renderSection-dynamic'>#__renderSection</a>
+          <a href='../../class/Joosy/Widget.html#__nestingMap-dynamic'>#__nestingMap</a>
+          <a href='../../class/Joosy/Widget.html#__bootstrapDefault-dynamic'>#__bootstrapDefault</a>
+          <a href='../../class/Joosy/Widget.html#__bootstrap-dynamic'>#__bootstrap</a>
+          <a href='../../class/Joosy/Widget.html#__fetch-dynamic'>#__fetch</a>
+          <a href='../../class/Joosy/Widget.html#__erase-dynamic'>#__erase</a>
+          <a href='../../class/Joosy/Widget.html#__paint-dynamic'>#__paint</a>
+          <a href='../../class/Joosy/Widget.html#__load-dynamic'>#__load</a>
+          <a href='../../class/Joosy/Widget.html#__unload-dynamic'>#__unload</a>
+          <a href='../../class/Joosy/Widget.html#__normalizeSelector-dynamic'>#__normalizeSelector</a>
+          <a href='../../class/Joosy/Widget.html#__normalizeWidget-dynamic'>#__normalizeWidget</a>
+          <a href='../../class/Joosy/Widget.html#beforeLoad-static'>.beforeLoad</a>
+          <a href='../../class/Joosy/Widget.html#afterLoad-static'>.afterLoad</a>
+          <a href='../../class/Joosy/Widget.html#beforeUnload-static'>.beforeUnload</a>
+          <a href='../../class/Joosy/Widget.html#fetch-static'>.fetch</a>
+          <a href='../../class/Joosy/Widget.html#beforePaint-static'>.beforePaint</a>
+          <a href='../../class/Joosy/Widget.html#paint-static'>.paint</a>
+          <a href='../../class/Joosy/Widget.html#erase-static'>.erase</a>
+          <a href='../../class/Joosy/Widget.html#__className-static'>.__className</a>
+          <a href='../../class/Joosy/Widget.html#hasAncestor-static'>.hasAncestor</a>
+          <a href='../../class/Joosy/Widget.html#aliasMethodChain-static'>.aliasMethodChain</a>
+          <a href='../../class/Joosy/Widget.html#aliasStaticMethodChain-static'>.aliasStaticMethodChain</a>
+          <a href='../../class/Joosy/Widget.html#merge-static'>.merge</a>
+          <a href='../../class/Joosy/Widget.html#include-static'>.include</a>
+          <a href='../../class/Joosy/Widget.html#extend-static'>.extend</a>
+          <a href='../../class/Joosy/Widget.html#concern-static'>.concern</a>
+        </p>
+      </h2>
+      <h2>Constructor Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='constructor-dynamic'>
+      #
+(void)
+<b>constructor</b><span>(params, previous)</span>
+      <br>
+    </p>
+    <div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>params</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>previous</span>
+      <span class='type'>
+        (<tt>Joosy.Layout</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='page-dynamic'>
+      #
+(void)
+<b>page</b><span>(tag, options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Helper that outputs container tag for the page</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>name</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='content-dynamic'>
+      #
+(jQuery)
+<b>content</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Gets DOM element that should be used as container for nested Page</p>
+</div>
+<div class='tags'>
+  <h3>Returns:</h3>
+  <ul class='return'>
+    <li>
+      <span class='type'></span><tt>jQuery</tt></li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__renderSection-dynamic'>
+      #
+(void)
+<b>__renderSection</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>This is required by <a href='../../mixin/Joosy/Modules.Renderer.html'>Joosy.Modules.Renderer</a>
+Sets the base template dir to app_name/templates/layouts</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__nestingMap-dynamic'>
+      #
+(void)
+<b>__nestingMap</b><span>(page)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Extends list of registered nested widgets with page</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__bootstrapDefault-dynamic'>
+      #
+(void)
+<b>__bootstrapDefault</b><span>(page, applicationContainer)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Adds page as first argument to default bootstrap</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>page</span>
+      <span class='type'>
+        (<tt>Joosy.Page</tt>)
+      </span>
+    </li>
+    <li>
+      <span class='name'>applicationContainer</span>
+      <span class='type'>
+        (<tt>jQuery</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  November 09, 13 18:21:28 by
+  <a href='https://github.com/coffeescript/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.0.0-rc.1
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+  &#10034;
+  <a href='https://mksoft.ch' target='_parent'>mksoft.ch</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

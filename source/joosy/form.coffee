@@ -17,7 +17,7 @@
 #
 # @include Joosy.Modules.Log
 # @include Joosy.Modules.Events
-# @include Joosy.Modules.DOM
+# @concern Joosy.Modules.DOM
 #
 class Joosy.Form extends Joosy.Module
   @concern Joosy.Modules.DOM

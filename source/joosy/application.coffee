@@ -7,8 +7,8 @@
 # Joosy Application container
 #
 class Joosy.Application
-  @Pages: {}
-  @Layouts: {}
+  @Pages:    {}
+  @Layouts:  {}
   @Controls: {}
 
   @initialized: false

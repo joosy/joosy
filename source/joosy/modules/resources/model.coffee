@@ -1,14 +1,19 @@
 #= require ../resources
 
+#
+# The collection of methods extending basic implemenetation of resources
+# adding typical model features and making it aware of primary key and collection.
+#
+# @example
+#   class Test extends Joosy.Resources.Hash
+#     @concern Joosy.Modules.Resources.Model
+#
 # @mixin
 Joosy.Modules.Resources.Model =
 
   ClassMethods:
     #
     # Sets the field containing primary key.
-    #
-    # @note It has no direct use inside the REST resource itself and can be omited.
-    #   But it usually should not since we have plans on adding some kind of Identity Map to Joosy.
     #
     # @param [String] primary     Name of the field
     #
@@ -39,17 +44,21 @@ Joosy.Modules.Resources.Model =
     #   to handle inline changes with triggers and all that resources stuff
     #
     # @example Basic usage
-    #   class Zombie extends Joosy.Resources.REST
+    #   class Model extends Joosy.Resources.Hash
+    #     @concern Joosy.Modules.Resources.Model
+    #
+    #   class Zombie extends Model
     #     @entity 'zombie'
-    #   class Puppy extends Joosy.Resources.REST
+    #
+    #   class Puppy extends Model
     #     @entity 'puppy'
     #     @map 'zombies'
     #
     #   p = Puppy.build {zombies: [{foo: 'bar'}]}
     #
-    #   p('zombies')            # Direct access: [{foo: 'bar'}]
+    #   p.get('zombies')        # Direct access: [{foo: 'bar'}]
     #   p.zombies               # Wrapped Collection of Zombie instances
-    #   p.zombies.at(0)('foo')  # bar
+    #   p.zombies[0].get('foo') # bar
     #
     # @param [String] name    Pluralized name of property to define
     # @param [Class] klass    Resource class to instantiate
@@ -80,6 +89,20 @@ Joosy.Modules.Resources.Model =
     grab: (form) ->
       @build({}).grab form
 
+    #
+    # Registers dynamic accessors for given fields
+    #
+    # @example
+    #   class Test extends Joosy.Resources.Hash
+    #     @concern Joosy.Modules.Resources.Model
+    #
+    #     @attrAccessor 'field1', 'field2'
+    #
+    #   test = Test.build(field1: 'test', field2: 'test')
+    #
+    #   test.field1()               # 'test'
+    #   test.field2('new value')    # 'new value'
+    #
     attrAccessor: ->
       for attribute in arguments
         do (attribute) =>
@@ -100,16 +123,39 @@ Joosy.Modules.Resources.Model =
     #
     __collection: Joosy.Resources.Array
 
+    #
+    # Getter for the primary key field
+    #
+    # @see Joosy.Modules.Resources.Model.primaryKey
+    #
     id: ->
       @data?[@__primaryKey]
 
+    #
+    # Returns the list of known fields for the resource
+    #
+    # @return [Array<String>]
+    #
+    # @example
+    #   class Test extends Joosy.Resources.Hash
+    #     @concern Joosy.Modules.Resources.Model
+    #
+    #   test = Test.build field1: 'test', field2: 'test'
+    #
+    #   test.knownAttributes() # ['field1', 'field2']
+    #
     knownAttributes: ->
       Object.keys @data
 
     #
-    # Set the resource data manually
+    # Set the resource data manually.
+    #
+    # Unlike the basic implementation of load, this one
+    # merges newer and older fieldsets that allows you to
+    # receive different parts of model data from different endpoints.
     #
     # @param [Object] data      Data to store
+    # @param [Boolean] clear    Whether previous data should be overwriten (not merged)
     #
     # @return [Object]          Returns self
     #
@@ -122,6 +168,7 @@ Joosy.Modules.Resources.Model =
     # Defines how exactly prepared data should be saved
     #
     # @param [Object] data    Raw data to store
+    # @private
     #
     __fillData: (data, notify=true) ->
       @raw  = data
@@ -136,6 +183,12 @@ Joosy.Modules.Resources.Model =
     #
     # @param [DOMElement] form      Form to grab
     #
+    # @example
+    #   class Test extends Joosy.Resources.Hash
+    #     @concern Joosy.Modules.Resources.Model
+    #
+    #   test = Test.build().grab($ 'form')
+    #
     grab: (form) ->
       data = {}
       for field in $(form).serializeArray()
@@ -147,5 +200,6 @@ Joosy.Modules.Resources.Model =
 
       @load data
 
+    # @nodoc
     toString: ->
       "<Resource #{@__entityName}> #{JSON.stringify(@data)}"

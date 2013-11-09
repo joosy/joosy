@@ -2,7 +2,7 @@ describe 'Joosy.Modules.Resources.Function', ->
 
   it 'works', ->
     class Generic extends Joosy.Module
-      @extend Joosy.Modules.Resources.Function
+      @concern Joosy.Modules.Resources.Function
 
       constructor: (@bar) ->
         @foo = 'bar'
@@ -19,7 +19,7 @@ describe 'Joosy.Modules.Resources.Function', ->
   describe 'Hash', ->
     it 'works', ->
       class Hash extends Joosy.Resources.Hash
-        @extend Joosy.Modules.Resources.Function
+        @concern Joosy.Modules.Resources.Function
 
         constructor: (data) ->
           data.bar = 'foo'

@@ -290,8 +290,6 @@ class Joosy.Widget extends Joosy.Module
     @__nestedSections = []
     @$container.html @__renderDefault?(@data || {})
 
-    @__load()
-
     for selector, section of nestingMap
       do (selector, section) =>
         $container = @__normalizeSelector(selector)
@@ -300,6 +298,8 @@ class Joosy.Widget extends Joosy.Module
           section.instance.__paint @, section.nested, $container
         else
           section.instance.__bootstrap @, section.nested, $container, false
+
+    @__load()
 
   #
   # Initializes section that was injected into DOM

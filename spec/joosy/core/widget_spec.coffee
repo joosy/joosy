@@ -327,6 +327,15 @@ describe "Joosy.Widget", ->
           @a.__bootstrap null, @nestingMap, @$ground
           expect(@$ground.html()).toEqualHTML '<div id="b"><div id="c"></div><div id="d">D</div></div>'
 
+        it 'loads children before parent', ->
+          order = []
+          for instance in ['a', 'b', 'c', 'd', 'e', 'f']
+            do (instance) =>
+              @[instance].constructor.afterLoad ->
+                order.push(instance)
+          @a.__bootstrap null, @nestingMap, @$ground
+          expect(order).toEqual ['d', 'e', 'f', 'c', 'b', 'a']
+
       describe 'independent', ->
 
         it 'loads independent children synchronously if they managed to fetch', ->

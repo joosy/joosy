@@ -58,6 +58,7 @@ Joosy.helpers 'Application', ->
   #   2. @contentTag 'name', ->
   #   3. @contentTag 'name', {}, ->
   #   4. @contentTag 'name', {}, false, ->
+  #   5. @contentTag 'name', null, {}
   #
   # Example
   #   != @contentTag 'div', {class: 'foo'}, =>
@@ -72,14 +73,16 @@ Joosy.helpers 'Application', ->
     else if typeof(contentOrOptions) == 'function'
       options = {}
       content = contentOrOptions()
-    else
+    else if contentOrOptions?
       if typeof(options) == 'function'
         escape = true
         content = options()
-      else
-        escape = options
+      else if typeof(escape) == 'function'
         content = escape()
+        escape = options
       options = contentOrOptions
+    else
+      content = ''
 
     element = document.createElement name
     temp    = document.createElement 'div'

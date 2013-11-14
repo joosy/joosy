@@ -107,7 +107,7 @@ class Joosy.Form extends Joosy.Module
     @__delegateEvents()
 
     method = @$container.get(0).getAttribute('method')?.toLowerCase()
-    if method && !['get', 'post'].indexOf(method) != -1
+    if method && ['get', 'post'].indexOf(method) == -1
       @__markMethod method
       @$container.attr 'method', 'POST'
 

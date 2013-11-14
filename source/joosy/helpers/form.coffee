@@ -127,11 +127,11 @@ Joosy.helpers 'Application', ->
       block   = options
       options = {}
 
-    attributes = Joosy.Module.merge(options.html || {}, id: uuid)
     uuid = Joosy.uuid()
+    attributes = Joosy.Module.merge(options.html || {}, id: uuid)
     form = new Form @, resource, options
 
-    @tag 'form', attributes, block?.call(@, form)
+    @contentTag 'form', block?.call(@, form), attributes
 
   #
   # Generates `label` tag

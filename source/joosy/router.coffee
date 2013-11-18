@@ -101,7 +101,15 @@ class Joosy.Router extends Joosy.Module
         block = options
         options = {}
 
-      Drawer.run block, @__namespace+name, options.as?.toString()
+      alias = if options.as
+        if @__alias
+          @__alias + options.as.charAt(0).toUpperCase() + options.as.slice(1)
+        else
+          options.as
+      else
+        @__alias
+
+      Drawer.run block, @__namespace+name, alias
 
   #
   # Registers a set of raw routes

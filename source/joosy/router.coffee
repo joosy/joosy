@@ -298,7 +298,12 @@ class Joosy.Router extends Joosy.Module
 
       if match = path.match(/\/:[^\/]+/g)
         for param in match
-          result = result.replace(param.substr(1), options[param.substr(2)])
+          name = param.substr(2)
+          value = if typeof(options[name]) == 'function'
+            options[name]()
+          else
+            options[name]
+          result = result.replace(param.substr(1), value)
 
       if Joosy.Router.config.html5
         "#{Joosy.Router.config.prefix}#{result}"

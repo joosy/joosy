@@ -25,14 +25,8 @@
 class Joosy.Router extends Joosy.Module
   @extend Joosy.Modules.Events
 
-  # We need to subscribe to popstate event in such weird way to skip
-  # the first event that always happens on the initial load in Webkit
-  $ =>
-    bind = =>
-      $(window).bind 'popstate', (event) =>
-        @trigger 'popstate', event
-
-    setTimeout bind, 0
+  $(window).bind 'popstate', (event) =>
+    @trigger 'popstate', event
 
   # Comfortable links for the views
   $(document).on 'click', 'a[data-joosy]', (event) ->
@@ -153,8 +147,20 @@ class Joosy.Router extends Joosy.Module
       # Canonical form of HTML5 prefix is '/any/thing/'
       @config.prefix = ('/'+@config.prefix+'/').replace /\/{2,}/g, '/'
 
-      @listener = @bind 'popstate pushstate', =>
-        @respond @canonizeLocation()
+      @suppressPopstate = true
+      @initialPath = location.pathname
+
+      @popstateListener = @bind 'popstate', =>
+        isInitialPop = @suppressPopstate && location.pathname == @initialPath
+        @suppressPopstate = false
+        if isInitialPop
+          Joosy.Modules.Log.debug "Router> Suppressed initial popstate"
+        else
+          @respond @canonizeLocation()
+
+      @pushstateListener = @bind 'pushstate', =>
+        @suppressPopstate = false
+        @respond @canonizeLocation()        
     else
       # Canonical form of hash suffix is 'any/thing'
       @config.prefix = @config.prefix.replace(/^\#?\/?/, '').replace /\/?$/, ''
@@ -168,7 +174,8 @@ class Joosy.Router extends Joosy.Module
   # Clears current map of routes and deactivates bindings
   #
   @reset: ->
-    @unbind @listener
+    @unbind @popstateListener
+    @unbind @pushstateListener
     $(window).unbind '.JoosyRouter'
     @restriction = false
     @routes = {}

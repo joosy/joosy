@@ -160,7 +160,7 @@ class Joosy.Router extends Joosy.Module
 
       @pushstateListener = @bind 'pushstate', =>
         @suppressPopstate = false
-        @respond @canonizeLocation()        
+        @respond @canonizeLocation()
     else
       # Canonical form of hash suffix is 'any/thing'
       @config.prefix = @config.prefix.replace(/^\#?\/?/, '').replace /\/?$/, ''
@@ -327,6 +327,9 @@ class Joosy.Router extends Joosy.Module
           "#{origin}#{helper(options)}"
         else
           "#{origin}#{location.pathname}#{helper(options)}"
+
+      Joosy.Widget::["#{as}Path"] = @["#{as}Path"]
+      Joosy.Widget::["#{as}Url"]  = @["#{as}Url"]
 
   #
   # Parses parameters from both, current URL and route placeholders

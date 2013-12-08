@@ -302,6 +302,14 @@ describe "Joosy.Router", ->
           expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '/section/page/1'
           expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://#{location.host}/section/page/1"
 
+        it 'adds helper to widgets', ->
+          class A extends Joosy.Widget
+            test: ->
+              expect(@rootPath()).toEqual '/'
+              expect(@rootUrl()).toEqual "http://#{location.host}/"
+
+          (new A).test()
+
   for name, val of { html5: true, hash: false }
     do (name, val) ->
       if name != 'html5' || history.pushState

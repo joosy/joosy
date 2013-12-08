@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='UTF-8'>
+  <title>CoffeeScript API Documentation</title>
+  <script src='../../javascript/application.js'></script>
+  <script src='../../javascript/search.js'></script>
+  <link rel='stylesheet' href='../../stylesheets/application.css' type='text/css'>
+</head>
+  <body>
+    <div id='base' data-path='../../'></div>
+<div id='header'>
+  <div id='menu'>
+    <a href='../../extra/README.md.html' title='Joosy'>
+      Joosy
+    </a>
+    &raquo;
+    <a href='../../alphabetical_index.html' title='Index'>
+      Index
+    </a>
+    &raquo;
+    <span class='title'>Joosy</span>
+    &raquo;
+    <span class='title'>Resources</span>
+    &raquo;
+    <span class='title'>REST</span>
+  </div>
+</div>
+    <div id='content'>
+      <h1>
+        Class:
+        Joosy.Resources.REST
+      </h1>
+      <table class='box'>
+        <tr>
+          <td>Defined in:</td>
+          <td>source&#47;joosy&#47;resources&#47;rest.coffee</td>
+        </tr>
+        <tr>
+          <td>Inherits:</td>
+          <td>
+            <a href='../../class/Joosy/Resources.Hash.html'>Joosy.Resources.Hash</a>
+          </td>
+        </tr>
+        <tr>
+          <td>Concerns:</td>
+          <td>
+            <a href='../../mixin/Joosy/Modules.Resources.Model.html'>Joosy.Modules.Resources.Model</a>
+          </td>
+        </tr>
+      </table>
+      <h2>Overview</h2>
+      <div class='docstring'>
+  <p>Resource with REST/JSON backend</p>
+</div>
+<div class='tags'>
+</div>
+      <h2>Class Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#requestOptions-static'>
+        .
+(void)
+<b>requestOptions</b><span>(options)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Registeres default options for all HTTP queries
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#source-static'>
+        .
+(void)
+<b>source</b><span>(location)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Sets default base url for fetching and modifiing resources
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__atWrapper-static'>
+        .
+(void)
+<b>__atWrapper</b><span>(definer, args...)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Makes needed changes with clone/wrapper for @at method to extend its&#39; path
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#at-static'>
+        .
+(void)
+<b>at</b><span>()</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Creates the proxy of current resource binded as a child of given entity
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#collectionPath-static'>
+        .
+(void)
+<b>collectionPath</b><span>(args...)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Builds collection path
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#memberPath-static'>
+        .
+(void)
+<b>memberPath</b><span>(args...)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Builds member path based on the given id.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#send-static'>
+        .
+(void)
+<b>send</b><span>(method, options, callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Sends a query using collectionPath.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#find-static'>
+        .
+(void)
+<b>find</b><span>(where, options = {}, callback = false)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Requests the required resource from backend
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#all-static'>
+        .
+(void)
+<b>all</b><span>(where, options = {}, callback = false)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Requests the required collection of resources from backend
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__query-static'>
+        .
+(void)
+<b>__query</b><span>(path, method, params, callback)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Wrapper for AJAX request
+    </span>
+  </li>
+</ul>
+      <h2>Instance Method Summary</h2>
+      <ul class='summary'>
+  <li>
+    <span class='signature'>
+      <a href='#at-dynamic'>
+        #
+(void)
+<b>at</b><span>(args...)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Creates the proxy of current resource instance binded as a children of given entity
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__interpolatePath-dynamic'>
+        #
+(void)
+<b>__interpolatePath</b><span>(source, ids)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Interpolates path with masks by given array of params
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#collectionPath-dynamic'>
+        #
+(void)
+<b>collectionPath</b><span>(ids = [], options = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Builds collection path
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#memberPath-dynamic'>
+        #
+(void)
+<b>memberPath</b><span>(ids = [], options = {})</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Builds member path
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#send-dynamic'>
+        #
+(void)
+<b>send</b><span>(method, options, callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Sends a query using memberPath.
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#reload-dynamic'>
+        #
+(void)
+<b>reload</b><span>(options = {}, callback = false)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Refetches the data from backend and triggers <code>changed</code>
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#update-dynamic'>
+        #
+(void)
+<b>update</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Updates the instance on the server with PUT query
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#create-dynamic'>
+        #
+(void)
+<b>create</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Updates new entry on the server with local state with POST query
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#save-dynamic'>
+        #
+(void)
+<b>save</b><span>(callback)</span>
+      </a>
+    </span>
+    <span class='desc'>
+      Saves current state of instance (automatically choosing between updation and creation)
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__extractOptionsAndCallback-dynamic'>
+        #
+(void)
+<b>__extractOptionsAndCallback</b><span>(options, callback)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Utility function for better API support for unrequired first options parameter
+    </span>
+  </li>
+</ul>
+      <h2>
+        <small>Inherited Method Summary</small>
+        <h3 class='inherited'>
+          Methods inherited from
+          <a href='../../class/Joosy/Resources.Hash.html'>Joosy.Resources.Hash</a>
+        </h3>
+        <p class='inherited'>
+          <a href='../../class/Joosy/Resources.Hash.html#build-static'>.build</a>
+          <a href='../../class/Joosy/Resources.Hash.html#__call-dynamic'>#__call</a>
+          <a href='../../class/Joosy/Resources.Hash.html#load-dynamic'>#load</a>
+          <a href='../../class/Joosy/Resources.Hash.html#get-dynamic'>#get</a>
+          <a href='../../class/Joosy/Resources.Hash.html#set-dynamic'>#set</a>
+          <a href='../../class/Joosy/Resources.Hash.html#__callTarget-dynamic'>#__callTarget</a>
+          <a href='../../class/Joosy/Resources.Hash.html#__fillData-dynamic'>#__fillData</a>
+          <a href='../../mixin/Joosy/Modules.Events.html#eventsNamespace-dynamic'>#eventsNamespace</a>
+          <a href='../../mixin/Joosy/Modules.Events.html#wait-dynamic'>#wait</a>
+          <a href='../../mixin/Joosy/Modules.Events.html#unwait-dynamic'>#unwait</a>
+          <a href='../../mixin/Joosy/Modules.Events.html#bind-dynamic'>#bind</a>
+          <a href='../../mixin/Joosy/Modules.Events.html#unbind-dynamic'>#unbind</a>
+          <a href='../../mixin/Joosy/Modules.Events.html#trigger-dynamic'>#trigger</a>
+          <a href='../../mixin/Joosy/Modules.Events.html#synchronize-dynamic'>#synchronize</a>
+          <a href='../../mixin/Joosy/Modules.Events.html#__splitEvents-dynamic'>#__splitEvents</a>
+          <a href='../../mixin/Joosy/Modules.Filters.html#__registerFilterCollector-static'>.__registerFilterCollector</a>
+          <a href='../../mixin/Joosy/Modules.Filters.html#registerPlainFilters-static'>.registerPlainFilters</a>
+          <a href='../../mixin/Joosy/Modules.Filters.html#registerSequencedFilters-static'>.registerSequencedFilters</a>
+          <a href='../../class/Joosy/Module.html#__className-static'>.__className</a>
+          <a href='../../class/Joosy/Module.html#hasAncestor-static'>.hasAncestor</a>
+          <a href='../../class/Joosy/Module.html#aliasMethodChain-static'>.aliasMethodChain</a>
+          <a href='../../class/Joosy/Module.html#aliasStaticMethodChain-static'>.aliasStaticMethodChain</a>
+          <a href='../../class/Joosy/Module.html#merge-static'>.merge</a>
+          <a href='../../class/Joosy/Module.html#include-static'>.include</a>
+          <a href='../../class/Joosy/Module.html#extend-static'>.extend</a>
+          <a href='../../class/Joosy/Module.html#concern-static'>.concern</a>
+        </p>
+      </h2>
+      <h2>
+        <small>Concerned Method Summary</small>
+      </h2>
+      <h3 class='inherited'>
+        Methods concerned from
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html'>Joosy.Modules.Resources.Model</a>
+      </h3>
+      <p class='inherited'>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#primaryKey-static'>.primaryKey</a>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#collection-static'>.collection</a>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#entity-static'>.entity</a>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#map-static'>.map</a>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#grab-static'>.grab</a>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#attrAccessor-static'>.attrAccessor</a>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#id-dynamic'>#id</a>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#knownAttributes-dynamic'>#knownAttributes</a>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#load-dynamic'>#load</a>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#__fillData-dynamic'>#__fillData</a>
+        <a href='../../mixin/Joosy/Modules.Resources.Model.html#grab-dynamic'>#grab</a>
+      </p>
+      <h2>Class Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='requestOptions-static'>
+      .
+(void)
+<b>requestOptions</b><span>(options)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Registeres default options for all HTTP queries</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>class Test extends Joosy.Resources.REST
+  @requestOptions
+    headers:
+      &#39;access-token&#39;: &#39;test&#39;</code></pre>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>class Test extends Joosy.Resources.REST
+  @requestOptions (options) -&gt;
+    options.url = Config.baseUrl + options.url</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options as a hash</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Function&lt;Hash&gt;</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Function that overrides options in given hash</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='source-static'>
+      .
+(void)
+<b>source</b><span>(location)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    can be omitted if url equals pluralized @entity i.e. &#39;comment&#39; entity name =&gt; &#39;/comments&#39; url
+  </div>
+  <p>Sets default base url for fetching and modifiing resources</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>primary</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Name of the field</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__atWrapper-static'>
+      .
+(void)
+<b>__atWrapper</b><span>(definer, args...)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Makes needed changes with clone/wrapper for @at method to extend its&#39; path</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='at-static'>
+      .
+(void)
+<b>at</b><span>()</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    accepts both array notation (Comment.at([&#39;admin&#39;, @blog, @post])) and args notation (Comment.at(&#39;admin&#39;, @blog, @post))
+  </div>
+  <p>Creates the proxy of current resource binded as a child of given entity</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffeescript'>Comment.at(&#39;admin&#39;, @blog, @post).collectionPath() # =&gt; &#39;&#47;admin&#47;blogs&#47;555&#47;posts&#47;666&#47;comments&#39;</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>args</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Array of parent entities. Can be a string or another REST resource.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='collectionPath-static'>
+      .
+(void)
+<b>collectionPath</b><span>(args...)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Builds collection path</p>
+</div>
+<div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='../../class/Joosy/Resources.REST.html#collectionPath-dynamic'>Joosy.Resources.REST#collectionPath</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='memberPath-static'>
+      .
+(void)
+<b>memberPath</b><span>(args...)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Builds member path based on the given id.</p>
+</div>
+<div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='../../class/Joosy/Resources.REST.html#memberPath-dynamic'>Joosy.Resources.REST#memberPath</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='send-static'>
+      .
+(void)
+<b>send</b><span>(method, options, callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Sends a query using collectionPath.
+Callback will get parsed JSON object as a parameter.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>method</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>GET / POST / PUT / DELETE</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options to proxy to collectionPath</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='find-static'>
+      .
+(void)
+<b>find</b><span>(where, options = {}, callback = false)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Requests the required resource from backend</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>where</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>id or an array of ids for interpolated path</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Path modification options</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'><code>(error, instance, data) -&gt; ...</code></span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='all-static'>
+      .
+(void)
+<b>all</b><span>(where, options = {}, callback = false)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Requests the required collection of resources from backend</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>where</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>id or an array of ids for interpolated path</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Path modification options</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'><code>(error, instance, data) -&gt; ...</code></span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__query-static'>
+      .
+(void)
+<b>__query</b><span>(path, method, params, callback)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Wrapper for AJAX request</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+      <h2>Instance Method Details</h2>
+      <div class='methods'>
+  <div class='method_details'>
+    <p class='signature' id='at-dynamic'>
+      #
+(void)
+<b>at</b><span>(args...)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <div class='note'>
+    <strong>Note:</strong>
+    accepts both array notation (comment.at([&#39;admin&#39;, @blog, @post])) and args notation (comment.at(&#39;admin&#39;, @blog, @post))
+  </div>
+  <p>Creates the proxy of current resource instance binded as a children of given entity</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffeescript'>Comment.build(1).at(&#39;admin&#39;, @blog, @post).memberPath() # =&gt; &#39;&#47;admin&#47;blogs&#47;555&#47;posts&#47;666&#47;comments&#47;1&#39;</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>args</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Array of parent entities. Can be a string or another REST resource.</span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__interpolatePath-dynamic'>
+      #
+(void)
+<b>__interpolatePath</b><span>(source, ids)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Interpolates path with masks by given array of params</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='collectionPath-dynamic'>
+      #
+(void)
+<b>collectionPath</b><span>(ids = [], options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Builds collection path</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffeescript'>Resource.collectionPath() # &#47;resources&#47;</code></pre>
+    <h4>
+      Nested resources
+    </h4>
+    <pre><code class='coffeescript'>Resource.collectionPath([&#39;admin&#39;, Resource.build 1]) # &#47;admin&#47;resources&#47;1&#47;resources</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>ids</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Interpolation arguments for nested objects</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='memberPath-dynamic'>
+      #
+(void)
+<b>memberPath</b><span>(ids = [], options = {})</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Builds member path</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      Basic usage
+    </h4>
+    <pre><code class='coffeescript'>resource.memberPath(action: &#39;foo&#39;) # &#47;resources&#47;1&#47;foo</code></pre>
+    <h4>
+      Nested resources
+    </h4>
+    <pre><code class='coffeescript'>Resource.memberPath([&#39;admin&#39;, Resource.build 1]) # &#47;admin&#47;resources&#47;1&#47;resources&#47;2</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>ids</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Interpolation arguments for nested objects</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='send-dynamic'>
+      #
+(void)
+<b>send</b><span>(method, options, callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Sends a query using memberPath.
+Callback will get parsed JSON object as a parameter.</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>method</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>GET / POST / PUT / DELETE</span>
+    </li>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Options to proxy to memberPath</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'><code>(error, data) -&gt; ...</code></span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='reload-dynamic'>
+      #
+(void)
+<b>reload</b><span>(options = {}, callback = false)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Refetches the data from backend and triggers <code>changed</code></p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>options</span>
+      <span class='type'>
+        (<tt>Hash</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>See <a href='../../class/Joosy/Resources.REST.html#find-static'>Joosy.Resources.REST.find</a> for possible options</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Resulting callback</span>
+    </li>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'><code>(error, instance, data) -&gt; ...</code></span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='update-dynamic'>
+      #
+(void)
+<b>update</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Updates the instance on the server with PUT query</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>class Test extends Joosy.Resources.REST
+test = Test.build id: 1, field1: &#39;test&#39;
+
+test.update (error, test) -&gt;
+  unless error
+    # ...</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function&lt;Mixed, REST&gt;</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='create-dynamic'>
+      #
+(void)
+<b>create</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Updates new entry on the server with local state with POST query</p>
+  <div class='examples'>
+    <h3>Examples:</h3>
+    <h4>
+      
+    </h4>
+    <pre><code class='coffeescript'>class Test extends Joosy.Resources.REST
+test = Test.build field1: &#39;test&#39;
+
+test.create (error, test) -&gt;
+  unless error
+    # ...</code></pre>
+  </div>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>callback</span>
+      <span class='type'>
+        (<tt>Function&lt;Mixed, REST&gt;</tt>)
+      </span>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='save-dynamic'>
+      #
+(void)
+<b>save</b><span>(callback)</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Saves current state of instance (automatically choosing between updation and creation)</p>
+</div>
+<div class='tags'>
+  <h3>See also:</h3>
+  <ul class='see'>
+    <li>
+      <a href='Joosy.Resources.REST.create'>Joosy.Resources.REST.create</a>
+    </li>
+    <li>
+      <a href='Joosy.Resources.REST.update'>Joosy.Resources.REST.update</a>
+    </li>
+  </ul>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__extractOptionsAndCallback-dynamic'>
+      #
+(void)
+<b>__extractOptionsAndCallback</b><span>(options, callback)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Utility function for better API support for unrequired first options parameter</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+</div>
+    </div>
+    <div id='footer'>
+  December 08, 13 23:40:32 by
+  <a href='https://github.com/coffeescript/codo' title='CoffeeScript API documentation generator'>
+    Codo
+  </a>
+  2.0.0-rc.4
+  &#10034;
+  Press H to see the keyboard shortcuts
+  &#10034;
+  <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
+  &#10034;
+  <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
+  &#10034;
+  <a href='https://mksoft.ch' target='_parent'>mksoft.ch</a>
+</div>
+<iframe id='search_frame'></iframe>
+<div id='fuzzySearch'>
+  <input type='text'>
+  <ol></ol>
+</div>
+<div id='help'>
+  <p>
+    Quickly fuzzy find classes, mixins, methods, file:
+  </p>
+  <ul>
+    <li>
+      <span>T</span>
+      Open fuzzy finder dialog
+    </li>
+  </ul>
+  <p>
+    Control the navigation frame:
+  </p>
+  <ul>
+    <li>
+      <span>L</span>
+      Toggle list view
+    </li>
+    <li>
+      <span>C</span>
+      Show class list
+    </li>
+    <li>
+      <span>I</span>
+      Show mixin list
+    </li>
+    <li>
+      <span>F</span>
+      Show file list
+    </li>
+    <li>
+      <span>M</span>
+      Show method list
+    </li>
+    <li>
+      <span>E</span>
+      Show extras list
+    </li>
+  </ul>
+  <p>
+    You can focus and blur the search input:
+  </p>
+  <ul>
+    <li>
+      <span>S</span>
+      Focus search input
+    </li>
+    <li>
+      <span>Esc</span>
+      Blur search input
+    </li>
+  </ul>
+</div>
+  </body>
+</html>

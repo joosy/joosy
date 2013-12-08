@@ -25,38 +25,65 @@ describe "Joosy.Router", ->
     afterEach ->
       Joosy.Router.reset()
 
-    it 'draws', ->
-      spies = @spies
-      Page  = @Page
+    describe 'drawer', ->
+      beforeEach ->
+        spies = @spies
+        Page  = @Page
 
-      Joosy.Router.draw ->
-        @root to: spies.root
-        @match '/base', to: spies.base
-        @match '/page',  to: Page
-        @namespace '/section', {as: 'section'}, ->
-          @match '/page/:id', to: spies.section, as: 'page'
-          @match '/page2/:more', to: Page
-        @notFound to: spies.wildcard
+        Joosy.Router.setup {html5: true}, (-> ), false
 
-      expect(Joosy.Router.routes).toEqual
-        '^/?/?$':
-          to: spies.root
-          as: 'root'
-          capture: []
-        '^/?base/?$':
-          to: spies.base,
-          capture: [],
-        '^/?page/?$':
-          to: Page, capture : []
-        '^/?section/page/([^/]+)/?$':
-          to: spies.section,
-          as: 'sectionPage'
-          capture: ['id']
-        '^/?section/page2/([^/]+)/?$':
-          to: Page
-          capture: ['more']
+        Joosy.Router.draw ->
+          @root to: spies.root
+          @match '/base', to: spies.base
+          @match '/page',  to: Page
+          @namespace '/test', ->
+            @match '/page', to: spies.section, as: 'test'
+          @namespace '/section', {as: 'section'}, ->
+            @match '/page/:id', to: spies.section, as: 'page'
+            @match '/page2/:more', to: Page
+          @notFound to: spies.wildcard
 
-      expect(Joosy.Router.wildcardAction).toEqual spies.wildcard
+      it 'registeres routes', ->
+        expect(Joosy.Router.routes).toEqual
+          '^/?/?$':
+            to: @spies.root
+            as: 'root'
+            capture: []
+          '^/?base/?$':
+            to: @spies.base
+            capture: []
+          '^/?page/?$':
+            to: @Page, capture : []
+          '^/?test/page/?$':
+            to: @spies.section
+            capture: []
+            as: 'test'
+          '^/?section/page/([^/]+)/?$':
+            to: @spies.section
+            as: 'sectionPage'
+            capture: ['id']
+          '^/?section/page2/([^/]+)/?$':
+            to: @Page
+            capture: ['more']
+
+        expect(Joosy.Router.wildcardAction).toEqual @spies.wildcard
+
+      it 'defines plain helper', ->
+        expect(Joosy.Helpers.Routes.rootPath()).toEqual '/'
+        expect(Joosy.Helpers.Routes.rootUrl()).toEqual "http://#{location.host}/"
+        expect(Joosy.Helpers.Routes.testPath()).toEqual '/test/page'
+
+      it 'defines namespaced parameterized helpers', ->
+        expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '/section/page/1'
+        expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://#{location.host}/section/page/1"
+
+      it 'adds helper to widgets', ->
+        class A extends Joosy.Widget
+          test: ->
+            expect(@rootPath()).toEqual '/'
+            expect(@rootUrl()).toEqual "http://#{location.host}/"
+
+        (new A).test()
 
     it 'maps', ->
       Joosy.Router.map @map
@@ -189,14 +216,6 @@ describe "Joosy.Router", ->
           expect(location.hash).toEqual '#/base'
           expect(@spies.responder.callCount).toEqual 0
 
-      it 'defines plain helper', ->
-        expect(Joosy.Helpers.Routes.rootPath()).toEqual '#'
-        expect(Joosy.Helpers.Routes.rootUrl()).toEqual "http://#{location.host}#{pathname}#"
-
-      it 'defines namespaced parameterized helpers', ->
-        expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '#section/page/1'
-        expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://#{location.host}#{pathname}#section/page/1"
-
     if history.pushState?
       describe 'html5 based', ->
         beforeEach ->
@@ -294,22 +313,6 @@ describe "Joosy.Router", ->
             expect(@spies.responder.callCount).toEqual 1
             expect(history.length).toEqual length
 
-        it 'defines plain helper', ->
-          expect(Joosy.Helpers.Routes.rootPath()).toEqual '/'
-          expect(Joosy.Helpers.Routes.rootUrl()).toEqual "http://#{location.host}/"
-
-        it 'defines namespaced parameterized helpers', ->
-          expect(Joosy.Helpers.Routes.sectionPagePath(id: 1)).toEqual '/section/page/1'
-          expect(Joosy.Helpers.Routes.sectionPageUrl(id: 1)).toEqual "http://#{location.host}/section/page/1"
-
-        it 'adds helper to widgets', ->
-          class A extends Joosy.Widget
-            test: ->
-              expect(@rootPath()).toEqual '/'
-              expect(@rootUrl()).toEqual "http://#{location.host}/"
-
-          (new A).test()
-
   for name, val of { html5: true, hash: false }
     do (name, val) ->
       if name != 'html5' || history.pushState
@@ -347,7 +350,7 @@ describe "Joosy.Router", ->
 
   describe 'linker', ->
     it 'defines helper', ->
-      tag = Joosy.Helpers.Routes.linkTo 'test', '/base', class: 'zomg!'
+      tag = Joosy.Helpers.Application.linkTo 'test', '/base', class: 'zomg!'
 
       expect(tag).toBeTag 'a', 'test',
         'data-joosy': 'true'

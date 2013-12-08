@@ -116,3 +116,13 @@ Joosy.helpers 'Application', ->
   #
   @renderWrapped = (template, lambda) ->
     @render template, Joosy.Module.merge(this, yield: lambda())
+
+  @linkTo = (name='', url='', tagOptions={}) ->
+
+    # (url, tagOptions, block) ->
+    if typeof(tagOptions) == 'function'
+      block = tagOptions
+      [url, tagOptions] = [name, url]
+      name = block()
+
+    Joosy.Helpers.Application.contentTag 'a', name, Joosy.Module.merge(tagOptions, 'data-joosy': true, href: url)

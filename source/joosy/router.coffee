@@ -1,7 +1,6 @@
 #= require joosy/joosy
 #= require joosy/modules/events
 #= require joosy/page
-#= require joosy/helpers/routes
 
 #
 # Router. Reacts on URI change event and loads proper pages
@@ -177,6 +176,10 @@ class Joosy.Router extends Joosy.Module
   # Clears current map of routes and deactivates bindings
   #
   @reset: ->
+    if Joosy.Helpers.Routes?
+      delete Joosy.Widget::[key] for key, method of Joosy.Helpers.Routes
+      Joosy.Helpers.Routes = {}
+
     @unbind @popstateListener
     @unbind @pushstateListener
     $(window).unbind '.JoosyRouter'

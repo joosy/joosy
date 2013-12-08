@@ -12,3 +12,17 @@ describe "Joosy.Helpers.View", ->
       h.contentTag 'div', 'content', {id: 'id2'}
 
     expect(tag.toLowerCase()).toEqualHTML '<div id="id"><div id="id2">content</div></div>'
+
+  it "renders data-joosy links", ->
+    link = Joosy.Helpers.Application.linkTo 'test', '/app/link', nice: true
+    expect(link).toBeTag 'a', 'test',
+      'data-joosy': 'true'
+      nice: 'true'
+      href: '/app/link'
+
+  it "renders data-joosy links yielding block", ->
+    link = Joosy.Helpers.Application.linkTo '/app/link', nice: true, -> 'test'
+    expect(link).toBeTag 'a', 'test',
+      'data-joosy': 'true'
+      nice: 'true'
+      href: '/app/link'

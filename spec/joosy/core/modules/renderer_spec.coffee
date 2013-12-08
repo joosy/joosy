@@ -66,6 +66,24 @@ describe "Joosy.Modules.Renderer", ->
       runs ->
         expect(@$ground.text()).toBe "new"
 
+    it "runs callback during update", ->
+      template = (locals) -> locals.entity.value
+      callback = sinon.spy()
+
+      runs ->
+        @$ground.html @renderer.renderDynamic(template, {entity: @entity}, callback)
+        expect(@$ground.text()).toBe "initial"
+        expect(callback.callCount).toEqual 0
+
+      runs ->
+        @entity.update "new"
+
+      waits 0
+
+      runs ->
+        expect(@$ground.text()).toBe "new"
+        expect(callback.callCount).toEqual 1
+
     it "does not update unloaded content", ->
       template = (locals) -> locals.entity.value
 

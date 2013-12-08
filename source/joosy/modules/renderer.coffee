@@ -56,8 +56,8 @@ Joosy.Modules.Renderer =
     # @param [Object] locals                Locals to assign
     # @param [Object] parentStackPointer    Internal rendering stack pointer
     #
-    renderDynamic: (template, locals={}, parentStackPointer=false) ->
-      @__render true, template, locals, parentStackPointer
+    renderDynamic: (template, locals={}, callback, parentStackPointer=false) ->
+      @__render (callback || true), template, locals, parentStackPointer
 
     #
     # Converts all possible `@helper` arguments to the objects available for merge
@@ -107,13 +107,22 @@ Joosy.Modules.Renderer =
     # @private
     #
     __instantiateRenderers: (parentStackPointer) ->
+
       render: (template, locals={}) =>
         @render template, locals, parentStackPointer
-      renderDynamic: (template, locals={}) =>
-        @renderDynamic template, locals, parentStackPointer
-      renderInline: (locals={}, partial) =>
-        template = (params) -> partial.apply(params)
-        @renderDynamic template, locals, parentStackPointer
+
+      renderDynamic: (template, locals={}, callback) =>
+        @renderDynamic template, locals, callback, parentStackPointer
+
+      renderInline: (locals={}, callback, partial) =>
+        if arguments.length < 3
+          partial  = callback
+          callback = undefined
+
+        template = (params) ->
+          partial.apply(params)
+
+        @renderDynamic template, locals, callback, parentStackPointer
 
     #
     # Actual rendering implementation
@@ -158,6 +167,7 @@ Joosy.Modules.Renderer =
               @__removeMetamorphs child
             stack.children = []
             morph.html result()
+            dynamic() if dynamic instanceof Function
 
         # This is here to break stack tree and save from
         # repeating DOM modification

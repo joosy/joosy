@@ -61,7 +61,7 @@
       </a>
     </span>
     <span class='desc'>
-      Sets the curent template by specifying its name or lambda
+      Sets the curent template by specifying its name or lambda 
     </span>
   </li>
   <li>
@@ -73,7 +73,7 @@
       </a>
     </span>
     <span class='desc'>
-      Lists set of helpers&#39; namespaces to include
+      Lists set of helpers&#39; namespaces to include 
     </span>
   </li>
 </ul>
@@ -88,7 +88,7 @@
       </a>
     </span>
     <span class='desc'>
-      Renders given template with given locals
+      Renders given template with given locals 
     </span>
   </li>
   <li>
@@ -100,7 +100,7 @@
       </a>
     </span>
     <span class='desc'>
-      Dynamically renders given template with given locals<p>Whenever any of assigned locals triggers <code>changed</code> event, DOM will automatically be refreshed</p>
+      Dynamically renders given template with given locals <p>Whenever any of assigned locals triggers <code>changed</code> event, DOM will automatically be refreshed</p>
     </span>
   </li>
   <li>
@@ -113,7 +113,7 @@
     </span>
     <span class='note private title'>Private</span>
     <span class='desc'>
-      Converts all possible <code>@helper</code> arguments to the objects available for merge
+      Converts all possible <code>@helper</code> arguments to the objects available for merge 
     </span>
   </li>
   <li>
@@ -126,7 +126,7 @@
     </span>
     <span class='note private title'>Private</span>
     <span class='desc'>
-      Collects and merges all requested helpers including global scope to one cached object
+      Collects and merges all requested helpers including global scope to one cached object 
     </span>
   </li>
   <li>
@@ -139,7 +139,7 @@
     </span>
     <span class='note private title'>Private</span>
     <span class='desc'>
-      Defines local <code>@render*</code> methods with proper stack pointer set
+      Defines local <code>@render*</code> methods with proper stack pointer set 
     </span>
   </li>
   <li>
@@ -152,7 +152,7 @@
     </span>
     <span class='note private title'>Private</span>
     <span class='desc'>
-      Actual rendering implementation
+      Actual rendering implementation 
     </span>
   </li>
   <li>
@@ -165,7 +165,7 @@
     </span>
     <span class='note private title'>Private</span>
     <span class='desc'>
-      Template for the rendering stack node
+      Template for the rendering stack node 
     </span>
   </li>
   <li>
@@ -178,7 +178,7 @@
     </span>
     <span class='note private title'>Private</span>
     <span class='desc'>
-      Creates new rendering stack node using given pointer as the parent
+      Creates new rendering stack node using given pointer as the parent 
     </span>
   </li>
   <li>
@@ -191,7 +191,7 @@
     </span>
     <span class='note private title'>Private</span>
     <span class='desc'>
-      Disables and unbinds all dynamic bindings for the whole rendering stack
+      Disables and unbinds all dynamic bindings for the whole rendering stack 
     </span>
   </li>
 </ul>
@@ -221,6 +221,20 @@
       <span class='type'>
         (<tt>Hash</tt>)
       </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>dynamic</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Marks if the whole view should be rendered as a Dynamic one </span>
     </li>
   </ul>
 </div>
@@ -260,7 +274,7 @@
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Name of the template to render using templater</span>
+      <span class='desc'>Name of the template to render using templater </span>
     </li>
     <li>
       <span class='name'>template</span>
@@ -268,7 +282,7 @@
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'><code>(locals) -&gt;</code> lambda to use as template</span>
+      <span class='desc'><code>(locals) -&gt;</code> lambda to use as template </span>
     </li>
     <li>
       <span class='name'>locals</span>
@@ -276,7 +290,7 @@
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Locals to assign</span>
+      <span class='desc'>Locals to assign </span>
     </li>
     <li>
       <span class='name'>parentStackPointer</span>
@@ -284,7 +298,7 @@
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Internal rendering stack pointer</span>
+      <span class='desc'>Internal rendering stack pointer </span>
     </li>
   </ul>
 </div>
@@ -308,7 +322,7 @@
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Name of the template to render using templater</span>
+      <span class='desc'>Name of the template to render using templater </span>
     </li>
     <li>
       <span class='name'>template</span>
@@ -316,7 +330,7 @@
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'><code>(locals) -&gt;</code> lambda to use as template</span>
+      <span class='desc'><code>(locals) -&gt;</code> lambda to use as template </span>
     </li>
     <li>
       <span class='name'>locals</span>
@@ -324,7 +338,7 @@
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Locals to assign</span>
+      <span class='desc'>Locals to assign </span>
     </li>
     <li>
       <span class='name'>parentStackPointer</span>
@@ -332,7 +346,7 @@
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Internal rendering stack pointer</span>
+      <span class='desc'>Internal rendering stack pointer </span>
     </li>
   </ul>
 </div>
@@ -385,7 +399,7 @@
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Internal rendering stack pointer</span>
+      <span class='desc'>Internal rendering stack pointer </span>
     </li>
   </ul>
 </div>
@@ -449,11 +463,11 @@
 </div>
     </div>
     <div id='footer'>
-  December 08, 13 23:40:32 by
-  <a href='https://github.com/coffeescript/codo' title='CoffeeScript API documentation generator'>
+  December 08, 13 23:51:19 by
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
-  2.0.0-rc.4
+  2.0.2
   &#10034;
   Press H to see the keyboard shortcuts
   &#10034;

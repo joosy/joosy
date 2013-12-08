@@ -77,7 +77,7 @@
       </a>
     </span>
     <span class='desc'>
-      Registers a set of raw routesThe method saves hash of routes for further activation
+      Registers a set of raw routes The method saves hash of routes for further activation
 
     </span>
   </li>
@@ -90,7 +90,7 @@
       </a>
     </span>
     <span class='desc'>
-      Draws the routes similar to Ruby on Rails
+      Draws the routes similar to Ruby on Rails 
     </span>
   </li>
   <li>
@@ -102,7 +102,7 @@
       </a>
     </span>
     <span class='desc'>
-      Inits the routing system and loads the current route
+      Inits the routing system and loads the current route 
     </span>
   </li>
   <li>
@@ -114,7 +114,7 @@
       </a>
     </span>
     <span class='desc'>
-      Clears current map of routes and deactivates bindings
+      Clears current map of routes and deactivates bindings 
     </span>
   </li>
   <li>
@@ -126,7 +126,7 @@
       </a>
     </span>
     <span class='desc'>
-      Sets the restriction pattern.
+      Sets the restriction pattern. 
     </span>
   </li>
   <li>
@@ -138,7 +138,7 @@
       </a>
     </span>
     <span class='desc'>
-      Changes current URI and therefore triggers route loading
+      Changes current URI and therefore triggers route loading 
     </span>
   </li>
   <li>
@@ -150,7 +150,7 @@
       </a>
     </span>
     <span class='desc'>
-      Gets current route out of the window location
+      Gets current route out of the window location 
     </span>
   </li>
   <li>
@@ -162,7 +162,7 @@
       </a>
     </span>
     <span class='desc'>
-      Compiles one single route
+      Compiles one single route 
     </span>
   </li>
   <li>
@@ -174,7 +174,7 @@
       </a>
     </span>
     <span class='desc'>
-      Searches given route at compiled routes and reacts
+      Searches given route at compiled routes and reacts 
     </span>
   </li>
   <li>
@@ -186,7 +186,7 @@
       </a>
     </span>
     <span class='desc'>
-      Registers Rails-like route helpers (<code>fooPath()</code>, <code>fooUrl()</code>)
+      Registers Rails-like route helpers (<code>fooPath()</code>, <code>fooUrl()</code>) 
     </span>
   </li>
   <li>
@@ -199,7 +199,7 @@
     </span>
     <span class='note private title'>Private</span>
     <span class='desc'>
-      Parses parameters from both, current URL and route placeholders
+      Parses parameters from both, current URL and route placeholders 
     </span>
   </li>
 </ul>
@@ -242,7 +242,7 @@ The method saves hash of routes for further activation</p>
         (<tt>Object</tt>)
       </span>
       &mdash;
-      <span class='desc'>Set of routes in inner format (see class description)</span>
+      <span class='desc'>Set of routes in inner format (see class description) </span>
     </li>
   </ul>
 </div>
@@ -266,7 +266,7 @@ The method saves hash of routes for further activation</p>
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>callback for child commands</span>
+      <span class='desc'>callback for child commands </span>
     </li>
   </ul>
 </div>
@@ -340,13 +340,35 @@ Set <code>false</code> to make router react on all modifications.</p>
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Route to navigate to</span>
+      <span class='desc'>Route to navigate to </span>
     </li>
     <li>
       <span class='name'>options</span>
       <span class='type'>
         (<tt>Object</tt>)
       </span>
+    </li>
+  </ul>
+  <h3>
+    Options Hash:
+    (options):
+  </h3>
+  <ul class='options'>
+    <li>
+      <span class='name'>respond</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>If false just changes route without responding </span>
+    </li>
+    <li>
+      <span class='name'>replace</span>
+      <span class='type'>
+        (<tt>Boolean</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>If true replaces history entry instead of adding (HTML5 mode only) </span>
     </li>
   </ul>
 </div>
@@ -361,7 +383,7 @@ Set <code>false</code> to make router react on all modifications.</p>
     <div class='docstring'>
   <div class='note'>
     <strong>Note:</strong>
-    canonized location always starts with leading /
+    canonized location always starts with leading / 
   </div>
   <p>Gets current route out of the window location</p>
 </div>
@@ -387,7 +409,7 @@ Set <code>false</code> to make router react on all modifications.</p>
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Full path from raw route</span>
+      <span class='desc'>Full path from raw route </span>
     </li>
     <li>
       <span class='name'>response</span>
@@ -395,7 +417,7 @@ Set <code>false</code> to make router react on all modifications.</p>
         (<tt>Class</tt>)
       </span>
       &mdash;
-      <span class='desc'>Class that should be instantiated at this route</span>
+      <span class='desc'>Class that should be instantiated at this route </span>
     </li>
     <li>
       <span class='name'>response</span>
@@ -403,7 +425,7 @@ Set <code>false</code> to make router react on all modifications.</p>
         (<tt>Function</tt>)
       </span>
       &mdash;
-      <span class='desc'>Lambda to call at this route</span>
+      <span class='desc'>Lambda to call at this route </span>
     </li>
   </ul>
 </div>
@@ -427,7 +449,7 @@ Set <code>false</code> to make router react on all modifications.</p>
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Hash value to search route for</span>
+      <span class='desc'>Hash value to search route for </span>
     </li>
   </ul>
 </div>
@@ -451,7 +473,7 @@ Set <code>false</code> to make router react on all modifications.</p>
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>String route representation to wrap into helper</span>
+      <span class='desc'>String route representation to wrap into helper </span>
     </li>
     <li>
       <span class='name'>as</span>
@@ -459,7 +481,7 @@ Set <code>false</code> to make router react on all modifications.</p>
         (<tt>String</tt>)
       </span>
       &mdash;
-      <span class='desc'>Helpers base name</span>
+      <span class='desc'>Helpers base name </span>
     </li>
   </ul>
 </div>
@@ -481,11 +503,11 @@ Set <code>false</code> to make router react on all modifications.</p>
 </div>
     </div>
     <div id='footer'>
-  December 08, 13 23:40:32 by
-  <a href='https://github.com/coffeescript/codo' title='CoffeeScript API documentation generator'>
+  December 08, 13 23:51:19 by
+  <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
-  2.0.0-rc.4
+  2.0.2
   &#10034;
   Press H to see the keyboard shortcuts
   &#10034;

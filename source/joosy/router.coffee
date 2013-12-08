@@ -166,7 +166,10 @@ class Joosy.Router extends Joosy.Module
       @config.prefix = @config.prefix.replace(/^\#?\/?/, '').replace /\/?$/, ''
 
       $(window).bind 'hashchange.JoosyRouter', =>
-        @respond @canonizeLocation()
+        if @__skipHashChange? && @__skipHashChange > 0
+          @__skipHashChange -= 1
+        else
+          @respond @canonizeLocation()
 
     @respond @canonizeLocation() if respond
 
@@ -193,22 +196,31 @@ class Joosy.Router extends Joosy.Module
   # Changes current URI and therefore triggers route loading
   #
   # @param [String] to                       Route to navigate to
-  #
+  # @param [Object] options
   # @option options [Boolean] respond        If false just changes route without responding
-  # @option options [Boolean] replaceState   If true replaces history entry instead of adding. Works only in browsers supporting history.pushState
+  # @option options [Boolean] replace        If true replaces history entry instead of adding (HTML5 mode only)
   #
-  @navigate: (to, options={}) ->
-    path = to
+  @navigate: (path, options={}) ->
+    method  = if options.replace then 'replaceState' else 'pushState'
+    respond = options.respond ? true
 
     if @config.html5
       # omit html5 relative links
       if @config.prefix && path[0] == '/' && !path.match(RegExp("^#{@config.prefix.replace(/\/$/, '')}(/|$)"))
         path = path.replace /^\//, @config.prefix
-      history.pushState {}, '', path
-      @trigger 'pushstate'
+
+      history[method] {}, '', path
+
+      @trigger('pushstate') if respond
     else
+      # remove prefix
       if @config.prefix && !path.match(RegExp("^#?/?#{@config.prefix}(/|$)"))
         path = path.replace /^\#?\/?/, "#{@config.prefix}/"
+
+      unless respond
+        @__skipHashChange ?= 0
+        @__skipHashChange += 1
+
       location.hash = path
 
     return

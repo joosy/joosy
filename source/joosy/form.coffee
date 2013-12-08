@@ -298,7 +298,7 @@ class Joosy.Form extends Joosy.Module
 
   #
   # Simulates REST methods by adding hidden _method input with real method
-  # while setting POST as the transport method
+  # while setting POST as the transport method.
   #
   # @param [String] method      Real method to simulate
   #

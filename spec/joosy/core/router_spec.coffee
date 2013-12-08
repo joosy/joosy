@@ -179,8 +179,15 @@ describe "Joosy.Router", ->
         runs -> Joosy.Router.navigate '/base'
         waits 0
         runs ->
-          location.hash == '#/base'
+          expect(location.hash).toEqual '#/base'
           expect(@spies.responder.callCount).toEqual 1
+
+      it 'stubs', ->
+        runs -> Joosy.Router.navigate '/base', respond: false
+        waits 0
+        runs ->
+          expect(location.hash).toEqual '#/base'
+          expect(@spies.responder.callCount).toEqual 0
 
       it 'defines plain helper', ->
         expect(Joosy.Helpers.Routes.rootPath()).toEqual '#'
@@ -269,6 +276,23 @@ describe "Joosy.Router", ->
           runs ->
             location.pathname == '/base'
             expect(@spies.responder.callCount).toEqual 1
+
+        it 'stubs', ->
+          runs -> Joosy.Router.navigate '/base', respond: false
+          waits 0
+          runs ->
+            location.pathname == '/base'
+            expect(@spies.responder.callCount).toEqual 0
+
+        it 'replaces', ->
+          length = history.length
+
+          runs -> Joosy.Router.navigate '/base', replace: true
+          waits 0
+          runs ->
+            location.pathname == '/base'
+            expect(@spies.responder.callCount).toEqual 1
+            expect(history.length).toEqual length
 
         it 'defines plain helper', ->
           expect(Joosy.Helpers.Routes.rootPath()).toEqual '/'

@@ -183,12 +183,9 @@ class Joosy.Form extends Joosy.Module
           input = @$fields().filter("[name='#{key}']:not(:file),[name='#{inflection.underscore(key)}']:not(:file),[name='#{inflection.camelize(key, true)}']:not(:file)")
           if input.length > 0
             if input.is ':checkbox'
-              if val
-                input.attr 'checked', 'checked'
-              else
-                input.removeAttr 'checked'
+              input.prop 'checked', !!val
             else if input.is ':radio'
-              input.filter("[value='#{val}']").attr 'checked', 'checked'
+              input.filter("[value='#{val}']").prop 'checked', true
             else
               input.val val
           if val instanceof Joosy.Resources.Array
@@ -341,7 +338,7 @@ class Joosy.Form extends Joosy.Module
 
         if notifications.constructor == Object || @isArrayOfObjects(notifications)
           result[field+key] = value for key, value of @__foldInlineEntities(notifications)
-            
+
         else
           if field.indexOf(".") != -1
             splited = field.split '.'

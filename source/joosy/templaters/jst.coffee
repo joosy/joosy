@@ -9,6 +9,7 @@ class Joosy.Templaters.JST
   #
   constructor: (@config={}) ->
     @prefix = @config.prefix if @config.prefix? && @config.prefix.length > 0
+    @locale = @config.locale if @config.locale? && @config.locale.length > 0
 
   #
   # Gets template lambda by its full name
@@ -18,19 +19,24 @@ class Joosy.Templaters.JST
   buildView: (name) ->
     template = false
 
-    if @prefix
-      haystack = [
-        "#{@prefix}/templates/#{name}-#{I18n?.locale}",
-        "#{@prefix}/templates/#{name}"
-      ]
-    else
-      haystack = [
-        "templates/#{name}-#{I18n?.locale}",
-        "templates/#{name}"
-      ]
+    if window.JST[name]
+      return window.JST[name]
 
-    for path in haystack
-      return window.JST[path] if window.JST[path]
+    if @locale && window.JST["#{name}-#{@locale}"]
+      return window.JST["#{name}-#{@locale}"]
+
+    if @prefix
+      if @locale && window.JST["#{@prefix}/templates/#{name}-#{@locale}"]
+        return window.JST["#{@prefix}/templates/#{name}-#{@locale}"]
+
+      if window.JST["#{@prefix}/templates/#{name}"]
+        return window.JST["#{@prefix}/templates/#{name}"]
+    else
+      if @locale && window.JST["templates/#{name}-#{@locale}"]
+        return window.JST["templates/#{name}-#{@locale}"]
+
+      if window.JST["templates/#{name}"]
+        return window.JST["templates/#{name}"]
 
     throw new Error "Template '#{name}' not found. Checked at: '#{haystack.join(', ')}'"
 

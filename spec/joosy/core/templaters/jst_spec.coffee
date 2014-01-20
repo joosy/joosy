@@ -4,16 +4,14 @@ describe "Joosy.Templaters.JST", ->
 
     beforeEach ->
       window.JST = {}
-      window.I18n = {locale: 'en'}
 
     afterEach ->
       window.JST = undefined
-      window.I18n = undefined
 
     describe "with empty application name", ->
 
       beforeEach ->
-        @templater = new Joosy.Templaters.JST
+        @templater = new Joosy.Templaters.JST(locale: 'en')
 
       it "resolves plain template", ->
         JST['templates/test'] = 'template'
@@ -24,10 +22,15 @@ describe "Joosy.Templaters.JST", ->
         JST['templates/test-en'] = 'template'
         expect(@templater.buildView('test')).toEqual 'template'
 
+      it "preffers full path template", ->
+        JST['templates/test'] = 'template'
+        JST['templates/templates/test'] = 'error'
+        expect(@templater.buildView('templates/test')).toEqual 'template'
+
     describe "with set application name", ->
 
       beforeEach ->
-        @templater = new Joosy.Templaters.JST(prefix: 'application')
+        @templater = new Joosy.Templaters.JST(prefix: 'application', locale: 'en')
 
       it "resolves plain template", ->
         JST['application/templates/test'] = 'template'
@@ -37,6 +40,11 @@ describe "Joosy.Templaters.JST", ->
         JST['application/templates/test'] = 'error'
         JST['application/templates/test-en'] = 'template'
         expect(@templater.buildView('test')).toEqual 'template'
+
+      it "preffers full path template", ->
+        JST['templates/test'] = 'template'
+        JST['application/templates/templates/test'] = 'error'
+        expect(@templater.buildView('templates/test')).toEqual 'template'
 
   it "resolves templates correctly", ->
     templater = new Joosy.Templaters.JST

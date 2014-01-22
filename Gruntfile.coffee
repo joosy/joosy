@@ -34,7 +34,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-testem'
   grunt.loadNpmTasks 'grunt-coffeelint'
   grunt.loadNpmTasks 'grunt-release'
-  grunt.loadNpmTasks 'grunt-gh-pages'
+  grunt.loadNpmTasks 'grunt-push'
 
   #
   # Config
@@ -68,15 +68,6 @@ module.exports = (grunt) ->
             level: 'error'
           'no_empty_param_list':
             level: 'error'
-
-    'gh-pages':
-      docs:
-        options:
-          add: true
-          clone: 'doc'
-          command:
-            cmd: 'grunt'
-            args: ['doc']
 
     testem:
       core: testemOptions(
@@ -139,22 +130,22 @@ module.exports = (grunt) ->
         commit: false
         push: false
 
+    push:
+      docs:
+        options:
+          cwd: 'doc'
+          branch: 'gh-pages'
+
   #
   # Main tasks
   #
   grunt.registerTask 'default', 'testem'
 
-  grunt.registerTask 'compile', ['bowerize', 'grill:compile', 'uglify']
-
-  grunt.registerTask 'spec', ->
-    grunt.task.run 'coffeelint'
-    grunt.task.run if @args[0] then "testem:run:#{@args[0]}" else 'testem'
-
   grunt.registerTask 'publish', [
-    'spec',
     'compile',
+    'spec',
     'ensureCommits',
-    'gh-pages',
+    'doc',
     'release',
     'gemify'
   ]
@@ -162,6 +153,12 @@ module.exports = (grunt) ->
   #
   # Building
   #
+  grunt.registerTask 'spec', ->
+    grunt.task.run 'coffeelint'
+    grunt.task.run if @args[0] then "testem:run:#{@args[0]}" else 'testem'
+
+  grunt.registerTask 'compile', ['bowerize', 'grill:compile', 'uglify']
+
   grunt.registerTask 'bowerize', ->
     bower = require './bower.json'
     meta  = require './package.json'
@@ -203,7 +200,7 @@ module.exports = (grunt) ->
   #
   # Documentation
   #
-  grunt.registerTask 'doc', ->
+  grunt.registerTask 'doc:generate', ->
     complete = @async()
 
     version     = require('./package.json').version.split('-')
@@ -240,3 +237,11 @@ module.exports = (grunt) ->
         versions: versions.map (x) -> { version: x, date: date(x) }
       }
       grunt.file.write 'doc/versions.js', "window.versions = #{JSON.stringify(versions)}"
+      complete()
+
+  grunt.registerTask 'doc', [
+    'push:prepare:docs',
+    'doc:generate',
+    'push:add:docs',
+    'push:deliver:docs'
+  ]

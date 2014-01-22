@@ -25,6 +25,7 @@
     "grunt-contrib-testem": "=0.5.13",
     "grunt-gh-pages": "git+https://github.com/inossidabile/grunt-gh-pages.git",
     "moment": "~2.1.0",
-    "grunt-contrib-uglify": "~0.2.4"
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-push": "~0.1.1"
   }
 }

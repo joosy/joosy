@@ -38,14 +38,21 @@
 <a href="https://travis-ci.org/joosy/joosy"><img src="https://travis-ci.org/joosy/joosy.png" alt="Build Status"></a>
 <a href="https://gemnasium.com/joosy/joosy"><img src="https://gemnasium.com/joosy/joosy.png" alt="Dependency Status"></a></p><hr>
 <h2 id="warning-">WARNING!!!</h2><p>Master branch is currently totally incompatible with the stable 1.1 and 1.0 branches. 1.2 features
-total restructuring of the way we build the gem and the way you are supposed to include it.</p><p>To keep things working please use either</p><pre><code class="lang-ruby">  gem &#39;joosy&#39;, &#39;~&gt; 1.1.1&#39;</code></pre><p>or</p><pre><code class="lang-ruby">  gem &#39;joosy&#39;, github: &#39;joosy/joosy&#39;, branch: &#39;1.1&#39;</code></pre><p><a href="http://guides.joosy.ws/">Guides</a> are still bound to 1.1 branch! <a href="http://api.joosy.ws/">API</a> docs
+total restructuring of the way we build the gem and the way you are supposed to include it.</p><p>To keep things working please use either</p><pre><code class="lang-ruby">  gem &#39;joosy&#39;, &#39;~&gt; 1.1.1&#39;
+</code></pre><p>or</p><pre><code class="lang-ruby">  gem &#39;joosy&#39;, github: &#39;joosy/joosy&#39;, branch: &#39;1.1&#39;
+</code></pre><p><a href="http://guides.joosy.ws/">Guides</a> are still bound to 1.1 branch! <a href="http://api.joosy.ws/">API</a> docs
 are available for all current versions. Again – make sure you use proper gem versions.</p><h3 id="whatever-i-m-ninja-">Whatever! I&#39;m ninja!</h3><p>Below in this README you will find new installation instructions. 1.2 branch is currently in beta.
 It means we are in feature-freeze mode and interface is unlikely to change. But things are still
 unstable and the release can contain tiny inconsistencies that might be required to make things work.</p><p>Keep track on what&#39;s going on at the <a href="https://github.com/joosy/joosy/wiki#12-feather">Wiki</a></p><hr>
-<h2 id="what-is-joosy">What is Joosy</h2><p>Joosy allows you to create web apps which work completely in the browser. So that, it helps you to relocate all your Rails Views to the client side. It also helps you with managing the growing quantity of JS code. On another hand, it makes your backend to have exactly one function – to be a simple REST provider. That leads to easier development support and improves the scalability greatly.</p><p>Besides Rails, Joosy is based on top of <a href="http://coffeescript.org/">CoffeeScript</a>, <a href="http://jquery.com/">jQuery</a> and <a href="http://sugarjs.com/">Sugar.js</a> in role of ActiveSupport.</p><p>Finally, Joosy boosts your development drastically. Just like the Rails framework does.</p><h3 id="jump-in-with-rails">Jump in with Rails</h3><p>Add Joosy gem to your Gemfile:</p><pre><code class="lang-ruby">  gem &#39;joosy-rails&#39;, &#39;~&gt; 1.0.0.RC2&#39;</code></pre><p>Use built-in generator to seed a basic application:</p><pre><code>rails g joosy:application</code></pre><p>Make sure to remove <code>public/index.html</code> and you are ready to go with <a href="http://localhost:3000/">localhost:3000</a>. The main application code can be found at <code>app/assets/javascripts</code> directory. HTML canvas of the application is at <code>app/views/layouts/joosy.html.erb</code>.</p><h3 id="jump-in-with-sinatra">Jump in with Sinatra</h3>
-<h3 id="standalone-application">Standalone application</h3><p>Standalone mode of Joosy is based on <a href="http://yeoman.io">Yeoman</a> and <a href="https://github.com/joosy/grill">Grill</a>. Start from installing proper Yeoman extension:</p><pre><code>npm install -g yo generator-joosy</code></pre><p>Now create a directory to use a project root and run application generator:</p><pre><code>mkdir new dummy
+<h2 id="what-is-joosy">What is Joosy</h2><p>Joosy allows you to create web apps which work completely in the browser. So that, it helps you to relocate all your Rails Views to the client side. It also helps you with managing the growing quantity of JS code. On another hand, it makes your backend to have exactly one function – to be a simple REST provider. That leads to easier development support and improves the scalability greatly.</p><p>Besides Rails, Joosy is based on top of <a href="http://coffeescript.org/">CoffeeScript</a>, <a href="http://jquery.com/">jQuery</a> and <a href="http://sugarjs.com/">Sugar.js</a> in role of ActiveSupport.</p><p>Finally, Joosy boosts your development drastically. Just like the Rails framework does.</p><h3 id="jump-in-with-rails">Jump in with Rails</h3><p>Add Joosy gem to your Gemfile:</p><pre><code class="lang-ruby">  gem &#39;joosy-rails&#39;, &#39;~&gt; 1.0.0.RC2&#39;
+</code></pre><p>Use built-in generator to seed a basic application:</p><pre><code>rails g joosy:application
+</code></pre><p>Make sure to remove <code>public/index.html</code> and you are ready to go with <a href="http://localhost:3000/">localhost:3000</a>. The main application code can be found at <code>app/assets/javascripts</code> directory. HTML canvas of the application is at <code>app/views/layouts/joosy.html.erb</code>.</p><h3 id="jump-in-with-sinatra">Jump in with Sinatra</h3>
+<h3 id="standalone-application">Standalone application</h3><p>Standalone mode of Joosy is based on <a href="http://yeoman.io">Yeoman</a> and <a href="https://github.com/joosy/grill">Grill</a>. Start from installing proper Yeoman extension:</p><pre><code>npm install -g yo generator-joosy
+</code></pre><p>Now create a directory to use a project root and run application generator:</p><pre><code>mkdir new dummy
 cd dummy
-yo joosy</code></pre><p>The main application code will appear at <code>source</code> directory. <code>stylesheets</code> is for Stylus-based styles and the main canvas of page is defined at <code>source/haml/index.haml</code>. Now you can <code>grunt server</code> to start development server at <a href="http://localhost:4000/">localhost:4000</a>.</p><p>To generate assets statically prior to the deployment run:</p><pre><code>grunt compile</code></pre><p>You assets are at <code>public/</code> directory, enjoy!</p><ul>
+yo joosy
+</code></pre><p>The main application code will appear at <code>source</code> directory. <code>stylesheets</code> is for Stylus-based styles and the main canvas of page is defined at <code>source/haml/index.haml</code>. Now you can <code>grunt server</code> to start development server at <a href="http://localhost:4000/">localhost:4000</a>.</p><p>To generate assets statically prior to the deployment run:</p><pre><code>grunt compile
+</code></pre><p>You assets are at <code>public/</code> directory, enjoy!</p><ul>
 <li><a href="https://github.com/joosy/generator-joosy#available-in-app-generators">List of supported generators</a></li>
 <li><a href="https://github.com/joosy/grill#commands">Commands and options of Grill</a></li>
 </ul>
@@ -68,19 +75,17 @@ environment is Node.js.</p><h2 id="maintainers">Maintainers</h2>
       </div>
     </div>
     <div id='footer'>
-  January 22, 14 22:26:25 by
+  February 02, 14 21:33:13 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>
-  2.0.2
+  2.0.6
   &#10034;
   Press H to see the keyboard shortcuts
   &#10034;
   <a href='http://twitter.com/netzpirat' target='_parent'>@netzpirat</a>
   &#10034;
   <a href='http://twitter.com/_inossidabile' target='_parent'>@_inossidabile</a>
-  &#10034;
-  <a href='https://mksoft.ch' target='_parent'>mksoft.ch</a>
 </div>
 <iframe id='search_frame'></iframe>
 <div id='fuzzySearch'>

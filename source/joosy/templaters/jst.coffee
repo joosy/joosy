@@ -38,7 +38,7 @@ class Joosy.Templaters.JST
       if window.JST["templates/#{name}"]
         return window.JST["templates/#{name}"]
 
-    throw new Error "Template '#{name}' not found. Checked at: '#{haystack.join(', ')}'"
+    throw new Error "Template '#{name}' not found."
 
   #
   # Gets full name of template by several params

@@ -1,5 +1,6 @@
 #= require ./hash
 #= require joosy/modules/resources/model
+#= require ./rest_collection
 
 #
 # Resource with REST/JSON backend
@@ -18,6 +19,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
       data = data[name] if data[name]
 
     data
+
+  @collection Joosy.Resources.RESTCollection
 
   #
   # Registeres default options for all HTTP queries
@@ -290,20 +293,11 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
     else
       [options, callback] = @::__extractOptionsAndCallback(options, callback)
 
-    result = new @::__collection
+    result = new @::__collection(this, where)
 
     @__query @collectionPath(where, options), 'GET', options.params, (error, rawData, xhr) =>
-      if (data = rawData)?
-        if data.constructor == Object && !(data = data[inflection.pluralize(@::__entityName)])
-          throw new Error "Invalid data for `all` received: #{JSON.stringify(data)}"
-
-        data = data.map (x) =>
-          instance = @build x
-          # Substitute interpolation mask with actual path
-          instance.__source = @collectionPath where if where.length > 1
-          instance
-
-        result.load data...
+      if rawData?
+        result.load rawData
 
       callback?(error, result, rawData, xhr)
 

@@ -390,22 +390,28 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   # @private
   #
   __extractSendArguments: (where, method, options, callback) ->
+    # (method, callback) ->
     if typeof method == 'function'
       callback = method
       options = {}
       method = where
       where = []
+
+    # (method, options, callback) ->
     else if typeof method == 'object'
       callback = options
       options = method
       method = where
       where = []
+
+    # (method) ->
     else if !method?
       callback = undefined
       options = {}
       method = where
       where = []
 
+    # ([where, method], callback)
     if typeof options == 'function'
       callback = options
       options = {}

@@ -295,8 +295,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
     result = new @::__collection(this, where)
 
     @send where, 'GET', options, (error, rawData, xhr) =>
-      if rawData?
-        result.load rawData
+      result.load rawData if rawData?
 
       callback?(error, result, rawData, xhr)
 

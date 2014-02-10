@@ -24,7 +24,6 @@ class Joosy.Resources.RESTCollection extends Joosy.Resources.Array
       options = {}
 
     @__resource.send @__where, 'GET', options, (error, rawData, xhr) =>
-      if rawData?
-        @load rawData
+      @load rawData if rawData?
 
       callback?(error, this, rawData, xhr)

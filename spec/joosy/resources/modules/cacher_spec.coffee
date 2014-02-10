@@ -39,7 +39,7 @@ describe 'Joosy.Modules.Resources.Cacher', ->
 
         @cache 'array'
         @fetcher (callback) ->
-          spy(); callback 1, 2
+          spy(); callback [1, 2]
 
     it 'caches', ->
       @Cacher.cached (instance) =>
@@ -47,7 +47,7 @@ describe 'Joosy.Modules.Resources.Cacher', ->
         expect(instance[1]).toEqual 2
         expect(instance.length).toEqual 2
 
-        expect(localStorage['array']).toEqual '[1,2]'
+        expect(localStorage['array']).toEqual '[[1,2]]'
         expect(@spy.callCount).toEqual 1
 
         instance.refresh (instance) =>

@@ -2,7 +2,7 @@ describe 'Joosy.Resources.Array', ->
 
   describe 'in general', ->
     beforeEach ->
-      @array = new Joosy.Resources.Array(1, 2, 3)
+      @array = new Joosy.Resources.Array([1, 2, 3])
 
     it 'wraps', ->
       expect(@array instanceof Array).toBeTruthy()
@@ -46,11 +46,11 @@ describe 'Joosy.Resources.Array', ->
           data.push 2
           data
 
-      array = new RealArray(1)
+      array = new RealArray([1])
       expect(array[0]).toEqual 1
       expect(array[1]).toEqual 2
 
-      array.load(5,6)
+      array.load([5,6])
       expect(array[0]).toEqual 5
       expect(array[1]).toEqual 6
       expect(array[2]).toEqual 2

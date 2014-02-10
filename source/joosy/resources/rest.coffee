@@ -206,10 +206,9 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   # @param [Function] callback    Resulting callback
   # @param [Object]   callback    `(error, data) -> ...`
   #
-  @send: (method, options, callback) ->
-    [options, callback] = @::__extractOptionsAndCallback(options, callback)
-    @__query @collectionPath(options), method.toUpperCase(), options.params, callback
-
+  @send: (where, method, options, callback) ->
+    [ where, method, options, callback ] = @::__extractSendArguments where, method, options, callback
+    @__query @collectionPath(where, options), method.toUpperCase(), options.params, callback
 
 
   #
@@ -221,9 +220,9 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   # @param [Function] callback    Resulting callback
   # @param [Object]   callback    `(error, data) -> ...`
   #
-  send: (method, options, callback) ->
-    [options, callback] = @__extractOptionsAndCallback(options, callback)
-    @constructor.__query @memberPath(options), method.toUpperCase(), options.params, callback
+  send: (where, method, options, callback) ->
+    [ where, method, options, callback ] = @__extractSendArguments where, method, options, callback
+    @constructor.__query @memberPath(where, options), method.toUpperCase(), options.params, callback
 
   #
   # Refetches the data from backend and triggers `changed`
@@ -235,7 +234,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   reload: (options={}, callback=false) ->
     [options, callback] = @__extractOptionsAndCallback(options, callback)
 
-    @constructor.__query @memberPath(options), 'GET', options.params, (error, data, xhr) =>
+    @send 'GET', options, (error, data, xhr) =>
       @load data if data?
       callback?(error, @, data, xhr)
 
@@ -295,7 +294,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
 
     result = new @::__collection(this, where)
 
-    @__query @collectionPath(where, options), 'GET', options.params, (error, rawData, xhr) =>
+    @send where, 'GET', options, (error, rawData, xhr) =>
       if rawData?
         result.load rawData
 
@@ -387,6 +386,32 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
       callback = options
       options  = {}
     [options, callback]
+
+  #
+  # @private
+  #
+  __extractSendArguments: (where, method, options, callback) ->
+    if typeof method == 'function'
+      callback = method
+      options = {}
+      method = where
+      where = []
+    else if typeof method == 'object'
+      callback = options
+      options = method
+      method = where
+      where = []
+    else if !method?
+      callback = undefined
+      options = {}
+      method = where
+      where = []
+
+    if typeof options == 'function'
+      callback = options
+      options = {}
+
+    [ where, method, options, callback ]
 
 # AMD wrapper
 if define?.amd?

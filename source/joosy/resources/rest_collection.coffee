@@ -17,3 +17,14 @@ class Joosy.Resources.RESTCollection extends Joosy.Resources.Array
       # Substitute interpolation mask with actual path
       instance.__source = @__resource.collectionPath @__where if @__where.length > 1
       instance
+
+  reload: (options = {}, callback = false) ->
+    if typeof options == 'function'
+      callback = options
+      options = {}
+
+    @__resource.send @__where, 'GET', options, (error, rawData, xhr) =>
+      if rawData?
+        @load rawData
+
+      callback?(error, this, rawData, xhr)

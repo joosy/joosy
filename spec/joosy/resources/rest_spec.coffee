@@ -168,7 +168,7 @@ describe "Joosy.Resources.REST", ->
 
     beforeEach ->
       @callback = sinon.spy (error, target, data) ->
-        expect(target instanceof Joosy.Resources.Array).toEqual true
+        expect(target instanceof Joosy.Resources.RESTCollection).toEqual true
         expect(target.length).toEqual 2
         expect(target[0] instanceof Fluffy).toEqual true
         expect(data).toEqual $.parseJSON(rawData)
@@ -204,6 +204,21 @@ describe "Joosy.Resources.REST", ->
     resource.reload()
     checkAndRespond @server.requests[1], 'GET', /^\/fluffies\/1\?_=\d+/, rawData
     expect(callback.callCount).toEqual 1
+
+  it "reloads collection", ->
+    rawData = '{"page": 42, "fluffies": [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]}'
+    collection = undefined
+    @callback = sinon.spy (error, target, data) ->
+      expect(target instanceof Joosy.Resources.RESTCollection).toEqual true
+      collection = target
+
+    resource = Fluffy.all @callback
+    checkAndRespond @server.requests[0], 'GET', /^\/fluffies\?_=\d+/, rawData
+    expect(@callback.callCount).toEqual 1
+
+    collection.reload(@callback)
+    checkAndRespond @server.requests[0], 'GET', /^\/fluffies\?_=\d+/, rawData
+    expect(@callback.callCount).toEqual 1
 
   describe "requests", ->
     rawData  = '{"foo": "bar"}'

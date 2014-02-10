@@ -14,21 +14,27 @@ describe "Joosy.Modules.Filters", ->
         @beforeLoad 'filter1'
         @afterLoad 'filter2'
         @afterUnload 'filter3'
+        @prependBeforeLoad 'pfilter1'
+        @prependAfterLoad 'pfilter2'
+        @prependAfterUnload 'pfilter3'
 
       class B extends A
         @beforeLoad 'filter4'
         @afterLoad 'filter5'
         @afterUnload 'filter6'
+        @prependBeforeLoad 'pfilter4'
+        @prependAfterLoad 'pfilter5'
+        @prependAfterUnload 'pfilter6'
 
       target = new B
-      expect(target.__beforeLoads).toEqual ['filter1', 'filter4']
-      expect(target.__afterLoads).toEqual ['filter2', 'filter5']
-      expect(target.__afterUnloads).toEqual ['filter3', 'filter6']
+      expect(target.__beforeLoads).toEqual ['pfilter4', 'pfilter1', 'filter1', 'filter4']
+      expect(target.__afterLoads).toEqual ['pfilter5', 'pfilter2', 'filter2', 'filter5']
+      expect(target.__afterUnloads).toEqual ['pfilter6', 'pfilter3', 'filter3', 'filter6']
 
       target = new A
-      expect(target.__beforeLoads).toEqual ['filter1']
-      expect(target.__afterLoads).toEqual ['filter2']
-      expect(target.__afterUnloads).toEqual ['filter3']
+      expect(target.__beforeLoads).toEqual ['pfilter1','filter1']
+      expect(target.__afterLoads).toEqual ['pfilter2','filter2']
+      expect(target.__afterUnloads).toEqual ['pfilter3','filter3']
 
       target = new @Filters
       expect(target.__beforeLoads).toBeUndefined()
@@ -36,16 +42,19 @@ describe "Joosy.Modules.Filters", ->
       expect(target.__afterUnloads).toBeUndefined()
 
     it "runs callbacks", ->
-      callbacks = [0..2].map -> sinon.spy()
+      callbacks = [0..5].map -> sinon.spy()
       @Filters.beforeLoad callbacks[0]
       @Filters.afterLoad callbacks[1]
       @Filters.afterUnload callbacks[2]
+      @Filters.prependBeforeLoad callbacks[3]
+      @Filters.prependAfterLoad callbacks[4]
+      @Filters.prependAfterUnload callbacks[5]
 
       @filters.__confirmBeforeLoads 1, 2
       @filters.__runAfterLoads 1, 2
       @filters.__runAfterUnloads 1, 2
 
-      for i in [0..2]
+      for i in [0..5]
         expect(callbacks[i].callCount).toEqual 1
         expect(callbacks[i].alwaysCalledWithExactly 1, 2).toBeTruthy()
 
@@ -86,7 +95,7 @@ describe "Joosy.Modules.Filters", ->
       @Filters.beforeLoad  'callback0'
       @Filters.afterLoad   'callback1'
       @Filters.afterUnload 'callback2'
-        
+
       @filters.__confirmBeforeLoads()
       @filters.__runAfterLoads()
       @filters.__runAfterUnloads()
@@ -106,21 +115,27 @@ describe "Joosy.Modules.Filters", ->
         @beforeLoad 'filter1'
         @afterLoad 'filter2'
         @afterUnload 'filter3'
+        @prependBeforeLoad 'pfilter1'
+        @prependAfterLoad 'pfilter2'
+        @prependAfterUnload 'pfilter3'
 
       class B extends A
         @beforeLoad 'filter4'
         @afterLoad 'filter5'
         @afterUnload 'filter6'
+        @prependBeforeLoad 'pfilter4'
+        @prependAfterLoad 'pfilter5'
+        @prependAfterUnload 'pfilter6'
 
       target = new B
-      expect(target.__beforeLoads).toEqual ['filter1', 'filter4']
-      expect(target.__afterLoads).toEqual ['filter2', 'filter5']
-      expect(target.__afterUnloads).toEqual ['filter3', 'filter6']
+      expect(target.__beforeLoads).toEqual ['pfilter4', 'pfilter1', 'filter1', 'filter4']
+      expect(target.__afterLoads).toEqual ['pfilter5', 'pfilter2', 'filter2', 'filter5']
+      expect(target.__afterUnloads).toEqual ['pfilter6', 'pfilter3', 'filter3', 'filter6']
 
       target = new A
-      expect(target.__beforeLoads).toEqual ['filter1']
-      expect(target.__afterLoads).toEqual ['filter2']
-      expect(target.__afterUnloads).toEqual ['filter3']
+      expect(target.__beforeLoads).toEqual ['pfilter1', 'filter1']
+      expect(target.__afterLoads).toEqual ['pfilter2', 'filter2']
+      expect(target.__afterUnloads).toEqual ['pfilter3', 'filter3']
 
       target = new @Filters
       expect(target.__beforeLoads).toBeUndefined()

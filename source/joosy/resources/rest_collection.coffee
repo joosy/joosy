@@ -4,9 +4,7 @@
 # REST collection data
 #
 class Joosy.Resources.RESTCollection extends Joosy.Resources.Array
-  constructor: (resource, where) ->
-    @__resource = resource
-    @__where = where
+  constructor: (@__resource, @__where) ->
 
   @beforeLoad (data) ->
     if data.constructor == Object && !(data = data[inflection.pluralize(@__resource::__entityName)])

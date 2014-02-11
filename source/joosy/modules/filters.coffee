@@ -12,12 +12,19 @@ Joosy.Modules.Filters =
   # Internal helper registering filters accessors
   #
   __registerFilterCollector: (filter) ->
+    camelized = filter.charAt(0).toUpperCase() + filter.slice(1)
+
     @[filter] = (callback) ->
       unless @::hasOwnProperty "__#{filter}s"
         @::["__#{filter}s"] = [].concat @.__super__["__#{filter}s"] || []
       @::["__#{filter}s"].push callback
 
-    filter.charAt(0).toUpperCase() + filter.slice(1)
+    @["prepend#{camelized}"] = (callback) ->
+      unless @::hasOwnProperty "__#{filter}s"
+        @::["__#{filter}s"] = [].concat @.__super__["__#{filter}s"] || []
+      @::["__#{filter}s"].unshift callback
+
+    camelized
 
   #
   # Registers a set of plain (synchronous) filters

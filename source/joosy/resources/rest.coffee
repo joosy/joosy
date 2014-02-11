@@ -1,5 +1,6 @@
 #= require ./hash
 #= require joosy/modules/resources/model
+#= require ./rest_collection
 
 #
 # Resource with REST/JSON backend
@@ -18,6 +19,8 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
       data = data[name] if data[name]
 
     data
+
+  @collection Joosy.Resources.RESTCollection
 
   #
   # Registeres default options for all HTTP queries
@@ -203,10 +206,9 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   # @param [Function] callback    Resulting callback
   # @param [Object]   callback    `(error, data) -> ...`
   #
-  @send: (method, options, callback) ->
-    [options, callback] = @::__extractOptionsAndCallback(options, callback)
-    @__query @collectionPath(options), method.toUpperCase(), options.params, callback
-
+  @send: (where, method, options, callback) ->
+    [ where, method, options, callback ] = @::__extractSendArguments where, method, options, callback
+    @__query @collectionPath(where, options), method.toUpperCase(), options.params, callback
 
 
   #
@@ -218,9 +220,9 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   # @param [Function] callback    Resulting callback
   # @param [Object]   callback    `(error, data) -> ...`
   #
-  send: (method, options, callback) ->
-    [options, callback] = @__extractOptionsAndCallback(options, callback)
-    @constructor.__query @memberPath(options), method.toUpperCase(), options.params, callback
+  send: (where, method, options, callback) ->
+    [ where, method, options, callback ] = @__extractSendArguments where, method, options, callback
+    @constructor.__query @memberPath(where, options), method.toUpperCase(), options.params, callback
 
   #
   # Refetches the data from backend and triggers `changed`
@@ -232,7 +234,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   reload: (options={}, callback=false) ->
     [options, callback] = @__extractOptionsAndCallback(options, callback)
 
-    @constructor.__query @memberPath(options), 'GET', options.params, (error, data, xhr) =>
+    @send 'GET', options, (error, data, xhr) =>
       @load data if data?
       callback?(error, @, data, xhr)
 
@@ -290,20 +292,10 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
     else
       [options, callback] = @::__extractOptionsAndCallback(options, callback)
 
-    result = new @::__collection
+    result = new @::__collection(this, where)
 
-    @__query @collectionPath(where, options), 'GET', options.params, (error, rawData, xhr) =>
-      if (data = rawData)?
-        if data.constructor == Object && !(data = data[inflection.pluralize(@::__entityName)])
-          throw new Error "Invalid data for `all` received: #{JSON.stringify(data)}"
-
-        data = data.map (x) =>
-          instance = @build x
-          # Substitute interpolation mask with actual path
-          instance.__source = @collectionPath where if where.length > 1
-          instance
-
-        result.load data...
+    @send where, 'GET', options, (error, rawData, xhr) =>
+      result.load rawData if rawData?
 
       callback?(error, result, rawData, xhr)
 
@@ -393,6 +385,38 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
       callback = options
       options  = {}
     [options, callback]
+
+  #
+  # @private
+  #
+  __extractSendArguments: (where, method, options, callback) ->
+    # (method, callback) ->
+    if typeof method == 'function'
+      callback = method
+      options = {}
+      method = where
+      where = []
+
+    # (method, options, callback) ->
+    else if typeof method == 'object'
+      callback = options
+      options = method
+      method = where
+      where = []
+
+    # (method) ->
+    else if !method?
+      callback = undefined
+      options = {}
+      method = where
+      where = []
+
+    # ([where, method], callback)
+    if typeof options == 'function'
+      callback = options
+      options = {}
+
+    [ where, method, options, callback ]
 
 # AMD wrapper
 if define?.amd?

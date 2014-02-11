@@ -36,7 +36,7 @@ describe "Joosy.Form", ->
           test: 'test'
       EXact:
         MATCH: 'works'
-      items: new Joosy.Resources.Array Test.build(attr: 'one'), Test.build(attr: 'two')
+      items: new Joosy.Resources.Array [ Test.build(attr: 'one'), Test.build(attr: 'two') ]
       single: Test.build(attr: 'sin')
 
   afterEach ->

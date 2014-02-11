@@ -27,6 +27,8 @@
 Joosy.Modules.Resources.Cacher =
 
   ClassMethods:
+    VERSION: 1
+
     #
     # Defines the key that will be used to reference
     # the cached value at localStorage. Unless specified
@@ -75,8 +77,9 @@ Joosy.Modules.Resources.Cacher =
       cacheKey ||= @::__cacheKey
       fetcher  ||= @::__fetcher
 
-      if cacheKey && localStorage && localStorage[cacheKey]
-        instance = @build JSON.parse(localStorage[cacheKey])...
+      data = @__fetchFromLocalStorage cacheKey
+      if data?
+        instance = @build data...
         callback? instance
         instance.refresh()
       else
@@ -91,8 +94,33 @@ Joosy.Modules.Resources.Cacher =
     #
     fetch: (callback) ->
       @::__fetcher (results...) =>
-        localStorage[@::__cacheKey] = JSON.stringify(results) if @::__cacheKey && localStorage
+        @__storeInLocalStorage @::__cacheKey, results
         callback results
+
+    #
+    # @private
+    #
+    __fetchFromLocalStorage: (key) ->
+      if key? && localStorage? && localStorage[key]?
+        obj = JSON.parse localStorage[key]
+
+        if typeof obj == 'object' && obj.v == @VERSION
+          obj.d
+
+      undefined
+
+    #
+    # @private
+    #
+    __storeInLocalStorage: (key, data) ->
+      if key? && localStorage?
+        obj = v: @VERSION, d: data
+
+        localStorage[key] = JSON.stringify obj
+
+        true
+      else
+        false
 
   InstanceMethods:
     #

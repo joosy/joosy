@@ -5,11 +5,11 @@
 # @extend  Joosy.Modules.Filters
 #
 # @example
-#   data = Joosy.Resources.Array.build 1, 2, 3
+#   data = Joosy.Resources.Array.build [ 1, 2, 3 ]
 #   data.get(0)                                     # 1
 #   data.set(0, 5)                                  # triggers 'changed'
 #   data.push(4)                                    # triggers 'changed'
-#   data.load(7, 8, 9)                              # triggers 'changed'
+#   data.load([ 7, 8, 9 ])                          # triggers 'changed'
 #
 class Joosy.Resources.Array extends Array
   Joosy.Module.merge @, Joosy.Module
@@ -22,14 +22,14 @@ class Joosy.Resources.Array extends Array
   #
   # Instantiates a new array
   #
-  @build: ->
-    new @ arguments...
+  @build: (array = []) ->
+    new @ array
 
   #
   # Accepts numerous parameters (corresponding to array members)
   #
-  constructor: ->
-    @__fillData arguments, false
+  constructor: (array = []) ->
+    @__fillData array, false
 
   #
   # Replaces all the values with given
@@ -38,8 +38,8 @@ class Joosy.Resources.Array extends Array
   #   data = Joosy.Resources.Array.build 1, 2, 3
   #   data.load 1, 2, 3
   #
-  load: ->
-    @__fillData arguments
+  load: (array) ->
+    @__fillData array
 
   #
   # Gets element by its index
@@ -135,8 +135,6 @@ class Joosy.Resources.Array extends Array
   # @private
   #
   __fillData: (data, notify=true) ->
-    data = @slice.call(data, 0)
-
     @splice 0, @length if @length > 0
     @push entry for entry in @__applyBeforeLoads(data)
 

@@ -96,15 +96,33 @@ describe "Joosy.Modules.Resources.Model", ->
 
   it "sets attributes", ->
     class Fluffy extends Model
-      @attrAccessor 'foo', 'bar'
+      @attrAccessor 'foo', 'bar', 'nested': [{'deeplyNested': 'field'}, 'field']
 
-    fluffy = Fluffy.build foo: 'bar', bar: 'foo'
+    fluffy = Fluffy.build
+      foo: 'bar'
+      bar: 'foo'
+      nested:
+        deeplyNested:
+          field: 'deeply_nested'
+        field: 'nested'
 
-    expect(fluffy.foo()).toEqual 'bar'
-    expect(fluffy.bar()).toEqual 'foo'
+    expect(fluffy.foo).toEqual 'bar'
+    expect(fluffy.bar).toEqual 'foo'
+    expect(fluffy.nested).toEqual {'deeplyNested': {field: 'deeply_nested'}, 'field': 'nested'}
+    expect(fluffy.nested.deeplyNested).toEqual {field: 'deeply_nested'}
+    expect(fluffy.nested.deeplyNested.field).toEqual 'deeply_nested'
+    expect(fluffy.nested.field).toEqual 'nested'
 
-    fluffy.foo 'bar1'
-    fluffy.bar 'foo1'
+    fluffy.foo = 'bar1'
+    fluffy.bar = 'foo1'
+    fluffy.nested.deeplyNested = {field: 'deeply_nested1'}
 
-    expect(fluffy.foo()).toEqual 'bar1'
-    expect(fluffy.bar()).toEqual 'foo1'
+    expect(fluffy.foo).toEqual 'bar1'
+    expect(fluffy.bar).toEqual 'foo1'
+    expect(fluffy.nested).toEqual {'deeplyNested': {field: 'deeply_nested1'}, 'field': 'nested'}
+    expect(fluffy.nested.deeplyNested).toEqual {field: 'deeply_nested1'}
+    expect(fluffy.nested.deeplyNested.field).toEqual 'deeply_nested1'
+    expect(fluffy.nested.field).toEqual 'nested'
+
+    expect(fluffy.data.foo).toEqual 'bar1'
+    expect(fluffy.data.bar).toEqual 'foo1'

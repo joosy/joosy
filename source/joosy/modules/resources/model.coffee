@@ -11,6 +11,22 @@
 # @mixin
 Joosy.Modules.Resources.Model =
 
+  #
+  # Tiny class created to contain deep fields properties
+  # for nested attributes accessors
+  #
+  # @see Joosy.Modules.Resources.Model#attrAccessor
+  #
+  AttrAccessorProxy: class
+    @parentFor: (object) ->
+      object = object.parent while object instanceof @
+      object
+
+    constructor: ->  
+      Object.defineProperty @, 'parent',
+        enumerable: false
+        writable: true
+
   ClassMethods:
     #
     # Sets the field containing primary key.
@@ -96,21 +112,58 @@ Joosy.Modules.Resources.Model =
     #   class Test extends Joosy.Resources.Hash
     #     @concern Joosy.Modules.Resources.Model
     #
-    #     @attrAccessor 'field1', 'field2'
+    #     @attrAccessor 'field1', 'field2', 'nested': ['n1', 'n2']
     #
-    #   test = Test.build(field1: 'test', field2: 'test')
+    #   test = Test.build(field1: 'test', nested: {n1: 'test', n2: 'test'})
     #
-    #   test.field1()               # 'test'
-    #   test.field2('new value')    # 'new value'
+    #   test.field1                      # 'test'
+    #   test.field2 = 'new value'        # triggers 'changed'
+    #   test.nested.n1                   # 'test'
+    #   test.nested = {n1: '', n2: ''}   # triggers 'changed'
     #
-    attrAccessor: ->
-      for attribute in arguments
-        do (attribute) =>
-          @::[attribute] = (value) ->
-            if value?
-              @set attribute, value
-            else
-              @get attribute
+    attrAccessor: (attributes...) ->
+      @__buildAccessors @::, '', attributes
+
+    #
+    # Internal recursive accessors builders
+    #
+    # @private
+    #
+    # @param [Object] receiver      Current nesting instance (starting with model itself)
+    # @param [String] prefix        The prefix to current attributes nesting (ending with .)
+    # @param [Array]  attributes    The array of attributes to define
+    #
+    __buildAccessors: (receiver, prefix, attributes) ->
+      proxyClass = Joosy.Modules.Resources.Model.AttrAccessorProxy
+
+      for attribute in attributes
+        if typeof attribute == 'string'
+          attributeName = prefix + attribute
+
+          do (attributeName) =>
+            Object.defineProperty receiver, attribute,
+              enumerable: true
+              get: ->
+                proxyClass.parentFor(@).get attributeName
+              set: (value) ->
+                proxyClass.parentFor(@).set attributeName, value
+   
+        else if attribute instanceof Array
+          @__buildAccessors receiver, prefix, attribute
+        else
+          for key, nestedAttribute of attribute
+            nestedReceiver = new proxyClass
+   
+            do (nestedReceiver) =>
+              Object.defineProperty receiver, key,
+                enumerable: true
+                get: ->
+                  nestedReceiver.parent = @
+                  nestedReceiver
+                set: (value) ->
+                  proxyClass.parentFor(@).set prefix+key, value
+   
+            @__buildAccessors nestedReceiver, "#{prefix}#{key}.", [ nestedAttribute ]
 
   InstanceMethods:
     #

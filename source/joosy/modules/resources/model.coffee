@@ -22,7 +22,7 @@ Joosy.Modules.Resources.Model =
       object = object.parent while object instanceof @
       object
 
-    constructor: ->  
+    constructor: ->
       Object.defineProperty @, 'parent',
         enumerable: false
         writable: true

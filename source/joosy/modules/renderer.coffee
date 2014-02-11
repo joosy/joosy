@@ -60,6 +60,13 @@ Joosy.Modules.Renderer =
       @__render (callback || true), template, locals, parentStackPointer
 
     #
+    # Allows to delay certain action to them moment when rendering is finished
+    # and template has become part of the actual DOM
+    #
+    onRendered: (action) ->
+      @setTimeout 0, action
+
+    #
     # Converts all possible `@helper` arguments to the objects available for merge
     #
     # @private

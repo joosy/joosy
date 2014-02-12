@@ -325,7 +325,7 @@ class Joosy.Widget extends Joosy.Module
 
     @__clearContainer()
     @__clearTime()
-    @__removeMetamorphs()
+    @__destructRenderingStack()
     @__runAfterUnloads()
 
     if @parent && modifyParent

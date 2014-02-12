@@ -60,13 +60,6 @@ Joosy.Modules.Renderer =
       @__render (callback || true), template, locals, parentStackPointer
 
     #
-    # Allows to delay certain action to them moment when rendering is finished
-    # and template has become part of the actual DOM
-    #
-    onRendered: (action) ->
-      @setTimeout 0, action
-
-    #
     # Converts all possible `@helper` arguments to the objects available for merge
     #
     # @private
@@ -113,13 +106,13 @@ Joosy.Modules.Renderer =
     # @param [Object] parentStackPointer        Internal rendering stack pointer
     # @private
     #
-    __instantiateRenderers: (parentStackPointer) ->
+    __instantiateRenderers: (stack) ->
 
       render: (template, locals={}) =>
-        @render template, locals, parentStackPointer
+        @render template, locals, stack
 
       renderDynamic: (template, locals={}, callback) =>
-        @renderDynamic template, locals, callback, parentStackPointer
+        @renderDynamic template, locals, callback, stack
 
       renderInline: (locals={}, callback, partial) =>
         if arguments.length < 3
@@ -129,7 +122,22 @@ Joosy.Modules.Renderer =
         template = (params) ->
           partial.apply(params)
 
-        @renderDynamic template, locals, callback, parentStackPointer
+        @renderDynamic template, locals, callback, stack
+
+      #
+      # Allows to delay certain action to the moment when rendering is finished
+      # and template has become part of the actual DOM
+      #
+      onRendered: (action) ->
+        @__renderer.setTimeout 0, =>
+          action(@__renderer)
+
+      #
+      # Allows to delay certain action to the moment when particular region
+      # is removed (works with dynamic rendering as well)
+      #
+      onRemoved: (action) ->
+        stack.destructors.push action
 
     #
     # Actual rendering implementation
@@ -167,11 +175,11 @@ Joosy.Modules.Renderer =
         morph  = Metamorph result()
         update = =>
           if morph.isRemoved()
-            for [object, binding] in morph.__bindings
+            for [object, binding] in stack.metamorphBindings
               object.unbind binding
           else
             for child in stack.children
-              @__removeMetamorphs child
+              @__destructRenderingStack child
             stack.children = []
             morph.html result()
             dynamic() if dynamic instanceof Function
@@ -189,8 +197,6 @@ Joosy.Modules.Renderer =
               binding = [object, object.bind('changed', debouncedUpdate)]
               stack.metamorphBindings.push binding
 
-        morph.__bindings = stack.metamorphBindings
-
         morph.outerHTML()
       else
         result()
@@ -206,6 +212,7 @@ Joosy.Modules.Renderer =
       template: null
       children: []
       parent: parent
+      destructors: []
 
     #
     # Creates new rendering stack node using given pointer as the parent
@@ -230,16 +237,20 @@ Joosy.Modules.Renderer =
     #
     # @private
     #
-    __removeMetamorphs: (stackPointer=false) ->
+    __destructRenderingStack: (stackPointer=false) ->
       remove = (stackPointer) =>
         if stackPointer?.children
           for child in stackPointer.children
-            @__removeMetamorphs child
+            @__destructRenderingStack child
 
         if stackPointer?.metamorphBindings
           for [object, callback] in stackPointer.metamorphBindings
             object.unbind callback
           stackPointer.metamorphBindings = []
+
+        if stackPointer?.destructors
+          for action in stackPointer.destructors
+            action(@)
 
       unless stackPointer
         if @__renderingStack?

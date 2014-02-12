@@ -90,7 +90,7 @@ describe "Joosy.Modules.Renderer", ->
       runs ->
         @$ground.html @renderer.renderDynamic(template, entity: @entity)
         expect(@$ground.text()).toBe "initial"
-        @renderer.__removeMetamorphs()
+        @renderer.__destructRenderingStack()
 
       runs ->
         @entity.update "new"

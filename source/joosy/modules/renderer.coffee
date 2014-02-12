@@ -231,7 +231,7 @@ Joosy.Modules.Renderer =
         element
 
     #
-    # Disables and unbinds all dynamic bindings for the whole rendering stack
+    # Properly recursively destructs rendering region bound to given stack pointer
     #
     # @private
     #
@@ -242,23 +242,43 @@ Joosy.Modules.Renderer =
       else
         @__destructRegion stackPointer
 
+    #
+    # Properly recursively destructs rendering region bound to given stack pointer
+    #
+    # @private
+    #
     __destructRegion: (stackPointer) ->
       @__destructRegionChildren stackPointer
       @__destructRegionBindings stackPointer
       @__destructRegionManuals  stackPointer
 
+    #
+    # Recursively runs destruction for every children
+    #
+    # @private
+    #
     __destructRegionChildren: (stackPointer) ->
       if stackPointer?.children
         for child in stackPointer.children
           @__destructRenderingStack child
         stackPointer.children = []
 
+    #
+    # Cleans metamorphs bindings
+    #
+    # @private
+    #
     __destructRegionBindings: (stackPointer) ->
       if stackPointer?.metamorphBindings
         for [object, callback] in stackPointer.metamorphBindings
           object.unbind callback
         stackPointer.metamorphBindings = []
 
+    #
+    # Calls manually bounded destructors
+    #
+    # @private
+    #
     __destructRegionManuals: (stackPointer) ->
       if stackPointer?.destructors
         for action in stackPointer.destructors

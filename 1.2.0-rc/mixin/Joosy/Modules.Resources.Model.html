@@ -128,11 +128,24 @@ adding typical model features and making it aware of primary key and collection.
       <a href='#attrAccessor-static'>
         .
 (void)
-<b>attrAccessor</b><span>()</span>
+<b>attrAccessor</b><span>(attributes...)</span>
       </a>
     </span>
     <span class='desc'>
       Registers dynamic accessors for given fields 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__buildAccessors-static'>
+        .
+(void)
+<b>__buildAccessors</b><span>(receiver, prefix, attributes)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Internal recursive accessors builders 
     </span>
   </li>
 </ul>
@@ -355,7 +368,7 @@ p.zombies[0].get(&#39;foo&#39;) # bar</code></pre>
     <p class='signature' id='attrAccessor-static'>
       .
 (void)
-<b>attrAccessor</b><span>()</span>
+<b>attrAccessor</b><span>(attributes...)</span>
       <br>
     </p>
     <div class='docstring'>
@@ -368,15 +381,58 @@ p.zombies[0].get(&#39;foo&#39;) # bar</code></pre>
     <pre><code class='coffeescript'>class Test extends Joosy.Resources.Hash
   @concern Joosy.Modules.Resources.Model
 
-  @attrAccessor &#39;field1&#39;, &#39;field2&#39;
+  @attrAccessor &#39;field1&#39;, &#39;field2&#39;, &#39;nested&#39;: [&#39;n1&#39;, &#39;n2&#39;]
 
-test = Test.build(field1: &#39;test&#39;, field2: &#39;test&#39;)
+test = Test.build(field1: &#39;test&#39;, nested: {n1: &#39;test&#39;, n2: &#39;test&#39;})
 
-test.field1()               # &#39;test&#39;
-test.field2(&#39;new value&#39;)    # &#39;new value&#39;</code></pre>
+test.field1                      # &#39;test&#39;
+test.field2 = &#39;new value&#39;        # triggers &#39;changed&#39;
+test.nested.n1                   # &#39;test&#39;
+test.nested = {n1: &#39;&#39;, n2: &#39;&#39;}   # triggers &#39;changed&#39;</code></pre>
   </div>
 </div>
 <div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__buildAccessors-static'>
+      .
+(void)
+<b>__buildAccessors</b><span>(receiver, prefix, attributes)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Internal recursive accessors builders</p>
+</div>
+<div class='tags'>
+  <h3>Parameters:</h3>
+  <ul class='param'>
+    <li>
+      <span class='name'>receiver</span>
+      <span class='type'>
+        (<tt>Object</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>Current nesting instance (starting with model itself) </span>
+    </li>
+    <li>
+      <span class='name'>prefix</span>
+      <span class='type'>
+        (<tt>String</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The prefix to current attributes nesting (ending with .) </span>
+    </li>
+    <li>
+      <span class='name'>attributes</span>
+      <span class='type'>
+        (<tt>Array</tt>)
+      </span>
+      &mdash;
+      <span class='desc'>The array of attributes to define </span>
+    </li>
+  </ul>
 </div>
   </div>
 </div>
@@ -536,7 +592,7 @@ test = Test.build().grab($ &#39;form&#39;)</code></pre>
 </div>
     </div>
     <div id='footer'>
-  February 02, 14 21:36:34 by
+  February 12, 14 19:02:58 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

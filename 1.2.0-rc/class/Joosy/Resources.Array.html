@@ -63,15 +63,19 @@
     <h4>
       
     </h4>
-    <pre><code class='coffeescript'>data = Joosy.Resources.Array.build 1, 2, 3
+    <pre><code class='coffeescript'>data = Joosy.Resources.Array.build [ 1, 2, 3 ]
 data.get(0)                                     # 1
 data.set(0, 5)                                  # triggers &#39;changed&#39;
 data.push(4)                                    # triggers &#39;changed&#39;
-data.load(7, 8, 9)                              # triggers &#39;changed&#39;</code></pre>
+data.load([ 7, 8, 9 ])                          # triggers &#39;changed&#39;</code></pre>
   </div>
 </div>
 <div class='tags'>
 </div>
+      <h2>Direct Known Subclasses</h2>
+      <p class='children'>
+        <a href='../../class/Joosy/Resources.RESTCollection.html'>Joosy.Resources.RESTCollection</a>
+      </p>
       <h2>Class Method Summary</h2>
       <ul class='summary'>
   <li>
@@ -79,7 +83,7 @@ data.load(7, 8, 9)                              # triggers &#39;changed&#39;</co
       <a href='#build-static'>
         .
 (void)
-<b>build</b><span>()</span>
+<b>build</b><span>(array = [])</span>
       </a>
     </span>
     <span class='desc'>
@@ -94,7 +98,7 @@ data.load(7, 8, 9)                              # triggers &#39;changed&#39;</co
       <a href='#load-dynamic'>
         #
 (void)
-<b>load</b><span>()</span>
+<b>load</b><span>(array)</span>
       </a>
     </span>
     <span class='desc'>
@@ -234,7 +238,7 @@ data.load(7, 8, 9)                              # triggers &#39;changed&#39;</co
     <p class='signature' id='build-static'>
       .
 (void)
-<b>build</b><span>()</span>
+<b>build</b><span>(array = [])</span>
       <br>
     </p>
     <div class='docstring'>
@@ -250,7 +254,7 @@ data.load(7, 8, 9)                              # triggers &#39;changed&#39;</co
     <p class='signature' id='constructor-dynamic'>
       #
 (void)
-<b>constructor</b><span>()</span>
+<b>constructor</b><span>(array = [])</span>
       <br>
     </p>
     <div class='docstring'>
@@ -266,7 +270,7 @@ data.load(7, 8, 9)                              # triggers &#39;changed&#39;</co
     <p class='signature' id='load-dynamic'>
       #
 (void)
-<b>load</b><span>()</span>
+<b>load</b><span>(array)</span>
       <br>
     </p>
     <div class='docstring'>
@@ -453,7 +457,7 @@ data                                          # [6, 3]</code></pre>
 </div>
     </div>
     <div id='footer'>
-  February 02, 14 21:36:34 by
+  February 12, 14 19:02:58 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

@@ -134,7 +134,7 @@
       <a href='#__instantiateRenderers-dynamic'>
         #
 (void)
-<b>__instantiateRenderers</b><span>(parentStackPointer)</span>
+<b>__instantiateRenderers</b><span>(stack)</span>
       </a>
     </span>
     <span class='note private title'>Private</span>
@@ -183,15 +183,67 @@
   </li>
   <li>
     <span class='signature'>
-      <a href='#__removeMetamorphs-dynamic'>
+      <a href='#__destructRenderingStack-dynamic'>
         #
 (void)
-<b>__removeMetamorphs</b><span>(stackPointer = false)</span>
+<b>__destructRenderingStack</b><span>(stackPointer = false)</span>
       </a>
     </span>
     <span class='note private title'>Private</span>
     <span class='desc'>
-      Disables and unbinds all dynamic bindings for the whole rendering stack 
+      Properly recursively destructs rendering region bound to given stack pointer 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__destructRegion-dynamic'>
+        #
+(void)
+<b>__destructRegion</b><span>(stackPointer)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Properly recursively destructs rendering region bound to given stack pointer 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__destructRegionChildren-dynamic'>
+        #
+(void)
+<b>__destructRegionChildren</b><span>(stackPointer)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Recursively runs destruction for every children 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__destructRegionBindings-dynamic'>
+        #
+(void)
+<b>__destructRegionBindings</b><span>(stackPointer)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Cleans metamorphs bindings 
+    </span>
+  </li>
+  <li>
+    <span class='signature'>
+      <a href='#__destructRegionManuals-dynamic'>
+        #
+(void)
+<b>__destructRegionManuals</b><span>(stackPointer)</span>
+      </a>
+    </span>
+    <span class='note private title'>Private</span>
+    <span class='desc'>
+      Calls manually bounded destructors 
     </span>
   </li>
 </ul>
@@ -383,7 +435,7 @@
     <p class='signature' id='__instantiateRenderers-dynamic'>
       #
 (void)
-<b>__instantiateRenderers</b><span>(parentStackPointer)</span>
+<b>__instantiateRenderers</b><span>(stack)</span>
       <span class='note private'>Private</span>
       <br>
     </p>
@@ -447,15 +499,71 @@
 </div>
   </div>
   <div class='method_details'>
-    <p class='signature' id='__removeMetamorphs-dynamic'>
+    <p class='signature' id='__destructRenderingStack-dynamic'>
       #
 (void)
-<b>__removeMetamorphs</b><span>(stackPointer = false)</span>
+<b>__destructRenderingStack</b><span>(stackPointer = false)</span>
       <span class='note private'>Private</span>
       <br>
     </p>
     <div class='docstring'>
-  <p>Disables and unbinds all dynamic bindings for the whole rendering stack</p>
+  <p>Properly recursively destructs rendering region bound to given stack pointer</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__destructRegion-dynamic'>
+      #
+(void)
+<b>__destructRegion</b><span>(stackPointer)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Properly recursively destructs rendering region bound to given stack pointer</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__destructRegionChildren-dynamic'>
+      #
+(void)
+<b>__destructRegionChildren</b><span>(stackPointer)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Recursively runs destruction for every children</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__destructRegionBindings-dynamic'>
+      #
+(void)
+<b>__destructRegionBindings</b><span>(stackPointer)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Cleans metamorphs bindings</p>
+</div>
+<div class='tags'>
+</div>
+  </div>
+  <div class='method_details'>
+    <p class='signature' id='__destructRegionManuals-dynamic'>
+      #
+(void)
+<b>__destructRegionManuals</b><span>(stackPointer)</span>
+      <span class='note private'>Private</span>
+      <br>
+    </p>
+    <div class='docstring'>
+  <p>Calls manually bounded destructors</p>
 </div>
 <div class='tags'>
 </div>
@@ -463,7 +571,7 @@
 </div>
     </div>
     <div id='footer'>
-  February 02, 14 21:36:34 by
+  February 12, 14 19:02:58 by
   <a href='https://github.com/coffeedoc/codo' title='CoffeeScript API documentation generator'>
     Codo
   </a>

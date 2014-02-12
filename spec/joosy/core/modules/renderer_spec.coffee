@@ -3,6 +3,7 @@ describe "Joosy.Modules.Renderer", ->
   beforeEach ->
     class @Renderer extends Joosy.Module
       @concern Joosy.Modules.Renderer
+      @include Joosy.Modules.TimeManager
 
     @renderer = new @Renderer
 
@@ -37,6 +38,36 @@ describe "Joosy.Modules.Renderer", ->
       expect(@renderer.render 'template', foo: 'bar').toEqual 'result'
 
       Joosy.templater false
+
+    it "runs constructor", ->
+      callback = sinon.spy()
+      template = (locals) =>
+        locals.onRendered callback
+        'result'
+
+      runs ->
+        expect(@renderer.render template).toEqual 'result'
+
+      waits 0
+
+      runs ->
+        expect(callback.callCount).toEqual 1
+
+    it "runs destructor", ->
+      callback = sinon.spy()
+      template = (locals) =>
+        locals.onRemoved callback
+        'result'
+
+      runs ->
+        expect(@renderer.render template).toEqual 'result'
+
+      waits 0
+
+      runs ->
+        expect(callback.callCount).toEqual 0
+        @renderer.__destructRenderingStack()
+        expect(callback.callCount).toEqual 1
 
   describe "dynamic rendering", ->
     beforeEach ->
@@ -99,6 +130,59 @@ describe "Joosy.Modules.Renderer", ->
 
       runs ->
         expect(@$ground.text()).toBe "initial"
+
+    it "runs constructor", ->
+      callback = sinon.spy()
+      template = (locals) =>
+        locals.onRendered callback
+        locals.entity.value
+
+      runs ->
+        @$ground.html @renderer.renderDynamic(template, entity: @entity)
+        expect(@$ground.text()).toBe "initial"
+
+      waits 0
+
+      runs ->
+        expect(callback.callCount).toEqual 1
+
+      runs ->
+        @entity.update "new"
+
+      waits 0
+
+      runs ->
+        expect(@$ground.text()).toBe "new"
+        expect(callback.callCount).toEqual 1
+
+    it "runs destructor", ->
+      callback = sinon.spy()
+      template = (locals) =>
+        locals.onRemoved callback
+        locals.entity.value
+
+      runs ->
+        @$ground.html @renderer.renderDynamic(template, entity: @entity)
+        expect(@$ground.text()).toBe "initial"
+
+      waits 0
+
+      runs ->
+        expect(callback.callCount).toEqual 0
+        @entity.update "new"
+
+      waits 0
+
+      runs ->
+        expect(@$ground.text()).toBe "new"
+        expect(callback.callCount).toEqual 1
+        @entity.update "new 2"
+
+      waits 0
+
+      runs ->
+        expect(@$ground.text()).toBe "new 2"
+        expect(callback.callCount).toEqual 2
 
     describe "Metamorph magic", ->
       beforeEach ->

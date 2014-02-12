@@ -175,12 +175,10 @@ Joosy.Modules.Renderer =
         morph  = Metamorph result()
         update = =>
           if morph.isRemoved()
-            for [object, binding] in stack.metamorphBindings
-              object.unbind binding
+            @__destructRegionBindings stack
           else
-            for child in stack.children
-              @__destructRenderingStack child
-            stack.children = []
+            @__destructRegionManuals stack
+            @__destructRegionChildren stack
             morph.html result()
             dynamic() if dynamic instanceof Function
 
@@ -238,26 +236,34 @@ Joosy.Modules.Renderer =
     # @private
     #
     __destructRenderingStack: (stackPointer=false) ->
-      remove = (stackPointer) =>
-        if stackPointer?.children
-          for child in stackPointer.children
-            @__destructRenderingStack child
-
-        if stackPointer?.metamorphBindings
-          for [object, callback] in stackPointer.metamorphBindings
-            object.unbind callback
-          stackPointer.metamorphBindings = []
-
-        if stackPointer?.destructors
-          for action in stackPointer.destructors
-            action(@)
-
       unless stackPointer
         if @__renderingStack?
-          remove stackPointer for stackPointer in @__renderingStack
-          
+          @__destructRegion stackPointer for stackPointer in @__renderingStack
       else
-        remove stackPointer
+        @__destructRegion stackPointer
+
+    __destructRegion: (stackPointer) ->
+      @__destructRegionChildren stackPointer
+      @__destructRegionBindings stackPointer
+      @__destructRegionManuals  stackPointer
+
+    __destructRegionChildren: (stackPointer) ->
+      if stackPointer?.children
+        for child in stackPointer.children
+          @__destructRenderingStack child
+        stackPointer.children = []
+
+    __destructRegionBindings: (stackPointer) ->
+      if stackPointer?.metamorphBindings
+        for [object, callback] in stackPointer.metamorphBindings
+          object.unbind callback
+        stackPointer.metamorphBindings = []
+
+    __destructRegionManuals: (stackPointer) ->
+      if stackPointer?.destructors
+        for action in stackPointer.destructors
+          action(@)
+        stackPointer.destructors = []
 
 # AMD wrapper
 if define?.amd?

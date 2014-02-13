@@ -81,11 +81,15 @@ Joosy.Modules.Resources.Model =
     #
     map: (name, klass=false) ->
       unless klass
-
         klass = window[inflection.camelize inflection.singularize(name)]
 
       if !klass
         throw new Error "#{Joosy.Module.__className @}> class can not be detected for '#{name}' mapping"
+
+      unless @__mappedAttributes?
+        @__mappedAttributes = {}
+
+      @__mappedAttributes[name] = klass
 
       @beforeLoad (data) ->
         klass = klass() unless klass.build?
@@ -147,13 +151,13 @@ Joosy.Modules.Resources.Model =
                 proxyClass.parentFor(@).get attributeName
               set: (value) ->
                 proxyClass.parentFor(@).set attributeName, value
-   
+
         else if attribute instanceof Array
           @__buildAccessors receiver, prefix, attribute
         else
           for key, nestedAttribute of attribute
             nestedReceiver = new proxyClass
-   
+
             do (nestedReceiver) =>
               Object.defineProperty receiver, key,
                 enumerable: true
@@ -162,7 +166,7 @@ Joosy.Modules.Resources.Model =
                   nestedReceiver
                 set: (value) ->
                   proxyClass.parentFor(@).set prefix+key, value
-   
+
             @__buildAccessors nestedReceiver, "#{prefix}#{key}.", [ nestedAttribute ]
 
   InstanceMethods:

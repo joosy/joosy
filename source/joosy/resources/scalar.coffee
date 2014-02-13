@@ -38,7 +38,7 @@ class Joosy.Resources.Scalar extends Joosy.Module
     @load value
 
   #
-  # Replaces the value with given
+  # Replaces the value with given (applies beforeLoad)
   #
   # @example
   #   data = Joosy.Resources.Scalar.build 1
@@ -57,12 +57,17 @@ class Joosy.Resources.Scalar extends Joosy.Module
     @value
 
   #
-  # Replaces the value with given
+  # Replaces the value with given (doesn't apply beforeLoad)
+  #
+  # @param [Mixed] value              The value to set
+  # @param [Object] options
+  #
+  # @option options [Boolean] silent       Suppresses modification trigger
   #
   # @see Joosy.Resources.Scalar.load
   #
-  set: (@value) ->
-    @trigger 'changed'
+  set: (@value, options={}) ->
+    @trigger 'changed' unless options.silent
 
   #
   # JS helper converting object to its internal value during basic operations

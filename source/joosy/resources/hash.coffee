@@ -74,13 +74,17 @@ class Joosy.Resources.Hash extends Joosy.Module
   #
   # @param [String] path              The path to the field that should be resolved
   # @param [Mixed] value              The value to set
+  # @param [Object] options
+  #
+  # @option options [Boolean] silent       Suppresses modification trigger
+  #
   # @note Can resolve nested fields
   #
   # @example
   #    data.set('field', {subfield: 'value'})
   #    data.set('field.subfield', 'value2')
   #
-  set: (path, value) ->
+  set: (path, value, options={}) ->
     [instance, property] = @__callTarget path
 
     if instance.set?
@@ -88,7 +92,7 @@ class Joosy.Resources.Hash extends Joosy.Module
     else
       instance[property] = value
 
-    @trigger 'changed'
+    @trigger 'changed' unless options.silent
     value
 
   #

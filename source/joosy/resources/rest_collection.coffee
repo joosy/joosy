@@ -4,6 +4,10 @@
 # REST collection data
 #
 class Joosy.Resources.RESTCollection extends Joosy.Resources.Array
+  #
+  # @param [Joosy.Resources.REST] __resource        Resource this collection contains
+  # @param [String] __where                         Location the collection has been fetched from
+  #
   constructor: (@__resource, @__where) ->
 
   @beforeLoad (data) ->

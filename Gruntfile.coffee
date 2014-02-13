@@ -99,7 +99,6 @@ module.exports = (grunt) ->
         [
           'joosy/resources/index.coffee',
           'joosy/form.coffee',
-          'joosy/helpers/form.coffee',
           'spec/joosy/form/**/*_spec.coffee'
         ]
       )
@@ -118,7 +117,6 @@ module.exports = (grunt) ->
         [
           'joosy/resources/index.coffee',
           'joosy/form.coffee',
-          'joosy/helpers/form.coffee',
           'spec/joosy/environments/amd_spec.coffee'
         ]
       )

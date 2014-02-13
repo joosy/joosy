@@ -54,14 +54,20 @@ class Joosy.Resources.Array extends Array
   #
   # Sets element by its index
   #
+  # @param [Integer] index            Index to set to
+  # @param [Mixed] value              The value to set
+  # @param [Object] options
+  #
+  # @option options [Boolean] silent       Suppresses modification trigger
+  #
   # @example
   #   data = Joosy.Resources.Array.build 1, 2, 3
   #   data.set(0, 2)                                   # 2
   #   data                                             # [2, 2, 3]
   #
-  set: (index, value) ->
+  set: (index, value, options={}) ->
     @[index] = value
-    @trigger 'changed'
+    @trigger 'changed' unless options.silent
     value
 
   #

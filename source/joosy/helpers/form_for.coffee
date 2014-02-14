@@ -6,7 +6,9 @@ Joosy.helpers 'Application', ->
       options = {}
 
     attributes = options.html || {}
+    attributes.action ||= options.url
     delete options.html
+    delete options.url
 
     formBuilder = new Joosy.Helpers.FormBuilder(@, [resource], options)
     attributes.id = formBuilder.__id

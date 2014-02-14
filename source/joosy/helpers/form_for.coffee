@@ -8,7 +8,7 @@ Joosy.helpers 'Application', ->
     attributes = options.html || {}
     delete options.html
 
-    formBuilder = new Joosy.Helpers.FormBuilder(@, resource, options)
+    formBuilder = new Joosy.Helpers.FormBuilder(@, [resource], options)
     attributes.id = formBuilder.__id
 
     @contentTag 'form', block?.call(@, formBuilder), attributes
@@ -30,12 +30,13 @@ class Joosy.Helpers.FormBuilder
         for input in form.elements
           continue unless input.name? && input.name.length > 0 && input.getAttribute('data-form') == @__id
 
-          @__buckets[input.name] ||= []
-          @__buckets[input.name].push input
+          do (input) =>
+            @__buckets[input.name] ||= []
+            @__buckets[input.name].push input
 
-          input.addEventListener 'change', (
-            (ev) => @__inputToResource input
-          ), false
+            input.addEventListener 'change', (
+              (ev) => @__inputToResource input
+            ), false
 
         @__binding = @__resource.bind 'changed', =>
           @__formFromResource()
@@ -86,7 +87,7 @@ class Joosy.Helpers.FormBuilder
     @__stabilize =>
       if @__isCheckOrRadioBox(input)
         for neighbor in @__buckets[input.name]
-          if @__isGroupInputActive(input)
+          if @__isGroupInputActive(neighbor)
             value = neighbor.value
       else
         value = input.value
@@ -144,14 +145,15 @@ class Joosy.Helpers.FormBuilder
 
     id
 
-  __generateInput = (type, property, attributes={}, value=undefined, suffix = '') ->
-    attributes.type       = type
-    attributes.id         = @__generateId property, suffix
-    attributes.name       = property
-    attributes.value      = value if value?
-    attributes['data-to'] = property
+  __generateInput: (type, property, attributes={}, value=undefined, suffix = '') ->
+    attributes.type         = type
+    attributes.id           = @__generateId property, suffix
+    attributes.name         = property
+    attributes.value        = value if value?
+    attributes['data-to']   = property
+    attributes['data-form'] = @__id
 
-    @tag 'input', attributes
+    @__template.tag 'input', attributes
 
   #
   # Methods
@@ -173,11 +175,14 @@ class Joosy.Helpers.FormBuilder
 
     attributes.for = @__generateId property
 
-    @contentTag 'label', attributes, content
+    if typeof content == 'function'
+      @__template.contentTag 'label', attributes, content
+    else
+      @__template.contentTag 'label', content, attributes
 
   for type in [ 'text', 'file', 'hidden', 'password' ]
     do (type) =>
-      @::[inputType + 'Field'] = (property, attributes={}) ->
+      @::[type + 'Field'] = (property, attributes={}) ->
         attributes.value ||= @__resource.get(property)
 
         @__generateInput type, property, attributes
@@ -194,11 +199,12 @@ class Joosy.Helpers.FormBuilder
 
     delete attributes.value
 
-    attributes.id         = @__generateId property
-    attributes.name       = property
-    attributes['data-to'] = property
+    attributes.id           = @__generateId property
+    attributes.name         = property
+    attributes['data-to']   = property
+    attributes['data-form'] = @__id
 
-    @contentTag 'textarea', attributes, value
+    @__template.contentTag 'textarea', value, attributes
 
   checkBox: (property, attributes={}, checkedValue="1", uncheckedValue="0") ->
     attributes.checked = 'checked' if @__resource.get(property)
@@ -239,10 +245,11 @@ class Joosy.Helpers.FormBuilder
       if value? && optionAttributes.value == value
         optionAttributes.selected = 'selected'
 
-      optionsHtml += @contentTag 'option', content, optionAttributes
+      optionsHtml += @__template.contentTag 'option', content, optionAttributes
 
-    attributes.id         = @__generateId property
-    attributes.name       = property
-    attributes['data-to'] = property
+    attributes.id           = @__generateId property
+    attributes.name         = property
+    attributes['data-to']   = property
+    attributes['data-form'] = @__id
 
-    @contentTag 'select', optionsHtml, attributes
+    @__template.contentTag 'select', optionsHtml, attributes

@@ -82,11 +82,11 @@ class Joosy.Application
   # @param [Joosy.Page] page      The class (not object) of page to load
   # @param [Object] params        Hash of page params
   #
-  @changePage: (page, params) ->
+  @changePage: (page, params, options={}) ->
     attempt = new page params, @page
 
     unless attempt.halted
-      if attempt.layoutShouldChange && attempt.layout
+      if (options.forceLayout || attempt.layoutShouldChange) && attempt.layout
         attempt.layout.__bootstrapDefault attempt, @content()
       else
         attempt.__bootstrapDefault @content()

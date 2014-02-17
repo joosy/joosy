@@ -312,6 +312,7 @@ class Joosy.Widget extends Joosy.Module
     @__assignElements()
     @__delegateEvents()
     @__runAfterLoads()
+    @trigger name: 'loaded', remember: true
 
   #
   # Deinitializes section that is preparing to be removed from DOM

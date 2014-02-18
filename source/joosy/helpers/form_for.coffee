@@ -1,12 +1,12 @@
 Joosy.helpers 'Application', ->
 
-  @formFor = (resource, options={}, block=false) ->
+  @formFor = (resource, options={}, block=undefined) ->
     if typeof options == "function"
       block   = options
       options = {}
 
     attributes = options.html || {}
-    attributes.action ||= options.url
+    attributes.action ||= options.url if options.url?
     delete options.html
     delete options.url
 

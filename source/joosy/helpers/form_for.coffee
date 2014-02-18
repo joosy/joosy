@@ -27,7 +27,7 @@ class Joosy.Helpers.FormBuilder
     if @__resource.get && @__resource.set && @__resource.bind
       @__template.onRendered =>
         form = document.getElementById(@__id)
-        return unless form?
+        return unless form?.elements?
 
         for input in form.elements
           continue unless input.name? && input.name.length > 0 && input.getAttribute('data-form') == @__id
@@ -36,9 +36,7 @@ class Joosy.Helpers.FormBuilder
             @__buckets[input.name] ||= []
             @__buckets[input.name].push input
 
-            input.addEventListener 'change', (
-              (ev) => @__inputToResource input
-            ), false
+            $(input).change (ev) => @__inputToResource input
 
         @__binding = @__resource.bind 'changed', =>
           @__formFromResource()

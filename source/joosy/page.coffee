@@ -30,8 +30,8 @@ class Joosy.Page extends Joosy.Widget
   # @param [Hash] params             Route params
   # @param [Joosy.Page] previous     Previous page to unload
   #
-  constructor: (@params, @previous) ->
-    @layoutShouldChange = @previous?.__layoutClass != @__layoutClass
+  constructor: (@params, @previous, options={}) ->
+    @layoutShouldChange = options.forceLayout || @previous?.__layoutClass != @__layoutClass
 
     @halted = !@__confirmBeforeLoads()
     @layout = switch

@@ -83,10 +83,10 @@ class Joosy.Application
   # @param [Object] params        Hash of page params
   #
   @changePage: (page, params, options={}) ->
-    attempt = new page params, @page
+    attempt = new page params, @page, options
 
     unless attempt.halted
-      if (options.forceLayout || attempt.layoutShouldChange) && attempt.layout
+      if attempt.layoutShouldChange && attempt.layout
         attempt.layout.__bootstrapDefault attempt, @content()
       else
         attempt.__bootstrapDefault @content()

@@ -66,7 +66,7 @@ Joosy.Modules.Renderer =
     #
     __assignHelpers: ->
       return unless @__helpers?
-    
+
       unless @hasOwnProperty "__helpers"
         @__helpers = @__helpers.slice()
 
@@ -129,7 +129,7 @@ Joosy.Modules.Renderer =
       # and template has become part of the actual DOM
       #
       onRendered: (action) ->
-        @__renderer.setTimeout 0, =>
+        @__renderer.callDeferred =>
           action(@__renderer)
 
       #
@@ -186,8 +186,8 @@ Joosy.Modules.Renderer =
         # repeating DOM modification
         timeout = null
         debouncedUpdate = ->
-          clearTimeout timeout
-          timeout = setTimeout update, 0
+          Joosy.cancelDeferred timeout if timeout?
+          timeout = Joosy.callDeferred update
 
         for key, object of locals
           if locals.hasOwnProperty key

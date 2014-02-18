@@ -153,7 +153,7 @@ describe "Joosy.Modules.Renderer", ->
 
       runs ->
         expect(@$ground.text()).toBe "new"
-        expect(callback.callCount).toEqual 1
+        expect(callback.callCount).toEqual 2
 
     it "runs destructor", ->
       callback = sinon.spy()

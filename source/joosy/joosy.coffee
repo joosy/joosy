@@ -32,7 +32,7 @@
   #
   Events: {}
 
-  
+
   ### Global settings ###
 
   #
@@ -151,6 +151,86 @@
       paramsString = '&' + paramsString
 
     url + paramsString + hash
+
+  #
+  # @private
+  #
+  __initializeDeferred: ->
+    @__useSetTimeoutFallback = true
+
+    if window.postMessage?
+      @__useSetTimeoutFallback = false
+      @__callbackQueue = []
+
+      listener = (ev) =>
+        if ev.source == window && ev.data == 'joosy-invoke-immediate'
+          @__invokeCallbacks()
+
+      window.addEventListener 'message', listener, true
+
+      # Test if postMessage implementation is synchronous (IE8-like) or not
+      # If it is, fall back to setTimeout
+
+      synchronous = false
+      @callDeferred =>
+        synchronous = true
+
+      if synchronous
+        @__useSetTimeoutFallback = true
+        delete @__callbackQueue
+        window.removeEventListener 'message', listener, true
+
+  #
+  # Invoke callback after completion of the current callback
+  # Functionally similar to setTimeout(callback, 0)
+  #
+  # @param   [Function] callback Callback
+  # @return  [Integer]           Callback ID
+  #
+  callDeferred: (callback) ->
+    if @__useSetTimeoutFallback
+      setTimeout callback, 0
+    else
+      allocated = undefined
+      for item, index in @__callbackQueue
+        unless item?
+          @__callbackQueue[index] = callback
+          allocated = index
+          break
+
+      unless allocated?
+        allocated = @__callbackQueue.length
+        @__callbackQueue.push callback
+
+      window.postMessage 'joosy-invoke-immediate', '*'
+
+      allocated
+
+  #
+  # Cancel deferred callback
+  #
+  # @param   [Integer]  Callback ID
+  #
+  cancelDeferred: (index) ->
+    if @__useSetTimeoutFallback
+      clearTimeout index
+    else
+      @__callbackQueue[index] = null
+
+    undefined
+
+  #
+  # @private
+  #
+  __invokeCallbacks: ->
+    callbacks = @__callbackQueue
+    @__callbackQueue = []
+
+    for callback in callbacks
+      if callback?
+        callback()
+
+Joosy.__initializeDeferred()
 
 if define?.amd?
   define 'joosy', -> Joosy

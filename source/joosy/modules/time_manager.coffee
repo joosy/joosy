@@ -6,7 +6,6 @@
 # @mixin
 #
 Joosy.Modules.TimeManager =
-
   #
   # Registeres timeout for current object
   #
@@ -17,7 +16,13 @@ Joosy.Modules.TimeManager =
   setTimeout: (timeout, action) ->
     @__timeouts ||= []
 
-    timer = window.setTimeout (=> action()), timeout
+    timer = window.setTimeout =>
+      if @__timeouts?
+        index = @__timeouts.indexOf timer
+        @__timeouts.splice index if index != -1
+
+      action()
+    , timeout
     @__timeouts.push timer
 
     timer
@@ -45,6 +50,10 @@ Joosy.Modules.TimeManager =
   clearTimeout: (timer) ->
     window.clearTimeout timer
 
+    if @__timeouts?
+      index = @__timeouts.indexOf timer
+      @__timeouts.splice index if index != -1
+
   #
   # Clears inteval preventing callback from execution
   #
@@ -53,19 +62,60 @@ Joosy.Modules.TimeManager =
   clearInterval: (timer) ->
     window.clearInterval timer
 
+    if @__intervals?
+      index = @__intervals.indexOf timer
+      @__intervals.splice index if index != -1
+
+  #
+  # Invoke callback after completion of the current callback
+  # Functionally similar to setTimeout(callback, 0)
+  #
+  # @param   [Function] callback Callback
+  # @return  [Integer]           Callback ID
+  #
+  callDeferred: (callback) ->
+    @__deferreds ||= []
+
+    deferred = Joosy.callDeferred =>
+      if @__deferreds?
+        index = @__deferreds.indexOf deferred
+        @__deferreds.splice index if index != -1
+
+      callback()
+
+    @__deferreds.push deferred
+
+    deferred
+
+  #
+  # Cancel deferred callback
+  #
+  # @param   [Integer] timer  Callback ID
+  #
+  cancelDeferred: (timer) ->
+    Joosy.cancelDeferred timer
+
+    if @__intervals?
+      index = @__intervals.indexOf timer
+      @__intervals.splice index if index != -1
+
   #
   # Drops all registered timeouts and intervals for this object
   #
   # @private
   #
   __clearTime: ->
-    if @__intervals
+    if @__intervals?
       for entry in @__intervals
         window.clearInterval entry
 
-    if @__timeouts
+      delete @__intervals
+
+    if @__timeouts?
       for entry in @__timeouts
         window.clearTimeout entry
+
+      delete @__timeouts
 
 # AMD wrapper
 if define?.amd?

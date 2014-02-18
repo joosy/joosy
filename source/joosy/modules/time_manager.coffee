@@ -95,9 +95,9 @@ Joosy.Modules.TimeManager =
   cancelDeferred: (timer) ->
     Joosy.cancelDeferred timer
 
-    if @__intervals?
-      index = @__intervals.indexOf timer
-      @__intervals.splice index if index != -1
+    if @__deferreds?
+      index = @__deferreds.indexOf timer
+      @__deferreds.splice index if index != -1
 
   #
   # Drops all registered timeouts and intervals for this object
@@ -116,6 +116,12 @@ Joosy.Modules.TimeManager =
         window.clearTimeout entry
 
       delete @__timeouts
+
+    if @__deferreds?
+      for entry in @__deferreds
+        Joosy.cancelDeferred deferred
+
+      delete @__deferreds
 
 # AMD wrapper
 if define?.amd?

@@ -160,6 +160,7 @@
 
     if window.postMessage?
       @__useSetTimeoutFallback = false
+      @__invoking = false
       @__callbackQueue = []
 
       listener = (ev) =>
@@ -192,11 +193,12 @@
       setTimeout callback, 0
     else
       allocated = undefined
-      for item, index in @__callbackQueue
-        unless item?
-          @__callbackQueue[index] = callback
-          allocated = index
-          break
+      unless @__invoking
+        for item, index in @__callbackQueue
+          unless item?
+            @__callbackQueue[index] = callback
+            allocated = index
+            break
 
       unless allocated?
         allocated = @__callbackQueue.length
@@ -223,12 +225,19 @@
   # @private
   #
   __invokeCallbacks: ->
-    callbacks = @__callbackQueue
-    @__callbackQueue = []
+    try
+      @__invoking = true
+      lastIndex = @__callbackQueue.length
 
-    for callback in callbacks
-      if callback?
-        callback()
+      for callback, callbackIndex in @__callbackQueue
+        break if callbackIndex > lastIndex
+
+        if callback?
+          @__callbackQueue[callbackIndex] = null
+          callback()
+    finally
+      @__invoking = false
+
 
 Joosy.__initializeDeferred()
 

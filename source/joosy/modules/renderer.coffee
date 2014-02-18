@@ -174,6 +174,8 @@ Joosy.Modules.Renderer =
       if dynamic
         morph  = Metamorph result()
         update = =>
+          timeout = null
+
           if morph.isRemoved()
             @__destructRegionBindings stack
           else

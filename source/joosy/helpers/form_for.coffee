@@ -183,9 +183,7 @@ class Joosy.Helpers.FormBuilder
   for type in [ 'text', 'file', 'hidden', 'password' ]
     do (type) =>
       @::[type + 'Field'] = (property, attributes={}) ->
-        attributes.value ||= @__resource.get(property)
-
-        @__generateInput type, property, attributes
+        @__generateInput type, property, attributes, @__resource.get(property)
 
   radioButton: (property, tagValue, attributes={}) ->
     if @__resource.get(property)?.toString() == tagValue

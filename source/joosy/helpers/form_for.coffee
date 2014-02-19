@@ -188,7 +188,7 @@ class Joosy.Helpers.FormBuilder
         @__generateInput type, property, attributes
 
   radioButton: (property, tagValue, attributes={}) ->
-    if @__resource.get(property).toString() == tagValue
+    if @__resource.get(property)?.toString() == tagValue
       attributes.checked = 'checked'
 
     @__generateInput 'radio', property, attributes, tagValue
@@ -217,7 +217,7 @@ class Joosy.Helpers.FormBuilder
     blank   = attributes.includeBlank
     value ||= @__resource.get(property)
 
-    value = value.toString()
+    value = value?.toString()
 
     delete attributes.value
     delete attributes.includeBlank

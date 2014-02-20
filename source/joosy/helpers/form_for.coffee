@@ -129,7 +129,7 @@ class Joosy.Helpers.FormBuilder
   # Builder helpers
   #
   __generateId: (property, suffix) ->
-    resourceName = @__resource.__entityName || @_resource.toString()
+    resourceName = @__resource.__entityName || @__resource.toString()
     resourceId   = @__resource.id?()
 
     parameterizedProperty =

@@ -119,7 +119,7 @@ Joosy.Modules.TimeManager =
 
     if @__deferreds?
       for entry in @__deferreds
-        Joosy.cancelDeferred deferred
+        Joosy.cancelDeferred entry
 
       delete @__deferreds
 

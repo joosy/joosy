@@ -95,8 +95,6 @@ class Joosy.Helpers.FormBuilder
     values
 
   __setSelectedItems: (input, values) ->
-    console.log input, values
-
     if !values?
       values = []
     else if !values instanceof Array

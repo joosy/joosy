@@ -277,7 +277,7 @@ class Joosy.Helpers.FormBuilder
     delete attributes.includeBlank
 
     optionsHtml = @__collectionAsHtml selectOptions, blank, (optionValue) =>
-      optionValue
+      optionValue == value
 
     attributes.id           = @__generateId property
     attributes.name         = property

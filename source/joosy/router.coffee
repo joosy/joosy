@@ -29,8 +29,9 @@ class Joosy.Router extends Joosy.Module
 
   # Comfortable links for the views
   $(document).on 'click', 'a[data-joosy]', (event) ->
-    event.preventDefault()
-    Joosy.Router.navigate @getAttribute('href')
+    if !event.ctrlKey && !event.metaKey
+      event.preventDefault()
+      Joosy.Router.navigate @getAttribute('href')
 
   #
   # Rails-like wrapper around internal raw routes representation

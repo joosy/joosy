@@ -312,9 +312,26 @@ class Joosy.Router extends Joosy.Module
     helper = (options) ->
       result = path
 
+      usedParameters = {}
+      generatingQuery = false
+
       if match = path.match(/\/:[^\/]+/g)
         for param in match
-          result = result.replace(param.substr(1), options[param.substr(2)])
+          valueName = param.substr(2)
+          result = result.replace(param.substr(1), options[valueName])
+          usedParameters[valueName] = true
+
+      for key, value of options
+        continue if usedParameters[key]?
+
+        if generatingQuery
+          delimiter = "&"
+        else
+          delimiter = "?"
+
+        generatingQuery = true
+
+        result += delimiter + encodeURIComponent(key) + "=" + encodeURIComponent(value)
 
       if Joosy.Router.config.html5
         "#{Joosy.Router.config.prefix}#{result}"

@@ -369,7 +369,7 @@ class Joosy.Router extends Joosy.Module
     # Collect parameters from URL query section
     for entry in query when entry.length > 0
       [key, value] = entry.split '='
-      params[key] = value
+      params[decodeURIComponent(key)] = decodeURIComponent(value)
 
     params
 

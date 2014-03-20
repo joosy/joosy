@@ -19,14 +19,15 @@ Joosy.helpers 'Application', ->
 # @nodoc
 #
 class Joosy.Helpers.FormBuilder
-  constructor: (@__template, @__resources, @__options) ->
-    @__id       = Joosy.uid()
-    @__buckets  = {}
-    @__resource = @__resources[@__resources.length-1]
+  constructor: (@__template, @__resources, @__options, @__formNodeId) ->
+    @__id           = Joosy.uid()
+    @__formNodeId ||= @__id
+    @__buckets      = {}
+    @__resource     = @__resources[@__resources.length-1]
 
     if @__resource.get && @__resource.set && @__resource.bind
       @__template.onRendered =>
-        form = document.getElementById(@__id)
+        form = document.getElementById(@__formNodeId)
         return unless form?.elements?
 
         for input in form.elements
@@ -189,9 +190,9 @@ class Joosy.Helpers.FormBuilder
       block = options
       options = {}
 
-    fieldBuilder = new FormBuilder @__template, @__resources.concat(resource), @__withInheritedOptions(options)
+    fieldBuilder = new FormBuilder @__template, @__resources.concat(resource), @__withInheritedOptions(options), @__formNodeId
 
-    @__template.contentTag 'fieldset', {id: fieldBuilder.__id}, =>
+    @__template.contentTag 'div', {id: fieldBuilder.__id}, =>
       block.call @__template, fieldBuilder
 
   label: (property, attributes={}, content='') ->

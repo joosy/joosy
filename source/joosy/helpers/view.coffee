@@ -26,15 +26,13 @@ Joosy.helpers 'Application', ->
   # @param [String]  name                    Tag name
   # @param [Object]  options                 Tag attributes
   # @param [Boolean] open                    Marks whether standalone tags (like <br>) should be kept open
-  # @param [Boolean] escape                  Marks whether atribute values should be escaped
   # @return [String]                         Tag HTML string
   #
-  @tag = (name, options={}, open=false, escape=true) ->
+  @tag = (name, options={}, open=false) ->
     element = document.createElement name
     temp    = document.createElement 'div'
 
     for name, value of options
-      value = @escapeOnce(value) if escape
       element.setAttribute name, value
 
     temp.appendChild element
@@ -50,21 +48,19 @@ Joosy.helpers 'Application', ->
   # @param [Object] contentOrOptions         Tag attributes
   # @param [String] contentOrOptions         String content
   # @param [Object] options                  Tag attributes
-  # @param [Boolean] escape                  Marks whether attribute values should be escaped
   # @return [String]                         Tag HTML string
   #
   # Possible arguments variations:
   #   1. @contentTag 'name', 'content'
   #   2. @contentTag 'name', ->
   #   3. @contentTag 'name', {}, ->
-  #   4. @contentTag 'name', {}, false, ->
   #   5. @contentTag 'name', null, {}
   #
   # Example
   #   != @contentTag 'div', {class: 'foo'}, =>
   #     != @contentTag 'hr'
   #
-  @contentTag = (name, contentOrOptions=null, options=null, escape=true) ->
+  @contentTag = (name, contentOrOptions=null, options=null, block=null) ->
     # This is a bit painfull but this is
     # how we emulate Ruby block with lambda :(
     if typeof(contentOrOptions) == 'string'
@@ -75,11 +71,9 @@ Joosy.helpers 'Application', ->
       content = contentOrOptions()
     else if contentOrOptions?
       if typeof(options) == 'function'
-        escape = true
         content = options()
-      else if typeof(escape) == 'function'
-        content = escape()
-        escape = options
+      else if typeof(block) == 'function'
+        content = block()
       options = contentOrOptions
     else
       content = ''
@@ -88,7 +82,6 @@ Joosy.helpers 'Application', ->
     temp    = document.createElement 'div'
 
     for name, value of options
-      value = @escapeOnce(value) if escape
       element.setAttribute name, value
 
     try

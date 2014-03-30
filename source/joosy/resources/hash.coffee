@@ -88,12 +88,43 @@ class Joosy.Resources.Hash extends Joosy.Module
     [instance, property] = @__callTarget path
 
     if instance.set?
-      instance.set(property, value)
+      instance.set(property, value, options)
     else
       instance[property] = value
 
-    @trigger 'changed' unless options.silent
+    @trigger 'changed', [path] unless options.silent
     value
+
+  #
+  # Sets values of multiple fields, emitting event only once.
+  #
+  # @param [Object] values            Hash of values to be set
+  # @param [Object] options
+  #
+  # @option options [Boolean] silent       Suppresses modification trigger
+  #
+  # @note Can resolve nested fields
+  #
+  # @example
+  #    data.setFields('field': {subfield: 'value'})
+  #    data.setFields('field.subfield': 'value2')
+  #
+  setFields: (values, options={}) ->
+    updatedFields = []
+
+    for path, value of values
+      [instance, property] = @__callTarget path
+
+      if instance.set?
+        instance.set(property, value, options)
+      else
+        instance[property] = value
+
+      updatedFields.push path
+
+    @trigger 'changed', updatedFields unless options.silent
+    this
+
 
   #
   # Locates the actual instance of attribute path `foo.bar` from get/set

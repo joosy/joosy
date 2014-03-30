@@ -2,6 +2,12 @@
 #= require joosy/joosy
 
 #
+# @private
+#
+class WatchedFieldsPack
+  constructor: (@resource, @fields) ->
+
+#
 # Core DOM rendering mechanics
 #
 # @mixin
@@ -139,6 +145,17 @@ Joosy.Modules.Renderer =
       onRemoved: (action) ->
         stack.destructors.push action
 
+      #
+      # Returns fields attribute pack, which can be used with `@renderDynamic`
+      # in order to watch changes to the specific attributes.
+      #
+      # @param [Object] resource  Resource to be watched
+      # @param [Array] fields     List of the fields to be watched
+      # @return [Object]          Watched fields pack.
+      #
+      watchFields: (resource, fields...) ->
+        new WatchedFieldsPack resource, fields
+
     #
     # Actual rendering implementation
     #
@@ -163,7 +180,12 @@ Joosy.Modules.Renderer =
       context = =>
         data = {}
 
-        Joosy.Module.merge data, stack.locals
+        for key, value of stack.locals
+          if value instanceof WatchedFieldsPack
+            data[key] = value.resource
+          else
+            data[key] = value
+
         Joosy.Module.merge data, @__instantiateHelpers(), false
         Joosy.Module.merge data, @__instantiateRenderers(stack)
         data
@@ -177,6 +199,7 @@ Joosy.Modules.Renderer =
           timeout = null
 
           if morph.isRemoved()
+            console.log '!!! DESTRUCT REGION BINDINGS !!!'
             @__destructRegionBindings stack
           else
             @__destructRegionManuals stack
@@ -191,11 +214,29 @@ Joosy.Modules.Renderer =
           Joosy.cancelDeferred timeout if timeout?
           timeout = Joosy.callDeferred update
 
-        for key, object of locals
+        for key, value of locals
           if locals.hasOwnProperty key
+            if value instanceof WatchedFieldsPack
+              object = value.resource
+              fields = value.fields
+            else
+              object = value
+              fields = undefined
+
             if object?.bind? && object?.unbind?
-              binding = [object, object.bind('changed', debouncedUpdate)]
-              stack.metamorphBindings.push binding
+              do (object, fields) =>
+                changeHandler = (changedFields) ->
+                  if !changedFields? || !fields?
+                    debouncedUpdate()
+                  else
+                    for changedField in changedFields
+                      if fields.indexOf(changedField) != -1
+                        return debouncedUpdate()
+
+                    null
+
+                binding = [object, object.bind('changed', changeHandler)]
+                stack.metamorphBindings.push binding
 
         morph.outerHTML()
       else

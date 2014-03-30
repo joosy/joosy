@@ -20,32 +20,52 @@ Joosy.helpers 'Application', ->
 #
 class Joosy.Helpers.FormBuilder
   constructor: (@__template, @__resources, @__options, @__formNodeId) ->
-    @__id           = Joosy.uid()
-    @__formNodeId ||= @__id
-    @__buckets      = {}
-    @__resource     = @__resources[@__resources.length-1]
+    @__id            = Joosy.uid()
+    @__formNodeId  ||= @__id
+    @__buckets       = {}
+    @__eventHandlers = []
+    @__resource      = @__resources[@__resources.length-1]
 
     if @__resource.get && @__resource.set && @__resource.bind
       @__template.onRendered =>
-        form = document.getElementById(@__formNodeId)
-        return unless form?.elements?
-
-        for input in form.elements
-          continue unless input.name? && input.name.length > 0 && input.getAttribute('data-form') == @__id
-
-          do (input) =>
-            @__buckets[input.name] ||= []
-            @__buckets[input.name].push input
-
-            $(input).change (ev) => @__inputToResource input
-
-        @__binding = @__resource.bind 'changed', =>
-          @__formFromResource()
+        @__reinitializeForm()
 
       @__template.onRemoved =>
         if @__binding?
           @__resource.unbind @__binding
           delete @__binding
+
+  __reinitializeForm: ->
+    if @__binding?
+      @__resource.unbind @__binding
+      delete @__binding
+
+    for eventHandler in @__eventHandlers
+      eventHandler.source.off(eventHandler.event, eventHandler.handler)
+
+    @__eventHandlers = []
+    @__buckets = []
+
+    form = document.getElementById(@__formNodeId)
+    return unless form?.elements?
+
+    for input in form.elements
+      continue unless input.name? && input.name.length > 0 && input.getAttribute('data-form') == @__id
+
+      do (input) =>
+        @__buckets[input.name] ||= []
+        @__buckets[input.name].push input
+
+        changeHandler = (ev) => @__inputToResource input
+
+        $input = $(input)
+        $input.on 'change', changeHandler
+
+        @__eventHandlers.push source: $input, event: 'change', handler: changeHandler
+
+    @__binding = @__resource.bind 'changed', (changedFields) =>
+      @__formFromResource(changedFields)
+
 
   #
   # Global helpers
@@ -126,9 +146,11 @@ class Joosy.Helpers.FormBuilder
 
       @__resource.set input.getAttribute('data-to'), value
 
-  __formFromResource: ->
+  __formFromResource: (changedFields) ->
     @__stabilize =>
       for name, inputs of @__buckets
+        continue unless !changedFields? || changedFields.indexOf(name) != -1
+
         value = @__resource.get inputs[0].getAttribute('data-to')
 
         # Type casting

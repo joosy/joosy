@@ -234,7 +234,10 @@
 
         if callback?
           @__callbackQueue[callbackIndex] = null
-          callback()
+          try
+            callback()
+          catch e
+            console?.error? "Uncatched exception in the callDeferred callback: ", e
     finally
       @__invoking = false
 

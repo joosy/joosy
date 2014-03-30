@@ -88,7 +88,7 @@ Joosy.Modules.Events =
     if arguments.length == 2
       callback = events
       events   = name
-      name     = Object.keys(@__oneShotEvents).length.toString()
+      name     = @__allocateEventName(@__oneShotEvents)
 
     events = @__splitEvents(events)
 
@@ -130,7 +130,7 @@ Joosy.Modules.Events =
     if arguments.length == 2
       callback = events
       events   = name
-      name     = Object.keys(@__boundEvents).length.toString()
+      name     = @__allocateEventName(@__boundEvents)
 
     events = @__splitEvents(events)
 
@@ -148,6 +148,17 @@ Joosy.Modules.Events =
   #
   unbind: (target) ->
     delete @__boundEvents[target] if @hasOwnProperty '__boundEvents'
+
+  #
+  # @private
+  #
+  __allocateEventName: (collection) ->
+    eventIndex = 0
+
+    while collection.hasOwnProperty(eventIndex.toString())
+      eventIndex += 1
+
+    eventIndex.toString()
 
   #
   # Triggers event for {Joosy.Modules.Events~bind} and {Joosy.Modules.Events~wait}

@@ -156,7 +156,7 @@
   # @private
   #
   __initializeDeferred: ->
-    @__useSetTimeoutFallback = false
+    @__useSetTimeoutFallback = true
 
     if window.postMessage?
       @__useSetTimeoutFallback = false

@@ -220,19 +220,17 @@ Joosy.Modules.Renderer =
               fields = value.fields
             else
               object = value
-              fields = undefined
 
             if object?.bind? && object?.unbind?
               do (object, fields) =>
                 changeHandler = (changedFields) ->
-                  if !changedFields? || !fields?
-                    debouncedUpdate()
-                  else
-                    for changedField in changedFields
-                      if fields.indexOf(changedField) != -1
-                        return debouncedUpdate()
+                  return debouncedUpdate() if !fields? || !changedFields?
+                    
+                  for changedField in changedFields
+                    if fields.indexOf(changedField) != -1
+                      return debouncedUpdate()
 
-                    null
+                  null
 
                 binding = [object, object.bind('changed', changeHandler)]
                 stack.metamorphBindings.push binding

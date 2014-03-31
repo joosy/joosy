@@ -194,8 +194,9 @@ Joosy.Modules.Renderer =
         template(context())
 
       if dynamic
-        morph  = Metamorph result()
-        update = =>
+        timeout = null
+        morph   = Metamorph result()
+        update  = =>
           timeout = null
 
           if morph.isRemoved()
@@ -208,7 +209,6 @@ Joosy.Modules.Renderer =
 
         # This is here to break stack tree and save from
         # repeating DOM modification
-        timeout = null
         debouncedUpdate = ->
           Joosy.cancelDeferred timeout if timeout?
           timeout = Joosy.callDeferred update

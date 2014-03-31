@@ -152,9 +152,10 @@ class Joosy.Helpers.FormBuilder
         continue unless !changedFields? || changedFields.indexOf(name) != -1
 
         value = @__resource.get inputs[0].getAttribute('data-to')
+        lastInput = inputs[inputs.length - 1]
 
         # Type casting
-        value = switch inputs[0].type
+        value = switch lastInput.type
           when 'checkbox'
             if value
               '1'
@@ -164,9 +165,9 @@ class Joosy.Helpers.FormBuilder
             value
 
         for input in inputs
-          if @__isMultiSelectInput input
+          if @__isMultiSelectInput lastInput
             @__setSelectedItems input, value
-          else if @__isCheckOrRadioBox(input)
+          else if @__isCheckOrRadioBox(lastInput)
             if input.value == value
               @__activateGroupInput input
             else

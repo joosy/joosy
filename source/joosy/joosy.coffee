@@ -156,12 +156,13 @@
   # @private
   #
   __initializeDeferred: ->
-    @__useSetTimeoutFallback = true
+    @__useSetTimeoutFallback = false
 
     if window.postMessage?
       @__useSetTimeoutFallback = false
       @__invoking = false
       @__callbackQueue = []
+      @__callbackNonces = []
 
       listener = (ev) =>
         if ev.source == window && ev.data == 'joosy-invoke-immediate'
@@ -196,27 +197,36 @@
       unless @__invoking
         for item, index in @__callbackQueue
           unless item?
-            @__callbackQueue[index] = callback
             allocated = index
             break
 
       unless allocated?
         allocated = @__callbackQueue.length
-        @__callbackQueue.push callback
+
+      @__callbackQueue[allocated] = callback
+      @__callbackNonces[allocated] ||= 0
+      nonce = @__callbackNonces[allocated]
 
       window.postMessage 'joosy-invoke-immediate', '*'
 
-      allocated
+      (allocated << 16) | (nonce & 65535)
 
   #
   # Cancel deferred callback
   #
   # @param   [Integer]  Callback ID
   #
-  cancelDeferred: (index) ->
+  cancelDeferred: (handle) ->
     if @__useSetTimeoutFallback
-      clearTimeout index
+      clearTimeout handle
     else
+      index = handle >> 16
+      nonce = handle & 65535
+
+      if nonce != @__callbackNonces[index]
+        throw new Error "Attempted to cancel stale handle"
+
+      @__callbackNonces[index] = (@__callbackNonces[index] + 1) & 65535
       @__callbackQueue[index] = null
 
     undefined
@@ -233,7 +243,9 @@
         break if callbackIndex > lastIndex
 
         if callback?
+          @__callbackNonces[callbackIndex] = (@__callbackNonces[callbackIndex] + 1) & 65535
           @__callbackQueue[callbackIndex] = null
+
           try
             callback()
           catch e

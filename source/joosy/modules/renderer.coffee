@@ -199,7 +199,6 @@ Joosy.Modules.Renderer =
           timeout = null
 
           if morph.isRemoved()
-            console.log '!!! DESTRUCT REGION BINDINGS !!!'
             @__destructRegionBindings stack
           else
             @__destructRegionManuals stack

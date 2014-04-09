@@ -96,7 +96,9 @@ Joosy.Modules.Resources.Model =
 
         if data[name] instanceof Array
           entries = data[name].map (x) -> klass.build x
-          data[name] = new klass::__collection entries
+          collection = new klass::__collection
+          collection.loadPrebuiltData entries
+          data[name] = collection
         else if data[name]
           data[name] = klass.build data[name]
         data

@@ -267,7 +267,7 @@ Joosy.Modules.Resources.Model =
       @data = {} unless @hasOwnProperty 'data'
 
       Joosy.Module.merge @data, @__applyBeforeLoads(data)
-      @trigger 'changed' if notify
+      @trigger 'changed', @__applyBeforeChanges() if notify
       null
 
     #

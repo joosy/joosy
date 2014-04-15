@@ -9,6 +9,7 @@
 #   data.get('field1')                              # 'test'
 #   data.set('field2', 'test2')                     # triggers 'changed'
 #
+
 class Joosy.Resources.Hash extends Joosy.Module
 
   @include Joosy.Modules.Events
@@ -161,7 +162,7 @@ class Joosy.Resources.Hash extends Joosy.Module
   #
   __fillData: (data, notify=true) ->
     @data = @__applyBeforeLoads data
-    @trigger 'changed' if notify
+    @trigger 'changed', @__applyBeforeChanges() if notify
     null
 
   #

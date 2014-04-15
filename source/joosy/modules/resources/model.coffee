@@ -95,8 +95,9 @@ Joosy.Modules.Resources.Model =
         klass = klass() unless klass.build?
 
         if data[name] instanceof Array
-          entries = data[name].map (x) -> klass.build x
-          data[name] = new klass::__collection entries
+          entries = data[name]
+          data[name] = new klass::__collection klass
+          data[name].load entries
         else if data[name]
           data[name] = klass.build data[name]
         data
@@ -178,7 +179,7 @@ Joosy.Modules.Resources.Model =
     #
     # Default collection: Joosy.Resources.Array
     #
-    __collection: Joosy.Resources.Array
+    __collection: Joosy.Resources.Collection
 
     #
     # Getter for the primary key field

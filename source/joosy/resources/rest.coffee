@@ -374,14 +374,20 @@ class Joosy.Resources.REST extends Joosy.Resources.Entity
     else if @::__requestOptions
       Joosy.Module.merge options, @::__requestOptions
 
-    if (method != "GET" && method != "HEAD") && options.data? && options.requestType?
-      switch options.requestType
-        when "json"
-          options.data = JSON.stringify options.data
-          options.contentType = 'application/json' unless options.contentType?
+    if (method != "GET" && method != "HEAD") && options.data?
+      if options.wrapWithEntityName
+        newData = {}
+        newData[@constructor.__entityname] = options.data
+        options.data = newData
 
-        else
-          throw new Error "Undefined request encoding: #{options.requestType}"
+      if options.requestType?
+        switch options.requestType
+          when "json"
+            options.data = JSON.stringify options.data
+            options.contentType = 'application/json' unless options.contentType?
+
+          else
+            throw new Error "Undefined request encoding: #{options.requestType}"
 
     # allow to suppress generation of the Content-Type header by requestType option
     if options.contentType == false

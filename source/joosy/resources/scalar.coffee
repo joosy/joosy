@@ -15,6 +15,7 @@ class Joosy.Resources.Scalar extends Joosy.Module
   @extend Joosy.Modules.Filters
 
   @registerPlainFilters 'beforeLoad'
+  @registerPlainFilters 'beforeChange'
 
   #
   # Instantiates a new instance
@@ -47,7 +48,7 @@ class Joosy.Resources.Scalar extends Joosy.Module
   #
   load: (value) ->
     @value = @__applyBeforeLoads(value)
-    @trigger 'changed'
+    @trigger 'changed', @__applyBeforeChanges()
     @value
 
   #
@@ -67,7 +68,7 @@ class Joosy.Resources.Scalar extends Joosy.Module
   # @see Joosy.Resources.Scalar.load
   #
   set: (@value, options={}) ->
-    @trigger 'changed' unless options.silent
+    @trigger 'changed', @__applyBeforeChanges() unless options.silent
 
   #
   # JS helper converting object to its internal value during basic operations

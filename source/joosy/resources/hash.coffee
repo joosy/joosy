@@ -15,6 +15,7 @@ class Joosy.Resources.Hash extends Joosy.Module
   @extend Joosy.Modules.Filters
 
   @registerPlainFilters 'beforeLoad'
+  @registerPlainFilters 'beforeChange'
 
   #
   # Instantiates a new hash
@@ -92,7 +93,7 @@ class Joosy.Resources.Hash extends Joosy.Module
     else
       instance[property] = value
 
-    @trigger 'changed', [path] unless options.silent
+    @trigger 'changed', @__applyBeforeChanges([path]) unless options.silent
     value
 
   #
@@ -122,7 +123,7 @@ class Joosy.Resources.Hash extends Joosy.Module
 
       updatedFields.push path
 
-    @trigger 'changed', updatedFields unless options.silent
+    @trigger 'changed', @__applyBeforeChanges(updatedFields) unless options.silent
     this
 
 

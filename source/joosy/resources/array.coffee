@@ -18,6 +18,7 @@ class Joosy.Resources.Array extends Array
   @extend Joosy.Modules.Filters
 
   @registerPlainFilters 'beforeLoad'
+  @registerPlainFilters 'beforeChange'
 
   #
   # Instantiates a new array
@@ -67,7 +68,7 @@ class Joosy.Resources.Array extends Array
   #
   set: (index, value, options={}) ->
     @[index] = value
-    @trigger 'changed' unless options.silent
+    @trigger 'changed', @__applyBeforeChanges() unless options.silent
     value
 
   #
@@ -80,7 +81,7 @@ class Joosy.Resources.Array extends Array
   #
   push: ->
     result = super
-    @trigger 'changed'
+    @trigger 'changed', @__applyBeforeChanges()
     result
 
   #
@@ -93,7 +94,7 @@ class Joosy.Resources.Array extends Array
   #
   pop: ->
     result = super
-    @trigger 'changed'
+    @trigger 'changed', @__applyBeforeChanges()
     result
 
   #
@@ -106,7 +107,7 @@ class Joosy.Resources.Array extends Array
   #
   shift: ->
     result = super
-    @trigger 'changed'
+    @trigger 'changed', @__applyBeforeChanges()
     result
 
   #
@@ -119,7 +120,7 @@ class Joosy.Resources.Array extends Array
   #
   unshift: ->
     result = super
-    @trigger 'changed'
+    @trigger 'changed', @__applyBeforeChanges()
     result
 
   #
@@ -132,7 +133,7 @@ class Joosy.Resources.Array extends Array
   #
   splice: ->
     result = super
-    @trigger 'changed'
+    @trigger 'changed', @__applyBeforeChanges()
     result
 
   #
@@ -144,7 +145,7 @@ class Joosy.Resources.Array extends Array
     @splice 0, @length if @length > 0
     @push entry for entry in @__applyBeforeLoads(data)
 
-    @trigger 'changed' if notify
+    @trigger 'changed', @__applyBeforeChanges() if notify
 
     null
 

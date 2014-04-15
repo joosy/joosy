@@ -377,7 +377,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Entity
     if (method != "GET" && method != "HEAD") && options.data?
       if options.wrapWithEntityName
         newData = {}
-        newData[@constructor.__entityname] = options.data
+        newData[@::__entityName] = options.data
         options.data = newData
 
       if options.requestType?

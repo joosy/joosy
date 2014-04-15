@@ -350,6 +350,15 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
       @create callback
 
   #
+  # Sends DELETE request to the server
+  #
+  # @param [Hash] options         Path modification options
+  # @param [Function] callback    `(error, data) -> ...`
+  #
+  destroy: (options = {}, callback = false) ->
+    @send 'DELETE', options, callback
+
+  #
   # Wrapper for AJAX request
   #
   # @private

@@ -373,6 +373,19 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
     else if @::__requestOptions
       Joosy.Module.merge options, @::__requestOptions
 
+    if (method != "GET" && method != "HEAD") && options.data? && options.requestType?
+      switch options.requestType
+        when "json"
+          options.data = JSON.stringify options.data
+          options.contentType = 'application/json' unless options.contentType?
+
+        else
+          throw new Error "Undefined request encoding: #{options.requestType}"
+
+    # allow to suppress generation of the Content-Type header by requestType option
+    if options.contentType == false
+      delete options.contentType
+
     $.ajax options
 
   #

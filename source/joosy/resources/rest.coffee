@@ -1,19 +1,11 @@
-#= require ./hash
-#= require joosy/modules/resources/model
+#= require ./entity
 #= require ./rest_collection
 
 #
 # Resource with REST/JSON backend
 #
-# @concern Joosy.Modules.Resources.Model
-#
-class Joosy.Resources.REST extends Joosy.Resources.Hash
-
-  @concern Joosy.Modules.Resources.Model
-
-  @registerPlainFilters 'beforeSave'
-
-  @beforeLoad (data) ->
+class Joosy.Resources.REST extends Joosy.Resources.Entity
+  @prependBeforeLoad (data) ->
     if data.constructor == Object && Object.keys(data).length == 1 && @__entityName
       name = inflection.camelize(@__entityName, true)
       data = data[name] if data[name]
@@ -315,7 +307,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   #       # ...
   #
   update: (callback) ->
-    @send 'put', {params: @__applyBeforeSaves(@data)}, (error, data) =>
+    @send 'put', {params: @asSerializableData(true)}, (error, data) =>
       @load data unless error
       callback? error, @
 
@@ -333,7 +325,7 @@ class Joosy.Resources.REST extends Joosy.Resources.Hash
   #       # ...
   #
   create: (callback) ->
-    @constructor.send 'post', {params: @__applyBeforeSaves(@data)}, (error, data) =>
+    @constructor.send 'post', {params: @asSerializableData(true)}, (error, data) =>
       @load data unless error
       callback? error, @
 

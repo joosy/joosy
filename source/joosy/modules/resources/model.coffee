@@ -79,7 +79,7 @@ Joosy.Modules.Resources.Model =
     # @param [String] name    Pluralized name of property to define
     # @param [Class] klass    Resource class to instantiate
     #
-    map: (name, klass=false) ->
+    map: (name, klass=false, options = {}) ->
       unless klass
         klass = window[inflection.camelize inflection.singularize(name)]
 
@@ -89,18 +89,9 @@ Joosy.Modules.Resources.Model =
       unless @__mappedAttributes?
         @__mappedAttributes = {}
 
-      @__mappedAttributes[name] = klass
+      options.klass = klass
 
-      @beforeLoad (data) ->
-        klass = klass() unless klass.build?
-
-        if data[name] instanceof Array
-          entries = data[name]
-          data[name] = new klass::__collection klass
-          data[name].load entries
-        else if data[name]
-          data[name] = klass.build data[name]
-        data
+      @__mappedAttributes[name] = options
 
     #
     # Creates new instance of Resource using values from form

@@ -32,3 +32,7 @@ class Joosy.Resources.RESTCollection extends Joosy.Resources.Collection
       @load rawData if rawData?
 
       callback?(error, this, rawData, xhr)
+
+# AMD wrapper
+if define?.amd?
+  define 'joosy/resources/rest_collection', -> Joosy.Resources.RESTCollection

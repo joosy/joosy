@@ -1,4 +1,4 @@
-#= require ./collection
+#= require ./array
 
 #
 # Collection data
@@ -7,8 +7,8 @@ class Joosy.Resources.Collection extends Joosy.Resources.Array
   @registerPlainFilters 'beforeSave'
 
   #
-  # @param [Joosy.Modules.Resources.Model] __resource        Resource this collection contains
-  # @param [Array]                         collection        Data this collection contains
+  # @param [Joosy.Resources.Entity] __resource        Resource this collection contains
+  # @param [Array]                  collection        Data this collection contains
   #
   constructor: (@__resource, collection) ->
     super collection

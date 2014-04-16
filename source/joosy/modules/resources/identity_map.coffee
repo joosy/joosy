@@ -5,8 +5,7 @@
 # make all the instances of the same model to be a single JS Object.
 #
 # @example
-#   class Model extends Joosy.Resources.Hash
-#      @concern Joosy.Modules.Resources.Model
+#   class Model extends Joosy.Resources.Entity
 #      @concern Joosy.Modules.Resources.IdentityMap
 #
 #   foo = Test.build id: 1
@@ -21,6 +20,7 @@ Joosy.Modules.Resources.IdentityMap =
     extended: ->
       @::__identityHolder = @
       @aliasStaticMethodChain 'build', 'identityMap'
+      @aliasStaticMethodChain 'load', 'identiftyMap'
 
     #
     # Clears the identity map cache. Recomended to be called during layout switch to
@@ -67,3 +67,23 @@ Joosy.Modules.Resources.IdentityMap =
         location[destination].load data
       else
         @buildWithoutIdentityMap data
+
+    #
+    # Set the resource data manually.
+    #
+    # Unlike the basic implementation of load, this one
+    # merges newer and older fieldsets that allows you to
+    # receive different parts of model data from different endpoints.
+    #
+    # @param [Object] data      Data to store
+    # @param [Boolean] clear    Whether previous data should be overwriten (not merged)
+    #
+    # @return [Object]          Returns self
+    #
+    # @private
+    #
+    loadWithIdentityMap: (data, clear=false) ->
+      if clear || !@merge?
+        @loadWithIdentityMap(data)
+      else
+        @merge(data)

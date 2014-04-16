@@ -1,4 +1,4 @@
-describe "Joosy.Modules.Resources.Model", ->
+describe "Joosy.Resources.Entity", ->
 
   class Model extends Joosy.Resources.Entity
 

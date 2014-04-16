@@ -5,14 +5,16 @@
 # Resource with REST/JSON backend
 #
 class Joosy.Resources.REST extends Joosy.Resources.Entity
+  @registerPlainFilters 'beforeSave'
+
+  @collection Joosy.Resources.RESTCollection
+
   @prependBeforeLoad (data) ->
     if data.constructor == Object && Object.keys(data).length == 1 && @__entityName
       name = inflection.camelize(@__entityName, true)
       data = data[name] if data[name]
 
     data
-
-  @collection Joosy.Resources.RESTCollection
 
   #
   # Registeres default options for all HTTP queries

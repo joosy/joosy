@@ -98,6 +98,16 @@ class Joosy.Resources.Hash extends Joosy.Module
     value
 
   #
+  # Combines a new fieldset and the existing data.
+  #
+  # @param [Object] values            Hash of values to be set
+  #
+  merge: (values) ->
+    Joosy.Module.merge @data, @__applyBeforeLoads(data)
+
+    this
+
+  #
   # Sets values of multiple fields, emitting event only once.
   #
   # @param [Object] values            Hash of values to be set
@@ -126,7 +136,6 @@ class Joosy.Resources.Hash extends Joosy.Module
 
     @trigger 'changed', @__applyBeforeChanges(updatedFields) unless options.silent
     this
-
 
   #
   # Locates the actual instance of attribute path `foo.bar` from get/set

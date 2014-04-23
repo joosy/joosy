@@ -196,9 +196,11 @@ class Joosy.Helpers.FormBuilder
     id
 
   __generateInput: (type, property, attributes={}, value=undefined, suffix = '') ->
+    @__resource.__formId ||= @__resource.id?() || '_'+Joosy.uuid()
+
     attributes.type         = type
     attributes.id           = @__generateId property, suffix
-    attributes.name         = property+(@__resource.id?() || '_'+Joosy.uuid())
+    attributes.name         = property+@__resource.__formId
     attributes.value        = value if value?
     attributes['data-to']   = property
     attributes['data-form'] = @__id

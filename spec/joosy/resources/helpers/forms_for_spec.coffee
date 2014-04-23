@@ -49,7 +49,7 @@ describe "Joosy.Helpers.FormFor", ->
               value: 'data'
               type: type
               id: 'test_1_string'
-              name: 'string'
+              name: 'string1'
               'data-to': 'string'
               'data-form': /__joosy\d+/
 

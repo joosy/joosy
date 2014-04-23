@@ -50,11 +50,11 @@ class Joosy.Helpers.FormBuilder
     return unless form?.elements?
 
     for input in form.elements
-      continue unless input.name? && input.name.length > 0 && input.getAttribute('data-form') == @__id
+      continue unless input.getAttribute('data-to')?.length > 0 && input.getAttribute('data-form') == @__id
 
       do (input) =>
-        @__buckets[input.name] ||= []
-        @__buckets[input.name].push input
+        @__buckets[input.getAttribute('data-to')] ||= []
+        @__buckets[input.getAttribute('data-to')].push input
 
         changeHandler = (ev) => @__inputToResource input
 
@@ -131,7 +131,7 @@ class Joosy.Helpers.FormBuilder
       if @__isMultiSelectInput(input)
         value = @__collectSelectedItems(input)
       else if @__isCheckOrRadioBox(input)
-        for neighbor in @__buckets[input.name]
+        for neighbor in @__buckets[input.getAttribute('data-to')]
           if @__isGroupInputActive(neighbor)
             value = neighbor.value
       else
@@ -148,8 +148,8 @@ class Joosy.Helpers.FormBuilder
 
   __formFromResource: (changedFields) ->
     @__stabilize =>
-      for name, inputs of @__buckets
-        continue unless !changedFields? || changedFields.indexOf(name) != -1
+      for to, inputs of @__buckets
+        continue unless !changedFields? || changedFields.indexOf(to) != -1
 
         value = @__resource.get inputs[0].getAttribute('data-to')
         lastInput = inputs[inputs.length - 1]
@@ -198,7 +198,7 @@ class Joosy.Helpers.FormBuilder
   __generateInput: (type, property, attributes={}, value=undefined, suffix = '') ->
     attributes.type         = type
     attributes.id           = @__generateId property, suffix
-    attributes.name         = property
+    attributes.name         = property+(@__resource.id?() || '_'+Joosy.uuid())
     attributes.value        = value if value?
     attributes['data-to']   = property
     attributes['data-form'] = @__id

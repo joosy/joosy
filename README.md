@@ -93,8 +93,8 @@ You assets are at `public/` directory, enjoy!
   * Clone the project
   * Run `npm install` to get required Node modules
   * Run `bower install` to get required JS components
-  * Run `grunt test` to run all specs in all available browsers
-  * Run `grunt test:*` where `*` is then name of an environment to run the environment in the development mode. Check `Gruntfile.coffee` (section **testem**) for the list of existing environments.
+  * Run `grunt testem` to run all specs in all available browsers
+  * Run `grunt testem:*` where `*` is then name of an environment to run the environment in the development mode. Check `Gruntfile.coffee` (section **testem**) for the list of existing environments.
 
 While current repository is at the same time NPM package, Ruby gem and Bower component, – the main Core
 environment is Node.js.

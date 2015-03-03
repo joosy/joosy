@@ -49,10 +49,9 @@ Joosy.Modules.Filters =
         @::["__confirm#{camelized}s"] = (params...) ->
           return true unless @["__#{filter}s"]
 
-          @["__#{filter}s"].reduce (flag, callback) =>
+          @["__#{filter}s"].every (callback) =>
             callback = @[callback] unless typeof(callback) == 'function'
-            flag && callback.apply(@, params) != false
-          , true
+            callback.apply(@, params) != false
 
         @::["__apply#{camelized}s"] = (data, params...) ->
           return data unless @["__#{filter}s"]

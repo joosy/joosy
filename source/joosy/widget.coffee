@@ -97,7 +97,7 @@
 #   Use this method to setup hiding effect.
 #   @note Given method will be called with `complete` function as parameter. As soon as your
 #     preparations are done you should call that function.
-#   @note This method will be caled _before_ unload routines so in theory you can
+#   @note This method will be called _before_ unload routines so in theory you can
 #     access page data from that. Think twice if you are doing it right though.
 #   @example Sample eraser
 #     @erase (complete) ->
@@ -353,7 +353,7 @@ class Joosy.Widget extends Joosy.Module
   #
   # Normalizes widget descrpition to its instance.
   #
-  # Besides already being instance it cann be either class or lambda
+  # Besides already being instance it can be either class or lambda
   #
   __normalizeWidget: (widget) ->
     if typeof(widget) == 'function' && !Joosy.Module.hasAncestor(widget, Joosy.Widget)

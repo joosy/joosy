@@ -1,3 +1,6 @@
+> [!CAUTION]
+> Remnants of archive are here: https://joosy.github.io/website/
+
 # Joosy 1.2: Feather
 
 ![Joosy](http://f.cl.ly/items/2N2J453J2B353F1A0t0I/joocy1.1.png)
